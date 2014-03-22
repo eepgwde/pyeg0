@@ -37,7 +37,29 @@ system "a"
 
 .Q.view @ max date
 
-t0:100#select from aud0jpy where (not null bid0),(not null offer0)
+tbls:system "a"
+
+.fx.e: { () xkey select by tm0 from x where (not null bid0),(not null offer0) }
+.fx.t: { t0:update offer1:offer1 % 1e6, bid1:bid1 % 1e6 from x;
+	t0: delete from t0 where not type0 = "P";
+	t0: delete date,dt0,type0 from t0;
+	update mid0:((offer0*bid1) + (bid0*offer1)) % (bid1 + offer1) from t0 }
+
+t0: { .fx.t .fx.e @ value x } each tbls
+
+t1: first t0
+while [ count t0 ; t1,: first t0:1 _ t0 ]
+
+count t0
+
+\
+
+{ 0N!x; .fx.t .fx.e @ value x } each 1 _ tbls
+
+t0:select by tm0 from aud0jpy where (not null bid0),(not null offer0)
+update offer1:offer1 % 1000, bid1:bid1 % 1000 from `t0;
+delete date from `t0;
+update mid0:((offer0*bid1) + (bid0*offer1)) % (bid1 + offer1) from `t0;
 
 // @}
 
