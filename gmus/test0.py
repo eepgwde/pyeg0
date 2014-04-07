@@ -10,6 +10,12 @@ import pandas as pd
 
 from collections import Counter
 
+pd.set_option('display.height', 1000)
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.max_colwidth', 80)
+pd.set_option('display.width', 1000)
+
 gmus0 = ()
 s1 = ()
 
@@ -52,4 +58,8 @@ def main(args):
 
 if __name__ == '__main__':
     main(sys.argv)
+
+gmus0.df = gmus0.df.sort(['album', 'title'])
+
+df = gmus0.df[list(['title', 'album', 'creationTimestamp'])]
 
