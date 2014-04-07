@@ -1,5 +1,6 @@
 import logging
 import ConfigParser, os, logging
+import pandas as pd
 import json
 
 from gmusicapi import Mobileclient
@@ -10,6 +11,7 @@ class GMus0:
     cfg = ()
     api = Mobileclient()
     s0 = ()
+    df = ()
     
     def config0(self, paths):
         self.cfg = ConfigParser.ConfigParser()
@@ -40,6 +42,9 @@ class GMus0:
     def read(self, file0):
         with open(file0, 'rb') as infile:
             self.s0 = json.load(infile)
+        ids = [ x['id'] for x in self.s0 ]
+        self.df = pd.DataFrame(self.s0, index=ids)
+        return
 
     def in0(self, field, name):
         s1 = [ track for track in self.s0

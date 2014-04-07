@@ -6,6 +6,7 @@
 import logging
 import GMus0
 import sys
+import pandas as pd
 
 from collections import Counter
 
@@ -41,12 +42,11 @@ def main(args):
     gmus0 = GMus0.GMus0(file0)
     if len(gmus0.s0) > 0:
         test3()
-        return
-        
-    test0()
-    test1()
-    test2()
-    gmus0.write(file0)
+    else:
+        test0()
+        test1()
+        test2()
+        gmus0.write(file0)
 
     logging.info('Finished')
 
