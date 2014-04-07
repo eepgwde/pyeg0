@@ -20,6 +20,20 @@ class GMus0:
     def __init__(self):
         self.config0(paths)
         return
+
+    def in0(self, field, name):
+        s1 = [ track for track in self.s0
+               if name in track[field] ]
+        
+        logging.info("songs: filter: {0}".format(len(s1)))
+        return s1
+    
+    def exact0(self, field, name):
+        s1 = [ track for track in self.s0
+               if track[field] == name ]
+        
+        logging.info("songs: filter: {0}".format(len(s1)))
+        return s1
     
     def songs(self):
         self.s0 = self.api.get_all_songs()
