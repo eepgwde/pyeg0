@@ -1,3 +1,8 @@
+"""
+@author weaves
+@brief Removing older duplicates
+"""
+
 from gmusicapi import Mobileclient
 import ConfigParser, os
 
