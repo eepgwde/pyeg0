@@ -3,19 +3,24 @@
 @brief Removing older duplicates
 """
 
-from gmusicapi import Mobileclient
-import ConfigParser, os
+import logging
+import GMus0
 
-cfg = ConfigParser.ConfigParser()
+gmus0 = ()
 
-cfg.read(['site.cfg', os.path.expanduser('~/etc/gmusic.cfg')])
+def main():
+    global gmus0
+    logging.basicConfig(filename='gmus.log', level=logging.INFO)
+    logging.info('Started')
+    gmus0 = GMus0.GMus0()
+    logging.info('Finished')
 
-api = Mobileclient()
+def test0():
+    global gmus0
+    gmus0.songs()
 
-api.login(cfg.get('credentials', 'username'),
-          cfg.get('credentials', 'password'))
+if __name__ == '__main__':
+    main()
+    test0()
 
-s0 = api.get_all_songs()
-
-print len(s0)
 
