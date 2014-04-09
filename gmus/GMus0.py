@@ -8,10 +8,10 @@ from gmusicapi import Mobileclient
 paths = ['site.cfg', os.path.expanduser('~/etc/gmusic.cfg')]
   
 class GMus0:
-    cfg = ()
+    cfg = None
     api = Mobileclient()
-    s0 = ()
-    df = ()
+    s0 = None
+    df = None
     
     def config0(self, paths):
         self.cfg = ConfigParser.ConfigParser()
@@ -63,11 +63,21 @@ class GMus0:
         
         logging.info("songs: filter: {0}".format(len(s1)))
         return s1
-
-    def occurs0(self, field):
-        s1 = dict([ (t['id'], "{0}|{1}".format(t['album'], t[field])) for t in self.s0 ])
-        logging.info("songs: occurs: {0}".format(len(s1)))
-        return s1
+        
+    def duplicated(self):
+       # self.df = self.df.sort(['album', 'title', 'creationTimestamp'],
+       #                       ascending=[1, 1, 0])
+       df = self.df[list(['title', 'album', 'creationTimestamp'])]
+       df['n0'] = df['title'] + '|' + df['album']
+       df = df.sort(['n0','creationTimestamp'], ascending=[1, 0])
+       # Only rely on counts of 2.
+       s0 = pd.Series(df.n0)
+       s1 = s0.value_counts()
+       s2 = set( (s1[s1.values >= 2]).index )
+       df1 = df[df.n0.isin(s2)]
+       df1['d'] = df1.duplicated('n0')
+       s3 = list(df1[df1.d].index)
+       return s3
     
     def songs(self):
         self.s0 = self.api.get_all_songs()

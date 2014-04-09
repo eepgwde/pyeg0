@@ -26,6 +26,10 @@ class GMus0TestCase(unittest.TestCase):
         pd.set_option('display.width', 1000)
         logging.basicConfig(filename='gmus.log', level=logging.DEBUG)
     
+    @classmethod
+    def tearDownClass(cls):
+        GMus0TestCase.gmus0.dispose()
+    
     def setUp(self):
         logging.info('setup')
         if len(sys.argv) > 1:
@@ -47,6 +51,21 @@ class GMus0TestCase(unittest.TestCase):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
+        return
 
+    def test_03(self):
+        GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.exact0('composer', 'BBC iPlayer')
+        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
+                            'no songs')
+
+    def test_04(self):
+        GMus0TestCase.gmus0.write('songs.json')
+        GMus0TestCase.gmus0.read('songs.json')
+
+    def test_05(self):
+        s0 = GMus0TestCase.gmus0.duplicated()
+        self.assertTrue(len(s0)>0)
+        GMus0TestCase.gmus0.dup0 = s0
+        
 if __name__ == '__main__':
     unittest.main(sys.argv)
