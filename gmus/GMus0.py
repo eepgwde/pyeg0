@@ -27,12 +27,16 @@ class GMus0:
         return (os.path.isfile(fpath) and (os.path.getsize(fpath) > 0))
     
     def __init__(self, file0):
-        if self.is_valid(file0):
+        if file0 != None and self.is_valid(file0):
             self.read(file0)
             return
             
         self.config0(paths)
         return
+
+    def dispose(self):
+        self.api.logout()
+        self.s0 = None
 
     def write(self, file0):
         with open(file0, 'w') as outfile:
@@ -70,3 +74,10 @@ class GMus0:
         logging.info("songs: {0}".format(len(self.s0)))
         return self.s0
 
+    def delete(self, file0):
+        with open(file0, 'rb') as infile:
+            d0 = json.load(infile)
+        logging.info("delete: {0}: {1}".format(file0, len(d0)))
+        self.api.delete_songs(d0)
+        return
+    

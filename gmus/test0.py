@@ -3,63 +3,50 @@
 @brief Removing older duplicates
 """
 
-import logging
 import GMus0
-import sys
+import sys, logging
 import pandas as pd
-
 from collections import Counter
 
-pd.set_option('display.height', 1000)
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.max_colwidth', 80)
-pd.set_option('display.width', 1000)
+import unittest
 
-gmus0 = ()
-s1 = ()
+gmus0 = None
+s1 = None
 
-def test0():
-    global gmus0
-    gmus0.songs()
-    print gmus0.s0[0]
-
-def test1():
-    global gmus0
-    gmus0.s0 = gmus0.in0('artist', "BBC Radio")
-    print gmus0.s0[0]
-
-def test2():
-    global gmus0
-    gmus0.s0 = gmus0.exact0('composer', 'BBC iPlayer')
-    print gmus0.s0[0]
-
-def test3():
-    global gmus0, s1
-    s1 = gmus0.occurs0('title')
-
-def main(args):
-    global gmus0
-    logging.basicConfig(filename='gmus.log', level=logging.DEBUG)
-    logging.info('Started')
+class GMus0TestCase(unittest.TestCase):
     file0 = 'songs.json'
-    if len(args) > 1:
-        file0 = args[1]
-    gmus0 = GMus0.GMus0(file0)
-    if len(gmus0.s0) > 0:
-        test3()
-    else:
-        test0()
-        test1()
-        test2()
-        gmus0.write(file0)
+    gmus0 = None
 
-    logging.info('Finished')
+    @classmethod
+    def setUpClass(cls):
+        pd.set_option('display.height', 1000)
+        pd.set_option('display.max_rows', 500)
+        pd.set_option('display.max_columns', 500)
+        pd.set_option('display.max_colwidth', 80)
+        pd.set_option('display.width', 1000)
+        logging.basicConfig(filename='gmus.log', level=logging.DEBUG)
+    
+    def setUp(self):
+        logging.info('setup')
+        if len(sys.argv) > 1:
+            self.file0 = sys.argv[1]
+
+    def tearDown(self):
+        logging.info('tearDown')
+
+    def test_00(self):
+        GMus0TestCase.gmus0 = GMus0.GMus0(self.file0)
+        self.assertIsNotNone(GMus0TestCase.gmus0)
+
+    def test_01(self):
+        GMus0TestCase.gmus0.songs()
+        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
+                            'no songs')
+
+    def test_02(self):
+        GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
+        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
+                            'no songs')
 
 if __name__ == '__main__':
-    main(sys.argv)
-
-gmus0.df = gmus0.df.sort(['album', 'title'])
-
-df = gmus0.df[list(['title', 'album', 'creationTimestamp'])]
-
+    unittest.main(sys.argv)
