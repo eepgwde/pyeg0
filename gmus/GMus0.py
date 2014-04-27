@@ -1,3 +1,10 @@
+""
+weaves
+
+https://github.com/simon-weber/Unofficial-Google-Music-API
+http://unofficial-google-music-api.readthedocs.org/en/latest/
+""
+
 import logging
 import ConfigParser, os, logging
 import pandas as pd
@@ -5,7 +12,7 @@ import json
 
 from gmusicapi import Mobileclient
 
-paths = ['site.cfg', os.path.expanduser('~/etc/gmusic.cfg')]
+paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
   
 class GMus0:
     cfg = None
