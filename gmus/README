@@ -1,3 +1,19 @@
 weaves
 
-Using 
+Using the Gmusic API as a test project.
+
+Debugging is tricky because it is a test case. 
+Under emacs, start ipython, but don't pass --pylab or --colors=Linux
+
+Then, in the interpreter, nothing has been loaded, so 
+
+ run test0.py
+
+# message is zero tests run
+
+ unittest.main()
+
+# runs the tests
+
+The variables and the objects can then be accessed via the
+GMus0TestCase class's variables.

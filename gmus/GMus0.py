@@ -1,9 +1,17 @@
-""
-weaves
-
-https://github.com/simon-weber/Unofficial-Google-Music-API
-http://unofficial-google-music-api.readthedocs.org/en/latest/
-""
+## @file GMus0.py
+# @brief Application support class for the Unofficial Google Music API.
+# @author weaves
+#
+# @details
+# This class uses @c gmusicapi. 
+#
+# @note
+# An application support class is one that uses a set of driver classes
+# to provide a set of higher-level application specific methods.
+#
+# @see
+# https://github.com/simon-weber/Unofficial-Google-Music-API
+# http://unofficial-google-music-api.readthedocs.org/en/latest/
 
 import logging
 import ConfigParser, os, logging
@@ -12,21 +20,47 @@ import json
 
 from gmusicapi import Mobileclient
 
+## Set of file paths for the configuration file.
 paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
   
+## Google Music API login, search and result cache.
+#
+# The class needs to a configuration file with these contents. (The
+# values of the keys must be a valid Google Play account.)
+#
+# <pre>
+# [credentials]
+# username=username\@gmail.com
+# password=SomePassword9
+# </pre>
 class GMus0:
+    """
+    Max Headroom
+    """
+    ## The parsed configuration file.
+    # An instance of ConfigParser.ConfigParser
     cfg = None
+    ## The \c gmusicapi instance.
     api = Mobileclient()
+    ## Cached results: dictionary list.
     s0 = None
+    ## Cached results: \c pandas data-frame.
     df = None
-    
-    def config0(self, paths):
+
+    ## The configuration method.
+    # Called from the constructor. It uses the input \c paths sets cfg
+    # and uses that to login.
+    # @param paths usually the GMus0.paths.
+    def _config0(self, paths):
         self.cfg = ConfigParser.ConfigParser()
         self.cfg.read(paths)
         self.api.login(self.cfg.get('credentials', 'username'),
                        self.cfg.get('credentials', 'password'))
         return
 
+    ## Check if a path is a file and is non-zero.
+    # @param fpath a path string.
+    @classmethod
     def is_valid(self, fpath):
         logging.debug("fpath: {0}; {1} {2}".
                       format(fpath, os.path.isfile(fpath),
@@ -38,16 +72,22 @@ class GMus0:
             self.read(file0)
             return
             
-        self.config0(paths)
+        self._config0(paths)
         return
 
     def dispose(self):
         self.api.logout()
         self.s0 = None
 
-    def write(self, file0):
+    def write(self, file0, file1=None):
+        s1 = self.s0
+        if file1 is None:
+            pass
+        else:
+            s1 = file1
+            
         with open(file0, 'w') as outfile:
-            json.dump(self.s0, outfile, sort_keys = True, indent = 4,
+            json.dump(s1, outfile, sort_keys = True, indent = 4,
                       ensure_ascii=False)
 
     def read(self, file0):
@@ -85,11 +125,22 @@ class GMus0:
        df1['d'] = df1.duplicated('n0')
        s3 = list(df1[df1.d].index)
        return s3
-    
+
+    ## Retrieve all the songs and cache them.
+    # The songs are stored in GMus0.s0
     def songs(self):
         self.s0 = self.api.get_all_songs()
         logging.info("songs: {0}".format(len(self.s0)))
         return self.s0
+
+    ## Load a file of indices, filter the caches to just them.
+    # 
+    def indices(self, file0):
+        s1 = None
+        with open(file0, 'rb') as infile:
+            s1 = json.load(infile)
+        logging.info("indices: {0}".format(len(s1)))
+        return s1
 
     def delete(self, file0):
         with open(file0, 'rb') as infile:
@@ -97,4 +148,3 @@ class GMus0:
         logging.info("delete: {0}: {1}".format(file0, len(d0)))
         self.api.delete_songs(d0)
         return
-    

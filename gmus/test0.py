@@ -1,7 +1,13 @@
-"""
-@author weaves
-@brief Removing older duplicates
-"""
+## @file test0.py
+# @author weaves
+# @brief Unittest of GMus0: removes older duplicates
+#
+# This is a unittest class that can perform some useful work.
+# 
+## @package gmusic
+# Documentation for this module.
+#
+# More details.
 
 import GMus0
 import sys, logging
@@ -10,12 +16,10 @@ from collections import Counter
 
 import unittest
 
-gmus0 = None
-s1 = None
-
 class GMus0TestCase(unittest.TestCase):
-    file0 = 'songs.json'
+    file0 = None
     gmus0 = None
+    s1 = None
 
     @classmethod
     def setUpClass(cls):
@@ -63,9 +67,13 @@ class GMus0TestCase(unittest.TestCase):
         GMus0TestCase.gmus0.read('songs.json')
 
     def test_05(self):
-        s0 = GMus0TestCase.gmus0.duplicated()
-        self.assertTrue(len(s0)>0)
-        GMus0TestCase.gmus0.dup0 = s0
+        GMus0TestCase.s1 = GMus0TestCase.gmus0.duplicated()
+        self.assertTrue(len(GMus0TestCase.s1)>0)
+        GMus0TestCase.gmus0.write('dsongs.json', GMus0TestCase.s1)
+        
+    def test_06(self):
+        GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
+        self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
         
 if __name__ == '__main__':
     unittest.main(sys.argv)
