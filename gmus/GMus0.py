@@ -61,14 +61,14 @@ class GMus0:
     ## Check if a path is a file and is non-zero.
     # @param fpath a path string.
     @classmethod
-    def is_valid(self, fpath):
+    def is_valid(cls, fpath):
         logging.debug("fpath: {0}; {1} {2}".
                       format(fpath, os.path.isfile(fpath),
                              (os.path.getsize(fpath) if os.path.isfile(fpath) else 0) ))
         return (os.path.isfile(fpath) and (os.path.getsize(fpath) > 0))
     
     def __init__(self, file0):
-        if file0 != None and self.is_valid(file0):
+        if file0 != None and GMus0.is_valid(file0):
             logging.info("init: not-logging-in" )
             self.read(file0)
             return
@@ -130,6 +130,7 @@ class GMus0:
 
     ## Retrieve all the songs and cache them.
     # The songs are stored in GMus0.s0
+    # If s0 is already loaded then this is not done.
     def songs(self, force=False):
         if self.s0 is not None and len(self.s0) and not(force):
             return self.s0
