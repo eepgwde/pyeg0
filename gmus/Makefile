@@ -9,3 +9,10 @@ doc::
 check::
 	:> gmus.log
 	$(PYTHON) -m unittest -v -f GMus0TestCase
+
+clean::
+	$(RM) $(wildcard *.pyc *.log *~)
+
+distclean::
+	$(RM) -rf html
+	$(RM) $(wildcard *.json)

@@ -25,11 +25,11 @@ import unittest
 # @see GMus0
 class GMus0TestCase(unittest.TestCase):
     """
-    A test driver for GMus0. If the file songs.json exists,  then this class will
+    A test driver for GMus0. If the file songs.json exists, then this class will
     not try to a login.
     """
     # If this file exists, we do not login.
-    file0 = 'songs.json'
+    file0 = 'all-songs.json'
     gmus0 = None
     s1 = None
 
@@ -66,6 +66,7 @@ class GMus0TestCase(unittest.TestCase):
         GMus0TestCase.gmus0.songs()
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
+        GMus0TestCase.gmus0.write('all-songs.json')
 
     ## Check that artist is BBC Radio
     def test_02(self):
@@ -99,7 +100,7 @@ class GMus0TestCase(unittest.TestCase):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
         self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
 
-    ## List indices to file.
+    ## Filter based on indices
     def test_07(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
         self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)

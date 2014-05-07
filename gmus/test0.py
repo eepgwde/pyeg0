@@ -26,4 +26,8 @@ unittest.TextTestRunner(verbosity=2).run(suite)
 g0=GMus0TestCase.gmus0
 print("g0.s0: {0}".format(g0.s0 is None))
 
+g0.read('all-songs.json')
+print("g0.s0: {0}".format(len(g0.s0)))
+df=g0.df
+
 
