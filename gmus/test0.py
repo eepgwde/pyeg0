@@ -16,7 +16,14 @@
 import unittest
 import matplotlib.pyplot as plt
 from GMus0TestCase import GMus0TestCase
+from __future__ import print_function
+
+# You can run these again, but you the object is emptied by the dispose method.
 
 suite = unittest.TestLoader().loadTestsFromTestCase(GMus0TestCase)
 unittest.TextTestRunner(verbosity=2).run(suite)
+
+g0=GMus0TestCase.gmus0
+print("g0.s0: {0}".format(g0.s0 is None))
+
 

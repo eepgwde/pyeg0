@@ -12,6 +12,7 @@
 # if you want the class within the module, you need to use the from
 # file import class.
 
+from __future__ import print_function
 from GMus0 import GMus0
 import sys, logging
 import pandas as pd
@@ -19,11 +20,20 @@ from collections import Counter
 
 import unittest
 
+## A test driver for GMus0
+#
+# @see GMus0
 class GMus0TestCase(unittest.TestCase):
+    """
+    A test driver for GMus0. If the file songs.json exists,  then this class will
+    not try to a login.
+    """
+    # If this file exists, we do not login.
     file0 = 'songs.json'
     gmus0 = None
     s1 = None
 
+    ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
         pd.set_option('display.height', 1000)
@@ -33,46 +43,64 @@ class GMus0TestCase(unittest.TestCase):
         pd.set_option('display.width', 1000)
         logging.basicConfig(filename='gmus.log', level=logging.DEBUG)
     
+    ## Logs out.
     @classmethod
     def tearDownClass(cls):
         GMus0TestCase.gmus0.dispose()
-    
+
+    ## Null setup.
     def setUp(self):
         logging.info('setup')
 
+    ## Null setup.
     def tearDown(self):
         logging.info('tearDown')
 
+    ## Login or load from file.
     def test_00(self):
         GMus0TestCase.gmus0 = GMus0(self.file0)
         self.assertIsNotNone(GMus0TestCase.gmus0)
 
+    ## List songs.
     def test_01(self):
         GMus0TestCase.gmus0.songs()
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
 
+    ## Check that artist is BBC Radio
     def test_02(self):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
         return
 
+    ## Check that composer is iPlayer
     def test_03(self):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.exact0('composer', 'BBC iPlayer')
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
 
+    ## Test write and read.
     def test_04(self):
+        ns0 = len(GMus0TestCase.gmus0.s0)
         GMus0TestCase.gmus0.write('songs.json')
         GMus0TestCase.gmus0.read('songs.json')
+        ns1 = len(GMus0TestCase.gmus0.s0)
+        self.assertEqual(ns0, ns1, "not equal")
 
+    ## List duplicates
     def test_05(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.duplicated()
         self.assertTrue(len(GMus0TestCase.s1)>0)
         GMus0TestCase.gmus0.write('dsongs.json', GMus0TestCase.s1)
-        
+
+    ## List indices to file.
     def test_06(self):
+        GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
+        self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
+
+    ## List indices to file.
+    def test_07(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
         self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
 
@@ -86,4 +114,4 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='GMus0TestCase', exit=False)    
+        unittest.main(module='GMus0TestCase', verbosity=3, failfast=True, exit=False)

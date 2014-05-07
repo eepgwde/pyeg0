@@ -13,6 +13,7 @@
 # https://github.com/simon-weber/Unofficial-Google-Music-API
 # http://unofficial-google-music-api.readthedocs.org/en/latest/
 
+from __future__ import print_function
 import logging
 import ConfigParser, os, logging
 import pandas as pd
@@ -35,7 +36,7 @@ paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
 # </pre>
 class GMus0:
     """
-    Max Headroom
+    The Google Music API login and cache class.
     """
     ## The parsed configuration file.
     # An instance of ConfigParser.ConfigParser
@@ -99,13 +100,21 @@ class GMus0:
         self.df = pd.DataFrame(self.s0, index=ids)
         return
 
+    ## General method to filter by set membership.
+    # The name of the field is given by the string 'field'.  Only
+    # those songs that have name in song.field are selected.
+    # @param field name of the field in each song.
+    # @param name a key field to test.
     def in0(self, field, name):
         s1 = [ track for track in self.s0
                if name in track[field] ]
         
         logging.info("in0: filter: {0}".format(len(s1)))
         return s1
-    
+
+    ## General method to filter by an exact match.
+    # The name of the field is given by the string field.
+    # The value it must match is given with the name.
     def exact0(self, field, name):
         s1 = [ track for track in self.s0
                if track[field] == name ]
@@ -113,6 +122,7 @@ class GMus0:
         logging.info("exact0: filter: {0}".format(len(s1)))
         return s1
         
+    ## Ad-hoc method to find duplicated entries.
     def duplicated(self):
        # self.df = self.df.sort(['album', 'title', 'creationTimestamp'],
        #                       ascending=[1, 1, 0])
