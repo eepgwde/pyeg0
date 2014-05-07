@@ -37,11 +37,11 @@ paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
 # </pre>
 class GMus0(GMus00):
 
-    ## Ad-hoc method to find duplicated entries.
+    ## Ad-hoc method to find the indices of duplicated entries.
     def duplicated(self):
        # self._df = self._df.sort(['album', 'title', 'creationTimestamp'],
        #                       ascending=[1, 1, 0])
-       df = self._df[list(['title', 'album', 'creationTimestamp'])]
+       df = self.df[list(['title', 'album', 'creationTimestamp'])]
        df['n0'] = df['title'] + '|' + df['album']
        df = df.sort(['n0','creationTimestamp'], ascending=[1, 0])
        # Only rely on counts of 2.

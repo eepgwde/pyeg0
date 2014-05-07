@@ -67,12 +67,17 @@ class GMus0TestCase(unittest.TestCase):
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
         GMus0TestCase.gmus0.write('all-songs.json')
+        self.assertEqual(len(GMus0TestCase.gmus0.s0),
+                         len(GMus0TestCase.gmus0.df), 'data-frame invalid')
 
     ## Check that artist is BBC Radio
+    # Show that the data-frame is a dynamic property.
     def test_02(self):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
+        self.assertEqual(len(GMus0TestCase.gmus0.s0),
+                         len(GMus0TestCase.gmus0.df), 'data-frame invalid')
         return
 
     ## Check that composer is iPlayer

@@ -30,4 +30,15 @@ g0.read('all-songs.json')
 print("g0.s0: {0}".format(len(g0.s0)))
 df=g0.df
 
+g0.s0 = g0.exact0('composer', 'BBC iPlayer')
+print("g0.s0: {0}".format(len(g0.s0)))
+
+g0.s0 = g0.exact0('album', 'Late Junction')
+print("g0: s0 df: {0} {1}".format(len(g0.s0), len(g0.s0)))
+
+df = g0.df
+df.sort(['creationTimestamp', 'clientId'], ascending=[1, 0])
+df.columns.values.tolist()
+
+df[:5][list(['title', 'creationTimestamp', 'clientId', 'durationMillis'])]
 
