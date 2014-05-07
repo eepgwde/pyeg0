@@ -41,4 +41,11 @@ df.sort(['creationTimestamp', 'clientId'], ascending=[1, 0])
 df.columns.values.tolist()
 
 df[:5][list(['title', 'creationTimestamp', 'clientId', 'durationMillis'])]
+indices = df[:5].index.tolist()
+
+g0.read('all-songs.json')
+print("g0.s0: {0}".format(len(g0.s0)))
+df=g0.df
+
+df=df[df.index.isin(indices)]
 
