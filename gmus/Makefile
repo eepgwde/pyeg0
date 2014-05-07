@@ -1,6 +1,11 @@
+PYTHON ?= python
 
 all::
 	true
 
 doc::
 	doxygen gmus0-doc.cfg
+
+check::
+	:> gmus.log
+	$(PYTHON) -m unittest -v -f GMus0TestCase

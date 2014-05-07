@@ -69,9 +69,11 @@ class GMus0:
     
     def __init__(self, file0):
         if file0 != None and self.is_valid(file0):
+            logging.info("init: not-logging-in" )
             self.read(file0)
             return
             
+        logging.info("init: logging-in" )
         self._config0(paths)
         return
 
@@ -101,14 +103,14 @@ class GMus0:
         s1 = [ track for track in self.s0
                if name in track[field] ]
         
-        logging.info("songs: filter: {0}".format(len(s1)))
+        logging.info("in0: filter: {0}".format(len(s1)))
         return s1
     
     def exact0(self, field, name):
         s1 = [ track for track in self.s0
                if track[field] == name ]
         
-        logging.info("songs: filter: {0}".format(len(s1)))
+        logging.info("exact0: filter: {0}".format(len(s1)))
         return s1
         
     def duplicated(self):
@@ -128,7 +130,10 @@ class GMus0:
 
     ## Retrieve all the songs and cache them.
     # The songs are stored in GMus0.s0
-    def songs(self):
+    def songs(self, force=False):
+        if self.s0 is not None and len(self.s0) and not(force):
+            return self.s0
+            
         self.s0 = self.api.get_all_songs()
         logging.info("songs: {0}".format(len(self.s0)))
         return self.s0

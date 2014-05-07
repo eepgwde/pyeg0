@@ -1,19 +1,40 @@
-weaves
+*weaves
 
 Using the Gmusic API as a test project.
 
+* Running
+
 Debugging is tricky because it is a test case. 
-Under emacs, start ipython, but don't pass --pylab or --colors=Linux
 
-Then, in the interpreter, nothing has been loaded, so 
+** Command-line
 
- run test0.py
+To run from the command-line under unittest.
 
-# message is zero tests run
+ $ python -m unittest GMus0TestCase
 
- unittest.main()
+** Within Emacs
 
-# runs the tests
+Under Emacs using ipython, the ipython parameters are passed to the
+unittest.main(sys.argv). So there is some side-stepping code in the
+GMus0TestCase file now.
+
+Use the send buffer method of the Python IDE. Do not make it dedicated.
+Then enter the test0.py buffer and send the unittest.run commands.
+
+You can then access the object via the GMus0TestCase module.
 
 The variables and the objects can then be accessed via the
 GMus0TestCase class's variables.
+
+** This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: iso-8859-1-unix ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
