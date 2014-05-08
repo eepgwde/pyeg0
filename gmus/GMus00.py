@@ -18,7 +18,7 @@ import logging
 import ConfigParser, os, logging
 import pandas as pd
 import json
-import StringIO
+from io import StringIO
 
 from peak.rules import abstract, when, around, before, after
 
@@ -127,10 +127,9 @@ class GMus00(object):
             s0 = json.load(infile)
         return s0
         
-    @when(read0, "isinstance(file0,StringIO.StringIO)")
+    @when(read0, "isinstance(file0,StringIO)")
     def _read0_buffer(self, file0):
-        s0 = None
-        return s0
+        return json.load(infile)
     
     ## Load up the records given only a JSON file of indices.
     # The file of indices should come from indices()

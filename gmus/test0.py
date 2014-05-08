@@ -20,7 +20,7 @@ import unittest
 import matplotlib.pyplot as plt
 from GMus0TestCase import GMus0TestCase
 
-import StringIO
+from io import StringIO
 
 # You can run these again, but you the object is emptied by the dispose method.
 
@@ -53,7 +53,7 @@ df=g0.df
 
 df=df[df.index.isin(indices)]
 # Return a StringIO
-buf = StringIO.StringIO()
+buf = StringIO()
 df.to_json(buf, orient='records')
 g0.read(buf)
 
