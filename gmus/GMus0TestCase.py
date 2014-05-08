@@ -95,23 +95,23 @@ class GMus0TestCase(unittest.TestCase):
         ns1 = len(GMus0TestCase.gmus0.s0)
         self.assertEqual(ns0, ns1, "not equal")
 
-    ## List duplicates
+    ## List duplicates and write to file.
     def test_05(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.duplicated()
         self.assertTrue(len(GMus0TestCase.s1)>0)
         GMus0TestCase.gmus0.write('dsongs.json', GMus0TestCase.s1)
 
-    ## List indices to file.
+    ## Get indices from file.
     def test_06(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
         self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
 
     ## Filter based on indices
     def test_07(self):
-        i0 =  GMus0TestCase.gmus0.read0('dsongs.json')
+        i0 =  GMus0TestCase.gmus0.indices('dsongs.json')
         GMus0TestCase.s0 = GMus0TestCase.gmus0.load('dsongs.json',
-                                                    source='all-songs.json')
-        self.assertEqual(len(GMus0TestCase.s0), len(i0))
+                                                   source='all-songs.json')
+        self.assertEqual(len(GMus0TestCase.gmus0.s0), len(i0))
 
 # The sys.argv line will complain you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

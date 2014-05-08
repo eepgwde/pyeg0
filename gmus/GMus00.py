@@ -16,9 +16,9 @@
 from __future__ import print_function
 import logging
 import ConfigParser, os, logging
+from io import StringIO
 import pandas as pd
 import json
-from io import StringIO
 
 from peak.rules import abstract, when, around, before, after
 
@@ -129,7 +129,7 @@ class GMus00(object):
         
     @when(read0, "isinstance(file0,StringIO)")
     def _read0_buffer(self, file0):
-        return json.load(infile)
+        return json.load(file0)
     
     ## Load up the records given only a JSON file of indices.
     # The file of indices should come from indices()
@@ -147,8 +147,8 @@ class GMus00(object):
         # Select only those in the indices.
         df = df[df.index.isin(i0)]
 
-        df.to_json('df.json', orient='records')
-        self.read('df.json')
+        s = df.to_json(None, orient='records')
+        self.read(StringIO(unicode(s)))
         return self.s0
 
     ## General method to filter by set membership.
@@ -184,12 +184,10 @@ class GMus00(object):
         logging.info("songs: {0}".format(len(self.s0)))
         return self.s0
 
-    ## Load a file of indices, filter the caches to just them.
+    ## Load a file (or buffer) of indices, filter the caches to just them.
     # 
     def indices(self, file0):
-        s1 = None
-        with open(file0, 'rb') as infile:
-            s1 = json.load(infile)
+        s1 = self.read0(file0)
         logging.info("indices: {0}".format(len(s1)))
         return s1
 

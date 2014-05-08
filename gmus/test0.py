@@ -53,8 +53,8 @@ df=g0.df
 
 df=df[df.index.isin(indices)]
 # Return a StringIO
-buf = StringIO()
-df.to_json(buf, orient='records')
+s = df.to_json(None, orient='records')
+buf = StringIO(s)
 g0.read(buf)
 
 buf.close()
