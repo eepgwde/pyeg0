@@ -54,7 +54,7 @@ df=g0.df
 df=df[df.index.isin(indices)]
 # Return a StringIO
 s = df.to_json(None, orient='records')
-buf = StringIO(s)
+buf = StringIO(unicode(s))
 g0.read(buf)
 
 buf.close()
