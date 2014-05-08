@@ -49,3 +49,5 @@ df=g0.df
 
 df=df[df.index.isin(indices)]
 
+df.to_json('df.json', orient='records')
+

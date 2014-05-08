@@ -108,9 +108,9 @@ class GMus0TestCase(unittest.TestCase):
     ## Filter based on indices
     def test_07(self):
         i0 =  GMus0.read0('dsongs.json')
-        GMus0TestCase.df = GMus0TestCase.gmus0.load('dsongs.json',
+        GMus0TestCase.s0 = GMus0TestCase.gmus0.load('dsongs.json',
                                                     source='all-songs.json')
-        self.assertEqual(len(GMus0TestCase.df), len(i0))
+        self.assertEqual(len(GMus0TestCase.s0), len(i0))
 
 # The sys.argv line will complain you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
