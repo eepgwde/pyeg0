@@ -48,6 +48,11 @@ print("g0.s0: {0}".format(len(g0.s0)))
 df=g0.df
 
 df=df[df.index.isin(indices)]
-
 df.to_json('df.json', orient='records')
+g0.read('df.json')
+s0 = g0.s0
+
+g0.read('all-songs.json')
+s1 = g0.s0
+
 
