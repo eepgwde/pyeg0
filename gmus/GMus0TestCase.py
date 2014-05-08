@@ -71,7 +71,7 @@ class GMus0TestCase(unittest.TestCase):
                          len(GMus0TestCase.gmus0.df), 'data-frame invalid')
 
     ## Check that artist is BBC Radio
-    # Show that the data-frame is a dynamic property.
+    # Show that the data-frame is a dynamic property based on s0.
     def test_02(self):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
@@ -82,7 +82,8 @@ class GMus0TestCase(unittest.TestCase):
 
     ## Check that composer is iPlayer
     def test_03(self):
-        GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.exact0('composer', 'BBC iPlayer')
+        GMus0TestCase.gmus0.s0 = \
+        GMus0TestCase.gmus0.exact0('composer', 'BBC iPlayer')
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')
 
@@ -107,7 +108,7 @@ class GMus0TestCase(unittest.TestCase):
 
     ## Filter based on indices
     def test_07(self):
-        i0 =  GMus0.read0('dsongs.json')
+        i0 =  GMus0TestCase.gmus0.read0('dsongs.json')
         GMus0TestCase.s0 = GMus0TestCase.gmus0.load('dsongs.json',
                                                     source='all-songs.json')
         self.assertEqual(len(GMus0TestCase.s0), len(i0))

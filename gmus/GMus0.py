@@ -52,4 +52,3 @@ class GMus0(GMus00):
        df1['d'] = df1.duplicated('n0')
        s3 = list(df1[df1.d].index)
        return s3
-

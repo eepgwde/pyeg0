@@ -11,7 +11,7 @@ check::
 	$(PYTHON) -m unittest -v -f GMus0TestCase
 
 clean::
-	$(RM) $(wildcard *.pyc *.log *~)
+	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
 
 distclean::
 	$(RM) -rf html

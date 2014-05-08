@@ -13,10 +13,14 @@
 # This is a sample script for use within ipython.
 # @see GMus0TestCase
 
+from __future__ import print_function
+
 import unittest
+
 import matplotlib.pyplot as plt
 from GMus0TestCase import GMus0TestCase
-from __future__ import print_function
+
+import StringIO
 
 # You can run these again, but you the object is emptied by the dispose method.
 
@@ -34,7 +38,7 @@ g0.s0 = g0.exact0('composer', 'BBC iPlayer')
 print("g0.s0: {0}".format(len(g0.s0)))
 
 g0.s0 = g0.exact0('album', 'Late Junction')
-print("g0: s0 df: {0} {1}".format(len(g0.s0), len(g0.s0)))
+print("g0: s0 df: {0} {1}".format(len(g0.s0), len(g0.df)))
 
 df = g0.df
 df.sort(['creationTimestamp', 'clientId'], ascending=[1, 0])
@@ -48,11 +52,25 @@ print("g0.s0: {0}".format(len(g0.s0)))
 df=g0.df
 
 df=df[df.index.isin(indices)]
-df.to_json('df.json', orient='records')
-g0.read('df.json')
+# Return a StringIO
+buf = StringIO.StringIO()
+df.to_json(buf, orient='records')
+g0.read(buf)
+
+buf.close()
+
 s0 = g0.s0
-
-g0.read('all-songs.json')
-s1 = g0.s0
+print("g0.s0: {0}".format(len(g0.s0)))
 
 
+
+# Local Variables:
+# mode:python
+# mode:doxymacs
+# mode:auto-fill 
+# py-master-file: "GMus0TestCase.py"
+# fill-column: 75 
+# comment-column:50 
+# comment-start: "# "  
+# comment-end: "" 
+# End: 
