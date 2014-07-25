@@ -6,8 +6,6 @@
 from __future__ import print_function
 from sys import *
 from os.path import *
-from sha import *
-from BitTorrent.bencode import *
 
 from Bt0 import Bt0
 
@@ -23,7 +21,7 @@ if len(argv) == 1:
     print('%s file1.torrent file2.torrent file3.torrent ...' % argv[0])
     exit(2) # common exit code for syntax error
 
-bt0 = Bt0
+bt0 = Bt0(None)
 
 bt0.read(argv[1])
 

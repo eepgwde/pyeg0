@@ -14,8 +14,12 @@
 
 from __future__ import print_function
         
-import logging
 import ConfigParser, os, logging
+
+from sys import *
+from os.path import *
+from sha import *
+from BitTorrent.bencode import *
 
 from io import StringIO
 
@@ -84,6 +88,9 @@ class Bt0(object):
         return
 
     file0 = None;
+    announce = None;
+    info = None;
+    info_hash = None;
 
     def read(self, file0):
         file1 = open(file0, 'rb')
@@ -94,29 +101,34 @@ class Bt0(object):
         file1.seek(0)
         metainfo = bdecode(file1.read())
         file1.close()
-        announce = metainfo['announce']
-        info = metainfo['info']
-        info_hash = sha(bencode(info))
-        display()
+
+        logging.debug("metainfo: {0}".format(metainfo))
+
+        self.file0 = file0;
+        self.info = metainfo['info']
+        self.announce = metainfo['announce']
+        self.info_hash = sha(bencode(self.info))
+        self.display()
         return
 
-    def display(self, file0):
-        print('metainfo file.: %s' % basename(file0))
-        print('info hash.....: %s' % info_hash.hexdigest())
-        piece_length = info['piece length']
-        if info.has_key('length'):
+    def display(self):
+        print('metainfo file.: %s' % basename(self.file0))
+        print('info hash.....: %s' % self.info_hash.hexdigest())
+        piece_length = self.info['piece length']
+        if self.info.has_key('length'):
             # let's assume we just have a file
-            print('file name.....: %s' % info['name'])
-            file_length = info['length']
+            print('file name.....: %s' % self.info['name'])
+            file_length = self.info['length']
             name ='file size.....:'
             return
 
         # let's assume we have a directory structure
-        print('directory name: %s' % info['name'])
-        print('files.........: ')
+        print('directory name: %s' % self.info['name'])
+        print('files.........: %d' % len(self.info['files']))
         file_length = 0;
-        for file in info['files']:
+        for file in self.info['files']:
             path = ''
+            print('file .........: %s' % file)
             for item in file['path']:
                 if (path != ''):
                     path = path + "/"
@@ -126,7 +138,7 @@ class Bt0(object):
                     name = 'archive size..:'
                     piece_number, last_piece_length = divmod(file_length, piece_length)
                     print('%s %i (%i * %i + %i)' % (name,file_length, piece_number, piece_length, last_piece_length))
-                    print('announce url..: %s' % announce)
+                    print('announce url..: %s' % self.announce)
                     print
         return
 

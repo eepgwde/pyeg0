@@ -16,7 +16,8 @@ from __future__ import print_function
 
 import logging
 import ConfigParser, os, logging
-import Bt0 from Bt0
+
+from Bt0 import Bt0
 
 from io import StringIO
 
@@ -31,19 +32,8 @@ class Bt1(Bt0):
     The BitTorrent class
     """
 
-    def read(self, file0):
-        file1 = open(file0, 'rb')
-        if file1.read(11) != 'd8:announce':
-            print('%s: Not a BitTorrent metainfo file' % file0)
-            return
-
-        file1.seek(0)
-        metainfo = bdecode(file1.read())
-        file1.close()
-        announce = metainfo['announce']
-        info = metainfo['info']
-        info_hash = sha(bencode(info))
-        display()
+    def __init__(self, file0):
+        super(Child, self).__init__(file0)
         return
 
     def display(self):
