@@ -87,7 +87,7 @@ class bt0Test(unittest.TestCase):
     def test_11(self):
         self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
-        f0 = Bt1(None)
+        f0 = Bt1(self.file0)
         bt0Test.bt0.iterate(f0.item)
         self.assertIsNotNone(f0.root)
         f0.print_(None)

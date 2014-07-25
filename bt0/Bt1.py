@@ -16,7 +16,8 @@ from __future__ import print_function
 
 from xml.sax.saxutils import escape
 import logging
-from os.path import basename
+import tempfile
+import os.path 
 from sys import stderr
 
 from lxml import etree
@@ -32,9 +33,37 @@ class Bt1(object):
 
     root = None;
 
-    def __init__(self, file0):
-        self.root = etree.Element('torrent')
+    def __init__(self, file0, dir0=None):
+        file1 = file0
+        if file0 is None:
+            file0 = "Unknown"
+
+        if dir0 is None:
+            dir0 = os.getcwd()
+
+        file0 = os.path.basename(file0)
+        file0 = Bt1.sweeten(file0)
+        self.root = etree.Element('torrent', name=file0)
+
+        if file1 is None:
+            return
+
+        self.tfile = tempfile.NamedTemporaryFile(suffix='.xml',
+                                                 prefix=file0,
+                                                 dir=dir0,
+                                                 delete=False)
         return
+
+    @classmethod
+    def sweeten(cls, s):
+        try:
+            s = unicode(s, "utf-8")
+            s = escape(s)
+        except:
+            logging.debug("except: {0} {1}".format(len(s), s))
+            s = ''
+            
+        return s
 
     def item(self, item0, path):
         if item0 is None:
@@ -42,12 +71,7 @@ class Bt1(object):
 
         file_length = item0['length']
         child = etree.Element('file', length=str(file_length))
-        child.text = ''
-        try:
-            path = unicode(path, "utf-8")
-            child.text = escape(path)
-        except:
-            logging.debug("except: {0} {1}".format(len(path), path))
+        child.text = Bt1.sweeten(path)
 
         self.root.append(child)
         return
@@ -59,7 +83,8 @@ class Bt1(object):
         Locale print to file
         """
         logging.debug("tfile: ".format(type(self.tfile)))
-        s = etree.tostring(self.root, pretty_print=True)
+        s = etree.tostring(self.root, xml_declaration=True,
+                           encoding='utf-8', pretty_print=True)
         print(s, file=self.tfile)
         return
 
