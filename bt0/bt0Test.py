@@ -33,6 +33,7 @@ class bt0Test(unittest.TestCase):
     """
     # If this file exists, we do not login.
     file0 = '/home/weaves/Downloads/archive/Copy/outgoing1/50 years BBC2 Comedy.torrent'
+    files0 = 'fls.lst'
     bt0 = None
     s1 = None
 
@@ -49,11 +50,17 @@ class bt0Test(unittest.TestCase):
     ## Logs out.
     @classmethod
     def tearDownClass(cls):
+        if bt0Test.bt0 is None:
+            return
         bt0Test.bt0.dispose()
 
     ## Null setup.
     def setUp(self):
         logging.info('setup')
+        if not(Bt0.is_valid(self.files0)):
+            return
+        f0 = open(self.files0, "r");
+        self.s1 = f0.readlines()
 
     ## Null setup.
     def tearDown(self):
@@ -70,12 +77,23 @@ class bt0Test(unittest.TestCase):
 
     ## Login or load from file.
     def test_10(self):
-        bt0Test.bt0 = Bt1(self.file0)
+        bt0Test.bt0 = Bt1(None)
         self.assertIsNotNone(bt0Test.bt0)
 
     ## List songs.
     def test_11(self):
+        self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
+
+    def test_12(self):
+        if self.s1 == None:
+            return
+
+        for self.file0 in self.s1:
+            self.file0 = self.file0.rstrip()
+            logging.debug("file: %s" % self.file0)
+            self.test_11()
+        return
 
 # The sys.argv line will complain you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

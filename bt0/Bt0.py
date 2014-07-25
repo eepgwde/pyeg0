@@ -91,6 +91,7 @@ class Bt0(object):
     announce = None;
     info = None;
     info_hash = None;
+    piece_length = None;
 
     def read(self, file0):
         file1 = open(file0, 'rb')
@@ -108,7 +109,13 @@ class Bt0(object):
         self.info = metainfo['info']
         self.announce = metainfo['announce']
         self.info_hash = sha(bencode(self.info))
+        self.piece_length = self.info['piece length']
         self.display()
+        return
+
+    def locate(self):
+        ds = self.cfg.get('sources', 'source')
+        logging.debug("ds: {0}".format(ds))
         return
 
     def display(self):
