@@ -33,6 +33,7 @@ class bt0Test(unittest.TestCase):
     """
     # If this file exists, we do not login.
     file0 = '/home/weaves/Downloads/archive/Copy/outgoing1/50 years BBC2 Comedy.torrent'
+    # List of files to process
     files0 = 'fls.lst'
     bt0 = None
     s1 = None
@@ -47,14 +48,14 @@ class bt0Test(unittest.TestCase):
         pd.set_option('display.width', 1000)
         logging.basicConfig(filename='bt0.log', level=logging.DEBUG)
     
-    ## Logs out.
+    ## Finish
     @classmethod
     def tearDownClass(cls):
         if bt0Test.bt0 is None:
             return
         bt0Test.bt0.dispose()
 
-    ## Null setup.
+    ## Null setup: load any files
     def setUp(self):
         logging.info('setup')
         if not(Bt0.is_valid(self.files0)):
@@ -62,28 +63,35 @@ class bt0Test(unittest.TestCase):
         f0 = open(self.files0, "r");
         self.s1 = f0.readlines()
 
-    ## Null setup.
+    ## Clear up.
     def tearDown(self):
         logging.info('tearDown')
 
-    ## Login or load from file.
+    ## Test constructor.
     def test_00(self):
-        bt0Test.bt0 = Bt0(self.file0)
+        bt0Test.bt0 = Bt0(None)
         self.assertIsNotNone(bt0Test.bt0)
 
-    ## List songs.
+    ## List contents.
     def test_01(self):
         bt0Test.bt0.read(self.file0)
+        bt0Test.bt0.display()
 
-    ## Login or load from file.
+    ## Test constructor for Bt1.
     def test_10(self):
-        bt0Test.bt0 = Bt1(None)
+        bt0Test.bt0 = Bt0(None)
         self.assertIsNotNone(bt0Test.bt0)
+        bt0Test.bt0.read(self.file0)
 
-    ## List songs.
+    ## List contents in XML.
     def test_11(self):
         self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
+        f0 = Bt1(None)
+        bt0Test.bt0.iterate(f0.item)
+        self.assertIsNotNone(f0.root)
+        f0.print_(None)
+        return
 
     def test_12(self):
         if self.s1 == None:
@@ -94,6 +102,12 @@ class bt0Test(unittest.TestCase):
             logging.debug("file: %s" % self.file0)
             self.test_11()
         return
+
+    ## List songs.
+    def test_21(self):
+        self.assertIsNotNone(self.file0)
+        bt0Test.bt0.read(self.file0)
+        bt0Test.bt0.locate(self.file0)
 
 # The sys.argv line will complain you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

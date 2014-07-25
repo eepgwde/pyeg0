@@ -21,22 +21,25 @@ from sys import stderr
 
 from lxml import etree
 
-from Bt0 import Bt0
-
 ## BitTorrent
 #
 # The class needs to find a configuration file with these contents.
 #
-class Bt1(Bt0):
+class Bt1(object):
     """
-    The BitTorrent class
+    The XML class as a functor.
     """
 
+    root = None;
+
     def __init__(self, file0):
-        super(Bt1, self).__init__(file0)
+        self.root = etree.Element('torrent')
         return
 
     def item(self, item0, path):
+        if item0 is None:
+            return
+
         file_length = item0['length']
         child = etree.Element('file', length=str(file_length))
         child.text = ''
@@ -49,15 +52,22 @@ class Bt1(Bt0):
         self.root.append(child)
         return
 
-    root = None;
+    tfile = stderr
+
+    def print_(self, s):
+        """
+        Locale print to file
+        """
+        logging.debug("tfile: ".format(type(self.tfile)))
+        s = etree.tostring(self.root, pretty_print=True)
+        print(s, file=self.tfile)
+        return
 
     def display(self):
         """
         XML output
         """
         # create XML 
-        self.root = etree.Element('torrent')
-
         if self.info.has_key('length'):
             self.item(self.info, self.info['name'])
         else:
@@ -75,7 +85,7 @@ class Bt1(Bt0):
 
         # pretty string
         s = etree.tostring(self.root, pretty_print=True)
-        print(s, file=stderr)
+        self.print_(s)
         return
 
     def dispose(self):

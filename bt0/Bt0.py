@@ -110,12 +110,38 @@ class Bt0(object):
         self.announce = metainfo['announce']
         self.info_hash = sha(bencode(self.info))
         self.piece_length = self.info['piece length']
-        self.display()
         return
 
-    def locate(self):
-        ds = self.cfg.get('sources', 'source')
-        logging.debug("ds: {0}".format(ds))
+    tfile = stderr
+
+    def print_(self, s):
+        """
+        Locale print to file
+        """
+        logging.debug("tfile: ".format(type(self.tfile)))
+        print(s, file=self.tfile)
+        return
+
+    def iterate(self, functor):
+        """
+        Step through all the entries.
+        """
+        if self.info.has_key('length'):
+            functor(self.info, self.info['name'])
+        else:
+            # let's assume we have a directory structure
+            d0 = self.info['name']
+            n0 = len(self.info['files'])
+            logging.debug("%s: %d".format(d0, n0))
+            for file in self.info['files']:
+                path = d0;
+                for item in file['path']:
+                    if len(item) <= 0: continue
+                    path = path + "/" + item
+
+                functor(file, path)
+
+        functor(None, None)
         return
 
     def display(self):
