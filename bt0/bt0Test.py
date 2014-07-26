@@ -88,7 +88,7 @@ class bt0Test(unittest.TestCase):
         self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
         f0 = Bt1(self.file0)
-        bt0Test.bt0.iterate(f0.item)
+        bt0Test.bt0.iterate(f0.xml0)
         self.assertIsNotNone(f0.root)
         f0.print_(None)
         return
@@ -103,11 +103,31 @@ class bt0Test(unittest.TestCase):
             self.test_11()
         return
 
-    ## List songs.
+    ## Locate
+    def test_20(self):
+        bt0Test.bt0 = Bt0(None)
+        self.assertIsNotNone(bt0Test.bt0)
+        bt0Test.bt0.read(self.file0)
+
+    ## List contents in XML.
     def test_21(self):
         self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
-        bt0Test.bt0.locate(self.file0)
+        f0 = Bt1(self.file0, src0=bt0Test.bt0.cfg.get("sources", "source"))
+        bt0Test.bt0.iterate(f0.locate)
+        self.assertIsNotNone(f0.root)
+        return
+
+    ## List contents in XML.
+    def test_22(self):
+        if self.s1 == None:
+            return
+
+        for self.file0 in self.s1:
+            self.file0 = self.file0.rstrip()
+            logging.debug("file: %s" % self.file0)
+            self.test_21()
+        return
 
 # The sys.argv line will complain you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

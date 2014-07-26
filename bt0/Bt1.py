@@ -32,8 +32,9 @@ class Bt1(object):
     """
 
     root = None;
+    tfile = stderr
 
-    def __init__(self, file0, dir0=None):
+    def __init__(self, file0, dir0=None, src0=None):
         file1 = file0
         if file0 is None:
             file0 = "Unknown"
@@ -41,11 +42,17 @@ class Bt1(object):
         if dir0 is None:
             dir0 = os.getcwd()
 
+        if not(src0 is None):
+            self.src0 = src0
+
         file0 = os.path.basename(file0)
         file0 = Bt1.sweeten(file0)
         self.root = etree.Element('torrent', name=file0)
 
         if file1 is None:
+            return
+
+        if not(src0 is None):
             return
 
         self.tfile = tempfile.NamedTemporaryFile(suffix='.xml',
@@ -65,7 +72,16 @@ class Bt1(object):
             
         return s
 
-    def item(self, item0, path):
+    def locate(self, item0, path):
+        if item0 is None:
+            return
+
+        t0 = '/'.join([self.src0, path])
+        if not(os.path.exists(t0)):
+            print(t0, file=self.tfile)
+        return
+
+    def xml0(self, item0, path):
         if item0 is None:
             return
 
@@ -76,8 +92,6 @@ class Bt1(object):
         self.root.append(child)
         return
 
-    tfile = stderr
-
     def print_(self, s):
         """
         Locale print to file
@@ -86,31 +100,6 @@ class Bt1(object):
         s = etree.tostring(self.root, xml_declaration=True,
                            encoding='utf-8', pretty_print=True)
         print(s, file=self.tfile)
-        return
-
-    def display(self):
-        """
-        XML output
-        """
-        # create XML 
-        if self.info.has_key('length'):
-            self.item(self.info, self.info['name'])
-        else:
-            # let's assume we have a directory structure
-            d0 = self.info['name']
-            n0 = len(self.info['files'])
-            logging.debug("%s: %d".format(d0, n0))
-            for file in self.info['files']:
-                path = d0;
-                for item in file['path']:
-                    if len(item) <= 0: continue
-                    path = path + "/" + item
-
-                self.item(file, path)
-
-        # pretty string
-        s = etree.tostring(self.root, pretty_print=True)
-        self.print_(s)
         return
 
     def dispose(self):
