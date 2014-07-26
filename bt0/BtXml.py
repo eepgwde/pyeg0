@@ -1,4 +1,4 @@
-## @file Bt1.py
+## @file BtXml.py
 # @brief Application support class for BitTorrent
 # @author weaves
 #
@@ -26,7 +26,7 @@ from lxml import etree
 #
 # The class needs to find a configuration file with these contents.
 #
-class Bt1(object):
+class BtXml(object):
     """
     The XML class as a functor.
     """
@@ -46,7 +46,7 @@ class Bt1(object):
             self.src0 = src0
 
         file0 = os.path.basename(file0)
-        file0 = Bt1.sweeten(file0)
+        file0 = BtXml.sweeten(file0)
         self.root = etree.Element('torrent', name=file0)
 
         if file1 is None:
@@ -87,7 +87,7 @@ class Bt1(object):
 
         file_length = item0['length']
         child = etree.Element('file', length=str(file_length))
-        child.text = Bt1.sweeten(path)
+        child.text = BtXml.sweeten(path)
 
         self.root.append(child)
         return

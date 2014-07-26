@@ -15,11 +15,9 @@
 from __future__ import print_function
 
 from Bt0 import Bt0
-from Bt1 import Bt1
+from BtXml import BtXml
 
 import sys, logging
-import pandas as pd
-from collections import Counter
 
 import unittest
 
@@ -41,11 +39,6 @@ class bt0Test(unittest.TestCase):
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
-        pd.set_option('display.height', 1000)
-        pd.set_option('display.max_rows', 500)
-        pd.set_option('display.max_columns', 500)
-        pd.set_option('display.max_colwidth', 80)
-        pd.set_option('display.width', 1000)
         logging.basicConfig(filename='bt0.log', level=logging.DEBUG)
     
     ## Finish
@@ -113,7 +106,7 @@ class bt0Test(unittest.TestCase):
     def test_21(self):
         self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
-        f0 = Bt1(self.file0, src0=bt0Test.bt0.cfg.get("sources", "source"))
+        f0 = BtXml(self.file0, src0=bt0Test.bt0.cfg.get("sources", "source"))
         bt0Test.bt0.iterate(f0.locate)
         self.assertIsNotNone(f0.root)
         return

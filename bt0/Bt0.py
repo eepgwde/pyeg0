@@ -112,8 +112,6 @@ class Bt0(object):
         self.piece_length = self.info['piece length']
         return
 
-    tfile = stderr
-
     def print_(self, s):
         """
         Locale print to file
@@ -142,37 +140,6 @@ class Bt0(object):
                 functor(file, path)
 
         functor(None, None)
-        return
-
-    def display(self):
-        print('metainfo file.: %s' % basename(self.file0))
-        print('info hash.....: %s' % self.info_hash.hexdigest())
-        piece_length = self.info['piece length']
-        if self.info.has_key('length'):
-            # let's assume we just have a file
-            print('file name.....: %s' % self.info['name'])
-            file_length = self.info['length']
-            name ='file size.....:'
-            return
-
-        # let's assume we have a directory structure
-        print('directory name: %s' % self.info['name'])
-        print('files.........: %d' % len(self.info['files']))
-        file_length = 0;
-        for file in self.info['files']:
-            path = ''
-            print('file .........: %s' % file)
-            for item in file['path']:
-                if (path != ''):
-                    path = path + "/"
-                    path = path + item
-                    print('   %s (%d)' % (path, file['length']))
-                    file_length += file['length']
-                    name = 'archive size..:'
-                    piece_number, last_piece_length = divmod(file_length, piece_length)
-                    print('%s %i (%i * %i + %i)' % (name,file_length, piece_number, piece_length, last_piece_length))
-                    print('announce url..: %s' % self.announce)
-                    print
         return
 
     def dispose(self):
