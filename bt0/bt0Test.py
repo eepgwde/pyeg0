@@ -64,11 +64,25 @@ class bt0Test(unittest.TestCase):
     def test_00(self):
         bt0Test.bt0 = Bt0(None)
         self.assertIsNotNone(bt0Test.bt0)
+        bt0Test.bt0.read(self.file0)
 
     ## List contents.
     def test_01(self):
+        self.assertIsNotNone(self.file0)
         bt0Test.bt0.read(self.file0)
-        bt0Test.bt0.display()
+        f0 = BtXml(self.file0, suffix0=".txt")
+        bt0Test.bt0.iterate(f0.txt0)
+        return
+
+    def test_02(self):
+        if self.s1 == None:
+            return
+
+        for self.file0 in self.s1:
+            self.file0 = self.file0.rstrip()
+            logging.debug("file: %s" % self.file0)
+            self.test_01()
+        return
 
     ## Test constructor for Bt1.
     def test_10(self):

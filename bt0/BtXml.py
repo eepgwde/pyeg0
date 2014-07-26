@@ -34,7 +34,7 @@ class BtXml(object):
     root = None;
     tfile = stderr
 
-    def __init__(self, file0, dir0=None, src0=None):
+    def __init__(self, file0, dir0=None, src0=None, suffix0='.xml'):
         file1 = file0
         if file0 is None:
             file0 = "Unknown"
@@ -55,7 +55,7 @@ class BtXml(object):
         if not(src0 is None):
             return
 
-        self.tfile = tempfile.NamedTemporaryFile(suffix='.xml',
+        self.tfile = tempfile.NamedTemporaryFile(suffix=suffix0,
                                                  prefix=file0,
                                                  dir=dir0,
                                                  delete=False)
@@ -79,6 +79,13 @@ class BtXml(object):
         t0 = '/'.join([self.src0, path])
         if not(os.path.exists(t0)):
             print(t0, file=self.tfile)
+        return
+
+    def txt0(self, item0, path):
+        if item0 is None:
+            return
+        s = "{0}: {1}".format(item0['length'], path)
+        print(s, file=self.tfile);
         return
 
     def xml0(self, item0, path):
