@@ -188,20 +188,27 @@ class Gce(object):
     """
 
     if not zone:
-      zone = self.settings['compute']['zone']
+      if len(self.zones0) <= 0:
+        self.zones()
+      zones = self.zones0
+    elif not(isinstance(zone, tuple, list)):
+      zones = [ zone ]
 
-    request = None
-    if list_filter:
-      request = self.service.instances().list(
+    request = []
+    responses = []
+    for zone in zones:
+      if list_filter:
+        request = self.service.instances().list(
           project=self.project_id, zone=zone, filter=list_filter)
-    else:
-      request = self.service.instances().list(
+      else:
+        request = self.service.instances().list(
           project=self.project_id, zone=zone)
-    response = self._execute_request(request)
+        response = self._execute_request(request)
 
-    if response and 'items' in response:
-      return response['items']
-    return []
+      if response and 'items' in response:
+        responses.append(response['items'])
+
+    return responses
 
   def stop_instance(self,
                     instance_name,

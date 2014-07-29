@@ -88,7 +88,8 @@ def main():
   logging.info('These are your running instances:')
   instances = gce_helper.list_instances()
   for instance in instances:
-    logging.info(instance['name'])
+    for x in instance:
+      logging.info(x['name'])
 
   instances = gce_helper.zones()
   logging.info("type: {0}".format(type(instances)))
