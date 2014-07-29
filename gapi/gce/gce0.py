@@ -17,6 +17,7 @@
 Demo steps:
 
 """
+from __future__ import print_function
 
 __author__ = 'kbrisbin@google.com (Kathryn Hurley)'
 
@@ -32,6 +33,18 @@ from oauth2client.file import Storage
 from oauth2client.tools import run
 
 import gce
+
+import sys
+import gflags
+FLAGS = gflags.FLAGS
+
+# Flag names are globally defined!  So in general, we need to be
+# careful to pick names that are unlikely to be used by other libraries.
+# If there is a conflict, we'll get an error at import time.
+gflags.DEFINE_string('filename', '', 'input filename')
+gflags.DEFINE_integer('count', None, 'arithmetic count', lower_bound=0)
+gflags.DEFINE_boolean('debug', False, 'produces debugging output')
+gflags.DEFINE_enum('state', 'up', ['up', 'down'], 'operational state')
 
 IMAGE_URL = 'http://storage.googleapis.com/gce-demo-input/photo.jpg'
 IMAGE_TEXT = 'Ready for dessert?'
@@ -61,10 +74,28 @@ def delete_resource(delete_method, *args):
     logging.error(e)
 
 
-def main():
+def main(argv):
   """Perform OAuth 2 authorization, then start, list, and stop instance(s)."""
 
   logging.basicConfig(level=logging.INFO)
+
+  for x in argv:
+    logging.info(x);
+
+  try:
+    argv = FLAGS(argv)  # parse flags
+  except gflags.FlagsError, e:
+    print('%s\\nUsage: %s ARGS\\n%s' % (e, argv[0], FLAGS))
+    sys.exit(1)
+
+  if FLAGS.debug:
+    logging.info('non-flag arguments: {0}'.format(" ".join(argv)))
+  logging.info('filename {0}'.format(FLAGS.filename))
+  if FLAGS.count is not None:
+    s = 'state %s; count %d'
+    logging.info(s % (FLAGS.state, FLAGS.count))
+
+  sys.exit(0)
 
   # Load the settings for this sample app.
   settings = json.loads(open(gce.SETTINGS_FILE, 'r').read())
@@ -97,4 +128,4 @@ def main():
   logging.info(gce_helper.zones0)
 
 if __name__ == '__main__':
-  main()
+  main(sys.argv)
