@@ -1,0 +1,20 @@
+{
+    "client_secrets": "client_secrets.json",
+    "compute": {
+        "api_version": "v1",
+        "image": "debian-7-wheezy-v20140718",
+        "image_project": "debian-cloud",
+        "machine_type": "n1-standard-1",
+        "network": "default",
+        "scopes": [
+            "https://www.googleapis.com/auth/devstorage.full_control"
+        ],
+        "service_email": "default",
+        "zone": "us-central1-a"
+    },
+    "compute_scope": [
+        "https://www.googleapis.com/auth/compute"
+    ],
+    "oauth_storage": "oauth2.dat",
+    "project": "coastal-cascade-654"
+}
