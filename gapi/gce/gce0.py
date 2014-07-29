@@ -123,15 +123,18 @@ def main(argv):
   # Initialize gce.Gce.
   gce_helper = gce.Gce(auth_http, project_id=settings['project'])
 
+  instances = gce_helper.list_instances()
+  names = [ [ x[0]['name'], gce.Gce.zone0(x[0]['zone']) ] for x in instances ]
+
   # List all running instances.
   if FLAGS.debug:
     logging.info('These are your running instances:')
-    instances = gce_helper.list_instances()
-    for instance in instances:
-      for x in instance:
-        logging.info(x['name'])
+    for name in names:
+      logging.info(name)
 
   if not(FLAGS.nodo):
+    for name in names:
+      gce_helper.stop_instance(name[0], zone=name[1])
     request = gce_helper.service.instances().insert(
       project=settings['project'], zone=zone0, body=machine)
     response = gce_helper._execute_request(request)
