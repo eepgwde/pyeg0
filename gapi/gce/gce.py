@@ -351,6 +351,18 @@ class Gce(object):
 
     return response
 
+  zones0 = []
+
+  def zones(self):
+    request = self.service.zones().list(project=self.project_id)
+    response = self._execute_request(request)
+    if response and 'error' in response:
+      raise ApiOperationError(response['error']['errors'])
+
+    x0 = response["items"]
+    self.zones0 = [ x["description"] for x in x0 ]
+    return response
+
   def _blocking_call(self, response):
     """Blocks until the operation status is done for the given operation.
 

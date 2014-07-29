@@ -84,11 +84,16 @@ def main():
   # Initialize gce.Gce.
   gce_helper = gce.Gce(auth_http, project_id=settings['project'])
 
-  # List all running instances.
+  # List all running insotances.
   logging.info('These are your running instances:')
   instances = gce_helper.list_instances()
   for instance in instances:
     logging.info(instance['name'])
+
+  instances = gce_helper.zones()
+  logging.info("type: {0}".format(type(instances)))
+  
+  logging.info(gce_helper.zones0)
 
 if __name__ == '__main__':
   main()
