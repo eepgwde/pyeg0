@@ -35,6 +35,9 @@ from apiclient.errors import HttpError
 from httplib2 import HttpLib2Error
 from oauth2client.client import AccessTokenRefreshError
 
+from urlparse import urlparse
+import os.path
+
 SETTINGS_FILE = 'settings.json'
 DISK_TYPE = 'PERSISTENT'
 
@@ -359,6 +362,12 @@ class Gce(object):
     return response
 
   zones0 = []
+
+  @classmethod
+  def zone0(cls, url0):
+    zone0 = urlparse(url0)
+    head, tail = os.path.split(zone0.path)
+    return tail
 
   def zones(self):
     request = self.service.zones().list(project=self.project_id)

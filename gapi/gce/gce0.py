@@ -32,6 +32,7 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run
 
+import os.path
 import gce
 
 import sys
@@ -44,6 +45,7 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_string('filename', '', 'input filename')
 gflags.DEFINE_integer('count', None, 'arithmetic count', lower_bound=0)
 gflags.DEFINE_boolean('debug', False, 'produces debugging output')
+gflags.DEFINE_boolean('nodo', False, 'take no action')
 gflags.DEFINE_enum('state', 'up', ['up', 'down'], 'operational state')
 
 IMAGE_URL = 'http://storage.googleapis.com/gce-demo-input/photo.jpg'
@@ -79,9 +81,6 @@ def main(argv):
 
   logging.basicConfig(level=logging.INFO)
 
-  for x in argv:
-    logging.info(x);
-
   try:
     argv = FLAGS(argv)  # parse flags
   except gflags.FlagsError, e:
@@ -90,12 +89,21 @@ def main(argv):
 
   if FLAGS.debug:
     logging.info('non-flag arguments: {0}'.format(" ".join(argv)))
-  logging.info('filename {0}'.format(FLAGS.filename))
+    logging.info('filename: length:{1} \"{0}\"'.format(FLAGS.filename, len(FLAGS.filename)))
   if FLAGS.count is not None:
     s = 'state %s; count %d'
     logging.info(s % (FLAGS.state, FLAGS.count))
 
-  sys.exit(0)
+  machine = {}
+  zone0 = None
+  if len(FLAGS.filename) > 0:
+    logging.info(os.path.isfile(FLAGS.filename))
+    machine = json.loads(open(FLAGS.filename, 'r').read())
+    machine = machine[0]
+    zone0 = gce.Gce.zone0(machine['zone'])
+    machine['name'] = 'weaves-{0}'.format(FLAGS.count)
+    logging.info(machine['networkInterfaces'][0]['accessConfigs'][0]['natIP'])
+    del machine['networkInterfaces'][0]['accessConfigs'][0]['natIP']
 
   # Load the settings for this sample app.
   settings = json.loads(open(gce.SETTINGS_FILE, 'r').read())
@@ -115,12 +123,23 @@ def main(argv):
   # Initialize gce.Gce.
   gce_helper = gce.Gce(auth_http, project_id=settings['project'])
 
-  # List all running insotances.
-  logging.info('These are your running instances:')
-  instances = gce_helper.list_instances()
-  for instance in instances:
-    for x in instance:
-      logging.info(x['name'])
+  # List all running instances.
+  if FLAGS.debug:
+    logging.info('These are your running instances:')
+    instances = gce_helper.list_instances()
+    for instance in instances:
+      for x in instance:
+        logging.info(x['name'])
+
+  if not(FLAGS.nodo):
+    request = gce_helper.service.instances().insert(
+      project=settings['project'], zone=zone0, body=machine)
+    response = gce_helper._execute_request(request)
+    response = gce_helper._blocking_call(response)
+    if response and 'error' in response:
+      raise gce.ApiOperationError(response['error']['errors'])
+
+  sys.exit(0)
 
   instances = gce_helper.zones()
   logging.info("type: {0}".format(type(instances)))
