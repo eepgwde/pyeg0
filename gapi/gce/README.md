@@ -1,3 +1,5 @@
+* weaves
+
 # Getting Started with Compute Engine and the Google Python Client Library
 
 Google Compute Engine features a RESTful API that allows developers to
@@ -48,3 +50,65 @@ Demo steps:
 [7]: http://code.google.com/p/google-api-python-client/
 [8]: https://code.google.com/p/python-gflags/
 [9]: https://code.google.com/p/httplib2/
+
+* Local
+
+Used Ubuntu 14.04 packages 
+
+ python-googleapi
+ python-googleapi-samples
+ python-gflags
+
+ python-oauth2client
+ python-httplib2
+
+A lot of what can be done with the system can be carried out with the Python
+Google cloud SDK and with the web interface.
+
+I believe that this code (gce.py, etc.) uses earlier versions of this
+SDK. It is all based on an underlying REST API.
+
+** Authentication and Setup 
+
+I needed to use  my walterd account in my browser to get the OAuth to
+authenticate against that account so that it would access the projects.
+
+The file client_secrets.json can be taken from the Project API and Auth
+menu. Use "Create New Client ID" as an installed application. Download and
+copy to this directory as client_secrets.json.
+
+ https://console.developers.google.com/project/apps~coastal-cascade-654/apiui/credential
+
+You can then run the script
+
+ python main.py 
+
+This will launch some authentication in the browser. In response, it
+creates the oauth.dat file (just a .json file).
+
+To restart authentication, delete the oauth.dat file.
+
+* Process
+
+After collecting the initial information. It invokes the open
+authentication components (flow_from_...) and these are placed in a OAuth
+Storage() object, which is the 'oauth2.dat' name in the settings.json
+file. 
+
+
+
+** 
+
+
+** This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: iso-8859-1-unix ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]

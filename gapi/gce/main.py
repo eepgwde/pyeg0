@@ -114,6 +114,14 @@ def main():
   # Initialize gce.Gce.
   gce_helper = gce.Gce(auth_http, project_id=settings['project'])
 
+  # List all running instances.
+  logging.info('These are your running instances:')
+  instances = gce_helper.list_instances()
+  for instance in instances:
+    logging.info(instance['name'])
+
+  return
+
   # Create a Persistent Disk (PD), which is used as a boot disk.
   try:
     gce_helper.create_disk(DISK_NAME)
@@ -145,12 +153,6 @@ def main():
     logging.error(INSERT_ERROR, {'name': INSTANCE_NAME})
     logging.error(e)
     return
-
-  # List all running instances.
-  logging.info('These are your running instances:')
-  instances = gce_helper.list_instances()
-  for instance in instances:
-    logging.info(instance['name'])
 
   logging.info(
       'Visit http://storage.googleapis.com/%s/output.png.' % bucket)
