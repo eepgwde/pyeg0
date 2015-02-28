@@ -1,16 +1,12 @@
 ## @file RandomGenTestCase.py
 # @author weaves
-# @brief Unittest of GMus0: removes older duplicates
+# @brief Unittest of RandomGen
 #
 # This is a unittest class that can perform some useful work.
 # 
-# Objects of GMus0 are used to load the songs data.
-#
 # @note
-# Python modules are imported wholesale with the import name
-# matching the file name. (And you can use a directory.filename). But
-# if you want the class within the module, you need to use the from
-# file import class.
+#
+# Relatively complete test.
 
 from __future__ import print_function
 from RandomGen import RandomGen
@@ -18,7 +14,6 @@ import sys, logging
 
 from collections import Counter
 
-import random
 import unittest
 
 ## A test driver for GMus0
@@ -43,7 +38,7 @@ class RandomGenTestCase(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    ## Null setup.
+    ## Null setup. Create a new one.
     def setUp(self):
         logging.info('setup')
         RandomGenTestCase.rndg = RandomGen(self.nums, self.freqs)
@@ -52,7 +47,7 @@ class RandomGenTestCase(unittest.TestCase):
     def tearDown(self):
         logging.info('tearDown')
 
-    ## Load.
+    ## Loaded?
     def test_00(self):
         self.assertIsNotNone(RandomGenTestCase.rndg)
 
@@ -64,12 +59,18 @@ class RandomGenTestCase(unittest.TestCase):
             logging.info("i: {0} v: {1}".format(i, v))
         return
 
-    ## Check that artist is BBC Radio
-    # Show that the data-frame is a dynamic property based on s0.
+    ## check next_num() pass a forced value for testing.
     def test_02(self):
-        logging.info(RandomGenTestCase.rndg.next_num())
+        logging.info("r: {0}".format(RandomGenTestCase.rndg.next_num()))
         logging.info(RandomGenTestCase.rndg.next_num(0.999))
         logging.info(RandomGenTestCase.rndg.next_num(0.001))
+        return
+
+    ## Changed order (because of enumerate)
+    def test_03(self):
+        logging.info(RandomGenTestCase.rndg.next_num(0.001))
+        logging.info(RandomGenTestCase.rndg.next_num(0.999))
+        logging.info("r: {0}".format(RandomGenTestCase.rndg.next_num()))
         return
 
 # The sys.argv line will complain you if you run it with ipython
