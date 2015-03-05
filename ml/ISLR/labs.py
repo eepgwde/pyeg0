@@ -22,12 +22,24 @@ import json
 import matplotlib.pyplot as plt
 import rpy2
 
+import numpy.matlib as M
+
+# Make some matlib functions accessible directly at the top level via,
+# e.g. rand(3,3)
+from numpy.matlib import rand,zeros,ones,empty,eye
+
+# Define a Hermitian function
+def hermitian(A, **kwargs):
+    return num.transpose(A,**kwargs).conj()
+
+
 print("Hello world!")
 
 plt.plot([1,2,3,4])
 plt.ylabel('some numbers')
 plt.show()
 
+    
 origin = 'lower'
 #origin = 'upper'
 
@@ -130,5 +142,9 @@ for ax, extend in zip(axs.ravel(), extends):
 
 plt.show()
 
+np.array([1,2])
 
+matrix("1,2; 3,4")
+
+np.dot(np.array([1,2]), np.array([2,1]))
 
