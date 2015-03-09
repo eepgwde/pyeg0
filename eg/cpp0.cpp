@@ -4,27 +4,34 @@
 #include <string.h>
 #include <malloc.h>
 
+// Original class
+
+namespace x0 {
+  class string {
+  public:
+    string( char const* t ) : s(t) {}
+    ~string() { delete s; }
+    char const* c_str() const { return s; }
+  private:
+    char const* s;
+  };
+}
+
+// Revised
+
 namespace x {
+  class string final {
+  public:
+    string(char * const t) : s(t) {}
+    ~string() {
+      std::cerr << "destruct" << std::endl;
+      delete s;
+    }
+    char * const c_str() const { return s; }
 
-class string {
-
- public:
-
- string( char const* t ) : s(t) {}
-
- ~string() {
-   std::cerr << "destruct" << std::endl;
-   delete s;
- }
-
- char const* c_str() const { return s; }
-
- private:
-
- char const* s;
-
- };
-
+  private:
+    char * const s;
+  };
 }
 
 static char mesg0[10] = "mesg0";
@@ -47,7 +54,7 @@ int main(int argc, char **argv) {
     // This will work with new() but valgrind reports and error.
     x::string x(s0);
 
-    const char * x0 = x.c_str();
+    char * const x0 = x.c_str();
     std::cerr << "x0: " << x0 << std::endl;
     *x0 = 't';
     std::cerr << "x0: " << x0 << std::endl;
