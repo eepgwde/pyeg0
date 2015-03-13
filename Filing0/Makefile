@@ -1,14 +1,17 @@
 PYTHON ?= python
+ROOT0 ?= Filing0
+
+export ARGS ?= $(firstword $(wildcard *_input.csv))
 
 all::
-	true
+	@echo $(ARGS)
 
 doc::
-	doxygen gmus0-doc.cfg
+	doxygen $(ROOT0)-doc.cfg
 
 check::
-	:> gmus.log
-	$(PYTHON) -m unittest -v -f Filing0TestCase
+	:> $(ROOT0).log
+	$(PYTHON) -m unittest -v -f $(ROOT0)TestCase
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)

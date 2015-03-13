@@ -1,5 +1,5 @@
-## @file RndDist.py
-# @brief Random numbers
+## @file Filing0
+# @brief Processing CSV files.
 # @author weaves
 #
 # @details
@@ -7,13 +7,7 @@
 #
 # @note
 #
-# A better version of this class would implement __next__ and thus be
-# iterable and be usable within a for-each.
-# It might also be desirable to allow for its use as a list
-# comprehension.
-#
 # @see
-# http://
 # 
 
 from __future__ import print_function
@@ -22,54 +16,55 @@ import logging
 
 import random
 import numpy as np
+import pandas as pd
+from pandas import *
 
 class Filing0(object):
-    """
-    Given a set of frequencies and a set of numbers provides
-    a stream of randomly chosen numbers from the set with the given
-    frequency.
+    """Given a file handle, apply some filtering to it.
+
+    Designed to be run within a web-server - see Django.  The
+    web-server handler for the URL would support upload, ie. a PUT and
+    this class would be passed a file (or stringbuffer posing as a
+    file) containing a CSV file in the constructor. A Pandas DataFrame
+    is constructed.
+
+    The object supports a set of filtering calls.
+
+    filter1: filters the columns based on the value of a field called
+    "decision" when it is set (or not.)
+
+    ranges0: calculates the min (or max) for each column given the
+    dataframe after filtering.
+
+    filter2: removes those rows where the decision is reset and the
+    value in each column is outside the range for that column.
+
+    In summary, filter1 filters when 'decision' is set. filter2
+    filters using the results of ranges0 and operates on rows where
+    'decision' is reset.
+
     """
     # Values that may be returned by next_num()
 
-    _random_nums = []
+    _filename = ''
+    _df = None
 
-    # Probability of the occurence of random_nums
-
-    _probabilities = []
-
-    _cum0 = []
-
-    def __init__(self, n, p):
-        if n == None or p == None:
+    # This constructor will do for testing.
+    # Read directly from file.
+    def __init__(self, filename0):
+        if filename0 == None:
             return
 
-        # use cumsum for a CDF 
-        self._random_nums = n
-        self._probabilities = p
-        self._cum0 = np.cumsum(self._probabilities, dtype=float)
+        self._filename = filename0
+        self._df = read_csv(self._filename)
+
+        # TODO: RAiI: Integrity checks
+        # does it have a column called decision?
+        # non-empty
+        # at least one row marked as decision 0, one as 1.
+
         return
 
     def dispose(self):
         pass
 
-    def next_num(self, l0 = None):
-        """
-        Returns one of the randomNums. When this method is called
-        multiple times over a long period, it should return the
-        numbers roughly with the initialized probabilities.
-
-        If you pass a l0 value, you can test the extremeties of the range.
-        """
-
-        # It is usual to not have l0 set and thus use a random value.
-        if l0 is None:
-            l0 = random.random()
-
-        # This isn't very efficient, for large lists use blist
-        # the enumeration could be made re-used in some way.
-
-        logging.info(l0)
-        i=next(i for i,v in enumerate(self._cum0) if v > l0)
-        # Use this for tracing, either as return or as log.
-        # logging.info([ l0, i,  self._random_nums[i]] )
-        return self._random_nums[i]
