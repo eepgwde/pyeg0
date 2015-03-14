@@ -48,6 +48,15 @@ class Filing0(object):
 
     _filename = ''
     _df = None
+    # Required columns
+    _rnames = ['Id', 'Decision']
+    # Names of the data columns
+    _dnames = None
+
+    _minima = None
+    _maxima = None
+
+    _toggle = False
 
     # This constructor will do for testing.
     # Read directly from file.
@@ -55,6 +64,7 @@ class Filing0(object):
         if filename0 == None:
             return
 
+        logging.info("init")
         self._filename = filename0
         self._df = read_csv(self._filename)
 
@@ -63,7 +73,41 @@ class Filing0(object):
         # non-empty
         # at least one row marked as decision 0, one as 1.
 
+        self._dnames = list(set(self._df.columns).difference(set(self._rnames)))
+
         return
+
+    def filter0(self, toggle=0):
+        """
+        Get the maxima and minima
+
+        Remove Id and Decision - no need to process them [Ed: minor]
+
+        @note
+        Allow the toggle to be flipped [Ed: extra]
+        """
+        logging.info("args: {0}".format(toggle))
+        df = self._df
+        self._toggle = bool(toggle)
+        df = df[df['Decision'] == toggle][list(self._dnames)]
+        self._minima = df.min()
+        self._maxima = df.max()
+        return
+
+    def filter1(self, **kwargs):
+        """
+        Using the maxima and minima, filter each column
+        """
+        logging.info("filter1: toggle {0}".format(self._toggle))
+        df = self._df
+        df = df[df['Decision'] == int(not(self._toggle)) ]
+
+        for x in self._dnames:
+            df = df[ df[x] > [ self._minima[x]] ]
+            df = df[ df[x] < [ self._maxima[x]] ]
+
+        self._df0 = df
+        return self._df0
 
     def dispose(self):
         pass

@@ -41,9 +41,12 @@ class Filing0TestCase(unittest.TestCase):
     def setUp(self):
         logging.info('setup {0}'.format(' '.join(sys.argv)) )
         logging.info('setup {0}'.format(os.environ['HOME']) )
-        s = os.environ['ARGS']
-        if s is None:
-            s = 'exampleA_input.csv';
+        s = 'exampleB_input.csv';
+        try:
+            s = os.environ['ARGS']
+        except:
+            pass
+            
         logging.info('setup {0}'.format(s) )
         Filing0TestCase.f0 = Filing0(s)
 
@@ -58,12 +61,32 @@ class Filing0TestCase(unittest.TestCase):
     ## List.
     def test_01(self):
         self.assertIsNotNone(Filing0TestCase.f0._df)
+        self.assertIsNotNone(Filing0TestCase.f0._dnames)
         logging.info(Filing0TestCase.f0._df)
         return
 
     ## check next_num() pass a forced value for testing.
     def test_02(self):
-        logging.info("r: {0}".format(Filing0TestCase.f0._df.count()) )
+        logging.info("r: count: {0}".format(Filing0TestCase.f0._df.count()) )
+        Filing0TestCase.f0.filter0(0)
+        logging.info("r: minima: {0}".format(Filing0TestCase.f0._minima))
+        logging.info("r: maxima: {0}".format(Filing0TestCase.f0._maxima))
+        return
+
+    ## check next_num() pass a forced value for testing.
+    def test_03(self):
+        Filing0TestCase.f0.filter0(1)
+        Filing0TestCase.f0.filter1()
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
+        return
+
+    ## check next_num() pass a forced value for testing.
+    def test_04(self):
+        Filing0TestCase.f0.filter0(1)
+        Filing0TestCase.f0.filter1()
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
         return
 
 # The sys.argv line will complain you if you run it with ipython
