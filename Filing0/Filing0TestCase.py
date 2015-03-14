@@ -66,7 +66,7 @@ class Filing0TestCase(unittest.TestCase):
         logging.info(Filing0TestCase.f0._df)
         return
 
-    ## check next_num() pass a forced value for testing.
+    ## Basic filter
     def test_02(self):
         logging.info("r: count: {0}".format(Filing0TestCase.f0._df.count()) )
         Filing0TestCase.f0.filter0(0)
@@ -74,22 +74,46 @@ class Filing0TestCase(unittest.TestCase):
         logging.info("r: maxima: {0}".format(Filing0TestCase.f0._maxima))
         return
 
-    ## check next_num() pass a forced value for testing.
+    ## Use the exclusion rule
     def test_03(self):
         Filing0TestCase.f0.filter0(1)
-        Filing0TestCase.f0.filter1()
+        Filing0TestCase.f0.exclude0()
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
         return
 
-    ## check next_num() pass a forced value for testing.
+    ## Use the exclusion rule and write to file.
     def test_04(self):
         Filing0TestCase.f0.filter0(1)
-        Filing0TestCase.f0.filter1()
+        Filing0TestCase.f0.exclude0()
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
         s1 = self.s;
-        s1 = s1.replace("input", "output")
+        s1 = s1.replace("input", "exclude")
+        logging.info("df0: name: {0}".format(s1) )
+        Filing0TestCase.f0._df0.to_csv(s1, index=False)
+        return
+
+    ## use the inclusion rule (and write)
+    def test_05(self):
+        Filing0TestCase.f0.filter0(1)
+        Filing0TestCase.f0.include0()
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
+        s1 = self.s;
+        s1 = s1.replace("input", "include")
+        logging.info("df0: name: {0}".format(s1) )
+        Filing0TestCase.f0._df0.to_csv(s1, index=False)
+        return
+
+    ## use the other inclusion rule (and write)
+    def test_05(self):
+        Filing0TestCase.f0.filter0(1)
+        Filing0TestCase.f0.include1()
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
+        logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
+        s1 = self.s;
+        s1 = s1.replace("input", "jnclude")
         logging.info("df0: name: {0}".format(s1) )
         Filing0TestCase.f0._df0.to_csv(s1, index=False)
         return

@@ -95,8 +95,25 @@ class Filing0(object):
         self._maxima = df.max()
         return
 
-    def filter1(self, **kwargs):
+    def exclude0(self, **kwargs):
         """Using the maxima and minima, filter each column
+
+        The app should parse the csv file and remove any records (rows) which
+        meet both of the following conditions: 
+
+         Have a Decision of 0 
+         For each variable (column), no value falls between FMIN and FMAX.
+
+        Where FMIN and FMAX are the smallest and largest value for that
+        variable across all records with a decision value of 1.
+
+        This is not too clear, it's in negative logic (remove). We
+        change it to be
+
+        Retain only those records which 
+
+         Have a Decision of 0 
+         For each variable (column), value lies outside FMIN and FMAX.
 
         Return only those rows that are in range on all columns, so an
         intersection.
@@ -116,19 +133,68 @@ class Filing0(object):
         # Decision == 0 entries.
         df0 = self._df[self._df['Decision'] == int(not(self._toggle)) ]
 
+        # Collector has all the good entries
+        ixs = set( self._df[self._df['Decision'] == int(not(self._toggle))].index )
+        # We remove using set difference.
+        for x in self._dnames:
+            ixs0 = df0[ (df0[x] >= [ self._minima[x]]) &
+                        (df0[x] <= [ self._maxima[x]] ) ].index
+            ixs = ixs - set(ixs0)
+
+        # And include the Decision == 1
+        # and lookup and return.
+        ixs = ixs1.union(ixs)
+        self._df0 = self._df.iloc[list(ixs)]
+        
+        return self._df0
+
+    def include0(self, **kwargs):
+        logging.info("filter1a: toggle {0}".format(self._toggle))
+        # Decision == 1
+        ixs1 = set( self._df[self._df['Decision'] == int(self._toggle)].index )
+        
+        # DataFrame for Min and max
+        # Decision == 0 entries.
+        df0 = self._df[self._df['Decision'] == int(not(self._toggle)) ]
+
         # Collector
         ixs = set([])
-        # Add to good indices for each column
+
+        # We include so use DeMoivre 
         for x in self._dnames:
-            ixs0 = df0[ (df0[x] < [ self._minima[x]]) & 
-                        (df0[x] > [ self._maxima[x]] ) ].index
+            ixs0 = df0[ (df0[x] >= [ self._minima[x]]) & 
+                        (df0[x] <= [ self._maxima[x]] ) ].index
             if len(ixs) > 0:
                 ixs = ixs.intersection(ixs0)
             else:
                 ixs = ixs0
 
-        # And include the Decision == 1
-        # and lookup and return.
+        ixs = ixs1.union(ixs)
+        self._df0 = self._df.iloc[list(ixs)]
+        
+        return self._df0
+
+    def include1(self, **kwargs):
+        logging.info("filter1a: toggle {0}".format(self._toggle))
+        # Decision == 1
+        ixs1 = set( self._df[self._df['Decision'] == int(self._toggle)].index )
+        
+        # DataFrame for Min and max
+        # Decision == 0 entries.
+        df0 = self._df[self._df['Decision'] == int(not(self._toggle)) ]
+
+        # Collector
+        ixs = set([])
+
+        # We include so use DeMoivre 
+        for x in self._dnames:
+            ixs0 = df0[ (df0[x] > [ self._minima[x]]) & 
+                        (df0[x] < [ self._maxima[x]] ) ].index
+            if len(ixs) > 0:
+                ixs = ixs.intersection(ixs0)
+            else:
+                ixs = ixs0
+
         ixs = ixs1.union(ixs)
         self._df0 = self._df.iloc[list(ixs)]
         
