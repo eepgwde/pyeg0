@@ -60,6 +60,7 @@ class Filing0(object):
 
     # This constructor will do for testing.
     # Read directly from file.
+    # Id is an index column, but I don't use it as such in the DataFrame
     def __init__(self, filename0):
         if filename0 == None:
             return
@@ -95,29 +96,42 @@ class Filing0(object):
         return
 
     def filter1(self, **kwargs):
-        """
-        Using the maxima and minima, filter each column
+        """Using the maxima and minima, filter each column
+
+        Return only those rows that are in range on all columns, so an
+        intersection.
 
         We want to preserve the order, so we will collect the indices
         of those we want.
-        
+
         """
         logging.info("filter1: toggle {0}".format(self._toggle))
 
+        # We also return all the error records, ie. those already 1.
         # The set of acceptable indices includes all those that have
         # Decision == 1
-        ixs = set( self._df[self._df['Decision'] == int(self._toggle)].index )
+        ixs1 = set( self._df[self._df['Decision'] == int(self._toggle)].index )
         
-        # DataFrame for Min and max from 0 == Decision entries.
+        # DataFrame for Min and max
+        # Decision == 0 entries.
         df0 = self._df[self._df['Decision'] == int(not(self._toggle)) ]
 
+        # Collector
+        ixs = set([])
         # Add to good indices for each column
         for x in self._dnames:
-            ixs = ixs.union(df0[ (df0[x] > [ self._minima[x]]) & 
-                                 (df0[x] < [ self._maxima[x]] ) ].index)
+            ixs0 = df0[ (df0[x] < [ self._minima[x]]) & 
+                        (df0[x] > [ self._maxima[x]] ) ].index
+            if len(ixs) > 0:
+                ixs = ixs.intersection(ixs0)
+            else:
+                ixs = ixs0
 
-        # And collect all the records in order.
+        # And include the Decision == 1
+        # and lookup and return.
+        ixs = ixs1.union(ixs)
         self._df0 = self._df.iloc[list(ixs)]
+        
         return self._df0
 
     def dispose(self):
