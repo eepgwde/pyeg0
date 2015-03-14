@@ -25,6 +25,7 @@ class Filing0TestCase(unittest.TestCase):
     """
 
     f0 = None
+    s = 'exampleB_input.csv';
 
     ## Sets pandas options and logging.
     @classmethod
@@ -41,14 +42,13 @@ class Filing0TestCase(unittest.TestCase):
     def setUp(self):
         logging.info('setup {0}'.format(' '.join(sys.argv)) )
         logging.info('setup {0}'.format(os.environ['HOME']) )
-        s = 'exampleB_input.csv';
         try:
-            s = os.environ['ARGS']
+            self._s = os.environ['ARGS']
         except:
             pass
             
-        logging.info('setup {0}'.format(s) )
-        Filing0TestCase.f0 = Filing0(s)
+        logging.info('setup {0}'.format(self._s) )
+        Filing0TestCase.f0 = Filing0(self._s)
 
     ## Null setup.
     def tearDown(self):
@@ -87,6 +87,10 @@ class Filing0TestCase(unittest.TestCase):
         Filing0TestCase.f0.filter1()
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0) )
+        s1 = self.s;
+        s1 = s1.replace("input", "output")
+        logging.info("df0: name: {0}".format(s1) )
+        Filing0TestCase.f0._df0.to_csv(s1)
         return
 
 # The sys.argv line will complain you if you run it with ipython

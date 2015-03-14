@@ -99,18 +99,25 @@ class Filing0(object):
         Using the maxima and minima, filter each column
 
         We want to preserve the order, so we will collect the indices
-        and remove those.
+        of those we want.
         
         """
         logging.info("filter1: toggle {0}".format(self._toggle))
+
+        # The set of acceptable indices includes all those that have
+        # Decision == 1
+        ixs = set( self._df[self._df['Decision'] == int(self._toggle)].index )
+        
+        # DataFrame for Min and max from 0 == Decision entries.
         df0 = self._df[self._df['Decision'] == int(not(self._toggle)) ]
-        df1 = self._df[self._df['Decision'] == int(self._toggle) ]
 
+        # Add to good indices for each column
         for x in self._dnames:
-            df0 = df0[ (df0[x] > [ self._minima[x]]) & 
-                     (df0[x] < [ self._maxima[x]] ) ]
+            ixs = ixs.union(df0[ (df0[x] > [ self._minima[x]]) & 
+                                 (df0[x] < [ self._maxima[x]] ) ].index)
 
-        self._df0 = pd.concat([df0, df1])
+        # And collect all the records in order.
+        self._df0 = self._df.iloc[list(ixs)]
         return self._df0
 
     def dispose(self):
