@@ -97,16 +97,20 @@ class Filing0(object):
     def filter1(self, **kwargs):
         """
         Using the maxima and minima, filter each column
+
+        We want to preserve the order, so we will collect the indices
+        and remove those.
+        
         """
         logging.info("filter1: toggle {0}".format(self._toggle))
-        df = self._df
-        df = df[df['Decision'] == int(not(self._toggle)) ]
+        df0 = self._df[self._df['Decision'] == int(not(self._toggle)) ]
+        df1 = self._df[self._df['Decision'] == int(self._toggle) ]
 
         for x in self._dnames:
-            df = df[ df[x] > [ self._minima[x]] ]
-            df = df[ df[x] < [ self._maxima[x]] ]
+            df0 = df0[ (df0[x] > [ self._minima[x]]) & 
+                     (df0[x] < [ self._maxima[x]] ) ]
 
-        self._df0 = df
+        self._df0 = pd.concat([df0, df1])
         return self._df0
 
     def dispose(self):
