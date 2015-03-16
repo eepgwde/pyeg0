@@ -8,7 +8,70 @@ This is a training set of fault data.
 
 Find all records that have no fault in any attribute.
 
-* Programming Task 1
+* Task 2 - Data Analysis 
+
+The data is compliant with Programming Task 1.
+
+I did some manipulation of the Tyres.csv file using the other files to
+derive the Decision field. 
+
+I discovered there are 204 failed tyre tests and 2724 successful
+ones.
+
+I ran the "include" algorithm and discovered that all of the 2724
+successful tests did not have any variables recorded outside the [min, max]
+ranges of the same variables in the failed tests.
+
+The method eliminates from the analysis those successful records that have
+variables that taken on values outside their normal operating ranges. So,
+we conclude from our analysis, that all the successful tests have had their
+variables measured within their normal operating ranges.
+
+* Task 3 - System Analysis 
+
+C# heap management uses mark and sweep garbage collection.  Garbage
+collection takes place when memory available falls below a certain level.
+
+Objects are initially assigned a "Generation 0" status - meaning they are
+expected to be short-lived - unless they are large objects, these go
+directly to "Generation 2". During the mark phase, any live objects left in
+"Generation 0" are promoted to "Generation 1". Similarly, any in
+"Generation 1" are promoted to "Generation 2".
+
+The mark phase processes Generation 0 objects first and then invokes a
+sweep. If garbage collection is still necessary (not below threshold), it
+moves onto the Generration 1 objects and so on.
+
+Lots of things that can be done to improve the garbage collection. 
+
+Simple things are to improve the machine (add more RAM), this means that
+garbage collection will be less frequent. You could then try and run the
+garbage collection manually - in a thread. There is a lot of trial and
+error involved in these kinds of changes.
+
+Improving the algorithm to not create as many new objects: trying to re-use
+objects with cacheing or memoization.
+
+A less conventional technique is to use the stack for temporary variables
+(variables that exist for just a block). It is possible with C# to
+implement simple classes (usually no more than Plain Old Datatype
+containers) as a struct, so it will not inherit the baggage of the Object
+class. And in an unsafe code block, these struct types can be then created
+on the stack.
+
+This is quite an attractive modification to make. You would only need to
+change the form of a basic type. (Unsafe code is not as dangerous as one
+might think.) So you wouldn't need to re-factor and re-test as you would
+with algorithm re-design.
+
+Using the stack in unsafe blocks means that some part of the code will be
+using an unmanaged run-time system. This can be taken further: key
+components of the code could be implemented wholly in an unmanaged
+language, usually C++. Often times not as tricky as it may seem. The
+overhead for passing variables between the C++ heap to the CLR one is an
+additional overhead.
+
+* Task 1 - Programming 
 
 ** No web interface
 
@@ -42,6 +105,14 @@ side-by-side format on the input to output.
 
 The *_output.csv files from the zipfile are in a subdir t and I've produced
 a diff with that too using the same check-all rule.
+
+There are a number of tests set up. You can compare input to output, output
+to analyst output and, importantly, a new test is to compare output as
+input to output. You can do that last test because the system is
+idempotent. That means, the output if used as input will produce the same
+output as the input. (This has been designed into the implementation of the
+Filing0 class, it preserves the order of the records to help in
+comparison.) 
 
 ** Results
 

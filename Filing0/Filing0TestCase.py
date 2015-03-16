@@ -107,7 +107,7 @@ class Filing0TestCase(unittest.TestCase):
         return
 
     ## use the other inclusion rule (and write)
-    def test_05(self):
+    def test_06(self):
         Filing0TestCase.f0.filter0(1)
         Filing0TestCase.f0.include1()
         logging.info("df0: count: {0}".format(Filing0TestCase.f0._df0.count()) )
