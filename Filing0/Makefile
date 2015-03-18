@@ -42,7 +42,7 @@ check-all:: $(DALL0) $(DALL1) $(DALM0) $(DALM1)
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
-	$(RM) $(wildcard *.json *.diff? *_output.csv)
+	$(RM) $(wildcard *.json *.diff* *_*clude.csv)
 
 distclean::
 	$(RM) -rf html 
