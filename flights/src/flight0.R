@@ -73,7 +73,7 @@ hr.wrap <- function(d0, a0) {
 flight$xDURN2 <- apply(flight[,c("SDEPHR", "SARRHR")], 1, 
                        function(y) hr.wrap(y['SDEPHR'], y['SARRHR']))
 
-flight[which(flight$xDURN2 <> flight$xDURN), c("SDEPHR", "SARRHR", "xDURN","xDURN2", "xHNGR")]
+flight[which(flight$xDURN2 != flight$xDURN), c("SDEPHR", "SARRHR", "xDURN","xDURN2", "xHNGR")]
 t.cols <- colnames(flight)
 
 t.drops <- c("SARRHR", "xDURN")
@@ -114,57 +114,6 @@ d00ed <- flight
 
 flight <- flight1
 
-t.cols <- colnames(flight)
-
-### Interpreter paste-ins for file 
-
-## jpeg(width = 640, height = 640)
-## plot())
-## dev.off()
-
-## Look at some plots for the numeric performance metrics AVG and, by
-## chance I chose, AVAILBUCKET, which is at the end.
-
-## This is more data validation. D00 must partition all parameters
-## cleanly.
-
-t.cols0 <- t.cols[grep("^AV.)*", t.cols)]
-t.cols0 <- append("D00", t.cols0)
-
-featurePlot(x = flight[, t.cols0],
-            y = flight$LEGTYPE,
-            plot = "pairs",
-            ## Add a key at the top
-            auto.key = list(columns = length(t.cols0) - 1))
-
-## see d00vsAV
-
-## See some density plots.
-t.cols1 <- head(t.cols0, -1)
-transparentTheme(trans = .9)
-featurePlot(x = flight[, t.cols1],
-            y = flight$LEGTYPE,
-            plot = "density",
-            scales = list(x = list(relation="free"),
-                          y = list(relation="free")),
-            adjust = 1.5,
-            pch = "|",
-            layout = c(length(t.cols1), 1),
-            auto.key = list(columns = length(t.cols1)-1))
-
-## Not very distinct partitioning. AVGSQ is most distinct.
-
-## Correlations are not good for this subset.
-library(corrgram)
-corrgram(flight[, t.cols1], 
-         abs = TRUE, 
-         lower.panel=panel.shade, upper.panel=panel.pie,
-         diag.panel=panel.minmax, text.panel=panel.txt)
-
-corrplot::corrplot(cor(flight[, t.cols1],
-                       use="pairwise.complete.obs"),
-                   method="number")
-
 ## So something is defining the behaviour.
 
 ## Try to simplify structure
@@ -172,20 +121,24 @@ corrplot::corrplot(cor(flight[, t.cols1],
 head(model.matrix(LEGTYPE ~ ., data = flight))
 
 dummies <- dummyVars(LEGTYPE ~ ., data = flight)
-head(predict(dummies, newdata = flight))
-dim(dummies)
+flight.dum <- predict(dummies, newdata = flight)
 
 ## It's too big to use, but useful for inspection.
 
-## But very difficult: too many airports, too many aircraft.
+### Numeric variables
 
-plot(table(flight00$SKDDEPSTA))
+## Check some more correlations, I haven't scaled yet.
 
-plot(table(flight00$SKDARRSTA))
+x1 <- as.data.frame(as.matrix(sapply(flight, class)))
 
-plot(density(as.numeric(flight00$SKDARRSTA)))
+flight.num <- flight[,names(x1[which(x1$V1 %in% c("numeric", "integer")),])]
 
-plot(table(flight00$SKDEQP))
+flight.nzv <- nearZeroVar(flight.num, saveMetrics = TRUE)
+flight.nzv
 
-factors(flight)
+flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
+
+highlyCorDescr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
+
+# Which tells me that row 1, column is very highly correlated to AVGSQ.
 
