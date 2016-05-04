@@ -140,5 +140,22 @@ flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
 
 highlyCorDescr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
 
-# Which tells me that row 1, column is very highly correlated to AVGSQ.
+## Which tells me that row 1, column is very highly correlated to AVGSQ.
+
+### Try and impute the AVG
+
+flight$xAVAILBUCKET <- as.numeric(gsub("^[A<]+", "", 
+                                       flight$AVAILBUCKET))
+
+## Arbitrary choice to set to -1.
+flight[which(flight$AVAILBUCKET == 'A<0'), "xAVAILBUCKET" ] <- -1
+
+flight.na <- flight[, c("AVGSKDAVAIL", "xAVAILBUCKET")]
+
+preProcValues <- preProcess(flight.na, method = c("knnImpute"))
+flight.na1 <- predict(preProcValues, flight.na)
+
+flight$xAVGSKDAVAIL <- flight.na1$AVGSKDAVAIL
+
+## And I'll leave the centered and scale values in for now.
 
