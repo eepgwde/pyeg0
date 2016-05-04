@@ -11,6 +11,9 @@ library(mlbench)
 library(pROC)
 library(pls)
 
+library(doMC)
+registerDoMC(cores = 4)
+
 options(useFancyQuotes = FALSE) 
 
 # Accounting info.
@@ -162,11 +165,10 @@ flight$xAVGSKDAVAIL <- flight.na1$AVGSKDAVAIL
 flight$AVGSKDAVAIL <- NULL
 flight$D00 <- NULL
 flight$xHNGR <- NULL
+flight$AVAILBUCKET <- NULL
 
 ## Keep the results.
 outcomes.flight <- flight$LEGTYPE
-
-
 
 flight$LEGTYPE <- NULL
 
@@ -209,7 +211,7 @@ stopifnot( all(nzv$nzv == FALSE) )
 
 descrCorr <- cor(scale(trainDescr))
 
-highCorr <- findCorrelation(descrCorr, cutoff = .90, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .80, verbose = TRUE)
 
 if (sum(highCorr) > 0) {
     warning("overfitting: correlations: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
@@ -220,6 +222,39 @@ if (sum(highCorr) > 0) {
 descrCorr <- cor(trainDescr)
 summary(descrCorr[upper.tri(descrCorr)])
 
-
 ## Dominant correlations
+## At 0.9, there are some big ones that might need re-thinking.
+
+table.descrCorr <- as.data.frame(as.table(descrCorr))
+table.descrCorr <- table.descrCorr[which(table.descrCorr$Var1 != table.descrCorr$Var2),]
+table.descrCorr[order(abs(table.descrCorr$Freq), decreasing = TRUE),]
+
+### Models
+
+## Training controller
+
+fitControl <- trainControl(## 10-fold CV
+    method = "repeatedcv",
+    number = 10,
+    ## repeated ten times
+    repeats = 10,
+    classProbs = 10,
+    summaryFunction = twoClassSummary)
+
+## Try many more varieties of airport and airplane
+gbmGrid <-  expand.grid(interaction.depth = c(1, 2, 3, 6, 7),
+                        n.trees = (1:30)*80,
+                        shrinkage = 0.1,
+                        n.minobsinnode = 20)
+
+set.seed(107)
+gbmFit1 <- train(trainDescr, trainClass,
+                 method = "gbm",
+                 trControl = fitControl,
+                 ## This last option is actually one
+                 ## for gbm() that passes through
+                 tuneGrid = gbmGrid,
+                 metric = "ROC",
+                 verbose = FALSE)
+gbmFit1
 

@@ -112,3 +112,17 @@ corrplot::corrplot(flight.cor, method="number")
 flight.na <- flight[, c("AVGSKDAVAIL", "xAVAILBUCKET")]
 
 preProcValues <- preProcess(flight.na, method = c("knnImpute"))
+
+## See a trainer
+
+trellis.par.set(caretTheme())
+plot(gbmFit1)
+
+head(twoClassSummary)
+
+trellis.par.set(caretTheme())
+plot(gbmFit1, metric = "Kappa")
+
+trellis.par.set(caretTheme())
+plot(gbmFit1, metric = "ROC")
+
