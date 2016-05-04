@@ -6,10 +6,14 @@
 library(MASS)
 library(caret)
 library(mlbench)
-data(Sonar)
 library(pROC)
 library(pls)
+
+library(AppliedPredictiveModeling)
+transparentTheme(trans = .4)
+
 options(useFancyQuotes = FALSE) 
+
 getInfo <- function(what = "Suggests")
 {
   text <- packageDescription("caret")[what][[1]]
@@ -22,6 +26,7 @@ getInfo <- function(what = "Suggests")
   length(eachPkg)
 }
 
+data(Sonar)
 
 ###################################################
 ### code chunk number 2: install (eval = FALSE)

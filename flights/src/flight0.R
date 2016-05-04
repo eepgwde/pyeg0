@@ -8,10 +8,12 @@
 library(MASS)
 library(caret)
 library(mlbench)
-data(Sonar)
 library(pROC)
 library(pls)
+
 options(useFancyQuotes = FALSE) 
+
+# Accounting info.
 getInfo <- function(what = "Suggests")
 {
   text <- packageDescription("caret")[what][[1]]
@@ -19,20 +21,15 @@ getInfo <- function(what = "Suggests")
   text <- gsub(">=", "$\\\\ge$", text, fixed = TRUE)
   eachPkg <- strsplit(text, ", ", fixed = TRUE)[[1]]
   eachPkg <- gsub(",", "", eachPkg, fixed = TRUE)
-  #out <- paste("\\\\pkg{", eachPkg[order(tolower(eachPkg))], "}", sep = "")
-  #paste(out, collapse = ", ")
+  # out <- paste("\\\\pkg{", eachPkg[order(tolower(eachPkg))], "}", sep = "")
+  # paste(out, collapse = ", ")
   length(eachPkg)
 }
-
-# Load caret - CART based training and ML toolkit.
-
-library(caret)
-library(mlbench)
 
 # Load original CSV file
 
 set.seed(101)
-flight <- read.csv("W:/walter.eaves/research/flight.csv")
+flight <- read.csv("../bak/flight.csv")
 
 # Backup
 flight0 <- flight
