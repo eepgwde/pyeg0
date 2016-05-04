@@ -94,7 +94,7 @@ str(flight)
 
 ## See if the numerics are near-zero or correlated.
 
-## Fiddly way of getting the classes out and use class not typeof or you get the factors.
+## Fiddly way of getting the classes out. Use class not typeof and you don't get the factors.
 
 x1 <- as.data.frame(as.matrix(sapply(flight, class)))
 
@@ -110,3 +110,6 @@ highlyCorDescr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
 # Which tells me that row 1, column is very highly correlated to AVGSQ. 
 
 flight[order(flight$SDEPHR), c("SDEPHR", "AVGSQ")]
+
+corrplot::corrplot(flight.cor,
+                   method="number")
