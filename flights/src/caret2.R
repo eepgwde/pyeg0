@@ -9,7 +9,9 @@ head(model.matrix(survived ~ ., data = etitanic))
 dummies <- dummyVars(survived ~ ., data = etitanic)
 head(predict(dummies, newdata = etitanic))
 
-head(model.matrix(LEGTYPE ~ ., data = flight))
+data(mdrr)
 
-dummies <- dummyVars(flight.m0 ~ ., data = flight)
-head(predict(dummies, newdata = flight))
+data.frame(table(mdrrDescr$nR11))
+
+nzv <- nearZeroVar(mdrrDescr, saveMetrics= TRUE)
+nzv[nzv$nzv,][1:10,]

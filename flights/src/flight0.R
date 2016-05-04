@@ -144,8 +144,7 @@ highlyCorDescr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
 
 ### Try and impute the AVG
 
-flight$xAVAILBUCKET <- as.numeric(gsub("^[A<]+", "", 
-                                       flight$AVAILBUCKET))
+flight$xAVAILBUCKET <- as.numeric(gsub("^[A<]+", "", flight$AVAILBUCKET))
 
 ## Arbitrary choice to set to -1.
 flight[which(flight$AVAILBUCKET == 'A<0'), "xAVAILBUCKET" ] <- -1
@@ -158,4 +157,69 @@ flight.na1 <- predict(preProcValues, flight.na)
 flight$xAVGSKDAVAIL <- flight.na1$AVGSKDAVAIL
 
 ## And I'll leave the centered and scale values in for now.
+## and delete the troublesome ones
+
+flight$AVGSKDAVAIL <- NULL
+flight$D00 <- NULL
+flight$xHNGR <- NULL
+
+## Keep the results.
+outcomes.flight <- flight$LEGTYPE
+
+
+
+flight$LEGTYPE <- NULL
+
+## Try converting all the factors to numerics
+
+flight[,names(x1[which(x1$V1 %in% c("factor")),])]
+
+## If you know your factors are definitely factors, you don't need this
+##  asNumeric <- function(x) as.numeric(as.character(x))
+
+factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], as.numeric))
+
+flight.num0 <- factors.numeric(flight)
+
+flight.scl0 <- scale(flight.num0)
+
+## Now split the results
+
+inTrain <- createDataPartition(outcomes.flight, p = 3/4, list = FALSE)
+
+trainDescr <- flight.scl0[inTrain,]
+testDescr <- flight.scl0[-inTrain,]
+
+trainClass <- outcomes.flight[inTrain]
+testClass <- outcomes.flight[-inTrain]
+
+prop.table(table(flight.scl0))
+
+prop.table(table(trainClass))
+
+ncol(trainDescr)
+
+## Check Near-zero
+
+nzv <- nearZeroVar(trainDescr, saveMetrics= TRUE)
+stopifnot( all(nzv$nzv == FALSE) )
+
+# It's imputed and behaves well, no need for this.
+# descrCorr <- cor(scale(trainDescr), use = "pairwise.complete.obs")
+
+descrCorr <- cor(scale(trainDescr))
+
+highCorr <- findCorrelation(descrCorr, cutoff = .90, verbose = TRUE)
+
+if (sum(highCorr) > 0) {
+    warning("overfitting: correlations: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
+    err.trainDescr <- trainDescr
+    trainDescr <- trainDescr[,-highCorr]
+}
+
+descrCorr <- cor(trainDescr)
+summary(descrCorr[upper.tri(descrCorr)])
+
+
+## Dominant correlations
 
