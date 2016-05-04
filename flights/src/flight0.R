@@ -35,7 +35,7 @@ set.seed(101)                           # helpful for testing
 flight <- read.csv("../bak/flight.csv")
 
 # Backup
-flight0 <- flight
+flight.raw <- flight
 
 # Some additions
 
@@ -51,6 +51,36 @@ t.drops <- c(t.drops, t.cols[grep("^(ARR|DEP)GRP$", t.cols)])
 t.drops <- c(t.drops, "D80THPCTL")
 
 flight <- flight[ , t.cols[!(t.cols %in% t.drops)] ]
+
+## Let's do the flight duration logic see the flight logic the notes.
+
+flight$xDURN <- flight$SARRHR - flight$SDEPHR
+flight$xHNGR <- flight$xDURN < 0
+
+## I don't think there is any hangaring. I have to clean this up.
+
+## Max flight time is 8 hours for the positives, but red-eyes can
+## take longer
+
+hr.wrap <- function(d0, a0) {
+    t0 <- a0 - d0
+    if (t0 >= 0) return(t0)
+    t0 <- 24 - d0
+    t0 <- t0 + a0
+    return(t0)
+}
+
+flight$xDURN2 <- apply(flight[,c("SDEPHR", "SARRHR")], 1, 
+                       function(y) hr.wrap(y['SDEPHR'], y['SARRHR']))
+
+flight[which(flight$xDURN2 <> flight$xDURN), c("SDEPHR", "SARRHR", "xDURN","xDURN2", "xHNGR")]
+t.cols <- colnames(flight)
+
+t.drops <- c("SARRHR", "xDURN")
+flight <- flight[ , t.cols[!(t.cols %in% t.drops)] ]
+
+## Backup
+
 flight00 <- flight
 
 # And we drop many, many rows because R cannot take large datasets.
@@ -58,7 +88,8 @@ flight00 <- flight
 
 flight <- flight[flight$AVGLOFATC >= 3.1 & flight$AVGLOFATC <= 4.4,]
 
-## Take another copy
+## Take another copy - this is all we need as the training/prediction
+## set.
 
 flight1 <- flight
 
@@ -78,8 +109,8 @@ d00ed <- flight
 
 ## Data insights
                                         #
-## Using the big dataset, I have this concern that D00 is a derived
-## probit and we should ignore it.
+## Using the D00 and LEGTYPE dataset, I have this concern that D00 is
+## a derived probit and we should ignore it.
 
 flight <- flight1
 
@@ -142,6 +173,7 @@ head(model.matrix(LEGTYPE ~ ., data = flight))
 
 dummies <- dummyVars(LEGTYPE ~ ., data = flight)
 head(predict(dummies, newdata = flight))
+dim(dummies)
 
 ## It's too big to use, but useful for inspection.
 
@@ -155,39 +187,5 @@ plot(density(as.numeric(flight00$SKDARRSTA)))
 
 plot(table(flight00$SKDEQP))
 
-## Things you notice. 
+factors(flight)
 
-## AVGSKDAVAIL is related to AVAILBUCKET, but AVAILBUCKET is complete
-
-## AVGLOFATC is zero at times? Must mean direct flight?
-
-## Definitely a strong correlation to time of day, just by eye.
-
-## I think this is time series data! departure < arrive unless
-## hangared for the night or a very short flight.
-
-## For the big data set, we have only 41 flights that arrive before
-## they leave, some are very short flights, aargh! three types in all.
-
-dim(flight00[which(flight00$SARRHR < flight00$SDEPHR), 
-             c("SARRHR", "SDEPHR")])
-
-## The flight duration is not related to AVGLOFATC, eg. Rio to Sao
-## Paulo is less than an hour, ISTR, but it would be translantic from
-## London
-
-flight00[which(flight00$SARRHR == flight00$SDEPHR), 
-         c("SARRHR", "SDEPHR", "AVGLOFATC")]
-
-## Try some tree inspection
-
-tree.f1 <- rpart(LEGTYPE ~ SDEPHR + SARRHR, method="class", data=flight1)
-
-printcp(tree.f1)
-summary(tree.f1)
-
-plotcp(tree.f1)
-
-plot(tree.f1, uniform=TRUE,
-     main="dep and arrive")
-text(tree.f1, use.n=TRUE, all=TRUE, cex=.8)
