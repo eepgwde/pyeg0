@@ -187,7 +187,7 @@ flight.scl0 <- scale(flight.num0)
 
 ## Now split the results
 
-inTrain <- createDataPartition(outcomes.flight, p = 3/4, list = FALSE)
+inTrain <- createDataPartition(outcomes.flight, p = 0.75, list = FALSE)
 
 trainDescr <- flight.scl0[inTrain,]
 testDescr <- flight.scl0[-inTrain,]
@@ -242,8 +242,8 @@ fitControl <- trainControl(## 10-fold CV
     summaryFunction = twoClassSummary)
 
 ## Try many more varieties of airport and airplane
-gbmGrid <-  expand.grid(interaction.depth = c(1, 2, 3, 6, 7),
-                        n.trees = (1:30)*80,
+gbmGrid <-  expand.grid(interaction.depth = c(6, 7, 8, 12),
+                        n.trees = (1:30)*60,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)
 
@@ -257,4 +257,15 @@ gbmFit1 <- train(trainDescr, trainClass,
                  metric = "ROC",
                  verbose = FALSE)
 gbmFit1
+
+## The acid test has failed. :-(
+
+testPred <- predict(gbmFit1, testDescr)
+postResample(testPred, testClass)
+confusionMatrix(testPred, testClass, positive = "Weak")
+
+## The training set is plausible - as one would hope.
+trainPred <- predict(gbmFit1, trainDescr)
+postResample(trainPred, trainClass)
+confusionMatrix(trainPred, trainClass, positive = "Weak")
 
