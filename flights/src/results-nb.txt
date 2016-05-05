@@ -111,22 +111,7 @@ Very poor, mis-classification of true Weak as Strong very marked.
 The trellis dove downwards. Airports didn't degrade as predictors as badly
 as flight duration or aircraft.
 
-Because the training result was so poor, counter-intuitively, one should
-decrease the correlation cut-off - and remove more variables - in the hope
-that more predictive features will be able to emerge. So 0.65 will drop 6
-(rather than 5)
-
-ARRSPOKE, SDEPHR, DEPBUCKET, ARRBUCKET, TRNRANKGRP, xAVAILBUCKET 
-
-and accuracy improves, but only marginally for both the training set and
-the test - 3%.
-
-We can try increasing the tree size and trying different variables.
-
-Tree size does improve testing 65% accuracy, but again the training set
-only marginally (3%).  suggesting I got a lucky partition. The trellis is
-still diving very quickly. But after another run, this does appear to have
-helped,
+I'll try some revisions in the next Revision below.
 
 Confusion Matrix and Statistics
 
@@ -154,6 +139,93 @@ Prediction Strong Weak
                                          
        'Positive' Class : Weak
 
+** Revision (2)
+
+Because the training result was so poor, counter-intuitively, one should
+decrease the correlation cut-off - and remove more variables - in the hope
+that more predictive features will be able to emerge. So 0.65 will drop 6
+(rather than 5)
+
+ARRSPOKE, SDEPHR, DEPBUCKET, ARRBUCKET, TRNRANKGRP, xAVAILBUCKET 
+
+and accuracy improves, but only marginally for both the training set and
+the test - 3%.
+
+We can try increasing the tree size and trying different variables.
+
+Tree size does improve testing 65% accuracy, but again the training set
+only marginally (3%).  suggesting I got a lucky partition. The trellis is
+still diving very quickly. But after another run, this does appear to have
+helped.
+
+Let's try helping the tree by changing its branching structure. Sadly not,
+it has degraded both, but I did replace xDURN2, so if I add xDURN2 back.
+
+That has also helped. I'll try one last thing, I'll add DOWNLINEATCIMP to
+the tree.
+
+
+> confusionMatrix(testPred, testClass, positive = "Weak")
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     15   10
+    Weak       20   34
+                                          
+               Accuracy : 0.6203          
+                 95% CI : (0.5041, 0.7272)
+    No Information Rate : 0.557           
+    P-Value [Acc > NIR] : 0.1540          
+                                          
+                  Kappa : 0.2074          
+ Mcnemar's Test P-Value : 0.1003          
+                                          
+            Sensitivity : 0.7727          
+            Specificity : 0.4286          
+         Pos Pred Value : 0.6296          
+         Neg Pred Value : 0.6000          
+             Prevalence : 0.5570          
+         Detection Rate : 0.4304          
+   Detection Prevalence : 0.6835          
+      Balanced Accuracy : 0.6006          
+                                          
+       'Positive' Class : Weak            
+                                          
+> 
+> ## The training set is exact even with the correlation cut-offs
+> ## As one would hope - but 
+> trainPred <- predict(gbmFit1, trainDescr)
+> postResample(trainPred, trainClass)
+ Accuracy     Kappa 
+0.8506224 0.6974684 
+> confusionMatrix(trainPred, trainClass, positive = "Weak")
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     89   17
+    Weak       19  116
+                                          
+               Accuracy : 0.8506          
+                 95% CI : (0.7992, 0.8931)
+    No Information Rate : 0.5519          
+    P-Value [Acc > NIR] : <2e-16          
+                                          
+                  Kappa : 0.6975          
+ Mcnemar's Test P-Value : 0.8676          
+                                          
+            Sensitivity : 0.8722          
+            Specificity : 0.8241          
+         Pos Pred Value : 0.8593          
+         Neg Pred Value : 0.8396          
+             Prevalence : 0.5519          
+         Detection Rate : 0.4813          
+   Detection Prevalence : 0.5602          
+      Balanced Accuracy : 0.8481          
+                                          
+       'Positive' Class : Weak            
+                                          
 
 
 ** Notes

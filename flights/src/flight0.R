@@ -109,7 +109,7 @@ flight1 <- flight
 
 ## Data insights
 
-## Run from here.
+## *Run from here.
 
 ## Using the D00 and LEGTYPE dataset, I have this concern that D00 is
 ## a derived probit and we should ignore it.
@@ -266,12 +266,17 @@ fitControl <- trainControl(## 10-fold CV
 
 ## Some trial and error with variables to branch and boost.
 ## I'm just going to try the airports and the planes and the duration
-## of the flight. There may be s\ome distance relationship there that
+## of the flight. There may be some distance relationship there that
 ## air traffic control use.
 
-colnames(trainDescr)
+## Annoying because I drop variables, this needs to be looked up.
 
-gbmGrid <- expand.grid(interaction.depth = c(14, 3, 2, 1),
+tr.cols <- colnames(trainDescr)
+tr.cols
+tr.icols <- grep("((STA|EQP)$)|(^xD)", tr.cols)
+tr.icols <- rev(tr.icols)
+
+gbmGrid <- expand.grid(interaction.depth = tr.icols,
                         n.trees = (1:30)*80,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)

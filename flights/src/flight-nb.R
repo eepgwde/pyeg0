@@ -152,3 +152,7 @@ src.l55 <- all(flight[ flight$D00 <= src.55, c("LEGTYPE")] == "Weak")
 src.l55n <- any(flight[ flight$D00 > src.55, c("LEGTYPE")] == "Weak")
 
 paste(src.l55, !src.l55n)
+
+## More prototyping
+
+grep("((STA|EQP)$)|(^x)", tr.cols)
