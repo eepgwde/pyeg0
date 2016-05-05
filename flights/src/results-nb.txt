@@ -139,7 +139,7 @@ Prediction Strong Weak
                                          
        'Positive' Class : Weak
 
-** Revision (2)
+** Revision (2) - results1.log
 
 Because the training result was so poor, counter-intuitively, one should
 decrease the correlation cut-off - and remove more variables - in the hope
@@ -154,13 +154,99 @@ the test - 3%.
 We can try increasing the tree size and trying different variables for it to
 branch on.
 
-Tree size does improve testing 65% accuracy, but again the training set
+Tree size does improve testing to 63% accuracy, but again the training set
 only marginally (3%). This might suggest I got a lucky with the test
-partition. The trellis is still diving very quickly. But after another more
-runs, this does appear to have helped.
+partition. The trellis is still diving very quickly. But after more
+runs, the tree size do appear to have helped.
 
 The xDURN2 seems to be key predictor. Other xAVGSKDAVAIL amongst others
 have tended to degrade the training set - never a good sign.
+
+This is my best confusion matrix for the revised data-set. Unfortunately, I
+wasn't assiduous enough with Git and made some minor changes to the code
+(tree and correlation cutoff) that have meant, the test results have not
+been reproducible.
+
+**** Reproducible
+
+These results should be reproducible from the scripts.
+
+> confusionMatrix(testPred, testClass, positive = "Weak")
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     22   22
+    Weak       28   39
+                                          
+               Accuracy : 0.5495          
+                 95% CI : (0.4522, 0.6441)
+    No Information Rate : 0.5495          
+    P-Value [Acc > NIR] : 0.5392          
+                                          
+                  Kappa : 0.0802          
+ Mcnemar's Test P-Value : 0.4795          
+                                          
+            Sensitivity : 0.6393          
+            Specificity : 0.4400          
+         Pos Pred Value : 0.5821          
+         Neg Pred Value : 0.5000          
+             Prevalence : 0.5495          
+         Detection Rate : 0.3514          
+   Detection Prevalence : 0.6036          
+      Balanced Accuracy : 0.5397          
+                                          
+       'Positive' Class : Weak            
+                                          
+
+> ## The training set is exact even with the correlation cut-offs
+> ## As one would hope - but 
+> trainPred <- predict(gbmFit1, trainDescr)
+
+> postResample(trainPred, trainClass)
+ Accuracy     Kappa 
+0.8516746 0.6987492 
+
+> confusionMatrix(trainPred, trainClass, positive = "Weak")
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     76   14
+    Weak       17  102
+                                          
+               Accuracy : 0.8517          
+                 95% CI : (0.7961, 0.8969)
+    No Information Rate : 0.555           
+    P-Value [Acc > NIR] : <2e-16          
+                                          
+                  Kappa : 0.6987          
+ Mcnemar's Test P-Value : 0.7194          
+                                          
+            Sensitivity : 0.8793          
+            Specificity : 0.8172          
+         Pos Pred Value : 0.8571          
+         Neg Pred Value : 0.8444          
+             Prevalence : 0.5550          
+         Detection Rate : 0.4880          
+   Detection Prevalence : 0.5694          
+      Balanced Accuracy : 0.8483          
+                                          
+       'Positive' Class : Weak            
+                                          
+Warning messages:
+1: In eval(expr, envir, enclos) : adjusting
+2: In eval(expr, envir, enclos) :
+  overfitting: correlations: err.trainDescr: SDEPHR, DEPBUCKET, ARRSPOKE, DEPSPOKE, AVGSQ, TRNRANKGRP, xAVAILBUCKET
+> 
+
+**** Best observed (but lost)
+
+I was experimenting with correlation cutoff and the tree structure and
+managed to get this result. Sadly, I've been unable to reproduce it. I
+suspect it was a fortunate choice of dataset, but I suspect there may have
+been something parametrically different because the training set is
+slightly different too.
 
 > confusionMatrix(testPred, testClass, positive = "Weak")
 Confusion Matrix and Statistics
