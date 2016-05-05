@@ -1,0 +1,84 @@
+* Flights
+
+weaves
+
+* Method
+
+* Model calibration - LEGTYPE "Weak" at 80th percentile - results0.log
+
+** Training 
+
+Perfect, so model is working.
+
+> confusionMatrix(trainPred, trainClass, positive = "Weak")
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong    180    0
+    Weak        0   61
+                                     
+               Accuracy : 1          
+                 95% CI : (0.9848, 1)
+    No Information Rate : 0.7469     
+    P-Value [Acc > NIR] : < 2.2e-16  
+                                     
+                  Kappa : 1          
+ Mcnemar's Test P-Value : NA         
+                                     
+            Sensitivity : 1.0000     
+            Specificity : 1.0000     
+         Pos Pred Value : 1.0000     
+         Neg Pred Value : 1.0000     
+             Prevalence : 0.2531     
+         Detection Rate : 0.2531     
+   Detection Prevalence : 0.2531     
+      Balanced Accuracy : 1.0000     
+                                     
+       'Positive' Class : Weak       
+
+** Test
+
+Not so good, 40% sensitivity (True positive), but specificity is good at
+77%. Accuracy of 68% does indicate that is a plausible predictor.
+
+> confusionMatrix(testPred, testClass, positive = "Weak")
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     46   12
+    Weak       13    8
+                                          
+               Accuracy : 0.6835          
+                 95% CI : (0.5692, 0.7837)
+    No Information Rate : 0.7468          
+    P-Value [Acc > NIR] : 0.92            
+                                          
+                  Kappa : 0.1767          
+ Mcnemar's Test P-Value : 1.00            
+                                          
+            Sensitivity : 0.4000          
+            Specificity : 0.7797          
+         Pos Pred Value : 0.3810          
+         Neg Pred Value : 0.7931          
+             Prevalence : 0.2532          
+         Detection Rate : 0.1013          
+   Detection Prevalence : 0.2658          
+      Balanced Accuracy : 0.5898          
+                                          
+       'Positive' Class : Weak            
+
+
+** This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: iso-8859-1-unix ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]

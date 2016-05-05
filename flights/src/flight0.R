@@ -1,5 +1,7 @@
 ### weaves
 
+## Processing for flights data.
+
 ## Following the caret vignette.
 
 ###################################################
@@ -30,15 +32,20 @@ getInfo <- function(what = "Suggests")
 }
 
 ### project-specific: begin
-## Set-seed, load original CSV file and do some simple-cleaning
+## Set-seed, load original CSV file, order it
+## and do some simple-cleaning
 ## Various datasets 
 
-set.seed(101)                           # helpful for testing
+seed.mine = 107
+set.seed(seed.mine)                     # helpful for testing
 
 flight <- read.csv("../bak/flight.csv")
+flight <- flight[order(flight$D00),]
 
 # Backup
 flight.raw <- flight
+
+source(file = "flight1.R")
 
 # Some additions
 
@@ -118,7 +125,8 @@ flight.dum <- predict(dummies, newdata = flight)
 
 ### Numeric variables
 
-## Check some more correlations, I haven't scaled yet.
+## Check some more numeric correlations, I haven't scaled yet.
+## I'd cut correlations above 0.75 because of overfitting.
 
 x1 <- as.data.frame(as.matrix(sapply(flight, class)))
 
@@ -127,13 +135,18 @@ flight.num <- flight[,names(x1[which(x1$V1 %in% c("numeric", "integer")),])]
 flight.nzv <- nearZeroVar(flight.num, saveMetrics = TRUE)
 flight.nzv
 
+# annoying NA
 flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
 
 descrCorr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
 
-## Which tells me that departure time is very highly correlated to AVGSQ.
+colnames(flight.num)[descrCorr]
 
-### Try and impute the AVG
+## Which tells me that departure time is very highly correlated to AVGSQ.
+## AVGSQ is average stand queue?
+
+### Try and impute the AVG, it might have more information than the
+### bucket.
 
 flight$xAVAILBUCKET <- as.numeric(gsub("^[A<]+", "", flight$AVAILBUCKET))
 
@@ -189,9 +202,10 @@ prop.table(table(flight.scl0))
 
 prop.table(table(trainClass))
 
-ncol(trainDescr)
+dim(trainDescr)
+dim(testDescr)
 
-## Check Near-zero
+## Check Near-zero variance
 
 nzv <- nearZeroVar(trainDescr, saveMetrics= TRUE)
 stopifnot( all(nzv$nzv == FALSE) )
@@ -201,16 +215,22 @@ stopifnot( all(nzv$nzv == FALSE) )
 
 descrCorr <- cor(scale(trainDescr))
 
-highCorr <- findCorrelation(descrCorr, cutoff = .90, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .80, verbose = TRUE)
 
 colnames(trainDescr)[highCorr]
 
+descr.ncol0 <- ncol(trainDescr)
+
 # I've switched off the correlation remover and the results are better.
 if (sum(highCorr) > 0) {
-    warning("overfitting: correlations: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
+    warning("overfitting: correlations: err.trainDescr: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
     err.trainDescr <- trainDescr
     trainDescr <- trainDescr[,-highCorr]
 }
+
+descr.ncol1 <- ncol(trainDescr)
+
+paste("Dropped: ", as.character(descr.ncol0 - descr.ncol1))
 
 descrCorr <- cor(trainDescr)
 summary(descrCorr[upper.tri(descrCorr)])
@@ -224,7 +244,11 @@ table.descrCorr[order(abs(table.descrCorr$Freq), decreasing = TRUE),]
 
 ### Models
 
-## Training controller
+## Try GBM (gradient boosting). Works well for mixed data.
+## And there is a tutorial for it with caret.
+
+## Training controller and big grid
+## Check the ROC (my preferred.)
 
 fitControl <- trainControl(## 10-fold CV
     method = "repeatedcv",
@@ -234,16 +258,19 @@ fitControl <- trainControl(## 10-fold CV
     classProbs = 10,
     summaryFunction = twoClassSummary)
 
-## Try many other parameters
+## Some trial and error with variables to branch and boost.
+## I'm just going to try the airports and the planes and the duration
+## of the flight. There may be some distance relationship there that
+## air traffic control use.
 
 colnames(trainDescr)
 
-gbmGrid <-  expand.grid(interaction.depth = c(1, 2, 3),
+gbmGrid <- expand.grid(interaction.depth = c(14, 3, 2, 1),
                         n.trees = (1:30)*60,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)
 
-set.seed(107)
+set.seed(seed.mine)
 gbmFit1 <- train(trainDescr, trainClass,
                  method = "gbm",
                  trControl = fitControl,
@@ -254,13 +281,14 @@ gbmFit1 <- train(trainDescr, trainClass,
                  verbose = FALSE)
 gbmFit1
 
-## The acid test has failed. :-(
+## The acid test is dissapointing, but I've seen worse.
 
 testPred <- predict(gbmFit1, testDescr)
 postResample(testPred, testClass)
 confusionMatrix(testPred, testClass, positive = "Weak")
 
-## The training set is plausible - as one would hope.
+## The training set is exact even with the correlation cut-offs
+## As one would hope - but 
 trainPred <- predict(gbmFit1, trainDescr)
 postResample(trainPred, trainClass)
 confusionMatrix(trainPred, trainClass, positive = "Weak")

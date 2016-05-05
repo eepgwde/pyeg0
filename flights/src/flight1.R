@@ -1,6 +1,7 @@
 ### weaves
 
-## 
+## Probit analysis.
+## Sub-script for flight0.R
 
 ## I'm supposed to improve on the probit model of D00
 ## but I'm relying on that to define LEGTYPE - to check my model.
@@ -9,19 +10,20 @@
 ## wrt to the top eighty destinations.) That may have been a typo because
 ## D00 was defined over all 300 or so destinations.
 
-## I'm going to fit the probit and find the D00 value for the 55th percentile.
+## I'm going to fit the probit to an ecdf and find the D00 value for the 55th percentile.
+## I could also do some probit regression, but I don't think that's required.
 
-## The raw data was sorted on D00 by Excel, I use this now.
+## The raw data was sorted on D00 by Excel, this code requires that sort.
 
+## Just a utility method for see if x is [l,u] is true and we expect l < u.
 is.between <- function(x, l, u) {
     x >= l & x <= u
 }
 
+## ecdf is enough for now.
 src.probit <- ecdf(flight.raw$D00)
 
-plot(src.probit)
-
-## from the source data, their methodology is to use D80THPCTL
+## from the source data, their methodology has used D80THPCTL
 ## ie. the 20th percentile.
 src.80 <- 0.590909091
 is.between(src.probit(src.80), 0.19, 0.21)
@@ -45,7 +47,7 @@ src.N <- dim(flight.raw)[1]
 
 src.n80 / src.N
 
-stopifnot(src.n80 == src.n)
+stopifnot(src.n80 == src.n0)
 
 ## They saw an improvement to 45% detection ie. at src.55 ==  0.6969697
 ## I'm only to use an existing value and hope
@@ -53,6 +55,9 @@ stopifnot(src.n80 == src.n)
 src.i55 <- max(which(is.between(src.probit(flight.raw$D00), 0, 0.45)))
 src.55 <- flight.raw$D00[src.i55]
 
-src.n55 <-dim(flight.raw[ flight.raw$D00 <= src.v55, ])[1]
+src.n55 <-dim(flight.raw[ flight.raw$D00 <= src.55, ])[1]
 
-stopifnot(src.n55 > src.n)
+stopifnot(src.n55 > src.n80)
+
+## That will do, I'll relabel the LEGTYPE using this, so it is an independent variable
+## and not a typo
