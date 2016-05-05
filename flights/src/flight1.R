@@ -65,8 +65,13 @@ stopifnot(src.n55 > src.n80)
 if (exists("src.adjust")) {
     if (src.adjust) {
         warning("adjusting")
-        flight <- flight
+        
+        flight$LEGTYPE <- "Strong"
+        flight[which(flight$D00 <= src.55), "LEGTYPE" ] <- "Weak"
+        flight$LEGTYPE <- factor(flight$LEGTYPE)
+        
     } else {
         warning("not adjusting")
     }
 }
+

@@ -46,8 +46,10 @@ flight <- flight[order(flight$D00),]
 flight.raw <- flight
 
 # Check warnings
-src.adjust <- FALSE
+src.adjust <- TRUE
 source(file = "flight1.R")
+
+# To check adjustment, there is test code in flight-nb.R
 
 # Some additions
 

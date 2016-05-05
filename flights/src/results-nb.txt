@@ -4,9 +4,9 @@ weaves
 
 * Method
 
-* Model calibration - LEGTYPE "Weak" at 80th percentile - results0.log
+** Model calibration - LEGTYPE "Weak" at 80th percentile - results0.log
 
-** Training 
+*** Training 
 
 Perfect, so model is working.
 
@@ -37,7 +37,7 @@ Prediction Strong Weak
                                      
        'Positive' Class : Weak       
 
-** Test
+*** Test
 
 Not so good, 40% sensitivity (True positive), but specificity is good at
 77%. Accuracy of 68% does indicate that is a plausible predictor.
@@ -68,6 +68,73 @@ Prediction Strong Weak
       Balanced Accuracy : 0.5898          
                                           
        'Positive' Class : Weak            
+
+** Revised model (1) results1.log
+
+The LEGTYPE has been re-classified in the kludgy manner, I wouldn't
+recommend. All other parameters are as before.
+
+*** Training
+
+Even the training data has non-ideal accuracy.
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     77   16
+    Weak       31  117
+                                         
+               Accuracy : 0.805          
+                 95% CI : (0.7492, 0.853)
+    No Information Rate : 0.5519         
+    P-Value [Acc > NIR] : < 2e-16        
+                                         
+                  Kappa : 0.6005         
+ Mcnemar's Test P-Value : 0.04114        
+                                         
+            Sensitivity : 0.8797         
+            Specificity : 0.7130         
+         Pos Pred Value : 0.7905         
+         Neg Pred Value : 0.8280         
+             Prevalence : 0.5519         
+         Detection Rate : 0.4855         
+   Detection Prevalence : 0.6141         
+      Balanced Accuracy : 0.7963         
+                                         
+       'Positive' Class : Weak           
+
+*** Test
+
+Very poor, mis-classification of true Weak as Strong very marked.
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction Strong Weak
+    Strong     18   30
+    Weak       17   14
+                                         
+               Accuracy : 0.4051         
+                 95% CI : (0.296, 0.5215)
+    No Information Rate : 0.557          
+    P-Value [Acc > NIR] : 0.99761        
+                                         
+                  Kappa : -0.1614        
+ Mcnemar's Test P-Value : 0.08005        
+                                         
+            Sensitivity : 0.3182         
+            Specificity : 0.5143         
+         Pos Pred Value : 0.4516         
+         Neg Pred Value : 0.3750         
+             Prevalence : 0.5570         
+         Detection Rate : 0.1772         
+   Detection Prevalence : 0.3924         
+      Balanced Accuracy : 0.4162         
+                                         
+       'Positive' Class : Weak
+
+
 
 ** Notes
 

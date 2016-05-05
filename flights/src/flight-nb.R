@@ -136,3 +136,19 @@ plot(gbmFit1, metric = "ROC")
 
 ## It fitted fairly well, but slowly (1 min) on a small dataset.
 
+## Some test code.
+
+ses <- rbind(head(flight), tail(flight))
+
+ses$LEGTYPE <- "Strong"
+
+ses[which(ses$D00 <= src.55), "LEGTYPE" ] <- "Weak"
+
+ses$LEGTYPE <- factor(ses$LEGTYPE)
+
+## Post-check
+
+src.l55 <- all(flight[ flight$D00 <= src.55, c("LEGTYPE")] == "Weak")
+src.l55n <- any(flight[ flight$D00 > src.55, c("LEGTYPE")] == "Weak")
+
+paste(src.l55, !src.l55n)
