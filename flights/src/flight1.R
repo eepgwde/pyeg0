@@ -61,3 +61,12 @@ stopifnot(src.n55 > src.n80)
 
 ## That will do, I'll relabel the LEGTYPE using this, so it is an independent variable
 ## and not a typo
+
+if (exists("src.adjust")) {
+    if (src.adjust) {
+        warning("adjusting")
+        flight <- flight
+    } else {
+        warning("not adjusting")
+    }
+}

@@ -69,6 +69,16 @@ Prediction Strong Weak
                                           
        'Positive' Class : Weak            
 
+** Notes
+
+*** Reproduciblity
+
+I've re-run just a few times and it works well.
+
+That said, I've haven't kept good track of my use of set.seed() which is
+critical when reproducing results.
+
+
 
 ** This file's Emacs file variables
 

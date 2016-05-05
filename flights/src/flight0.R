@@ -45,6 +45,8 @@ flight <- flight[order(flight$D00),]
 # Backup
 flight.raw <- flight
 
+# Check warnings
+src.adjust <- FALSE
 source(file = "flight1.R")
 
 # Some additions
