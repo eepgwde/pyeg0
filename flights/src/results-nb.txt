@@ -108,6 +108,12 @@ Prediction Strong Weak
 
 Very poor, mis-classification of true Weak as Strong very marked.
 
+The trellis dove downwards. Airports didn't degrade as predictors as badly
+as flight duration or aircraft.
+
+Because the training result was so poor, counter-intuitively, one decreases
+the correlation cut-off in the hope that more predictive features will emerge.
+
 Confusion Matrix and Statistics
 
           Reference

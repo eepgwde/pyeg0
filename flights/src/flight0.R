@@ -142,7 +142,7 @@ flight.nzv
 # annoying NA
 flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
 
-descrCorr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
+descrCorr <- findCorrelation(flight.cor, cutoff = .65, verbose=TRUE)
 
 colnames(flight.num)[descrCorr]
 
@@ -219,7 +219,9 @@ stopifnot( all(nzv$nzv == FALSE) )
 
 descrCorr <- cor(scale(trainDescr))
 
-highCorr <- findCorrelation(descrCorr, cutoff = .80, verbose = TRUE)
+## This cut-off should be under src.adjust control.
+## I'm under Git, so I can tinker with it.
+highCorr <- findCorrelation(descrCorr, cutoff = .65, verbose = TRUE)
 
 colnames(trainDescr)[highCorr]
 
