@@ -134,5 +134,5 @@ plot(gbmFit1, metric = "Kappa")
 trellis.par.set(caretTheme())
 plot(gbmFit1, metric = "ROC")
 
-## It fitted very badly
+## It fitted fairly well, but slowly (1 min) on a small dataset.
 
