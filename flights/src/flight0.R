@@ -86,7 +86,7 @@ flight <- flight[ , t.cols[!(t.cols %in% t.drops)] ]
 
 flight00 <- flight
 
-# And we drop many, many rows because R cannot take large datasets.
+# And we drop many, many rows because R slows with large datasets.
 # These are the ranges we have been asked to predict on.
 
 flight <- flight[flight$AVGLOFATC >= 3.1 & flight$AVGLOFATC <= 4.4,]
@@ -96,22 +96,10 @@ flight <- flight[flight$AVGLOFATC >= 3.1 & flight$AVGLOFATC <= 4.4,]
 
 flight1 <- flight
 
-## T1
-# Try to drop D00 and just use LEGTYPE
-
-flight$D00 <- NULL
-legtyped <- flight
-
-## T2
-# Try to drop LEGTYPE and use D00.
-
-flight <- flight1
-flight$LEGTYPE <- NULL
-
-d00ed <- flight
-
 ## Data insights
-                                        #
+
+## Run from here.
+
 ## Using the D00 and LEGTYPE dataset, I have this concern that D00 is
 ## a derived probit and we should ignore it.
 
@@ -126,7 +114,7 @@ head(model.matrix(LEGTYPE ~ ., data = flight))
 dummies <- dummyVars(LEGTYPE ~ ., data = flight)
 flight.dum <- predict(dummies, newdata = flight)
 
-## It's too big to use, but useful for inspection.
+## It may be too big to use, but useful for inspection.
 
 ### Numeric variables
 
@@ -143,7 +131,7 @@ flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
 
 highlyCorDescr <- findCorrelation(flight.cor, cutoff = .75, verbose=TRUE)
 
-## Which tells me that row 1, column is very highly correlated to AVGSQ.
+## Which tells me that departure time is very highly correlated to AVGSQ.
 
 ### Try and impute the AVG
 
@@ -163,9 +151,11 @@ flight$xAVGSKDAVAIL <- flight.na1$AVGSKDAVAIL
 ## and delete the troublesome ones
 
 flight$AVGSKDAVAIL <- NULL
-flight$D00 <- NULL
 flight$xHNGR <- NULL
 flight$AVAILBUCKET <- NULL
+
+# This should be deleted, leave it in and the results are ideal because it defines LEGTYPE.
+flight$D00 <- NULL
 
 ## Keep the results.
 outcomes.flight <- flight$LEGTYPE
@@ -213,6 +203,7 @@ descrCorr <- cor(scale(trainDescr))
 
 highCorr <- findCorrelation(descrCorr, cutoff = .80, verbose = TRUE)
 
+# I've switched off the correlation remover and the results are better.
 if (sum(highCorr) > 0) {
     warning("overfitting: correlations: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
     err.trainDescr <- trainDescr
@@ -241,8 +232,11 @@ fitControl <- trainControl(## 10-fold CV
     classProbs = 10,
     summaryFunction = twoClassSummary)
 
-## Try many more varieties of airport and airplane
-gbmGrid <-  expand.grid(interaction.depth = c(6, 7, 8, 12),
+## Try many other parameters
+
+colnames(trainDescr)
+
+gbmGrid <-  expand.grid(interaction.depth = c(1, 2, 3),
                         n.trees = (1:30)*60,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)
