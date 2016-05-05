@@ -111,8 +111,22 @@ Very poor, mis-classification of true Weak as Strong very marked.
 The trellis dove downwards. Airports didn't degrade as predictors as badly
 as flight duration or aircraft.
 
-Because the training result was so poor, counter-intuitively, one decreases
-the correlation cut-off in the hope that more predictive features will emerge.
+Because the training result was so poor, counter-intuitively, one should
+decrease the correlation cut-off - and remove more variables - in the hope
+that more predictive features will be able to emerge. So 0.65 will drop 6
+(rather than 5)
+
+ARRSPOKE, SDEPHR, DEPBUCKET, ARRBUCKET, TRNRANKGRP, xAVAILBUCKET 
+
+and accuracy improves, but only marginally for both the training set and
+the test - 3%.
+
+We can try increasing the tree size and trying different variables.
+
+Tree size does improve testing 65% accuracy, but again the training set
+only marginally (3%).  suggesting I got a lucky partition. The trellis is
+still diving very quickly. But after another run, this does appear to have
+helped,
 
 Confusion Matrix and Statistics
 

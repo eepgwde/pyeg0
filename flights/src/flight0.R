@@ -266,13 +266,13 @@ fitControl <- trainControl(## 10-fold CV
 
 ## Some trial and error with variables to branch and boost.
 ## I'm just going to try the airports and the planes and the duration
-## of the flight. There may be some distance relationship there that
+## of the flight. There may be s\ome distance relationship there that
 ## air traffic control use.
 
 colnames(trainDescr)
 
 gbmGrid <- expand.grid(interaction.depth = c(14, 3, 2, 1),
-                        n.trees = (1:30)*60,
+                        n.trees = (1:30)*80,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)
 
