@@ -151,44 +151,41 @@ ARRSPOKE, SDEPHR, DEPBUCKET, ARRBUCKET, TRNRANKGRP, xAVAILBUCKET
 and accuracy improves, but only marginally for both the training set and
 the test - 3%.
 
-We can try increasing the tree size and trying different variables.
+We can try increasing the tree size and trying different variables for it to
+branch on.
 
 Tree size does improve testing 65% accuracy, but again the training set
-only marginally (3%).  suggesting I got a lucky partition. The trellis is
-still diving very quickly. But after another run, this does appear to have
-helped.
+only marginally (3%). This might suggest I got a lucky with the test
+partition. The trellis is still diving very quickly. But after another more
+runs, this does appear to have helped.
 
-Let's try helping the tree by changing its branching structure. Sadly not,
-it has degraded both, but I did replace xDURN2, so if I add xDURN2 back.
-
-That has also helped. I'll try one last thing, I'll add DOWNLINEATCIMP to
-the tree.
-
+The xDURN2 seems to be key predictor. Other xAVGSKDAVAIL amongst others
+have tended to degrade the training set - never a good sign.
 
 > confusionMatrix(testPred, testClass, positive = "Weak")
 Confusion Matrix and Statistics
 
           Reference
 Prediction Strong Weak
-    Strong     15   10
-    Weak       20   34
+    Strong     31   22
+    Weak       19   39
                                           
-               Accuracy : 0.6203          
-                 95% CI : (0.5041, 0.7272)
-    No Information Rate : 0.557           
-    P-Value [Acc > NIR] : 0.1540          
+               Accuracy : 0.6306          
+                 95% CI : (0.5338, 0.7203)
+    No Information Rate : 0.5495          
+    P-Value [Acc > NIR] : 0.05167         
                                           
-                  Kappa : 0.2074          
- Mcnemar's Test P-Value : 0.1003          
+                  Kappa : 0.2579          
+ Mcnemar's Test P-Value : 0.75478         
                                           
-            Sensitivity : 0.7727          
-            Specificity : 0.4286          
-         Pos Pred Value : 0.6296          
-         Neg Pred Value : 0.6000          
-             Prevalence : 0.5570          
-         Detection Rate : 0.4304          
-   Detection Prevalence : 0.6835          
-      Balanced Accuracy : 0.6006          
+            Sensitivity : 0.6393          
+            Specificity : 0.6200          
+         Pos Pred Value : 0.6724          
+         Neg Pred Value : 0.5849          
+             Prevalence : 0.5495          
+         Detection Rate : 0.3514          
+   Detection Prevalence : 0.5225          
+      Balanced Accuracy : 0.6297          
                                           
        'Positive' Class : Weak            
                                           
@@ -198,31 +195,31 @@ Prediction Strong Weak
 > trainPred <- predict(gbmFit1, trainDescr)
 > postResample(trainPred, trainClass)
  Accuracy     Kappa 
-0.8506224 0.6974684 
+0.8373206 0.6699489 
 > confusionMatrix(trainPred, trainClass, positive = "Weak")
 Confusion Matrix and Statistics
 
           Reference
 Prediction Strong Weak
-    Strong     89   17
-    Weak       19  116
+    Strong     75   16
+    Weak       18  100
                                           
-               Accuracy : 0.8506          
-                 95% CI : (0.7992, 0.8931)
-    No Information Rate : 0.5519          
+               Accuracy : 0.8373          
+                 95% CI : (0.7802, 0.8846)
+    No Information Rate : 0.555           
     P-Value [Acc > NIR] : <2e-16          
                                           
-                  Kappa : 0.6975          
- Mcnemar's Test P-Value : 0.8676          
+                  Kappa : 0.6699          
+ Mcnemar's Test P-Value : 0.8638          
                                           
-            Sensitivity : 0.8722          
-            Specificity : 0.8241          
-         Pos Pred Value : 0.8593          
-         Neg Pred Value : 0.8396          
-             Prevalence : 0.5519          
-         Detection Rate : 0.4813          
-   Detection Prevalence : 0.5602          
-      Balanced Accuracy : 0.8481          
+            Sensitivity : 0.8621          
+            Specificity : 0.8065          
+         Pos Pred Value : 0.8475          
+         Neg Pred Value : 0.8242          
+             Prevalence : 0.5550          
+         Detection Rate : 0.4785          
+   Detection Prevalence : 0.5646          
+      Balanced Accuracy : 0.8343          
                                           
        'Positive' Class : Weak            
                                           

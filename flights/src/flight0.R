@@ -179,10 +179,6 @@ outcomes.flight <- flight$LEGTYPE
 
 flight$LEGTYPE <- NULL
 
-## Try converting all the factors to numerics
-
-flight[,names(x1[which(x1$V1 %in% c("factor")),])]
-
 ## If you know your factors are definitely factors, you don't need this
 ##  asNumeric <- function(x) as.numeric(as.character(x))
 
@@ -194,6 +190,7 @@ flight.scl0 <- scale(flight.num0)
 
 ## Now split the results
 
+set.seed(seed.mine)
 inTrain <- createDataPartition(outcomes.flight, p = 0.65, list = FALSE)
 
 trainDescr <- flight.scl0[inTrain,]
@@ -221,7 +218,7 @@ descrCorr <- cor(scale(trainDescr))
 
 ## This cut-off should be under src.adjust control.
 ## I'm under Git, so I can tinker with it.
-highCorr <- findCorrelation(descrCorr, cutoff = .70, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .65, verbose = TRUE)
 
 colnames(trainDescr)[highCorr]
 
@@ -273,11 +270,11 @@ fitControl <- trainControl(## 10-fold CV
 
 tr.cols <- colnames(trainDescr)
 tr.cols
-tr.icols <- grep("((STA|EQP)$)|(^x)", tr.cols)
+tr.icols <- grep("((STA|EQP)$)|(^xD)", tr.cols)
 tr.icols <- rev(tr.icols)
 
 gbmGrid <- expand.grid(interaction.depth = tr.icols,
-                        n.trees = (1:30)*80,
+                        n.trees = (1:30)*90,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)
 
