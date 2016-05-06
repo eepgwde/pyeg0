@@ -102,6 +102,8 @@ flight00 <- flight
 
 flight <- flight[flight$AVGLOFATC >= 3.1 & flight$AVGLOFATC <= 4.4,]
 
+paste("samples in use: ", dim(flight)[1])
+
 ## Take another copy - this is all we need as the training/prediction
 ## set.
 

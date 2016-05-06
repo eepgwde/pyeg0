@@ -1,4 +1,6 @@
 *.xlsx binary
 *.jpg binary
 *.jpeg binary
+*.gnumeric binary
+*.pdf binary
 
