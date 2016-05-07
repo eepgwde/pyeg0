@@ -164,8 +164,6 @@ flight$LEGTYPE <- NULL
 
 ## Try converting all the factors to numerics
 
-flight[,names(x1[which(x1$V1 %in% c("factor")),])]
-
 ## If you know your factors are definitely factors, you don't need this
 ##  asNumeric <- function(x) as.numeric(as.character(x))
 
@@ -201,7 +199,7 @@ stopifnot( all(nzv$nzv == FALSE) )
 
 descrCorr <- cor(scale(trainDescr))
 
-highCorr <- findCorrelation(descrCorr, cutoff = .80, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .95, verbose = TRUE)
 
 # I've switched off the correlation remover and the results are better.
 if (sum(highCorr) > 0) {
