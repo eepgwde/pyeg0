@@ -107,8 +107,6 @@ paste("samples in use: ", dim(flight)[1])
 ## Using the D00 and LEGTYPE dataset, I have this concern that D00 is
 ## a derived probit and we should ignore it.
 
-flight <- flight1
-
 ### Numeric variables
 
 ### Try and impute the AVG, it might have more information than the
@@ -266,7 +264,7 @@ fitControl <- trainControl(## 10-fold CV
 ## Try all variables
 
 gbmGrid <- expand.grid(interaction.depth = 
-                           c(length(colnames(trainDescr)-1, 2),
+                           length(colnames(trainDescr)),
                         n.trees = (1:30)*90,
                         shrinkage = 0.2,
                         n.minobsinnode = 10)
@@ -278,7 +276,7 @@ gbmFit1 <- train(trainDescr, trainClass,
                  ## This last option is actually one
                  ## for gbm() that passes through
                  tuneGrid = gbmGrid,
-                 metric = "ROC",
+                 metric = "Kappa",
                  verbose = FALSE)
 gbmFit1
 
@@ -293,4 +291,3 @@ confusionMatrix(testPred, testClass, positive = "Weak")
 trainPred <- predict(gbmFit1, trainDescr)
 postResample(trainPred, trainClass)
 confusionMatrix(trainPred, trainClass, positive = "Weak")
-
