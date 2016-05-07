@@ -45,10 +45,6 @@ flight <- flight[order(flight$D00),]
 # Backup
 flight.raw <- flight
 
-# Check warnings
-src.adjust <- TRUE
-source(file = "flight1.R")
-
 # To check adjustment, there is test code in flight-nb.R
 
 # Some additions
@@ -104,11 +100,6 @@ flight <- flight[flight$AVGLOFATC >= 3.1 & flight$AVGLOFATC <= 4.4,]
 
 paste("samples in use: ", dim(flight)[1])
 
-## Take another copy - this is all we need as the training/prediction
-## set.
-
-flight1 <- flight
-
 ## Data insights
 
 ## *Run from here.
@@ -118,38 +109,7 @@ flight1 <- flight
 
 flight <- flight1
 
-## So something is defining the behaviour.
-
-## Try to simplify structure
-
-head(model.matrix(LEGTYPE ~ ., data = flight))
-
-dummies <- dummyVars(LEGTYPE ~ ., data = flight)
-flight.dum <- predict(dummies, newdata = flight)
-
-## It may be too big to use, but useful for inspection.
-
 ### Numeric variables
-
-## Check some more numeric correlations, I haven't scaled yet.
-## I'd cut correlations above 0.75 because of overfitting.
-
-x1 <- as.data.frame(as.matrix(sapply(flight, class)))
-
-flight.num <- flight[,names(x1[which(x1$V1 %in% c("numeric", "integer")),])]
-
-flight.nzv <- nearZeroVar(flight.num, saveMetrics = TRUE)
-flight.nzv
-
-# annoying NA
-flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
-
-descrCorr <- findCorrelation(flight.cor, cutoff = .65, verbose=TRUE)
-
-colnames(flight.num)[descrCorr]
-
-## Which tells me that departure time is very highly correlated to AVGSQ.
-## AVGSQ is average stand queue?
 
 ### Try and impute the AVG, it might have more information than the
 ### bucket.
@@ -164,16 +124,44 @@ flight.na <- flight[, c("AVGSKDAVAIL", "xAVAILBUCKET")]
 preProcValues <- preProcess(flight.na, method = c("knnImpute"))
 flight.na1 <- predict(preProcValues, flight.na)
 
+## I'll add the new imputed value and drop the others
 flight$xAVGSKDAVAIL <- flight.na1$AVGSKDAVAIL
+flight$AVGSKDAVAIL <- NULL
+flight$xAVAILBUCKET <- NULL
+flight$AVAILBUCKET <- NULL
+
+flight$xHNGR <- NULL
+
+## Check some more numeric correlations, I haven't scaled everything yet.
+## I'd cut correlations above 0.65 to 0.75 because of overfitting.
+
+x1 <- as.data.frame(as.matrix(sapply(flight, class)))
+
+flight.num <- flight[,names(x1[which(x1$V1 %in% c("numeric", "integer")),])]
+
+flight.nzv <- nearZeroVar(flight.num, saveMetrics = TRUE)
+flight.nzv
+
+# annoying NA should be gone.
+flight.cor <- cor(flight.num, use = "pairwise.complete.obs")
+
+descrCorr <- findCorrelation(flight.cor, cutoff = .65, verbose=TRUE)
+
+colnames(flight.num)[descrCorr]
 
 ## And I'll leave the centered and scale values in for now.
 ## and delete the troublesome ones
 
-flight$AVGSKDAVAIL <- NULL
-flight$xHNGR <- NULL
-flight$AVAILBUCKET <- NULL
+## Re-classing
+## Check warnings to see what happened.
+## It doesn't matter if you run this on all or the sub-sample
+## The proportion is more or less the same
+src.adjust <- TRUE
+source(file = "flight1.R")
+flight1 <- flight
 
-# This should be deleted, leave it in and the results are ideal because it defines LEGTYPE.
+## This should be deleted, leave it in and the results
+## are ideal because it defines LEGTYPE.
 flight$D00 <- NULL
 
 ## Keep the results but don't change the order.
@@ -190,10 +178,14 @@ flight.num0 <- factors.numeric(flight)
 
 flight.scl0 <- scale(flight.num0)
 
-## Now split the results
+## Now split the samples
+## we need at least 60 to test with, p at 0.77 gives about 75.
+## Difficulty here is the bias in the table
+## Because we only have [3.1, 4.4] the proportion of Weak is higher.
+## see prop.table(results)
 
 set.seed(seed.mine)
-inTrain <- createDataPartition(outcomes.flight, p = 0.65, list = FALSE)
+inTrain <- createDataPartition(outcomes.flight, p = 0.77, list = FALSE)
 
 trainDescr <- flight.scl0[inTrain,]
 testDescr <- flight.scl0[-inTrain,]
@@ -201,11 +193,10 @@ testDescr <- flight.scl0[-inTrain,]
 trainClass <- outcomes.flight[inTrain]
 testClass <- outcomes.flight[-inTrain]
 
-prop.table(table(flight.scl0))
-
 prop.table(table(trainClass))
-
 dim(trainDescr)
+
+prop.table(table(testClass))
 dim(testDescr)
 
 ## Check Near-zero variance

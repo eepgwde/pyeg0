@@ -49,10 +49,19 @@ src.n80 / src.N
 
 stopifnot(src.n80 == src.n0)
 
-## They saw an improvement to 45% detection ie. at src.55 ==  0.6969697
-## I'm only to use an existing value and hope
+## They saw an improvement to 45% detection ie. at src.55 == 0.6969697
+## I'm only to use an existing value and hope This number is intended
+## to give you a good split in the training set.
 
-src.i55 <- max(which(is.between(src.probit(flight.raw$D00), 0, 0.45)))
+## For the original LEGTYPE I can usually get a proportion of 0.75 and
+## 0.25, but at the 55th percentile, src.55 == 0.6969697. There is a
+## bias to Weak, so I want prop.table to give me about 0.55 and 0.45
+## I would normally do this programmatically, but I'm going to just
+## hard code it.
+
+src.desired <- 1 - 0.655
+
+src.i55 <- max(which(is.between(src.probit(flight.raw$D00), 0, src.desired)))
 src.55 <- flight.raw$D00[src.i55]
 
 src.n55 <-dim(flight.raw[ flight.raw$D00 <= src.55, ])[1]
