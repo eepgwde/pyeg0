@@ -210,7 +210,7 @@ descrCorr <- cor(scale(trainDescr))
 
 ## This cut-off should be under src.adjust control.
 ## I'm under Git, so I can tinker with it.
-highCorr <- findCorrelation(descrCorr, cutoff = .95, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .90, verbose = TRUE)
 
 colnames(trainDescr)[highCorr]
 
@@ -257,8 +257,7 @@ fitControl <- trainControl(## 10-fold CV
     number = 10,
     ## repeated ten times
     repeats = 10,
-    classProbs = TRUE,
-    summaryFunction = twoClassSummary)
+    classProbs = TRUE)
 
 ## Some trial and error with variables to branch and boost.
 ## Try all variables
@@ -276,7 +275,7 @@ gbmFit1 <- train(trainDescr, trainClass,
                  ## This last option is actually one
                  ## for gbm() that passes through
                  tuneGrid = gbmGrid,
-                 metric = "ROC",
+                 metric = "Kappa",
                  verbose = FALSE)
 gbmFit1
 
