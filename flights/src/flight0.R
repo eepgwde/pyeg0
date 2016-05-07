@@ -153,9 +153,10 @@ colnames(flight.num)[descrCorr]
 ## and delete the troublesome ones
 
 ## Re-classing
-## Check warnings to see what happened.
-## It doesn't matter if you run this on all or the sub-sample
-## The proportion is more or less the same
+## Check warnings to see it adjustment has taken place.
+## We want the proportion in the training class to be about 0.55 0.45
+## Strong to Weak
+## I've achieved this heuristically
 src.adjust <- TRUE
 source(file = "flight1.R")
 flight1 <- flight
@@ -211,7 +212,7 @@ descrCorr <- cor(scale(trainDescr))
 
 ## This cut-off should be under src.adjust control.
 ## I'm under Git, so I can tinker with it.
-highCorr <- findCorrelation(descrCorr, cutoff = .65, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .95, verbose = TRUE)
 
 colnames(trainDescr)[highCorr]
 
@@ -246,30 +247,29 @@ table.descrCorr[order(abs(table.descrCorr$Freq), decreasing = TRUE),]
 ## Training controller and big grid
 ## Check the ROC (my preferred.)
 
-fitControl <- trainControl(## 10-fold CV
-    method = "repeatedcv",
-    number = 10,
-    ## repeated ten times
-    repeats = 10,
-    classProbs = 10,
-    summaryFunction = twoClassSummary)
-
-## Some trial and error with variables to branch and boost.
-## I'm just going to try the airports and the planes and the duration
-## of the flight. There may be some distance relationship there that
-## air traffic control use.
-
-## Annoying because I drop variables, this needs to be looked up.
+# I'm not using this at the moment.
 
 tr.cols <- colnames(trainDescr)
 tr.cols
 tr.icols <- grep("((STA|EQP)$)|(^xD)", tr.cols)
 tr.icols <- rev(tr.icols)
 
-gbmGrid <- expand.grid(interaction.depth = tr.icols,
+fitControl <- trainControl(## 10-fold CV
+    method = "repeatedcv",
+    number = 10,
+    ## repeated ten times
+    repeats = 10,
+    classProbs = TRUE,
+    summaryFunction = twoClassSummary)
+
+## Some trial and error with variables to branch and boost.
+## Try all variables
+
+gbmGrid <- expand.grid(interaction.depth = 
+                           c(length(colnames(trainDescr)-1, 2),
                         n.trees = (1:30)*90,
-                        shrinkage = 0.1,
-                        n.minobsinnode = 20)
+                        shrinkage = 0.2,
+                        n.minobsinnode = 10)
 
 set.seed(seed.mine)
 gbmFit1 <- train(trainDescr, trainClass,
