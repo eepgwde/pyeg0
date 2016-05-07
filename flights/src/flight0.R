@@ -276,7 +276,7 @@ gbmFit1 <- train(trainDescr, trainClass,
                  ## This last option is actually one
                  ## for gbm() that passes through
                  tuneGrid = gbmGrid,
-                 metric = "Kappa",
+                 metric = "ROC",
                  verbose = FALSE)
 gbmFit1
 
