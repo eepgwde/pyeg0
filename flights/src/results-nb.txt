@@ -4,6 +4,15 @@ weaves
 
 Jnygre.Q.Rnirf@tznvy.pbz
 
+Sat May  7 09:43:21 BST 2016
+
+* Stop Press!
+
+I wrote up the latest results and changes in method in the scripts and the
+PowerPoint presentation.
+
+There is, nonetheless, some useful material here.
+
 * Overview
 
 This is the Weak legs of flights test dataset under analysis for Strong and
