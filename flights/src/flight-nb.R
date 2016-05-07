@@ -156,3 +156,13 @@ paste(src.l55, !src.l55n)
 ## More prototyping
 
 grep("((STA|EQP)$)|(^x)", tr.cols)
+
+## More prototyping for results.
+
+x.p <- predict(gbmFit1, testDescr, type = "prob")[2]
+test.df <- data.frame(Weak=x.p$Weak, Obs=testClass)
+test.roc <- roc(Obs ~ Weak, test.df)
+
+densityplot(~test.df$Weak, groups = test.df$Obs, auto.key = TRUE)
+
+plot.roc(test.roc)

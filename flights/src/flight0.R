@@ -210,7 +210,7 @@ descrCorr <- cor(scale(trainDescr))
 
 ## This cut-off should be under src.adjust control.
 ## I'm under Git, so I can tinker with it.
-highCorr <- findCorrelation(descrCorr, cutoff = .90, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .99, verbose = TRUE)
 
 colnames(trainDescr)[highCorr]
 
@@ -290,3 +290,9 @@ confusionMatrix(testPred, testClass, positive = "Weak")
 trainPred <- predict(gbmFit1, trainDescr)
 postResample(trainPred, trainClass)
 confusionMatrix(trainPred, trainClass, positive = "Weak")
+
+## Get a density and a ROC
+
+x.p <- predict(gbmFit1, testDescr, type = "prob")[2]
+test.df <- data.frame(Weak=x.p$Weak, Obs=testClass)
+test.roc <- roc(Obs ~ Weak, test.df)
