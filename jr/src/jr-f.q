@@ -13,3 +13,4 @@ pcols: { [c0;prefx]
 	c1: `${ y,(1 _ x) }[;prefx] each c1;
 	c0[idx]: c1;
 	c0 }
+

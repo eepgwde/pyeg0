@@ -68,14 +68,17 @@ data1: t
 c0: cols t
 c1: string c0 @ where { x like "*[rx]*" } string c0 
 
-tcols: ([] n0:`$x0; t0:"I"${ -2 # x} each x0)
+tcols: ([] n0:`$c1; t0:"I"${ -2 # x} each c1)
+
 `t0 xasc `tcols
 
 c1: (c0 except tcols.n0),tcols.n0
 
 data1: c1 xcols t
 
-// Check I haven't broken anything.
+///* Check I haven't broken anything.
+
+show "checking: "
 
 (count data) = (count data1)
 
@@ -92,7 +95,10 @@ c:()
 b:0b
 a:a0
 
-sdata: flip ?[t;c;b;a]
+sdata: ?[t;c;b;a]
+sdata: `fcst`r0`x1`x2`x3`x4`x5`x6`x7`x8`x9`x10`x11`x12`x13`x14`x15`x16`x17`x18`x19`x20`x21`x22`x23`x24 xcols sdata
+
+sdata: flip sdata
 
 // And again
 
@@ -131,6 +137,12 @@ chk.data[;(`folio0;`x)] ~ chk.data1[;(`folio0;`x)]
 // Do you remember when you could use q/kdb+ as a remote data table?
 
 .sch.t2csv[`data1]
+
+// And split them up.
+
+{ nm:(string x),"0"; t0:select from data1 where folio0 = x; value nm,":t0"; .sch.t2csv[`$nm] } each distinct data1.folio0
+
+
 
 \
 
