@@ -26,6 +26,16 @@ folios.in <- folios.df[folios.df$in0, c(names.base, names.x)]
 
 folios.in0 <- tail(folios.in, n=40)
 
+## Quick time-series plot
+
+names.xr <- append(names.x, "r00")
+
+ts.plot(folios.in0[, names.xr],
+             gpars=list(xlab="day", ylab="metric", 
+                        lty=c(1:length(names.xr)) ))
+legend("bottomleft", names.xr, col=1:length(names.xr), lty=, cex=.65)
+
+
 ## A short set
 
 folios.df1 <- tail(folios.df, n=40)
