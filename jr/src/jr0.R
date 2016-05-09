@@ -7,6 +7,7 @@ folios.list <- read.csv("folios0.csv",
                         header=TRUE)
 
 folio.fname <- folios.list[1,1]
+folio.fname
 
 folios.df <- read.csv(folio.fname)
 folios.df$in0 <- as.logical(folios.df$in0)
@@ -17,14 +18,17 @@ c0 <- colnames(folios.df)
 
 ## Simple set: just to check
 
-c0.idx <- which(grepl(".*x01", c0))
+c0.idx <- which(grepl("^x[0-9]{2}$", c0))
 
-names.c <- c0[c0.idx]
+names.x <- c0[c0.idx]
 
-folios.in <- folios.df[folios.df$in0, c(names.base, names.c)]
+folios.in <- folios.df[folios.df$in0, c(names.base, names.x)]
 
 folios.in0 <- tail(folios.in, n=40)
 
 ## A short set
 
 folios.df1 <- tail(folios.df, n=40)
+
+lapply(names.x, function(x) grph.set0(x, jpeg0=TRUE))
+

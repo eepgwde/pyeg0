@@ -4,11 +4,18 @@ library(ggplot2)
 library(gtable)
 library(grid)
 
-grph.pair <- function(x, p1, p2) {
+## weaves
+##
+## Not easy to plot overlay charts.
+##
+## I have a colouring scheme, the most derived varible is blue
+## R O Y G B I V
+## but just red for the X and blue for the result/return
+grph.pair <- function(x, ref1, other1) {
 
-    p1 <- ggplot(x, p1) + 
-        geom_line(colour = "blue") + theme_bw()
-    p2 <- ggplot(x, p2) + geom_line(colour = "red") + 
+    p1 <- ggplot(x, other1) + 
+        geom_line(colour = "red") + theme_bw()
+    p2 <- ggplot(x, ref1) + geom_line(colour = "blue") + 
         theme_bw() %+replace% theme(panel.background = element_rect(fill = NA))
 
     ## extract gtable
@@ -40,6 +47,12 @@ grph.pair <- function(x, p1, p2) {
 ### Check some auto-correlations on the returns
 ## Check the result and the delta.
 ## Can indicate AR process.
+
+a0.p1 <- aes(dt0, r00)
+a0.p2 <- aes_(x = as.name("dt0"), y = as.name("x01"))
+
+grid.draw(grph.pair(folios.df1, a0.p1, a0.p2))
+
 
 ## Short-set
 
