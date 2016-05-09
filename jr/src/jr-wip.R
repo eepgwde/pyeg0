@@ -1,7 +1,6 @@
 ### weaves
 ## Protyping code.
-## May no longer work.
-
+# May no longer work.
 
 ## Plot time-series - too many to see clearly
 
@@ -53,7 +52,10 @@ dev.off()
 
 grph.set0("x01")
 
+grph.set0("x01", ref0="x02")
+
 grph.set0("x01", jpeg0=TRUE)
+grph.set0("x01", ref0="x02", jpeg0=TRUE)
 
 ## dev.off()
 
