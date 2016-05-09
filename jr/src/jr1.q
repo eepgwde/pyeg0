@@ -1,5 +1,6 @@
 /// weaves
 
+/// Called by jr0.q
 /// Checks the final CSV is not different from the source.  After the
 /// examination of the data in jr0.R, it appears they are all MAs.  So
 /// very little use. There's no volatility, no volume. Nothing other

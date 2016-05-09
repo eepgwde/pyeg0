@@ -31,15 +31,14 @@ data1: c0 xcol t
 
 first (.sys.qpath.list`)
 
+// To save in a file, you need to convert symbols to strings.
+
+.t.t0:update folio0:string each folio0 from data1
+
 // Make file name in the first directory and save a copy to it.
-.sch.mimefile[`data1;"qdb";first (.sys.qpath.list`)] set data1
+.sch.mimefile[`data1;"qdb";first (.sys.qpath.list`)] set .t.t0
 
-// drop from namespace and reload
-delete data1 from `.
-
-.sys.qreloader enlist "data1.qdb"
-
-count data1
+.t.t0:()
 
 // Add some day-to-day ratios
 // Like these
