@@ -4,11 +4,11 @@ library(ggplot2)
 library(gtable)
 library(grid)
 
-grph.pair <- function(p1, p2) {
+grph.pair <- function(x, p1, p2) {
 
-    p1 <- ggplot(folios.in, p1) + 
+    p1 <- ggplot(x, p1) + 
         geom_line(colour = "blue") + theme_bw()
-    p2 <- ggplot(folios.in, p2) + geom_line(colour = "red") + 
+    p2 <- ggplot(x, p2) + geom_line(colour = "red") + 
         theme_bw() %+replace% theme(panel.background = element_rect(fill = NA))
 
     ## extract gtable
@@ -37,9 +37,55 @@ grph.pair <- function(p1, p2) {
     return(g)
 }
 
-## Some sample plots
+### Some sample plots
 
-a0.p1 <- aes(dt0, m5r00)
-a0.p2 <- aes(dt0, m5x01)
+# a0.p1 <- aes(dt0, m5r00)
+# a0.p2 <- aes(dt0, y = m5x01)
 
-grid.draw(grph.pair(a0.p1, a0.p2))
+# grid.draw(grph.pair(folios.in0, a0.p1, a0.p2))
+
+a0.p1 <- aes(dt0, r00)
+
+a0.nm <- "x01"
+
+a0.p2 <- aes_(x = as.name("dt0"), y = as.name(a0.nm))
+
+grid.draw(grph.pair(folios.in0, a0.p1, a0.p2))
+
+## x01 clearly lags.
+
+### Check some auto-correlations on the returns
+## Check the result and the delta.
+## Can indicate AR process.
+
+## Short-set
+
+acf(folios.in0$r00)
+
+acf(folios.in0$dr00)                    # something on the 5
+
+pacf(folios.in0$r00)                    # nothing but the first
+
+pacf(folios.in0$dr00)                   # nothing at all!
+
+## Full-set
+
+acf(folios.in$r00)
+## touch on the second, usual profit taking
+
+acf(folios.in$dr00)
+
+pacf(folios.in$r00)                     # nothing
+
+pacf(folios.in$dr00)                    # nothing
+
+
+### Try a ccf with the name
+
+ccf(folios.in0$r00, folios.in0[, a0.nm])
+
+## Full-set
+
+ccf(folios.in$r00, folios.in[, a0.nm])
+
+## clearly lags.
