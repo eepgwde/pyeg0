@@ -29,6 +29,18 @@ c0: pcols[c0;"r"]
 
 data1: c0 xcol t
 
+first (.sys.qpath.list`)
+
+// Make file name in the first directory and save a copy to it.
+.sch.mimefile[`data1;"qdb";first (.sys.qpath.list`)] set data1
+
+// drop from namespace and reload
+delete data1 from `.
+
+.sys.qreloader enlist "data1.qdb"
+
+count data1
+
 // Add some day-to-day ratios
 // Like these
 
@@ -76,73 +88,21 @@ c1: (c0 except tcols.n0),tcols.n0
 
 data1: c1 xcols t
 
-///* Check I haven't broken anything.
-
-show "checking: "
-
-(count data) = (count data1)
-
-// check: sum the columns.
-
-t:data 
-
-t0:meta t
-c0: raze value flip select c from t0 where t = "f"
-
-a0: c0!({ (sum;x) } each c0)
-
-c:()
-b:0b
-a:a0
-
-sdata: ?[t;c;b;a]
-sdata: `fcst`r0`x1`x2`x3`x4`x5`x6`x7`x8`x9`x10`x11`x12`x13`x14`x15`x16`x17`x18`x19`x20`x21`x22`x23`x24 xcols sdata
-
-sdata: flip sdata
-
-// And again
-
-t:data1
-
-t0:meta t
-c0: raze value flip select c from t0 where (t = "f"),(c like "[rxf]*")
-
-a0: c0!({ (sum;x) } each c0)
-
-c:()
-b:0b
-a:a0
-
-sdata1: flip ?[t;c;b;a]
-
-( value sdata1 ) ~ ( value sdata )
-
-data1[;`folio0] ~ data[;`folio0]
-
-data1[;`dt0] ~ data[;`dt0]
-
-chk.data: 0!select count i by folio0, sample0 from data
-chk.data1: 0!select count i by folio0, in0 from data1
-
-delete sample0 from `chk.data
-delete in0 from `chk.data1
-
-`folio0`x xasc `chk.data
-`folio0`x xasc `chk.data1
-
-chk.data[;(`folio0;`x)] ~ chk.data1[;(`folio0;`x)] 
+// Run data-checks if required, but as noted there. These metrics are all MAs.
+// .sys.qreloader enlist "jr1.q"
 
 // Enough for now
 // Write out to a CSV for R. 
-// Do you remember when you could use q/kdb+ as a remote data table?
+// [Ed: Do you remember when you could use q/kdb+ as a remote data table?]
 
 .sch.t2csv[`data1]
 
-// And split them up.
+// And split them up, I must use a global here, so put it into a temporary workspace 
+// Note the trick with value in this function. Never found a better way.
 
-{ nm:(string x),"0"; t0:select from data1 where folio0 = x; value nm,":t0"; .sch.t2csv[`$nm] } each distinct data1.folio0
+.t.t0:()
 
-
+{ nm:(string x),"0"; .t.t0:select from data1 where folio0 = x; value nm,":.t.t0"; .sch.t2csv[`$nm] } each distinct data1.folio0
 
 \
 
