@@ -15,7 +15,7 @@ names.base <- c("dt0", "r00", "dr00", "m5r00")
 
 c0 <- colnames(folios.df)
 
-## Take a look 
+## Simple set: just to check
 
 c0.idx <- which(grepl(".*x01", c0))
 
@@ -24,3 +24,7 @@ names.c <- c0[c0.idx]
 folios.in <- folios.df[folios.df$in0, c(names.base, names.c)]
 
 folios.in0 <- tail(folios.in, n=40)
+
+## A short set
+
+folios.df1 <- tail(folios.df, n=40)

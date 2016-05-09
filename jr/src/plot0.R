@@ -37,55 +37,28 @@ grph.pair <- function(x, p1, p2) {
     return(g)
 }
 
-### Some sample plots
-
-# a0.p1 <- aes(dt0, m5r00)
-# a0.p2 <- aes(dt0, y = m5x01)
-
-# grid.draw(grph.pair(folios.in0, a0.p1, a0.p2))
-
-a0.p1 <- aes(dt0, r00)
-
-a0.nm <- "x01"
-
-a0.p2 <- aes_(x = as.name("dt0"), y = as.name(a0.nm))
-
-grid.draw(grph.pair(folios.in0, a0.p1, a0.p2))
-
-## x01 clearly lags.
-
 ### Check some auto-correlations on the returns
 ## Check the result and the delta.
 ## Can indicate AR process.
 
 ## Short-set
 
-acf(folios.in0$r00)
+acf(folios.df1$r00)
 
-acf(folios.in0$dr00)                    # something on the 5
+acf(folios.df1$dr00)                    # something on the 5
 
-pacf(folios.in0$r00)                    # nothing but the first
+pacf(folios.df1$r00)                    # nothing but the first
 
-pacf(folios.in0$dr00)                   # nothing at all!
+pacf(folios.df1$dr00)                   # nothing at all!
 
 ## Full-set
 
-acf(folios.in$r00)
+acf(folios.df$r00)
 ## touch on the second, usual profit taking
 
-acf(folios.in$dr00)
+acf(folios.df$dr00)
 
-pacf(folios.in$r00)                     # nothing
+pacf(folios.df$r00)                     # 14 day cycle
 
-pacf(folios.in$dr00)                    # nothing
+pacf(folios.df$dr00)                    # really nothing
 
-
-### Try a ccf with the name
-
-ccf(folios.in0$r00, folios.in0[, a0.nm])
-
-## Full-set
-
-ccf(folios.in$r00, folios.in[, a0.nm])
-
-## clearly lags.
