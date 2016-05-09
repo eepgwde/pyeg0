@@ -2,7 +2,7 @@
 ## A plotting script
 ## quick eye-ball of the variables.
 
-### Some sample plots
+### ACF and others 
 
 grph.set0 <- function(nm0, jpeg0=NULL) {
     if (!is.null(jpeg0)) {
@@ -41,19 +41,34 @@ grph.set0 <- function(nm0, jpeg0=NULL) {
     }
 }
 
-# nm0.fspec <- paste(nm0.tag, "-%03d.jpeg", sep ="")
+ts0.plot <- function(tbl, names0, xtra="r00", fname="XX0") {
+    names.xr <- append(xtra, names0)
 
-# jpeg(width=1024, height=768, filename = nm0)
+    ts.gpars=list(xlab="day", ylab="metric", main=fname,
+                  lty=1:4, col=1:length(names.xr) )
 
-grph.set0("x01")
+    ts.plot(tbl[, names.xr], gpars=ts.gpars)
+    legend("topleft", names.xr, lty=ts.gpars$lty, col=ts.gpars$col)
+}
 
-grph.set0("x01", jpeg0=TRUE)
+folio.marks0 <- function(tbl) {
+    s0 <- paste(as.character(c(head(tbl$dt0, 1), 
+                               tail(tbl$dt0, 1))), collapse="-")
+    return(s0)
+}
 
-# dev.off()
+ts0.folio <- function(tbl) {
+    nm0.tag <- folio.name
+    nm0.marks <- folio.marks0(tbl)
+    nm0.fspec <- paste(nm0.tag, nm0.marks, "-%03d.jpeg", sep ="")
 
-names.xr <- append(names.x, "r00")
+    jpeg(width=1024, height=768, filename = nm0.fspec)
 
-ts.plot(folios.in0[, names.xr],
-             gpars=list(xlab="day", ylab="metric", 
-                        lty=c(1:length(names.xr))))
+    lapply(1:dim(names.idxes)[1], 
+           function(y) ts0.plot(tbl, 
+                                names.x[names.idxes[y,]], 
+                                fname=folio.name))
+
+    dev.off()
+}
 
