@@ -89,7 +89,7 @@ c1: (c0 except tcols.n0),tcols.n0
 data1: c1 xcols t
 
 // Run data-checks if required, but as noted there. These metrics are all MAs.
-// .sys.qreloader enlist "jr1.q"
+.sys.qreloader enlist "jr1.q"
 
 // Enough for now
 // Write out to a CSV for R. 
