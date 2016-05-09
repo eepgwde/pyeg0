@@ -4,7 +4,9 @@
 
 ### ACF and others 
 
-grph.set0 <- function(nm0, jpeg0=NULL, idx0="dt0", ref0="r00") {
+grph.set0 <- function(data0, nm0, jpeg0=NULL, 
+                      idx0="dt0", ref0="r00", ntail=60) {
+    
     if (!is.null(jpeg0)) {
         nm0.tag <- nm0
         nm0.fspec <- paste(nm0.tag, "-%03d.jpeg", sep ="")
@@ -14,24 +16,26 @@ grph.set0 <- function(nm0, jpeg0=NULL, idx0="dt0", ref0="r00") {
     a0.p1 <- aes_(x = as.name(idx0), y = as.name(ref0))
     a0.p2 <- aes_(x = as.name(idx0), y = as.name(nm0))
 
-    grid.draw(grph.pair(folios.df1, a0.p1, a0.p2))
+    data1 <- tail(data0, n = ntail)
+
+    grid.draw(grph.pair(data1, a0.p1, a0.p2))
 
 ### Auto-correlations
     
-    acf(folios.df1[, nm0], main=paste("acf: tail: ", nm0))
-    acf(folios.df[, nm0], main=paste("acf: full: ", nm0))
+    acf(data1[, nm0], main=paste("acf: tail: ", nm0))
+    acf(data0[, nm0], main=paste("acf: full: ", nm0))
 
-    pacf(folios.df1[, nm0], main=paste("pacf: tail: ", nm0))
-    pacf(folios.df[, nm0], main=paste("pacf: full: ", nm0))
+    pacf(data1[, nm0], main=paste("pacf: tail: ", nm0))
+    pacf(data0[, nm0], main=paste("pacf: full: ", nm0))
 
 ### Try a ccf with the name
 
-    ccf(folios.df1[, ref0], folios.df1[, nm0], 
+    ccf(data1[, ref0], data1[, nm0], 
         main=paste("ccf: tail: ", ref0, nm0))
 
     ## Full-set
 
-    ccf(folios.df[, ref0], folios.df[, nm0],
+    ccf(data0[, ref0], data0[, nm0],
         main=paste("ccf: full: ", ref0, nm0))
 
     ## x01 clearly lags by one or two days.

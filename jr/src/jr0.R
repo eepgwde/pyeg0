@@ -6,7 +6,9 @@ folios.list <- read.csv("folios0.csv",
                         stringsAsFactors=FALSE, 
                         header=TRUE)
 
-folio.fname <- folios.list[1,1]
+
+
+folio.fname <- folios.list[sample(1:dim(folios.list)[1], 1), 1]
 folio.fname
 folio.name <- substring(folio.fname, 1, 3)
 
@@ -34,8 +36,6 @@ folios.in0 <- tail(folios.in, n=40)
 source("plot0.R")
 source("plot1.R")
 
-
-
 ## Some time-series plots
 
 names.idxes <- t(array(1:length(names.x), dim=c(6,4)))
@@ -49,10 +49,13 @@ ts0.folio(ts0.tbl)
 ts0.tbl <- tail(folios.in, n=40)
 ts0.folio(ts0.tbl)
 
-
 ## A short set of {A,PA,C}CF, this function uses globals.
 
-folios.df1 <- tail(folios.df, n=40)     # this one and folios.df
+lapply(names.x, function(x) grph.set0(folios.in, x, jpeg0=TRUE))
 
-lapply(names.x, function(x) grph.set0(x, jpeg0=TRUE))
+## Pairwise we will look at ccf wrt a few to see that they are too
+## similiar
 
+names.xXX <- sample(names.x, 1)
+lapply(names.x, function(x) grph.set0(folios.in, x, 
+                                      ref0=names.xXX, jpeg0=TRUE))

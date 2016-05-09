@@ -50,12 +50,13 @@ dev.off()
 
 ## jpeg(width=1024, height=768, filename = nm0)
 
-grph.set0("x01")
+grph.set0(folios.in, "x01")
 
-grph.set0("x01", ref0="x02")
+grph.set0(folios.in, "x01", ref0="x02")
 
-grph.set0("x01", jpeg0=TRUE)
-grph.set0("x01", ref0="x02", jpeg0=TRUE)
+grph.set0(folios.in, "x01", jpeg0=TRUE)
+
+grph.set0(folios.in, "x01", ref0="x02", jpeg0=TRUE)
 
 ## dev.off()
 
