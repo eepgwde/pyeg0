@@ -2,9 +2,6 @@
 ##
 ## Data analysis: look and feel
 
-library(ggplot2)
-library(tidyr)
-
 folios.list <- read.csv("folios0.csv", 
                         stringsAsFactors=FALSE, 
                         header=TRUE)
@@ -14,7 +11,7 @@ folio.fname <- folios.list[1,1]
 folios.df <- read.csv(folio.fname)
 folios.df$in0 <- as.logical(folios.df$in0)
 
-names.base <- c("dt0", "r00", "dr00")
+names.base <- c("dt0", "r00", "dr00", "m5r00")
 
 c0 <- colnames(folios.df)
 
