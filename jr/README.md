@@ -81,6 +81,31 @@ GARCH can be used, three years is enough data.
 ARIMA is not known to be too successful, but maybe with some machine
 learning there can be something.
 
+**** kdb+
+
+This has some simple metrics:
+
+mdev is a standard deviation over a sliding window
+
+mcount is a count over a window, so RSI can be done.
+
+mavg
+
+**** R
+
+fTrading has many technicals and many ready to use packages.
+
+r-cran-fextremes - GNU R package for financial engineering -- fExtremes
+r-cran-fgarch - GNU R package for financial engineering -- fGarch
+r-cran-fimport - GNU R package for financial engineering -- fImport
+r-cran-fmultivar - GNU R package for financial engineering -- fMultivar
+r-cran-fnonlinear - GNU R package for financial engineering -- fNonlinear
+r-cran-foptions - GNU R package for financial engineering -- fOptions
+r-cran-foreign - GNU R package to read/write data from other stat. systems
+r-cran-fportfolio - GNU R package for financial engineering -- fPortfolio
+r-cran-fregression - GNU R package for financial engineering -- fRegression
+r-cran-ftrading - GNU R package for financial engineering -- fTrading
+
 *** Strategies
 
 No sophisticated trader just takes a wild punt on a technical. Some hedging
@@ -117,7 +142,23 @@ I've used GNU R, I haven't got a full Python sci-kit learning setup on my
 home machine. GNU R machine and timeseries tools are the basis of what is
 developed for Python.
 
+** ChangeLog
 
+*** Original data
+
+Snapshot the JPEG and tag the code now
+
+branch jr1 - tag: x06-KT0
+
+> names.xXX
+[1] "x06"
+> folio.name
+[1] "KT0"
+
+*** Prices
+
+I've reconstituted the original price signal from the returns, and remove
+all the MAs. Made some Brownian motions of the folio prices. Analysis above.
 
 ** This file's Emacs file variables
 

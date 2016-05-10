@@ -22,6 +22,8 @@ data0: update p01:p01 * 1000  by folio0 from data0
 data0: update p00:p01 by folio0 from data0
 data0: delete p01 from data0
 
+datar: select from data0 where in0
+
 \
 
 /  Local Variables: 

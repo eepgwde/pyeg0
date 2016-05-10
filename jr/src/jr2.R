@@ -19,26 +19,33 @@ source("plot0.R")
 
 source("plot1.R")
 
+folios.metric <- "p00"
+folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
+
 ## Daily prices by folio
 ## unstack and find a way of plotting.
-folios.ustk <- unstack(folios.in, p00 ~ folio0)
+folios.ustk <- unstack(folios.in, folios.forml)
 folios.ustk0 <- tail(folios.ustk, n = 60)
 
 ## Brownians - just like the books.
 ts.plot(folios.ustk)
 
 ts0.plot(folios.ustk0, colnames(folios.ustk0),
-         xtra=NULL, fname="Folios", ylab0="p00")
+         xtra=NULL, fname="Folios", ylab0=folios.metric)
 
 ## change the dim to get no more than 6.
 names.x <- colnames(folios.ustk0)
 names.idxes <- t(array(1:length(names.x), dim=c(5,4)))
 
 ts0.tbl <- head(folios.ustk, n=180)
-ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
+ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric)
 
 ## ts0.tbl <- folios.ustk0[200:300, ]
 ## ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
 
 ts0.tbl <- tail(folios.ustk, n=180)
-ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
+ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric)
+
+ts0.tbl <- folios.ustk
+ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric)
+
