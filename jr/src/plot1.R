@@ -95,7 +95,7 @@ ts0.folio <- function(tbl) {
 ## names.idxes is a matrix of indices into the column names.
 
 ts1.folio <- function(tbl, names.idxes, 
-                      tag0="folios", 
+                      tag0="folios", xtra0=NULL,
                       names.x=NULL, ylab0="metric") {
 
     nm0.tag <- tag0
@@ -111,7 +111,7 @@ ts1.folio <- function(tbl, names.idxes,
 
     lapply(1:dim(names.idxes)[1], 
            function(y) ts0.plot(tbl, 
-                                names.x[names.idxes[y,]],
+                                unique(append(xtra0, names.x[names.idxes[y,]])),
                                 ylab0=ylab0,
                                 fname=tag0, xtra=NULL))
 
