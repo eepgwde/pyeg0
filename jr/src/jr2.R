@@ -19,7 +19,7 @@ source("plot0.R")
 
 source("plot1.R")
 
-folios.metric <- "p00"
+folios.metric <- "r00"
 folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
 
 ## Daily prices by folio

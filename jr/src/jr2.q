@@ -22,7 +22,52 @@ data0: update p01:p01 * 1000  by folio0 from data0
 data0: update p00:p01 by folio0 from data0
 data0: delete p01 from data0
 
-datar: select from data0 where in0
+// Safety info
+.sf.cols: cols data0
+.sf.cols: distinct data0.folio0
+
+// Calculate total across all
+p00: select sum p00 by dt0 from data0
+p01: raze value flip value p00
+
+// Add a blank dataset KA for a total.
+t1: select by dt0,folio0 from data0 where folio0 = `KF
+t1: update folio0:`KA, p00:0n from t1
+
+// Back to a dictionary and replace the sum values, flip back to a table and append
+t2: flip 0!t1
+t2[`p00]: p01
+t3: flip t2
+
+// Append tables
+data1: (0!select by dt0, folio0 from data0),(0!t3)
+
+
+// Additional metrics
+
+data0: update r05: 5 mavg r00 by folio0 from data0
+
+\
+
+t0: select from data0 where in0
+
+// Try a market as a whole metric
+
+t0: data0
+
+select count i by folio0, in0 from data1
+
+// copy off one column
+t1: select by dt0,folio0 from data0 where folio0 = `KF
+t1: update folio0:`KA, p00:0n from t1
+
+t2: (0!select by dt0, folio0 from data0),(0!t1)
+
+t1: select by dt0,folio0 from data0 where folio0 = `KA
+
+t0: select by dt0 from data0
+
+
 
 \
 
@@ -34,3 +79,4 @@ datar: select from data0 where in0
 /  comment-start: "/  "
 /  comment-end: ""
 /  End:
+
