@@ -128,8 +128,7 @@ ts1.folio <- function(tbl, names.idxes,
 
 ## rm("tbl", "tag0", "rs")
 
-ustck.folio <- function(tbl, names.idxes, 
-                        tag0="folios", xtra0=NULL,
+ustck.folio <- function(tbl,
                         folios.metric="p00") {
 
     folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
@@ -138,6 +137,4 @@ ustck.folio <- function(tbl, names.idxes,
     folios.ustk <- unstack(tbl, folios.forml)
     return(folios.ustk)
 }
-
-
 
