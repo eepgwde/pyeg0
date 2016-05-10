@@ -61,4 +61,17 @@ jpeg.ustk(folios.ustk0)
 jpeg.ustk(folios.ustk0, metric0="r00", xtra0=NULL)
 jpeg.ustk(folios.ustk0, metric0="s05", xtra0=NULL)
 
+jpeg.ustk(folios.ustk0, metric0="r05", xtra0=NULL)
+jpeg.ustk(folios.ustk0, metric0="r20", xtra0=NULL)
 
+## MACD on KF
+
+xx.mnames <- ustk.patt(folios.ustk0, patt="^KF\\.r((05)|(20))$")
+
+ts0.plot(folios.ustk0, xx.mnames, 
+         xtra=NULL, fname="KF0", ylab0="MACD:0,5,20")
+
+
+xx.mnames <- ustk.patt(folios.ustk0, patt="^K[B-Z]\\.r((05)|(20))$")
+jpeg.ustk(folios.ustk0, mnames=xx.mnames, 
+          xtra0=NULL, metric0=NULL, tag0="macd")

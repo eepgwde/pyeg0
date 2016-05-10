@@ -108,7 +108,7 @@ ts1.folio.f0 <- function(y, xtra0, ylab0, names.x,
 ## names.idxes is a matrix of indices into the column names.
 
 ts1.folio <- function(tbl, names.idxes, 
-                      tag0="folios", xtra0=NULL,
+                      tag0="folios-", xtra0=NULL,
                       names.x=NULL, ylab0="metric") {
 
     nm0.tag <- tag0
@@ -228,15 +228,27 @@ ustk.patt <- function(ustk, patt="^[A-Z]{2}\\.p00$", metric0=NULL) {
 ## @todo
 ## I haven't implemented the mnames logic, just use metric0
 ## be careful not to re-use globals as arguments.
+## Change the names.cols, but try not to have more than 6 on a
+## chart.
+
 jpeg.ustk <- function(ustk, metric0="p00", xtra0="KA", 
-                      names.cols = 5, mnames = NULL) {
-    ## change the names.cols, but try no to have more than get no more
-    ## than 6 on a chart.
+                      names.cols = 5, mnames = NULL, tag0=NULL) {
     f.metric <- NULL
     f.mnames <- NULL
-    if (!is.null(metric0) && is.null(mnames)) {
-        f.metric <- metric0
-        f.mnames <- ustk.patt(ustk, metric0=f.metric)
+
+    if (!is.null(mnames)) {
+        f.mnames <- mnames
+        if (!is.null(metric0)) {
+            f.metric <- "Metric"
+        }
+    } else {
+        if (!is.null(metric0) && is.null(mnames)) {
+            f.metric <- metric0
+            f.mnames <- ustk.patt(ustk, metric0=f.metric)
+        } else {
+            warning("no metrics")
+            return
+        }
     }
 
     names.x <- f.mnames
@@ -248,12 +260,21 @@ jpeg.ustk <- function(ustk, metric0="p00", xtra0="KA",
     names.idxes <- t(array(1:length(names.x), dim=names.dim ))
 
     f.xtra0 <- NULL
-    if (!is.null(xtra0)) {
+    if (!is.null(xtra0) && !is.null(metric0)) {
         f.xtra0 <- paste(xtra0, f.metric, sep=".")
+    }
+
+    x.tag0 <- metric0
+    if (is.null(x.tag0)) {
+        if (!is.null(tag0)) {
+            x.tag0 <- tag0
+        } else {
+            x.tag0 <- "metric"
+        }
     }
 
     ## The composite folio
     ts1.folio(ustk, names.idxes, names.x = f.mnames,
               ylab0=f.metric, xtra0=f.xtra0, 
-              tag0=paste(metric0, "-", sep=""))
+              tag0=paste(x.tag0, "-", sep=""))
 }
