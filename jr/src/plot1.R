@@ -44,10 +44,18 @@ grph.set0 <- function(data0, nm0, jpeg0=NULL,
     }
 }
 
-ts0.plot <- function(tbl, names0, xtra="r00", fname="XX0") {
-    names.xr <- append(xtra, names0)
+## Plots time-series
+##
+## Try and adapt this for the unstacked dataset.
+ts0.plot <- function(tbl, names0, xtra="r00", 
+                     fname="XX0", 
+                     ylab0="metric") {
+    names.xr <- names0
+    if (!is.null(xtra)) {
+        names.xr <- append(xtra, names0)
+    }
 
-    ts.gpars=list(xlab="day", ylab="metric", main=fname,
+    ts.gpars=list(xlab="day", ylab=ylab0, main=fname,
                   lty=1:4, col=1:length(names.xr) )
 
     ts.plot(tbl[, names.xr], gpars=ts.gpars)
