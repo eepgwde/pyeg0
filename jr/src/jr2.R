@@ -38,15 +38,18 @@ ts0.plot(folios.ustk0, colnames(folios.ustk0),
 names.x <- colnames(folios.ustk0)
 names.idxes <- t(array(1:length(names.x), dim=c(5,4)))
 
+## The composite folio
+folios.xtra0 <- paste("KA", folios.metric, sep=".")
+
 ts0.tbl <- head(folios.ustk, n=180)
-ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0="KA")
+ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
 
 ## ts0.tbl <- folios.ustk0[200:300, ]
 ## ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
 
 ts0.tbl <- tail(folios.ustk, n=180)
-ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0="KA")
+ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
 
 ts0.tbl <- folios.ustk
-ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0="KA")
+ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
 
