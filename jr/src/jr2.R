@@ -21,9 +21,11 @@ folios.in0 <- tail(folios.in, n=60)
 source("plot0.R")
 source("plot1.R")
 
+folios.metric <- "p00"
 
 ## Daily prices by folio
-folios.ustk <- ustck.folio(folios.in)
+folios.ustk <- ustck.folio(folios.in, 
+                           folios.metric=folios.metric)
 folios.ustk0 <- tail(folios.ustk, n = 60)
 
 ## Brownians - just like the books.
