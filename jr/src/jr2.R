@@ -2,9 +2,12 @@
 ##
 ## File with q/kdb+ generated technicals.
 
+## No longer used, but knowing me.
 folios.list <- read.csv("folios0.csv", 
                         stringsAsFactors=FALSE, 
                         header=TRUE)
+
+## Various kdb loads
 
 kdb.url <- "http://m1:5000/q.csv?select from data0 where folio0 = `KF"
 kdb.url <- "http://m1:5000/q.csv?select from data0 where in0"
@@ -16,15 +19,11 @@ folios.in <- read.csv(kdb.url, header=TRUE)
 folios.in0 <- tail(folios.in, n=60)
 
 source("plot0.R")
-
 source("plot1.R")
 
-folios.metric <- "p00"
-folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
 
 ## Daily prices by folio
-## unstack and find a way of plotting.
-folios.ustk <- unstack(folios.in, folios.forml)
+folios.ustk <- ustck.folio(folios.in)
 folios.ustk0 <- tail(folios.ustk, n = 60)
 
 ## Brownians - just like the books.

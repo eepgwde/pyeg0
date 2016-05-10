@@ -131,8 +131,16 @@ proportions to optimize for the next.
 
 ** To do
 
-I'll reconstitute the market price (100 base for each), calculate some
+I'll reconstitute the market price (1000 base for each), calculate some
 technicals. 130-30 looks easiest to do. It's a scaled-down Markowitz.
+
+Add more technicals in kdb.
+
+Merge the unstacked data frames from kdb in R.
+
+Apply R technicals.
+
+130-30 looks easiest to do. It's a scaled-down Markowitz.
 
 * Notes
 
@@ -159,6 +167,11 @@ branch jr1 - tag: x06-KT0
 
 I've reconstituted the original price signal from the returns, and remove
 all the MAs. Made some Brownian motions of the folio prices. Analysis above.
+
+I've added a market price (all portfolios equally weighted).
+
+Switched to jr2 branch to try the unstack merge.
+
 
 ** This file's Emacs file variables
 

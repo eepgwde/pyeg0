@@ -127,3 +127,17 @@ ts1.folio <- function(tbl, names.idxes,
 ## nm0.fspec <- paste(nm0.tag, nm0.marks, "-%03d.jpeg", sep ="")
 
 ## rm("tbl", "tag0", "rs")
+
+ustck.folio <- function(tbl, names.idxes, 
+                        tag0="folios", xtra0=NULL,
+                        folios.metric="p00") {
+
+    folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
+
+    ## unstack and find a way of plotting.
+    folios.ustk <- unstack(tbl, folios.forml)
+    return(folios.ustk)
+}
+
+
+
