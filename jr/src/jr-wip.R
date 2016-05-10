@@ -1,6 +1,20 @@
 ### weaves
 ## Protyping code.
-# May no longer work.
+## May no longer work. Most recent at the top
+
+ggplot(subset(folios.in0, folio0 %in% c("KF", "KG"),
+              aes(x=dt0, y=p00, color=folio0)) +
+       geom_line())
+
+## Check kdb
+
+kdb.url <- "http://m1:5000/q.csv?datar"
+
+kdb.url <- "http://m1:5000/q.csv?select from data0 where folio0 = `KF"
+kdb.url <- URLencode(kdb.url)
+
+df <- read.csv(kdb.url, header=TRUE)
+
 
 ## Plot time-series - too many to see clearly
 

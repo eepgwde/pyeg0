@@ -7,7 +7,6 @@ folios.list <- read.csv("folios0.csv",
                         header=TRUE)
 
 
-
 folio.fname <- folios.list[sample(1:dim(folios.list)[1], 1), 1]
 folio.fname
 folio.name <- substring(folio.fname, 1, 3)
