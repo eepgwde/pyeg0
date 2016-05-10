@@ -55,37 +55,10 @@ rm("folios.mnames", "folios.metric")
 
 ## There's 30 second time-lag writing these to the remote disk.
 
-jpeg.ustk(folios.ustk)
+# jpeg.ustk(folios.ustk)
 
 jpeg.ustk(folios.ustk0)
-
 jpeg.ustk(folios.ustk0, metric0="r00", xtra0=NULL)
-
 jpeg.ustk(folios.ustk0, metric0="s05", xtra0=NULL)
 
-## change the dim to get no more than 6 on a chart.
-names.cols <- 5
-
-names.x <- folios.mnames
-names.rows <- length(names.x) %/% names.cols
-if ((length(names.x) %% names.cols) != 0) {
-    names.rows <- names.rows + 1
-}
-names.dim <- c(names.cols, names.rows)
-names.idxes <- t(array(1:length(names.x), dim=names.dim ))
-
-## The composite folio
-folios.xtra0 <- paste("KA", folios.metric, sep=".")
-
-ts0.tbl <- head(folios.ustk, n=180)
-ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
-
-## ts0.tbl <- folios.ustk0[200:300, ]
-## ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
-
-ts0.tbl <- tail(folios.ustk, n=180)
-ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
-
-ts0.tbl <- folios.ustk
-ts1.folio(ts0.tbl, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
 
