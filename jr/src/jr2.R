@@ -34,11 +34,11 @@ ts0.plot(folios.ustk0, colnames(folios.ustk0),
 names.x <- colnames(folios.ustk0)
 names.idxes <- t(array(1:length(names.x), dim=c(5,4)))
 
-ts0.tbl <- head(folios.ustk0, n=40)
+ts0.tbl <- head(folios.ustk, n=180)
 ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
 
-ts0.tbl <- folios.ustk0[200:300, ]
-ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
+## ts0.tbl <- folios.ustk0[200:300, ]
+## ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
 
-ts0.tbl <- tail(folios.ustk0, n=40)
+ts0.tbl <- tail(folios.ustk, n=180)
 ts1.folio(ts0.tbl, names.idxes, ylab0="p00")
