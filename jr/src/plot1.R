@@ -218,10 +218,11 @@ jpeg.ustk <- function(ustk, metric0="p00", folios.xtra0="KA",
                       names.cols = 5, mnames = NULL) {
     ## change the names.cols, but try no to have more than get no more
     ## than 6 on a chart.
-
+    folios.metric <- NULL
+    folios.mnames <- NULL
     if (!is.null(metric0) && is.null(mnames)) {
         folios.metric <- metric0
-        folio.mnames <- ustk.patt(ustk, metric0=folio.metric)
+        folios.mnames <- ustk.patt(ustk, metric0=folios.metric)
     }
 
     names.x <- folios.mnames
@@ -237,5 +238,6 @@ jpeg.ustk <- function(ustk, metric0="p00", folios.xtra0="KA",
     }
 
     ## The composite folio
-    ts1.folio(ustk, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
+    ts1.folio(ustk, names.idxes, names.x = folios.mnames,
+              ylab0=folios.metric, xtra0=folios.xtra0)
 }
