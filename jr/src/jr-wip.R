@@ -2,6 +2,17 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### Data frame merging on rownames - very easy!
+
+folios.r00 <- ustck.folio(folios.in, 
+                          folios.metric="r00")
+
+folios.x00 <- data.frame(folios.ustk, folios.r00)
+
+x0 <- colnames(folios.in)
+
+### More attempts with ggplot
+
 ggplot(subset(folios.in0, folio0 %in% c("KF", "KG"),
               aes(x=dt0, y=p00, color=folio0)) +
        geom_line())

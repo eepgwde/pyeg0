@@ -125,10 +125,9 @@ ts1.folio <- function(tbl, names.idxes,
 ## rs <- rownames(tbl)
 ## nm0.marks <- paste(rs[1], rs[length(rs)], sep="-")
 ## nm0.fspec <- paste(nm0.tag, nm0.marks, "-%03d.jpeg", sep ="")
-
 ## rm("tbl", "tag0", "rs")
 
-ustck.folio <- function(tbl,
+ustck.folio <- function(tbl, merge0=NULL,
                         folios.metric="p00", rename=TRUE) {
 
     folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
@@ -141,6 +140,11 @@ ustck.folio <- function(tbl,
                  function(y) paste(y, ".", folios.metric, sep=""), 
                  simplify=TRUE, USE.NAMES=FALSE)
         names(folios.ustk) <- x0
+    }
+
+    if (!is.null(merge0)) {
+        folios.x00 <- data.frame(folios.ustk, merge0)
+        folios.ustk <- folios.x00
     }
 
     return(folios.ustk)

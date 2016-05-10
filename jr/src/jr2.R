@@ -21,11 +21,24 @@ folios.in0 <- tail(folios.in, n=60)
 source("plot0.R")
 source("plot1.R")
 
+## Some classifiers: what we want from kdb+ and its name in total
+## portfolio.
+
 folios.metric <- "p00"
+folios.xtra0 <- paste("KA", folios.metric, sep=".")
 
 ## Daily prices by folio
 folios.ustk <- ustck.folio(folios.in, 
                            folios.metric=folios.metric)
+
+folios.metric <- "r00"
+folios.xtra0 <- paste("KA", folios.metric, sep=".")
+
+## Daily prices by folio
+folios.ustk <- ustck.folio(folios.in, merge0=folios.ustk,
+                           folios.metric=folios.metric)
+
+## Shorter data set.
 folios.ustk0 <- tail(folios.ustk, n = 60)
 
 ## Brownians - just like the books.
