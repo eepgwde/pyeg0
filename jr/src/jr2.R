@@ -11,7 +11,9 @@ folios.list <- read.csv("folios0.csv",
 ## functions.
 
 rm(list = ls())
-debug(ts1.folio.f0)
+if (!is.null(dev.list()) {
+    lapply(dev.list(), function(x) dev.off())
+}
 
 ## Various kdb loads
 
@@ -27,10 +29,13 @@ folios.in0 <- tail(folios.in, n=60)
 source("plot0.R")
 source("plot1.R")
 
+### Debug
+## debug(ts1.folio.f0)
+
 ## Some classifiers: what we want from kdb+ and its name in total
 ## portfolio.
 
-folios.ustk <- ustck.folio1(folios.in)
+folios.ustk <- ustk.folio1(folios.in)
 
 ## Shorter data set.
 folios.ustk0 <- tail(folios.ustk, n = 60)
@@ -48,13 +53,15 @@ ts0.plot(folios.ustk0, folios.mnames,
 ## Global pollution
 rm("folios.mnames", "folios.metric")
 
-jpeg.ustk(folios.ustk0)
+## There's 30 second time-lag writing these to the remote disk.
 
 jpeg.ustk(folios.ustk)
 
+jpeg.ustk(folios.ustk0)
+
 jpeg.ustk(folios.ustk0, metric0="r00", xtra0=NULL)
 
-jpeg.ustk(folios.ustk0, metric0="m05", xtra0=NULL)
+jpeg.ustk(folios.ustk0, metric0="s05", xtra0=NULL)
 
 ## change the dim to get no more than 6 on a chart.
 names.cols <- 5

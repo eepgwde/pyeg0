@@ -145,7 +145,7 @@ ts1.folio <- function(tbl, names.idxes,
 ### Unstack tbl and return data.frame with renamed columns
 ## Optionally with merge.
 
-ustck.folio <- function(tbl, merge0=NULL,
+ustk.folio <- function(tbl, merge0=NULL,
                         folios.metric="p00", rename=TRUE) {
 
     folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
@@ -174,7 +174,7 @@ ustck.folio <- function(tbl, merge0=NULL,
 ## @note
 ## Great feature of R is the <<- operator
 
-ustck.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$") {
+ustk.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$") {
 
     x0.all <- colnames(tbl)
     x0.metrics <- sort(x0.all[grepl(patt, x0.all)], decreasing = TRUE)
@@ -188,17 +188,17 @@ ustck.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$") {
     t1 <- NULL
     
     if (!is.null(merge0)) {
-        t1 <- ustck.folio(tbl, merge0=merge0,
+        t1 <- ustk.folio(tbl, merge0=merge0,
                           folios.metric=folios.metric)
     } else {
-        t1 <- ustck.folio(tbl, 
+        t1 <- ustk.folio(tbl, 
                           folios.metric=folios.metric)
     }
 
     ## Note the global assignment operator, it searches for t1
     ## in an environment; here, it will find t1 in the caller.
     sapply(x0.metrics, function(y)
-        t1 <<- ustck.folio(tbl, merge0=t1,
+        t1 <<- ustk.folio(tbl, merge0=t1,
                            folios.metric=y),
         simplify=TRUE, USE.NAMES=FALSE)
     
