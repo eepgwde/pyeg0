@@ -24,6 +24,8 @@ source("plot1.R")
 ## Some classifiers: what we want from kdb+ and its name in total
 ## portfolio.
 
+stopifnot(FALSE)
+
 folios.metric <- "p00"
 folios.xtra0 <- paste("KA", folios.metric, sep=".")
 

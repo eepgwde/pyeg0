@@ -4,12 +4,16 @@
 
 ### Data frame merging on rownames - very easy!
 
+t0 <- ustck.folio1(folios.in)
+colnames(t0)
+
 folios.r00 <- ustck.folio(folios.in, 
                           folios.metric="r00")
 
 folios.x00 <- data.frame(folios.ustk, folios.r00)
 
-x0 <- colnames(folios.in)
+x0.all <- colnames(folios.in)
+x0.metrics <- x0.all[grepl("[a-z]+[0-9]{2}$", x0)]
 
 ### More attempts with ggplot
 

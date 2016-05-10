@@ -45,9 +45,13 @@ data1: update p00: p00 % count .sf.cols by dt0 from data1 where folio0 =`KA
 data1: update r00: log ratios p00 by folio0 from data1 where folio0 = `KA
 data1: update r00:0f from data1 where (folio0 = `KA),(dt0 = 1)
 
-// Additional metrics
+// Additional metrics - q/kdb+ only has simple moving averages built in.
 
 data1: update r05: 5 mavg r00 by folio0 from data1
+data1: update r20: 20 mavg r00 by folio0 from data1
+
+data1: update s05: 5 mdev r00 by folio0 from data1
+data1: update s20: 20 mdev r00 by folio0 from data1
 
 \
 

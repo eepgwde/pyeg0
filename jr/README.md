@@ -57,7 +57,7 @@ signal and go and get the real data from Yahoo!
 I'll cross-correlate the metrics to one another to see if anything isn't an
 MA.
 
-No, all MAs.
+No, all MAs. Some are EWMA, some MA. No indication of VWAP. Nothing.
 
 ** Improvements
 
