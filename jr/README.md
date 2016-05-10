@@ -52,6 +52,25 @@ These all appear suspiciously similar.
 These are all so similar, that I might have to reconstitute the price
 signal and go and get the real data from Yahoo!
 
+**** Metrics by eye (2)
+
+***** p00 - good looking Brownians
+
+I've added a portfolio that is the average price of all folios (on each
+day, of course). Calculated in q/kdb+.
+
+This performs badly, hovers around 
+
+***** r00 - looking at the last sixty days.
+
+Looking directly at the returns, we can see some good correlations and
+anti-correlations. 
+
+KI to KG in the last 60 days. Many good pairs here. KN to KL. KQ to KS.
+
+***** m05 - 
+
+
 *** More Checking
 
 I'll cross-correlate the metrics to one another to see if anything isn't an
@@ -141,6 +160,7 @@ Merge the unstacked data frames from kdb in R.
 Apply R technicals.
 
 130-30 looks easiest to do. It's a scaled-down Markowitz.
+
 
 * Notes
 

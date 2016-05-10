@@ -46,7 +46,7 @@ grph.set0 <- function(data0, nm0, jpeg0=NULL,
 
 ## Plots time-series
 ##
-## Try and adapt this for the unstacked dataset.
+## Used for unstacked data.frame.
 ts0.plot <- function(tbl, names0, xtra="r00", 
                      fname="XX0", 
                      ylab0="metric") {
@@ -88,6 +88,19 @@ ts0.folio <- function(tbl) {
     dev.off()
 }
 
+## Calls the plotter for each group.
+ts1.folio.f0 <- function(y, xtra0, ylab0, names.x, 
+                         names.idxes, tag0, tbl) {
+    x.names <- names.x[names.idxes[y,]]
+    x.names <- append(xtra0, x.names)
+    x.names <- unique(x.names)
+    
+    ts0.plot(tbl, x.names,
+             ylab0=ylab0,
+             fname=tag0, 
+             xtra=NULL)
+}
+
 ## Plots to JPEG
 ##
 ## Doesn't use globals, works for jr2.R
@@ -104,18 +117,18 @@ ts1.folio <- function(tbl, names.idxes,
     nm0.fspec <- paste(nm0.tag, nm0.marks, "-%03d.jpeg", sep ="")
 
     if (is.null(names.x)) {
+        warning("names.x is null")
         names.x <- colnames(tbl)
     }
 
     jpeg(width=1024, height=768, filename = nm0.fspec)
 
-    lapply(1:dim(names.idxes)[1], 
-           function(y) ts0.plot(tbl, 
-                                unique(append(xtra0, names.x[names.idxes[y,]])),
-                                ylab0=ylab0,
-                                fname=tag0, xtra=NULL))
+    lapply(1:dim(names.idxes)[1], ts1.folio.f0, 
+           xtra0=xtra0, ylab0=ylab0, names.x=names.x,
+           names.idxes=names.idxes,
+           tag0=tag0, tbl=tbl)
 
-    dev.off()
+    dev.off()                           # error trap needed.
 }
 
 ### prototyping code.
@@ -214,18 +227,19 @@ ustk.patt <- function(ustk, patt="^[A-Z]{2}\\.p00$", metric0=NULL) {
 ### Plot to jpeg file.
 ## @todo
 ## I haven't implemented the mnames logic, just use metric0
-jpeg.ustk <- function(ustk, metric0="p00", folios.xtra0="KA", 
+## be careful not to re-use globals as arguments.
+jpeg.ustk <- function(ustk, metric0="p00", xtra0="KA", 
                       names.cols = 5, mnames = NULL) {
     ## change the names.cols, but try no to have more than get no more
     ## than 6 on a chart.
-    folios.metric <- NULL
-    folios.mnames <- NULL
+    f.metric <- NULL
+    f.mnames <- NULL
     if (!is.null(metric0) && is.null(mnames)) {
-        folios.metric <- metric0
-        folios.mnames <- ustk.patt(ustk, metric0=folios.metric)
+        f.metric <- metric0
+        f.mnames <- ustk.patt(ustk, metric0=f.metric)
     }
 
-    names.x <- folios.mnames
+    names.x <- f.mnames
     names.rows <- length(names.x) %/% names.cols
     if ((length(names.x) %% names.cols) != 0) {
         names.rows <- names.rows + 1
@@ -233,11 +247,13 @@ jpeg.ustk <- function(ustk, metric0="p00", folios.xtra0="KA",
     names.dim <- c(names.cols, names.rows)
     names.idxes <- t(array(1:length(names.x), dim=names.dim ))
 
-    if (!is.null(folios.xtra0)) {
-        folios.xtra0 <- paste(folios.xtra0, folios.metric, sep=".")
+    f.xtra0 <- NULL
+    if (!is.null(xtra0)) {
+        f.xtra0 <- paste(xtra0, f.metric, sep=".")
     }
 
     ## The composite folio
-    ts1.folio(ustk, names.idxes, names.x = folios.mnames,
-              ylab0=folios.metric, xtra0=folios.xtra0)
+    ts1.folio(ustk, names.idxes, names.x = f.mnames,
+              ylab0=f.metric, xtra0=f.xtra0, 
+              tag0=paste(metric0, "-", sep=""))
 }
