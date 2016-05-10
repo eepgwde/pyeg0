@@ -26,7 +26,7 @@ data0: delete p01 from data0
 .sf.cols: cols data0
 .sf.cols: distinct data0.folio0
 
-// Calculate total across all
+/// Calculate total across all
 p00: select sum p00 by dt0 from data0
 p01: raze value flip value p00
 
@@ -39,13 +39,15 @@ t2: flip 0!t1
 t2[`p00]: p01
 t3: flip t2
 
-// Append tables
+// Append tables and set the price to the average and generate r00
 data1: (0!select by dt0, folio0 from data0),(0!t3)
-
+data1: update p00: p00 % count .sf.cols by dt0 from data1 where folio0 =`KA
+data1: update r00: log ratios p00 by folio0 from data1 where folio0 = `KA
+data1: update r00:0f from data1 where (folio0 = `KA),(dt0 = 1)
 
 // Additional metrics
 
-data0: update r05: 5 mavg r00 by folio0 from data0
+data1: update r05: 5 mavg r00 by folio0 from data1
 
 \
 
