@@ -142,8 +142,8 @@ ustck.folio <- function(tbl, merge0=NULL,
 
     if (rename) {
         x0 <- sapply(names(folios.ustk), 
-                 function(y) paste(y, ".", folios.metric, sep=""), 
-                 simplify=TRUE, USE.NAMES=FALSE)
+                     function(y) paste(y, ".", folios.metric, sep=""), 
+                     simplify=TRUE, USE.NAMES=FALSE)
         names(folios.ustk) <- x0
     }
 
@@ -176,23 +176,66 @@ ustck.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$") {
     
     if (!is.null(merge0)) {
         t1 <- ustck.folio(tbl, merge0=merge0,
-                                   folios.metric=folios.metric)
+                          folios.metric=folios.metric)
     } else {
         t1 <- ustck.folio(tbl, 
-                                   folios.metric=folios.metric)
+                          folios.metric=folios.metric)
     }
 
     ## Note the global assignment operator, it searches for t1
     ## in an environment; here, it will find t1 in the caller.
     sapply(x0.metrics, function(y)
         t1 <<- ustck.folio(tbl, merge0=t1,
-                                   folios.metric=y),
+                           folios.metric=y),
         simplify=TRUE, USE.NAMES=FALSE)
-        
+    
 
     return(t1)
 }
 
-## x0.all <- colnames(tbl)
-## folios.metric <- x0.metrics[1]
-## x0.metrics <- x0.metrics[2:length(x0.metrics)
+### Find column names of folios matching a pattern.
+##
+## ustk is an unstacked table with many columns of form KA.r00
+## finds all those that match the pattern.
+## If you give just metric0="x00", that takes priority and the patt is
+## set to "^[A-Z]{2}\\.x00$"
+## @note
+## Double quote slash for a literal dot '.' \\.
+
+ustk.patt <- function(ustk, patt="^[A-Z]{2}\\.p00$", metric0=NULL) {
+    x0.all <- colnames(ustk)
+    if (!is.null(metric0)) {
+        patt <- paste("^[A-Z]{2}\\.", metric0, "$", sep="")
+    }
+    
+    return(x0.all[grepl(patt, x0.all)])
+}
+
+### Plot to jpeg file.
+## @todo
+## I haven't implemented the mnames logic, just use metric0
+jpeg.ustk <- function(ustk, metric0="p00", folios.xtra0="KA", 
+                      names.cols = 5, mnames = NULL) {
+    ## change the names.cols, but try no to have more than get no more
+    ## than 6 on a chart.
+
+    if (!is.null(metric0) && is.null(mnames)) {
+        folios.metric <- metric0
+        folio.mnames <- ustk.patt(ustk, metric0=folio.metric)
+    }
+
+    names.x <- folios.mnames
+    names.rows <- length(names.x) %/% names.cols
+    if ((length(names.x) %% names.cols) != 0) {
+        names.rows <- names.rows + 1
+    }
+    names.dim <- c(names.cols, names.rows)
+    names.idxes <- t(array(1:length(names.x), dim=names.dim ))
+
+    if (!is.null(folios.xtra0)) {
+        folios.xtra0 <- paste(folios.xtra0, folios.metric, sep=".")
+    }
+
+    ## The composite folio
+    ts1.folio(ustk, names.idxes, ylab0=folios.metric, xtra0=folios.xtra0)
+}

@@ -24,34 +24,31 @@ source("plot1.R")
 ## Some classifiers: what we want from kdb+ and its name in total
 ## portfolio.
 
-stopifnot(FALSE)
-
-folios.metric <- "p00"
-folios.xtra0 <- paste("KA", folios.metric, sep=".")
-
-## Daily prices by folio
-folios.ustk <- ustck.folio(folios.in, 
-                           folios.metric=folios.metric)
-
-folios.metric <- "r00"
-folios.xtra0 <- paste("KA", folios.metric, sep=".")
-
-## Daily prices by folio
-folios.ustk <- ustck.folio(folios.in, merge0=folios.ustk,
-                           folios.metric=folios.metric)
+folios.ustk <- ustck.folio1(folios.in)
 
 ## Shorter data set.
 folios.ustk0 <- tail(folios.ustk, n = 60)
 
 ## Brownians - just like the books.
-ts.plot(folios.ustk)
 
-ts0.plot(folios.ustk0, colnames(folios.ustk0),
+folios.metric <- "p00"
+folios.mnames <- ustk.patt(folios.ustk, metric0=folio.metric)
+
+ts.plot(folios.ustk[, folios.mnames])
+
+ts0.plot(folios.ustk0, folios.mnames,
          xtra=NULL, fname="Folios", ylab0=folios.metric)
 
-## change the dim to get no more than 6.
-names.x <- colnames(folios.ustk0)
-names.idxes <- t(array(1:length(names.x), dim=c(5,4)))
+## change the dim to get no more than 6 on a chart.
+names.cols <- 5
+
+names.x <- folios.mnames
+names.rows <- length(names.x) %/% names.cols
+if ((length(names.x) %% names.cols) != 0) {
+    names.rows <- names.rows + 1
+}
+names.dim <- c(names.cols, names.rows)
+names.idxes <- t(array(1:length(names.x), dim=names.dim ))
 
 ## The composite folio
 folios.xtra0 <- paste("KA", folios.metric, sep=".")

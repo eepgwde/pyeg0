@@ -2,6 +2,12 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+## Plotting
+
+ts0.tbl <- head(folios.ustk, n=180)
+
+jpeg.ustk(ts0.tbl)
+
 ### Data frame merging on rownames - very easy!
 
 t0 <- ustck.folio1(folios.in)
@@ -43,9 +49,6 @@ ts0.folio(ts0.tbl)
 
 ts0.tbl <- tail(folios.in, n=40)
 ts0.folio(ts0.tbl)
-
-
-
 
 nm0.tag <- folio.name
 nm0.marks <- folio.marks0(ts0.tbl)
