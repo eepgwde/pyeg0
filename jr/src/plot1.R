@@ -68,6 +68,11 @@ folio.marks0 <- function(tbl) {
     return(s0)
 }
 
+## Plots to JPEG
+##
+## Uses globals.
+## Specifically for jr0.R
+
 ts0.folio <- function(tbl) {
     nm0.tag <- folio.name
     nm0.marks <- folio.marks0(tbl)
@@ -83,3 +88,42 @@ ts0.folio <- function(tbl) {
     dev.off()
 }
 
+## Plots to JPEG
+##
+## Doesn't use globals.
+##
+## names.idxes is a matrix of indices into the column names.
+
+ts1.folio <- function(tbl, names.idxes, 
+                      tag0="folios", 
+                      names.x=NULL, ylab0="metric") {
+
+    nm0.tag <- tag0
+    rs <- rownames(tbl)
+    nm0.marks <- paste(rs[1], rs[length(rs)], sep="-")
+    nm0.fspec <- paste(nm0.tag, nm0.marks, "-%03d.jpeg", sep ="")
+
+    if (is.null(names.x)) {
+        names.x <- colnames(tbl)
+    }
+
+    jpeg(width=1024, height=768, filename = nm0.fspec)
+
+    lapply(1:dim(names.idxes)[1], 
+           function(y) ts0.plot(tbl, 
+                                names.x[names.idxes[y,]],
+                                ylab0=ylab0,
+                                fname=tag0, xtra=NULL))
+
+    dev.off()
+}
+
+## tbl <- folios.ustk0
+## tag0 <- "folios"
+
+## nm0.tag <- tag0
+## rs <- rownames(tbl)
+## nm0.marks <- paste(rs[1], rs[length(rs)], sep="-")
+## nm0.fspec <- paste(nm0.tag, nm0.marks, "-%03d.jpeg", sep ="")
+
+## rm("tbl", "tag0", "rs")
