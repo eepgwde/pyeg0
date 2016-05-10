@@ -6,12 +6,21 @@
 
 cols data1
 
-/// We only have a price signal really drop these moving averages
+/// We only have a price signal, yes really, the rest are moving averages
+/// folio0 was stored as a string, convert back to a symbol.
 
 x.cols: (cols data1) @ where (string each cols data1) like "x??"
 
 data: ![data1;();0b;x.cols]
+data.folio0: `$data.folio0
 
+/// Add an absolute price signal - all based on a 1000
+
+data0: update p00:exp r00  by folio0 from data 
+data0: update p01:prds p00  by folio0 from data0
+data0: update p01:p01 * 1000  by folio0 from data0
+data0: update p00:p01 by folio0 from data0
+data0: delete p01 from data0
 
 \
 
