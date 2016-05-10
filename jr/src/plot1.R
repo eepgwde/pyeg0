@@ -129,12 +129,21 @@ ts1.folio <- function(tbl, names.idxes,
 ## rm("tbl", "tag0", "rs")
 
 ustck.folio <- function(tbl,
-                        folios.metric="p00") {
+                        folios.metric="p00", rename=TRUE) {
 
     folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
 
     ## unstack and find a way of plotting.
     folios.ustk <- unstack(tbl, folios.forml)
+
+    if (rename) {
+        x0 <- sapply(names(folios.ustk), 
+                 function(y) paste(y, ".", folios.metric, sep=""), 
+                 simplify=TRUE, USE.NAMES=FALSE)
+        names(folios.ustk) <- x0
+    }
+
     return(folios.ustk)
 }
+
 
