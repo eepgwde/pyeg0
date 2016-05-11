@@ -52,6 +52,21 @@ pcols: { [c0;prefx]
 
 .t00.count: { select count i by folio0, in0 from x }
 
+/// Exponentially weighted moving average
+/// Always some debate about this. This is the "starting value is one" version.
+/// @note
+/// In the use of scan, x is the prior and y the current. I've renamed them to make it
+/// look like the Wikipedia, they call lambda alpha
+/// @note
+/// This doesn't work.
+
+.f00.ewma1: { [s0; lambda] 
+	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
+	     { [now0;past0;z] z*now0 + (1 - z)*past0 }[;;lambda] scan s0 }
+
+.f00.ewma2: { [s0; lambda] 
+	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
+	     { [now0;past0;z] past0 + z*(now0 - past0) }[;;lambda] scan s0 }
 
 /  Local Variables: 
 /  mode:q 
