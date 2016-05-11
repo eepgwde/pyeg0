@@ -51,3 +51,17 @@ pcols: { [c0;prefx]
 	   1 _ x0 }
 
 .t00.count: { select count i by folio0, in0 from x }
+
+/// Exponentially weighted moving average
+/// Always some debate about this. This is the starting value is one version.
+
+.f00.ewma: { [x; lambda] { lambda*y + (1-lambda)*x } scan x }
+
+/  Local Variables: 
+/  mode:q 
+/  q-prog-args: "-load help.q -verbose -quiet"
+/  fill-column: 75
+/  comment-column:50
+/  comment-start: "/  "
+/  comment-end: ""
+/  End:

@@ -2,6 +2,31 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+// EWMA
+n0:20
+lambda: 0.95
+
+x0:1, (n0 # 0)
+count x0
+
+/// This is the startup is one version.
+x1:enlist x0[0]
+x2:enlist (lambda*x0[1] + (1 - lambda)*x1[0] )
+x3:enlist (lambda*x0[2] + (1 - lambda)*x2[0] )
+
+raze (x1;x2;x3)
+
+/// Exponentially weighted moving average
+/// Always some debate about this. This is the starting value is one version.
+
+.f00.ewma: { [x; lambda] { lambda*y + (1-lambda)*x } scan x }
+
+.f00.ewma[x0;lambda]
+
+\
+
+/// You need the data for this section
+
 // Copy by value
 data2: select by i from data1
 data2: .m0.r00[data2;`KA]
@@ -22,3 +47,15 @@ delete .cmp from `.x00
 .x00.cmp[p00;p02]
 
 .t00.count @ data1
+
+
+/  Local Variables: 
+/  mode:q 
+/  q-prog-args: "-load help.q -verbose -quiet"
+/  fill-column: 75
+/  comment-column:50
+/  comment-start: "/  "
+/  comment-end: ""
+/  End:
+
+

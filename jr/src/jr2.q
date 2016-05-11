@@ -68,11 +68,18 @@ data1: update r20: 20 mavg r00 by folio0 from data1
 data1: update s05: 5 mdev r00 by folio0 from data1
 data1: update s20: 20 mdev r00 by folio0 from data1
 
-// Validation
+/// Validation
+// But only by eye.
 
 show .t00.count @ data1
 
 show select last p00 by folio0 from data1
+
+\
+
+// EWMA
+
+
 
 \
 
