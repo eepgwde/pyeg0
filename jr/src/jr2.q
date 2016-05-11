@@ -69,12 +69,38 @@ data1: update s05: 5 mdev r00 by folio0 from data1
 data1: update s20: 20 mdev r00 by folio0 from data1
 
 // EWMA at 0.60 and 0.95 are comparable to the r05 and r20
+// EWMA smooth well but lag less and don't alias like as MA.
 
 x.lambda:0.60
 data1: update e05:.f00.ewma1[r00;x.lambda] by folio0 from data1
 
 x.lambda:0.95
 data1: update e20:.f00.ewma1[r00;x.lambda] by folio0 from data1
+
+// RSI
+
+data1: update u00:{ $[0 < x; x; 0f] } each deltas p00  by folio0 from data1
+data1: update d00:abs { $[0 > x; x; 0f] } each deltas p00  by folio0 from data1
+
+data1: update u00:0f, d00:0f by folio0 from data1 where dt0 = 1
+
+x.lambda: 0.60
+data1: update u05:.f00.ewma1[u00;x.lambda] by folio0 from data1
+data1: update d05:.f00.ewma1[d00;x.lambda] by folio0 from data1
+data1: update y05:u05 % d05 from data1
+data1: update z05:100 - 100 % 1 + y05 from data1
+
+x.lambda:0.95
+data1: update u20:.f00.ewma1[u00;x.lambda] by folio0 from data1
+data1: update d20:.f00.ewma1[d00;x.lambda] by folio0 from data1
+data1: update y20:u20 % d20 from data1
+data1: update z20:100 - 100 % 1 + y20 from data1
+
+data2: `folio0`dt0 xasc data1
+
+\
+
+data2:select u00:{ $[0 < x; x; 0f] } each deltas p00, d00:abs { $[0 > x; x; 0f] } each deltas p00 by folio0 from data1
 
 /// Validation
 // But only by eye.
