@@ -23,30 +23,42 @@ data0: update p00:p01 by folio0 from data0
 data0: delete p01 from data0
 
 // Safety info
-.sf.cols: cols data0
 .sf.cols: distinct data0.folio0
 
 .sys.qreloader enlist "jr-f.q"
 
-/// Calculate total across all
+/// Calculate total across all on each day
+n0: count .sf.cols
 p00: select sum p00 by dt0 from data0
-p01: raze value flip value p00
+p00: update p00:p00 % count .sf.cols from p00
 
-// Add a blank dataset KA for a total.
-t1: select by dt0,folio0 from data0 where folio0 = `KF
-t1: update folio0:`KA, p00:0n from t1
+data1: .m0.p00[data0; `KA; p00]
 
-// Back to a dictionary and replace the sum values, flip back to a table and append
-t2: flip 0!t1
-t2[`p00]: p01
-t3: flip t2
+/// Missing one folio
 
-// Append tables and set the price to the average and generate r00
-data1: (0!select by dt0, folio0 from data0),(0!t3)
+n0: (count .sf.cols) - 1
+p01: select sum p00 by dt0 from data0 where not(folio0 in enlist `KF)
+
+p01: update p00:p00 % n0 from p01
+
+data1: .m0.p00[data1; `KB; p01]
+
+/// Double one folio - uses pj plus-join and has to raze
+
+n0: (count .sf.cols) + 1
+p02: select sum p00 by dt0 from data0
+p02: p02 pj select p00 by dt0 from data1 where folio0 = `KF
+p02: update p00: raze p00 by dt0 from p02
+
+p02: update p00:p00 % n0 from p02
+
+data1: .m0.p00[data1; `KC; p02]
 
 // Update r00 for the synthetic aggregate portfolios
 
 data1: .m0.r00[data1;`KA]
+data1: .m0.r00[data1;`KB]
+data1: .m0.r00[data1;`KC]
 
 // Additional metrics - q/kdb+ only has simple moving averages built in.
 
@@ -55,6 +67,12 @@ data1: update r20: 20 mavg r00 by folio0 from data1
 
 data1: update s05: 5 mdev r00 by folio0 from data1
 data1: update s20: 20 mdev r00 by folio0 from data1
+
+// Validation
+
+show .t00.count @ data1
+
+show select last p00 by folio0 from data1
 
 \
 
@@ -75,7 +93,6 @@ t2: (0!select by dt0, folio0 from data0),(0!t1)
 t1: select by dt0,folio0 from data0 where folio0 = `KA
 
 t0: select by dt0 from data0
-
 
 
 \

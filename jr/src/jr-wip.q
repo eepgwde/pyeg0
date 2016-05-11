@@ -13,6 +13,12 @@ data1: update r00: log ratios p00 by folio0 from data1 where folio0 = `KA
 data1: update r00:0f from data1 where (folio0 = `KA),(dt0 = 1)
 
 (raze value flip select[10] p00 from data2) ~ (raze value flip select[10] p00 from data1)
+delete .cmp from `.x00
+.sys.qreloader enlist "jr-f.q"
 
+.t00.count @ .m0.p00[data0; `KB; p00]
 
-show .m0.p00[data0; `KB; p00]
+.x00.cmp[p00;p01]
+.x00.cmp[p00;p02]
+
+.t00.count @ data1

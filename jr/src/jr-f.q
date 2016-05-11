@@ -19,7 +19,6 @@ pcols: { [c0;prefx]
 
 /// Calculate the day returns on the p00 column for given folio in given table 
 .m0.r00: { [t1; f0] 
-	  t1: update p00: p00 % count .sf.cols by dt0 from t1 where folio0 = f0;
 	  t1: update r00: log ratios p00 by folio0 from t1 where folio0 = f0;
 	  t1: update r00:0f from t1 where (folio0 = f0),(dt0 = 1)	}
 
@@ -44,3 +43,11 @@ pcols: { [c0;prefx]
 	  (0!select by dt0, folio0 from t0),(0!t3) }
 
 
+/// A comparor for keyed columns
+.x00.cmp: {[x;y] 
+	   x0: enlist 1b;
+	   x0,: (count x) = (count y);
+	   x0,:(raze value flip value x) ~ (raze value flip value y);
+	   1 _ x0 }
+
+.t00.count: { select count i by folio0, in0 from x }
