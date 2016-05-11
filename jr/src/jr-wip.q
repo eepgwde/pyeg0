@@ -17,7 +17,7 @@
 
 .sys.qreloader enlist "jr-f.q"
 
-x.lambda: 0.60
+x.lambda: 0.95
 in0:(1,20#0)
 y0: .f00.ewma1[ in0 ; x.lambda ]
 first where y0 <= 0.01

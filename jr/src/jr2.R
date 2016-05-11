@@ -93,6 +93,6 @@ if (!exists("jpeg.short")) {
 
 xx.patt <- "^K[F-Z]\\.[er][0-9]{2}$"
 xx.mnames <- sort(ustk.patt(folios.ustk0, patt=xx.patt))
-jpeg.ustk(folios.ustk0, mnames=xx.mnames, names.cols = 4,
+jpeg.ustk(folios.ustk0, mnames=xx.mnames, names.cols = 5,
           xtra0=NULL, metric0=NULL, tag0="macd")
 
