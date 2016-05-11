@@ -94,7 +94,13 @@ x.lambda:0.95
 data1: update u20:.f00.ewma1[u00;x.lambda] by folio0 from data1
 data1: update d20:.f00.ewma1[d00;x.lambda] by folio0 from data1
 data1: update y20:u20 % d20 from data1
-data1: update z20:100 - 100 % 1 + y20 from data1
+
+data1: update z20:100f - 100f % 1f + y20 from data1
+
+data1: update fy05:first raze {$[x > 0.7; `over; `]}[z05] by i from data1
+data1: update fy20:first raze {$[x < 0.3; `under; `]}[z20] by i from data1
+
+delete u00, d00, u05, d05, y05, u20, d20, y20 from `data1 
 
 data2: `folio0`dt0 xasc data1
 
