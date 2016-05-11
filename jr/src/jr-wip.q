@@ -2,39 +2,54 @@
 ///
 /// Validation and prototyping code for jr2.q
 
-// EWMA
-n0:20
-lambda: 1 % 3
+/// R gives two implementations, both can start at the initial value
+// These are there impulse responses.
+/  > sprintf("%.5f", ewma(xin,x.lambda))
+/   [1] "1.00000" "0.40000" "0.16000" "0.06400" "0.02560" "0.01024" "0.00410"
+/   [8] "0.00164" "0.00066" "0.00026" "0.00010" "0.00004" "0.00002" "0.00001"
+/  [15] "0.00000" "0.00000" "0.00000" "0.00000" "0.00000" "0.00000" "0.00000"
+/  > library(fTrading)
+/  > sprintf("%.5f", EWMA(xin, x.lambda, startup=1) )
+/   [1] "1.00000" "0.40000" "0.16000" "0.06400" "0.02560" "0.01024" "0.00410"
+/   [8] "0.00164" "0.00066" "0.00026" "0.00010" "0.00004" "0.00002" "0.00001"
+/  [15] "0.00000" "0.00000" "0.00000" "0.00000" "0.00000" "0.00000" "0.00000"
+/  > 
 
-x0:1, (n0 # 0)
-count x0
-
-/// This is the startup is one version.
-x1:enlist x0[0]
-x2:enlist (lambda*x0[1] + (1 - lambda)*x1[0] )
-x3:enlist (lambda*x0[2] + (1 - lambda)*x2[0] )
-
-raze (x1;x2;x3)
-
-/// Exponentially weighted moving average
-/// Always some debate about this. This is the starting value is one version.
-/// 1 st value to have percentage % is where lambda = 2 / (N + 1)
-
-{ lambda*y + (1-lambda)*x } scan x0
 
 .sys.qreloader enlist "jr-f.q"
 
+x.lambda: 0.60
 in0:(1,20#0)
-y0: .f00.ewma1[ in0 ; 1 - 0.60 ]
+y0: .f00.ewma1[ in0 ; x.lambda ]
 first where y0 <= 0.01
 count y0
 y0
 
 in0:(1,20#0)
-y0: .f00.ewma1[ in0 ; 2.333 ]
+y0: .f00.ewma1[ in0 ; -1 + 2 % x.lambda ]
 first where y0 <= 0.01
 count y0
 y0
+
+in0:(1,20#1)
+y0: .f00.ewma1[ in0 ; x.lambda ]
+first where y0 <= 0.01
+count y0
+y0
+
+f0: { [n;p;a] n*a + (1 - a)*p }
+
+l0: { [x;y;z] show type x; enlist(x,y) }[;;x.lambda] scan 1 + til 9
+
+{ x0:$[0 > type x; x; 1 _ x[0]]; x0:raze x0  } each l0
+
+fact: { [n] $[1 = n; 1; n*fact[n-1]] }
+fact[3]
+
+\
+
+{ [x;y;z] idx:$[0 > type x; 1; (1 _ x[0]) + 1];
+ ; idx) } [;;x.lambda] scan in0
 
 
 \
