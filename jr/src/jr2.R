@@ -11,7 +11,7 @@ folios.list <- read.csv("folios0.csv",
 ## functions.
 
 rm(list = ls())
-if (!is.null(dev.list()) {
+if (!is.null(dev.list())) {
     lapply(dev.list(), function(x) dev.off())
 }
 
@@ -50,14 +50,13 @@ ts.plot(folios.ustk[, folios.mnames])
 ts0.plot(folios.ustk0, folios.mnames,
          xtra=NULL, fname="Folios", ylab0=folios.metric)
 
-## Global pollution
-rm("folios.mnames", "folios.metric")
+## There can be as much as a 30 second time-lag writing these to the
+## disk.
 
-## There's 30 second time-lag writing these to the remote disk.
-
-# jpeg.ustk(folios.ustk)
+### Short set analysis
 
 jpeg.ustk(folios.ustk0)
+
 jpeg.ustk(folios.ustk0, metric0="r00", xtra0=NULL)
 jpeg.ustk(folios.ustk0, metric0="s05", xtra0=NULL)
 jpeg.ustk(folios.ustk0, metric0="s20", xtra0=NULL)
@@ -68,12 +67,27 @@ jpeg.ustk(folios.ustk0, metric0="r20", xtra0=NULL)
 
 ## MACD
 
-xx.macd <- "^KF\\.r[0-9]{2}$"
-xx.mnames <- ustk.patt(folios.ustk0, patt=xx.macd)
+xx.patt <- "^KF\\.r[0-9]{2}$"
+xx.mnames <- ustk.patt(folios.ustk0, patt=xx.patt)
 ts0.plot(folios.ustk0, xx.mnames, 
          xtra=NULL, fname="KF0", ylab0="MACD:0,5,20")
 
-xx.macd <- "^K[B-Z]\\.r[0-9]{2}$"
-xx.mnames <- sort(ustk.patt(folios.ustk0, patt=xx.macd))
+xx.patt <- "^K[B-Z]\\.r[0-9]{2}$"
+xx.mnames <- sort(ustk.patt(folios.ustk0, patt=xx.patt))
 jpeg.ustk(folios.ustk0, mnames=xx.mnames, names.cols = 3,
           xtra0=NULL, metric0=NULL, tag0="macd")
+
+### Full set
+
+jpeg.ustk(folios.ustk)
+
+jpeg.ustk(folios.ustk, metric0="s20", xtra0=NULL)
+
+## KF is the folio I chose for the synthetics, it is a less volatile
+## stock and KC (KF twice) is more stable than KA (all equally
+## weighted).
+
+xx.patt <- "^K[A-C]\\.s20$"
+xx.mnames <- sort(ustk.patt(folios.ustk0, patt=xx.patt))
+jpeg.ustk(folios.ustk, mnames=xx.mnames, names.cols = 3,
+          xtra0=NULL, metric0=NULL, tag0="s20")

@@ -59,7 +59,15 @@ signal and go and get the real data from Yahoo!
 I've added a portfolio that is the average price of all folios (on each
 day, of course). Calculated in q/kdb+.
 
-This performs badly, hovers around 
+This performs badly, hovers around, but is very stable. Good example of
+portfolio diversification reducing risk. In fact, it's so good, it's
+suspicious. It may be that this is retro-generated data.
+
+To see that, I've added two other synthetic portfolios that either remove
+KF or have twice the amount.
+
+I've had to split the plots up to make them more intelligible, so watch the
+auto-scale on the axis.
 
 ***** r00 - looking at the last sixty days.
 
@@ -68,7 +76,7 @@ anti-correlations.
 
 KI to KG in the last 60 days. Many good pairs here. KN to KL. KQ to KS.
 
-***** m05 - 
+***** m05
 
 
 *** More Checking
