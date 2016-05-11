@@ -36,6 +36,9 @@ first where y0 <= 0.01
 count y0
 y0
 
+
+
+
 \
 
 f0: { [n;p;a] n*a + (1 - a)*p }

@@ -68,18 +68,18 @@ data1: update r20: 20 mavg r00 by folio0 from data1
 data1: update s05: 5 mdev r00 by folio0 from data1
 data1: update s20: 20 mdev r00 by folio0 from data1
 
+// EWMA
+
+x.lambda:0.60
+
+data1: update e05:.f00.ewma1[r00;x.lambda] by folio0 from data1
+
 /// Validation
 // But only by eye.
 
 show .t00.count @ data1
 
 show select last p00 by folio0 from data1
-
-\
-
-// EWMA
-
-select e05:.f00.ewma1[r00;
 
 \
 

@@ -58,13 +58,9 @@ pcols: { [c0;prefx]
 /// In the use of scan, x is the prior and y the current. I've renamed them to make it
 /// look like the Wikipedia, they call lambda alpha
 /// @note
-/// This doesn't work.
+/// This does work.
 
 .f00.ewma1: { [s0; lambda] 
-	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
-	     { [now0;past0;z] z*now0 + (1 - z)*past0 }[;;lambda] scan s0 }
-
-.f00.ewma2: { [s0; lambda] 
 	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
 	     { [now0;past0;z] past0 + z*(now0 - past0) }[;;lambda] scan s0 }
 

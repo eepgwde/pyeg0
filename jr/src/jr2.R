@@ -55,6 +55,8 @@ ts0.plot(folios.ustk0, folios.mnames,
 
 ### Short set analysis
 
+jpeg.short <- TRUE
+
 if (exists("jpeg.short")) {
 
     jpeg.ustk(folios.ustk0)
@@ -89,8 +91,8 @@ if (!exists("jpeg.short")) {
 
 ## MACD - you need to up close.
 
-xx.patt <- "^K[B-Z]\\.r[0-9]{2}$"
+xx.patt <- "^K[F-Z]\\.[er][0-9]{2}$"
 xx.mnames <- sort(ustk.patt(folios.ustk0, patt=xx.patt))
-jpeg.ustk(folios.ustk0, mnames=xx.mnames, names.cols = 3,
+jpeg.ustk(folios.ustk0, mnames=xx.mnames, names.cols = 4,
           xtra0=NULL, metric0=NULL, tag0="macd")
 
