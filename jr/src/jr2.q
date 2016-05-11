@@ -79,7 +79,7 @@ show select last p00 by folio0 from data1
 
 // EWMA
 
-
+select e05:.f00.ewma1[r00;
 
 \
 

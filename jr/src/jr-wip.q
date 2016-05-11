@@ -4,7 +4,7 @@
 
 // EWMA
 n0:20
-lambda: 0.95
+lambda: 1 % 3
 
 x0:1, (n0 # 0)
 count x0
@@ -18,10 +18,24 @@ raze (x1;x2;x3)
 
 /// Exponentially weighted moving average
 /// Always some debate about this. This is the starting value is one version.
+/// 1 st value to have percentage % is where lambda = 2 / (N + 1)
 
-.f00.ewma: { [x; lambda] { lambda*y + (1-lambda)*x } scan x }
+{ lambda*y + (1-lambda)*x } scan x0
 
-.f00.ewma[x0;lambda]
+.sys.qreloader enlist "jr-f.q"
+
+in0:(1,20#0)
+y0: .f00.ewma1[ in0 ; 1 - 0.60 ]
+first where y0 <= 0.01
+count y0
+y0
+
+in0:(1,20#0)
+y0: .f00.ewma1[ in0 ; 2.333 ]
+first where y0 <= 0.01
+count y0
+y0
+
 
 \
 

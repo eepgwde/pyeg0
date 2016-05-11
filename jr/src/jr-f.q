@@ -55,7 +55,9 @@ pcols: { [c0;prefx]
 /// Exponentially weighted moving average
 /// Always some debate about this. This is the starting value is one version.
 
-.f00.ewma: { [x; lambda] { lambda*y + (1-lambda)*x } scan x }
+.f00.ewma1: { [s0; lambda] 
+	    lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
+	    { [x;y;z] z*x + (1-z)*y }[;;1 - lambda] scan s0 }
 
 /  Local Variables: 
 /  mode:q 
