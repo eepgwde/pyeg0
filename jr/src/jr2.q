@@ -97,12 +97,21 @@ data1: update y20:u20 % d20 from data1
 
 data1: update z20:100f - 100f % 1f + y20 from data1
 
-data1: update fy05:first raze {$[x > 0.7; `over; `]}[z05] by i from data1
-data1: update fy20:first raze {$[x < 0.3; `under; `]}[z20] by i from data1
+data1: update fz05:`stable, fz20:` from data1
+
+data1: update fz05:`over from data1 where z05 >= 70f
+data1: update fz05:`under from data1 where z05 <= 20f
+
+data1: update fz20:`over from data1 where z20 >= 70f
+data1: update fz20:`under from data1 where z20 <= 20f
+
 
 delete u00, d00, u05, d05, y05, u20, d20, y20 from `data1 
 
 data2: `folio0`dt0 xasc data1
+
+select count i by folio0,fz05 from data1
+select count i by folio0,fz20 from data1
 
 \
 
