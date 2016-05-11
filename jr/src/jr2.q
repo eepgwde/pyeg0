@@ -26,6 +26,8 @@ data0: delete p01 from data0
 .sf.cols: cols data0
 .sf.cols: distinct data0.folio0
 
+.sys.qreloader enlist "jr-f.q"
+
 /// Calculate total across all
 p00: select sum p00 by dt0 from data0
 p01: raze value flip value p00
@@ -41,9 +43,10 @@ t3: flip t2
 
 // Append tables and set the price to the average and generate r00
 data1: (0!select by dt0, folio0 from data0),(0!t3)
-data1: update p00: p00 % count .sf.cols by dt0 from data1 where folio0 =`KA
-data1: update r00: log ratios p00 by folio0 from data1 where folio0 = `KA
-data1: update r00:0f from data1 where (folio0 = `KA),(dt0 = 1)
+
+// Update r00 for the synthetic aggregate portfolios
+
+data1: .m0.r00[data1;`KA]
 
 // Additional metrics - q/kdb+ only has simple moving averages built in.
 
