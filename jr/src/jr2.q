@@ -140,13 +140,17 @@ data2: update ft01:`null0 from data1
 
 // Safe is:
 // if near over and was near stable, then if not far under and not far bull -> short
+// if near stable or over or bull and was far stable or was far bull -> drop0
 
 data3: update fl01:`short0 by folio0 from data2 where ((({last prev x};fz05) fby fz05) in enlist `stable),(fz20 <> `under),(fc20 <> `bull)
+
+data3: update fl01:`drop0 by folio0 from data3 where ((({last prev x};fz20) fby fz20) in enlist `stable),((({last prev x};fc20) fby fc20) in enlist `bull),(fz05 in `stable`over),(fc05 = `bull)
+
 data1x: `folio0`dt0 xasc data3
 data1x: delete from data1x where folio0 in `KA`KB`KC
 data1y: `folio0`dt0 xasc ungroup select p00, fl01 by folio0,dt0 from data1x
 
-select i from data1y where fl01 in enlist `short0
+select count i by folio0,fl01 from data1y where fl01 in  `short0`drop0
 
 // Tidy up - keep the RSI in, the quantitative changes may help
 
