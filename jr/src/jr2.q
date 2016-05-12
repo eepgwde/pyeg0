@@ -97,7 +97,7 @@ data1: update y20:u20 % d20 from data1
 
 data1: update z20:100f - 100f % 1f + y20 from data1
 
-data1: update fz05:`stable, fz20:` from data1
+data1: update fz05:`stable, fz20:`stable from data1
 
 data1: update fz05:`over from data1 where z05 >= 70f
 data1: update fz05:`under from data1 where z05 <= 20f
@@ -105,17 +105,30 @@ data1: update fz05:`under from data1 where z05 <= 20f
 data1: update fz20:`over from data1 where z20 >= 70f
 data1: update fz20:`under from data1 where z20 <= 20f
 
+// Cardwell's trend indicators on RSI
+
+data1: update fc05:`stable, fc20:`stable, fd05:`stable, fd20:`stable from data1
+
+data1: update fc05:`bull from data1 where (z05 >= 40),(z05 <= 80)
+data1: update fc20:`bull from data1 where (z20 >= 40),(z20 <= 80)
+
+data1: update fd05:`bear from data1 where (z05 >= 20),(z05 <= 60)
+data1: update fd20:`bear from data1 where (z20 >= 20),(z20 <= 60)
+
+// Tidy up
 
 delete u00, d00, u05, d05, y05, u20, d20, y20 from `data1 
 
-data2: `folio0`dt0 xasc data1
+// Easy view using data2
 
-select count i by folio0,fz05 from data1
-select count i by folio0,fz20 from data1
+data1x: `folio0`dt0 xasc data1
+data1x: delete from data1x where folio0 in `KA`KB`KC
+
+select count i by folio0,in0,fz05 from data1
+select count i by folio0,in0,fz20 from data1
+
 
 \
-
-data2:select u00:{ $[0 < x; x; 0f] } each deltas p00, d00:abs { $[0 > x; x; 0f] } each deltas p00 by folio0 from data1
 
 /// Validation
 // But only by eye.
