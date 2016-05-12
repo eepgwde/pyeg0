@@ -36,7 +36,27 @@ first where y0 <= 0.01
 count y0
 y0
 
+\
 
+## Checking market as a whole.
+
+t0: select from data0 where in0
+
+// Try a market as a whole metric
+
+t0: data0
+
+select count i by folio0, in0 from data1
+
+// copy off one column
+t1: select by dt0,folio0 from data0 where folio0 = `KF
+t1: update folio0:`KA, p00:0n from t1
+
+t2: (0!select by dt0, folio0 from data0),(0!t1)
+
+t1: select by dt0,folio0 from data0 where folio0 = `KA
+
+t0: select by dt0 from data0
 
 
 \

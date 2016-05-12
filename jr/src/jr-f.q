@@ -58,7 +58,11 @@ pcols: { [c0;prefx]
 /// In the use of scan, x is the prior and y the current. I've renamed them to make it
 /// look like the Wikipedia, they call lambda alpha
 /// @note
-/// This does work.
+/// You can pass N in place of lambda, if greater than one, it will derive lambda
+/// for you. N is a sort of period. It's best to calibrate against a Impulse Response
+/// viz. .f00.ewma1[ (1,20#0); 2]
+/// @note
+/// Calibrated against and, once again, puts it to shame on execution times.
 
 .f00.ewma1: { [s0; lambda] 
 	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];

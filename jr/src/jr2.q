@@ -23,21 +23,23 @@ data0: update p00:p01 by folio0 from data0
 data0: delete p01 from data0
 
 // Safety info
-.sf.cols: distinct data0.folio0
+.sf.folios: distinct data0.folio0
 
 .sys.qreloader enlist "jr-f.q"
 
 /// Calculate total across all on each day
-n0: count .sf.cols
+n0: count .sf.folios
 p00: select sum p00 by dt0 from data0
-p00: update p00:p00 % count .sf.cols from p00
+p00: update p00:p00 % count .sf.folios from p00
 
 data1: .m0.p00[data0; `KA; p00]
 
-/// Missing one folio
+/// One folio removed - KF
+// Change this every time
+.sf.chg: first 1?.sf.folios 
 
-n0: (count .sf.cols) - 1
-p01: select sum p00 by dt0 from data0 where not(folio0 in enlist `KF)
+n0: (count .sf.folios) - 1
+p01: select sum p00 by dt0 from data0 where not(folio0 in enlist .sf.chg)
 
 p01: update p00:p00 % n0 from p01
 
@@ -45,9 +47,9 @@ data1: .m0.p00[data1; `KB; p01]
 
 /// Double one folio - uses pj plus-join and has to raze
 
-n0: (count .sf.cols) + 1
+n0: (count .sf.folios) + 1
 p02: select sum p00 by dt0 from data0
-p02: p02 pj select p00 by dt0 from data1 where folio0 = `KF
+p02: p02 pj select p00 by dt0 from data1 where folio0 = .sf.chg
 p02: update p00: raze p00 by dt0 from p02
 
 p02: update p00:p00 % n0 from p02
@@ -115,7 +117,35 @@ data1: update fc20:`bull from data1 where (z20 >= 40),(z20 <= 80)
 data1: update fd05:`bear from data1 where (z05 >= 20),(z05 <= 60)
 data1: update fd20:`bear from data1 where (z20 >= 20),(z20 <= 60)
 
-// Tidy up
+/// Calibration marks
+// I want to make a GARCH estimation of volatility over last 20 days
+// GARCH is very slow, so I'll re-calibrate when the RSI states change.
+// I'll mark the dates by folio and add other calibration marks
+
+.sf.marks: asc distinct data1.dt0
+.sf.marks: .sf.marks where not "b"$.sf.marks mod 20
+.sf.marks: (type data1[;`dt0])$.sf.marks
+
+data1: update l20:1b by folio0 from (update l20:0b from data1) where dt0 in .sf.marks
+
+/// Trading signals
+/// State machines on signals.
+
+.sf.tr0: `null0`short0`long0`hold0`drop0
+.sf.tr1: `null1`short1`long1`hold1`drop1
+
+data2: update ft01:`null0 from data1
+
+// Using near/far: as under/over/stable fz05/fz20, bull/stable fc05/fc20, bear/stable fd05/fd20
+
+// Safe is:
+// if near over and was near stable, then if not far under and not far bull -> short
+
+data3: update fl01:`short0 by folio0 from data2 where ((({last prev x};fz05) fby fz05) in enlist `stable),(fz20 <> `under),(fc20 <> `bull)
+data1x: `folio0`dt0 xasc data3
+data1x: delete from data1x where folio0 in `KA`KB`KC
+
+// Tidy up - keep the RSI in, the quantitative changes may help
 
 delete u00, d00, u05, d05, y05, u20, d20, y20 from `data1 
 
@@ -127,7 +157,6 @@ data1x: delete from data1x where folio0 in `KA`KB`KC
 select count i by folio0,in0,fz05 from data1
 select count i by folio0,in0,fz20 from data1
 
-
 \
 
 /// Validation
@@ -136,27 +165,6 @@ select count i by folio0,in0,fz20 from data1
 show .t00.count @ data1
 
 show select last p00 by folio0 from data1
-
-\
-
-t0: select from data0 where in0
-
-// Try a market as a whole metric
-
-t0: data0
-
-select count i by folio0, in0 from data1
-
-// copy off one column
-t1: select by dt0,folio0 from data0 where folio0 = `KF
-t1: update folio0:`KA, p00:0n from t1
-
-t2: (0!select by dt0, folio0 from data0),(0!t1)
-
-t1: select by dt0,folio0 from data0 where folio0 = `KA
-
-t0: select by dt0 from data0
-
 
 \
 
