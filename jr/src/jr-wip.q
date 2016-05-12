@@ -3,11 +3,7 @@
 /// Validation and prototyping code for jr2.q
 
 /// R gives two implementations, both can start at the initial value
-// These are there impulse responses.
-/  > sprintf("%.5f", ewma(xin,x.lambda))
-/   [1] "1.00000" "0.40000" "0.16000" "0.06400" "0.02560" "0.01024" "0.00410"
-/   [8] "0.00164" "0.00066" "0.00026" "0.00010" "0.00004" "0.00002" "0.00001"
-/  [15] "0.00000" "0.00000" "0.00000" "0.00000" "0.00000" "0.00000" "0.00000"
+// These are there impulse responses. x.lambda is 0.6
 /  > library(fTrading)
 /  > sprintf("%.5f", EWMA(xin, x.lambda, startup=1) )
 /   [1] "1.00000" "0.40000" "0.16000" "0.06400" "0.02560" "0.01024" "0.00410"
@@ -17,15 +13,16 @@
 
 .sys.qreloader enlist "jr-f.q"
 
-x.lambda: 0.95
+x.lambda: 0.60
+
 in0:(1,20#0)
-y0: .f00.ewma1[ in0 ; x.lambda ]
+y0: .f00.ewma1[ in0 ; -1 + 2 % x.lambda ]
 first where y0 <= 0.01
 count y0
 y0
 
 in0:(1,20#0)
-y0: .f00.ewma1[ in0 ; -1 + 2 % x.lambda ]
+y0: .f00.ewma1[ in0 ; x.lambda ]
 first where y0 <= 0.01
 count y0
 y0

@@ -56,7 +56,8 @@ pcols: { [c0;prefx]
 /// Always some debate about this. This is the "starting value is one" version.
 /// @note
 /// In the use of scan, x is the prior and y the current. I've renamed them to make it
-/// look like the Wikipedia, they call lambda alpha
+/// look like the Wikipedia, they call lambda alpha and here I had to anti the lambda
+/// (1-lambda) is passed as a constant 'z' to the interior function for scan.
 /// @note
 /// You can pass N in place of lambda, if greater than one, it will derive lambda
 /// for you. N is a sort of period. It's best to calibrate against a Impulse Response
@@ -66,7 +67,7 @@ pcols: { [c0;prefx]
 
 .f00.ewma1: { [s0; lambda] 
 	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
-	     { [now0;past0;z] past0 + z*(now0 - past0) }[;;lambda] scan s0 }
+	     { [now0;past0;z] past0 + z*(now0 - past0) }[;;1 - lambda] scan s0 }
 
 /  Local Variables: 
 /  mode:q 
