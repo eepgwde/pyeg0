@@ -37,24 +37,61 @@ data0: delete p01 from data0
 /// Trading signals
 /// State machines on signals.
 
-.sf.tr0: `null0`short0`long0`hold0`drop0
-.sf.tr1: `null1`short1`long1`hold1`drop1
+// Wilder
+.sf.tr0: `null`short`long`hold`close
 
-data2: update ft01:`null0 from data1
+.sf.tr1: `null1`short1`long1`hold1`close1
+
+// State machine table
+state0: ungroup select dt0, p00, fz05, fz20, fc05, fc20, fd05, fd20, lfz05:prev fz05, lfz20:prev fz20, lfc05:prev fc05, lfc20:prev fc20, lfd05:prev fd05, lfd20:prev fd20 by folio0 from (`folio0`dt0 xasc 0!delete from data1 where folio0 in `KA`KB`KC)
+
+delete from `state0 where dt0 < 20
+
+state0: `folio0`dt0`p00`fz05`lfz05`fz20`lfz20`fc05`lfc05`fc20`lfc20`fd05`lfd05`fd20`lfd20 xcols state0
 
 // Using near/far: as under/over/stable fz05/fz20, bull/stable fc05/fc20, bear/stable fd05/fd20
 
-// Safe is:
-// if near over and was near stable, then if not far under and not far bull -> short
-// if near stable or over or bull and was far stable or was far bull -> drop0
+// Wilder's under/stable/over: variant a
+// if under -> long
+// if over -> short
+// if stable -> close
 
-data3: update fl01:`short0 by folio0 from data2 where ((({last prev x};fz05) fby fz05) in enlist `stable),(fz20 <> `under),(fc20 <> `bull)
+update wa05:`long from `state0 where (fz05 = `under),(not lfz05 = `under)
+update wa05:`short from `state0 where (fz05 = `over),(not lfz05 = `over)
 
-data3: update fl01:`drop0 by folio0 from data3 where ((({last prev x};fz20) fby fz20) in enlist `stable),((({last prev x};fc20) fby fc20) in enlist `bull),(fz05 in `stable`over),(fc05 = `bull)
+update wa05:`close from `state0 where (fz05 = `stable),(lfz05 = `stable)
+
+update wa20:`long from `state0 where (fz20 = `under),(not lfz20 = `under)
+update wa20:`short from `state0 where (fz20 = `over),(not lfz20 = `over)
+
+update wa20:`close from `state0 where (fz20 = `stable),(lfz20 = `stable)
+
+// Profit and loss calculation.
+
+// Get the trades - for inspection to check plwa05
+plwa05a: ungroup select p00, wa05 by folio0,dt0 from state0 where not null wa05
+
+// Pair them up
+plwa05: ungroup select ldt0:prev dt0, dt0, lp00: prev p00, p00, lwa05: prev wa05, wa05 by folio0 from plwa05a
+
+// Drop the first pair: it will be the first leg of the first trade, so null in ldt0
+delete from `plwa05 where null ldt0
+
+// Drop the trades that start with a close, they're half the last trade and half of the next
+delete from `plwa05 where lwa05 = `close
+
+// long to short is close the long, open a short, so treat as a long close, because a short 
+// is the next trade. It's all those cases where wa05 isn't the same lwa05.
+
+update wa05:`close from `plwa05 where (wa05 <> lwa05)
+
+// Only the long-long and the short-short to do.
+
+\
 
 data1x: `folio0`dt0 xasc data3
 data1x: delete from data1x where folio0 in `KA`KB`KC
-data1y: `folio0`dt0 xasc ungroup select p00, fl01 by folio0,dt0 from data1x
+data1y: `folio0`dt0 xasc ungroup select p00, s05, fl01, fz05, fz20, fc05, fc20, fd05, fd20 by folio0,dt0 from data1x
 
 select count i by folio0,fl01 from data1y where fl01 in  `short0`drop0
 

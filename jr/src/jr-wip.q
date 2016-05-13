@@ -2,6 +2,11 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+distinct state0[;`fl05]
+
+select count i by folio0,fl05 from state0 where not null fl05
+
+
 /// R gives two implementations, both can start at the initial value
 // These are there impulse responses. x.lambda is 0.6
 /  > library(fTrading)
