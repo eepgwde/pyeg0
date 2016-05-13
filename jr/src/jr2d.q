@@ -75,6 +75,8 @@ update pnl0:p00 - lp00 from `plwa05 where lwa05 = `long
 update pnl1:`loss from `plwa05
 update pnl1:`profit from `plwa05 where pnl0 > 0
 
+update ddt0:dt0-ldt0 from `plwa05
+
 /// Some totals
 /// I've done this with joins, you can create intermediate tables or operate on the columns.
 

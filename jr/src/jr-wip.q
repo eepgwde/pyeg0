@@ -2,6 +2,16 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+/// Joining in holding times and pnl lookup
+
+// A forward lookup
+
+futdt0: raze value flip key select by dt0 from plwa05
+curdt0: raze value flip key select by ldt0 from plwa05
+
+futp00: 2!ungroup select dt0, p00 by folio0 from data1 where dt0 in futdt0
+curp00: 2!ungroup select dt0, lp00:p00 by folio0 from data1 where dt0 in curdt0
+
 
 
 \

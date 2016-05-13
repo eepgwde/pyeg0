@@ -61,7 +61,18 @@ data1: 0!delete from data1 where folio0 in `KA`KB`KC
 /// Now join the trading signals to data1 with the marking they will be in profit or loss.
 /// For this iteration, we are only concerned with profit and loss (a binary classifier)
 update fcst:` from `data1;
-data1: (select by folio0,dt0 from data1) lj (2!ungroup select ft05:lwa05, fp05:pnl1 by folio0,dt0:ldt0 from plwa05)
+data1: (select by folio0,dt0 from data1) lj (2!ungroup select ft05:lwa05, fp05:pnl1, h05:ddt0 by folio0,dt0:ldt0 from plwa05)
+
+/// Add a marker that these are RSI fv05 v for veritable - nstrat is not strategy
+update fv05:`nstrat from `data1
+update fv05:`strat from `data1 where not null ft05
+
+/// Calculate profits and losses on synthetic trades
+/// ie. same position at same time.
+data1: 0!data1
+
+.sys.qreloader enlist "jr2e.q"
+
 
 /// Validation
 /// But only by eye.
