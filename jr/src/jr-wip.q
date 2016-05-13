@@ -2,10 +2,20 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+// Assign a close number
+
+t0: 0!(select by folio0,dt0 from plwa05) lj 2!ungroup select cidx:i by folio0,dt0 from select by folio0,dt0 from plwa05 where wa05 = `close
+
+t0:update cidx:reverse fills reverse cidx from t0
+
+t1: 2!value select first folio0, ldt0:last dt0, first lp00 by cidx from t0 where (lwa05 = wa05)
+plwa05: delete from (plwa05 lj t1) where (lwa05 = wa05)
+
+\
+
 distinct state0[;`fl05]
 
 select count i by folio0,fl05 from state0 where not null fl05
-
 
 /// R gives two implementations, both can start at the initial value
 // These are there impulse responses. x.lambda is 0.6

@@ -86,6 +86,8 @@ delete from `plwa05 where lwa05 = `close
 update wa05:`close from `plwa05 where (wa05 <> lwa05)
 
 // Only the long-long and the short-short to do.
+// We have to take the long-long price and put it where the following long-close price is.
+// assign a close indicator
 
 \
 
