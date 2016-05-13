@@ -14,10 +14,10 @@ x.folios: distinct data1[;`folio0]
 /// In this iteration, just do the same ft05.
 /// I hope to add the opposite too.
 
-x.cd: select ft05, dt0, dt1:(type data1[;`dt0])$dt0 + h05  from data1 where not null ft05
+x.cd: select lwa05, dt0:(type data1[;`dt0])$dt0 + h05, ldt0:dt0  from data1 where not null lwa05
 
 /// Empty template table, get column order
-t0: 0#select folio0, ft05, dt0, dt1:dt0 from data1
+t0: 0#select folio0, lwa05, dt0, ldt0:dt0 from data1
 x.cols: cols t0
 
 /// Create a new table for each folio
@@ -25,15 +25,16 @@ x.cols: cols t0
 t1s: { t1: x.cols xcols update folio0:x from x.cd } each x.folios
 
 /// Insert to the empty one.
-{ `t0 insert x } each t1s
-
+{ `t0 insert x } each t1s;
 
 /// Use lookup to find the prices
 x.data1: select by folio0,dt0 from data1
 
-t1:update lp00:x.data1[([]folio0;dt0);`p00], p00:x.data1[([]folio0;dt0:dt1);`p00] from t0
+t1:update lp00:x.data1[([]folio0;dt0:ldt0);`p00], p00:x.data1[([]folio0;dt0);`p00] from t0
 
-t1: update v00:p00-lp00
+// t1: update lwa05:ft05 from t1
+
+.f00.pnl[t1]
 
 \
 

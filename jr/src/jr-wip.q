@@ -4,18 +4,9 @@
 
 /// Joining in holding times and pnl lookup
 
-/// Given a table and a trade type calculate profit and loss
-/// and classify
-///
-/// The table must have lp00, p00 and lwa05 defined
-/// It adds pnl0 the value, and pnl1 the type ie. profit or loss.
-x.pnl: { [tbl;ttype0]
-	tbl:update pnl0:lp00 - p00 from tbl where lwa05 = `short;
-	tbl:update pnl0:p00 - lp00 from tbl where lwa05 = `long;
-	tbl:update pnl1:`loss from tbl;
-	tbl:update pnl1:`profit from tbl where pnl0 > 0;
-	t0
-}
+.sys.qreloader enlist "jr-f.q"
+
+t4: .f00.pnl[plwa05]
 
 \
 
@@ -26,8 +17,6 @@ curdt0: raze value flip key select by ldt0 from plwa05
 
 futp00: 2!ungroup select dt0, p00 by folio0 from data1 where dt0 in futdt0
 curp00: 2!ungroup select dt0, lp00:p00 by folio0 from data1 where dt0 in curdt0
-
-
 
 \
 

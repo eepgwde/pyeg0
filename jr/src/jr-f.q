@@ -79,7 +79,17 @@ pcols: { [c0;prefx]
 	   tbl:update pnl0:p00 - lp00 from tbl where lwa05 = `long;
 	   tbl:update pnl1:`loss from tbl;
 	   tbl:update pnl1:`profit from tbl where pnl0 > 0;
+	   tbl: update ddt0:dt0-ldt0 from tbl;
 	   tbl }
+
+update pnl0:lp00 - p00 from `plwa05 where lwa05 = `short
+update pnl0:p00 - lp00 from `plwa05 where lwa05 = `long
+
+update pnl1:`loss from `plwa05
+update pnl1:`profit from `plwa05 where pnl0 > 0
+
+update ddt0:dt0-ldt0 from `plwa05
+
 
 
 /  Local Variables: 
