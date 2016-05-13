@@ -4,6 +4,8 @@
 
 .sys.qreloader enlist "data1.qdb"
 
+/// Because I'm going to be doing arithmetic on the dt0, I'm going to convert it to int.
+
 cols data1
 
 /// We only have a price signal, yes really, the rest are moving averages
@@ -68,10 +70,18 @@ update fv05:`nstrat from `data1
 update fv05:`strat from `data1 where not null lwa05
 
 /// Calculate profits and losses on synthetic trades
-/// ie. same position at same time.
+/// ie. take same position at same time, but not chosen by RSI
 data1: 0!data1
 
 .sys.qreloader enlist "jr2e.q"
+
+\
+
+/// Calculate profits and losses on each trade.
+/// This generates plwa05
+/// @class plwa05
+.sys.qreloader enlist "jr2d.q"
+
 
 
 /// Validation
@@ -82,8 +92,6 @@ show .t00.count @ data1
 show select last p00 by folio0 from data1
 
 show select count i by folio0,in0,lwa05,fcst from data1
-
-
 
 \
 

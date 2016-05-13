@@ -10,7 +10,8 @@
 /// Delete the synthetics 
 state0: ungroup select dt0, p00, fz05, fz20, fc05, fc20, fd05, fd20, lfz05:prev fz05, lfz20:prev fz20, lfc05:prev fc05, lfc20:prev fc20, lfd05:prev fd05, lfd20:prev fd20 by folio0 from (`folio0`dt0 xasc data1)
 
-delete from `state0 where dt0 < 20
+/// No need to delete them
+// delete from `state0 where dt0 < 20
 
 state0: `folio0`dt0`p00`fz05`lfz05`fz20`lfz20`fc05`lfc05`fc20`lfc20`fd05`lfd05`fd20`lfd20 xcols state0
 

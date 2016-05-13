@@ -79,7 +79,7 @@ pcols: { [c0;prefx]
 	   tbl:update pnl0:p00 - lp00 from tbl where lwa05 = `long;
 	   tbl:update pnl1:`loss from tbl;
 	   tbl:update pnl1:`profit from tbl where pnl0 > 0;
-	   tbl: update ddt0:dt0-ldt0 from tbl;
+	   tbl:update ddt0:(type tbl[;`dt0])$dt0-ldt0 from tbl;
 	   tbl }
 
 update pnl0:lp00 - p00 from `plwa05 where lwa05 = `short
