@@ -112,16 +112,17 @@ update pnl1:`loss from `plwa05
 update pnl1:`profit from `plwa05 where pnl0 > 0
 
 // Some totals
-// This is always fiddly in q, join the totals back in.
+// I've done this with joins, you can create intermediate tables or operate on the columns.
 
 t0:value select idx:1h, n0:count i, abs sum pnl0 by pnl1 from plwa05
 t1:select by idx from update idx:1h from select n1:count i, pnl1:abs sum abs pnl0 from plwa05
 
 t2: t0 lj t1
-t2: update idx:i from t2
+t2: delete x from select by idx:i from t2
 
 t3: value t2 lj 1!select idx:i, n2:100f * n0 % n1, pnl2:100f * pnl0 % pnl1 from t2 
 
+t4: select by t0 from value (select by i from t3) uj select by i from ([] t0:`loss`profit)
 
 \
 
