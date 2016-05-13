@@ -87,7 +87,26 @@ update wa05:`close from `plwa05 where (wa05 <> lwa05)
 
 // Only the long-long and the short-short to do.
 // We have to take the long-long price and put it where the following long-close price is.
-// assign a close indicator
+// assign an index to close (cidx) using the virtural row number, this leaves null for 
+// long-long and short-short 
+// Fill back, select just the long-long and short-short, first price and last date with a key to 
+// left join to the main table.
+// And then delete them to give just the closed trades table.
+
+t0: 0!(select by folio0,dt0 from plwa05) lj 2!ungroup select cidx:i by folio0,dt0 from select by folio0,dt0 from plwa05 where wa05 = `close
+
+t0:update cidx:reverse fills reverse cidx from t0
+
+t0: 2!value select first folio0, ldt0:last dt0, first lp00 by cidx from t0 where (lwa05 = wa05)
+plwa05: delete from (plwa05 lj t1) where (lwa05 = wa05)
+
+t0:()
+delete t0 from `.
+
+// See how much I made.
+
+select sum[lp00 - p00] from plwa05 where lwa05 = `short
+select sum[p00 - lp00] from plwa05 where lwa05 = `long
 
 \
 
