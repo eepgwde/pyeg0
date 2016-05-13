@@ -245,6 +245,13 @@ developed for Python.
 
 *** RSI Trading
 
+Overall
+
+t0    | n0   pnl0     n1   pnl1     n2      pnl2    
+------| --------------------------------------------
+loss  | 1671 9462.156 4896 21143.39 34.1299 44.75232
+profit| 3225 11681.23 4896 21143.39 65.8701 55.24768
+
 In-sample
 
 t0    | n0   pnl0     n1   pnl1     n2       pnl2    
