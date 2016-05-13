@@ -2,9 +2,17 @@
 ///
 /// Validation and prototyping code for jr2.q
 
-(cols data1) like "f*"
-
 \
+
+.t.t0: 0!data1
+.sch.t2str[`.t.t0]
+
+.t.t0:update folio0:string each folio0 from data1
+
+cols data1
+
+// Make file name in the first directory and save a copy to it.
+.sch.mimefile[`data2;"qdb";first (.sys.qpath.list`)] set .t.t0 
 
 // Assign a close number
 

@@ -243,6 +243,17 @@ developed for Python.
 
 ** ChangeLog
 
+*** Preparing for heuristics
+
+Unfortunately, I can't ask for a binary classifier because not all the
+trades have values, but I can add a fake value.
+
+If I find the holding time for the "real" profitable trades and then
+calculate what the other trades would have made at the same time had they
+been transacted similarly, I would then have a full binary qualifier.
+
+
+
 *** RSI Trading
 
 Overall

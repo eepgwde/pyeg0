@@ -72,15 +72,16 @@ show select last p00 by folio0 from data1
 
 show select count i by folio0,in0,ft05,fcst from data1
 
+/// Archive to CSV and binary format.
+
 data2: 0!data1
 .sch.t2csv[`data2]
 
-.t.t0:update folio0:string each folio0 from data1
-
-cols data1
+.t.t0: 0!data1
+.sch.t2str[`.t.t0]
 
 // Make file name in the first directory and save a copy to it.
-.sch.mimefile[`data1;"qdb";first (.sys.qpath.list`)] set .t.t0
+.sch.mimefile[`data2;"qdb";first (.sys.qpath.list`)] set .t.t0 
 
 \
 
