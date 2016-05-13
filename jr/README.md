@@ -153,7 +153,7 @@ r-cran-fportfolio - GNU R package for financial engineering -- fPortfolio
 r-cran-fregression - GNU R package for financial engineering -- fRegression
 r-cran-ftrading - GNU R package for financial engineering -- fTrading
 
-*** Strategies
+*** Strategies: General
 
 No sophisticated trader just takes a wild punt on a technical. Some hedging
 strategies are needed: market neutral.
@@ -176,7 +176,7 @@ Calculate the risk and return empirically for a trading window, and from
 the technicals predict what they could be in the next, then find the
 proportions to optimize for the next.
 
-*** On second thoughts: RSI trading with Mediation by Prediction
+*** Strategies: RSI trading with Mediation by Prediction
 
 I'll use the same trading system I develope for the ETFs. Except now we I'm
 not training on fundamentals and correlations, but trading signals from a
@@ -197,9 +197,6 @@ moving 20 day horizon.
 I should only give the learning algorithm the information of when the trade
 opened information and *not* when it was closed. That would be all the
 other stuff that hasn't been used by the RSI metric.
-
-(Note: I might add a hold-duration metric to give the learner a helping
-hand.)
 
 **** Trade the Out-of-Sample Data: Generate Candidate Trade Opens and Mediate
 
@@ -245,6 +242,22 @@ home machine. GNU R machine and timeseries tools are the basis of what is
 developed for Python.
 
 ** ChangeLog
+
+*** RSI Trading
+
+In-sample
+
+t0    | n0   pnl0     n1   pnl1     n2       pnl2    
+------| ---------------------------------------------
+loss  | 1235 7350.494 3674 16865.96 33.61459 43.58183
+profit| 2439 9515.465 3674 16865.96 66.38541 56.41817
+
+Out-of-sample
+
+t0    | n0  pnl0     n1   pnl1     n2       pnl2    
+------| --------------------------------------------
+loss  | 435 2126.526 1212 4279.741 35.89109 49.68819
+profit| 777 2153.215 1212 4279.741 64.10891 50.31181
 
 *** Original data
 

@@ -34,15 +34,21 @@ data0: delete p01 from data0
 // Metrics and Technical Analytics
 .sys.qreloader enlist "jr2b.q"
 
+// To check the in- or out- sample use one of these. Leave it undefined for all
+// In-sample
+// x.in0: 1b
+// Out-sample
+// x.in0: 0b
+
+show select count i by in0 from data1:$[ .sys.undef[`x;`in0]; data1; delete from data1 where in0 <> x.in0]
+
 /// Trading signals
 /// State machines on signals.
 
 // Wilder
-.sf.tr0: `null`short`long`hold`close
 
-.sf.tr1: `null1`short1`long1`hold1`close1
-
-// State machine table
+// State machine table - put the prev value in their own column prefix 'l' for lag
+// Delete the synthetics 
 state0: ungroup select dt0, p00, fz05, fz20, fc05, fc20, fd05, fd20, lfz05:prev fz05, lfz20:prev fz20, lfc05:prev fc05, lfc20:prev fc20, lfd05:prev fd05, lfd20:prev fd20 by folio0 from (`folio0`dt0 xasc 0!delete from data1 where folio0 in `KA`KB`KC)
 
 delete from `state0 where dt0 < 20
@@ -123,6 +129,7 @@ t2: delete x from select by idx:i from t2
 t3: value t2 lj 1!select idx:i, n2:100f * n0 % n1, pnl2:100f * pnl0 % pnl1 from t2 
 
 t4: select by t0 from value (select by i from t3) uj select by i from ([] t0:`loss`profit)
+show t4;
 
 \
 
