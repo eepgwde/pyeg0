@@ -35,3 +35,7 @@ data1: .m0.r00[data1;`KA]
 data1: .m0.r00[data1;`KB]
 data1: .m0.r00[data1;`KC]
 
+// Clean up
+
+n0:p00:p01:p02:()
+delete n0, p00, p01, p02 from `.

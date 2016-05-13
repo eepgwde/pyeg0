@@ -252,7 +252,14 @@ If I find the holding time for the "real" profitable trades and then
 calculate what the other trades would have made at the same time had they
 been transacted similarly, I would then have a full binary qualifier.
 
+I could also add the opposite position as well. The only feature is the
+holding time, which I do not give to the learner.
 
+I would have to delete the holding time from the training set, of course,
+and hope that the learner can infer it.
+
+It isn't a complete description of how long to hold trades for, but it is
+more complete.
 
 *** RSI Trading
 

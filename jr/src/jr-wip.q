@@ -2,6 +2,8 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+
+
 \
 
 .t.t0: 0!data1

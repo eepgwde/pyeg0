@@ -72,7 +72,12 @@ show select last p00 by folio0 from data1
 
 show select count i by folio0,in0,ft05,fcst from data1
 
+
+
+\
+
 /// Archive to CSV and binary format.
+/// If a dataset is good.
 
 data2: 0!data1
 .sch.t2csv[`data2]
