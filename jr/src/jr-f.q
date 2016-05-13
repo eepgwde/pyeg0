@@ -69,6 +69,19 @@ pcols: { [c0;prefx]
 	     lambda: $[lambda >= 1; 2 % lambda + 1; lambda];
 	     { [now0;past0;z] past0 + z*(now0 - past0) }[;;1 - lambda] scan s0 }
 
+/// Given a table and a trade type calculate profit and loss
+/// and classify
+///
+/// The table must have lp00, p00 and lwa05 defined
+/// It adds pnl0 the value, and pnl1 the type ie. profit or loss.
+.f00.pnl: { [tbl]
+	   tbl:update pnl0:lp00 - p00 from tbl where lwa05 = `short;
+	   tbl:update pnl0:p00 - lp00 from tbl where lwa05 = `long;
+	   tbl:update pnl1:`loss from tbl;
+	   tbl:update pnl1:`profit from tbl where pnl0 > 0;
+	   tbl }
+
+
 /  Local Variables: 
 /  mode:q 
 /  q-prog-args: "-load help.q -verbose -quiet"

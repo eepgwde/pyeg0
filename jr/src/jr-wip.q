@@ -4,7 +4,22 @@
 
 /// Joining in holding times and pnl lookup
 
-// A forward lookup
+/// Given a table and a trade type calculate profit and loss
+/// and classify
+///
+/// The table must have lp00, p00 and lwa05 defined
+/// It adds pnl0 the value, and pnl1 the type ie. profit or loss.
+x.pnl: { [tbl;ttype0]
+	tbl:update pnl0:lp00 - p00 from tbl where lwa05 = `short;
+	tbl:update pnl0:p00 - lp00 from tbl where lwa05 = `long;
+	tbl:update pnl1:`loss from tbl;
+	tbl:update pnl1:`profit from tbl where pnl0 > 0;
+	t0
+}
+
+\
+
+// A forward lookup - unused
 
 futdt0: raze value flip key select by dt0 from plwa05
 curdt0: raze value flip key select by ldt0 from plwa05
