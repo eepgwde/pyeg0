@@ -11,7 +11,7 @@
 x.folios: distinct data1[;`folio0]
 
 /// Candidate actions
-/// In this iteration, just do the same ft05.
+/// In this iteration, just do the same lwa05
 /// I hope to add the opposite too.
 
 x.cd: select lwa05, dt0:(type data1[;`dt0])$dt0 + h05, ldt0:dt0  from data1 where not null lwa05
@@ -32,9 +32,11 @@ x.data1: select by folio0,dt0 from data1
 
 t1:update lp00:x.data1[([]folio0;dt0:ldt0);`p00], p00:x.data1[([]folio0;dt0);`p00] from t0
 
-// t1: update lwa05:ft05 from t1
+data2: data1 lj select by folio0,dt0 from .f00.pnl[t1]
 
-.f00.pnl[t1]
+t1:t1s:()
+delete t1, t1s from `.
+
 
 \
 
