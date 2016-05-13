@@ -98,7 +98,7 @@ t0: 0!(select by folio0,dt0 from plwa05) lj 2!ungroup select cidx:i by folio0,dt
 t0:update cidx:reverse fills reverse cidx from t0
 
 t0: 2!value select first folio0, ldt0:last dt0, first lp00 by cidx from t0 where (lwa05 = wa05)
-plwa05: delete from (plwa05 lj t1) where (lwa05 = wa05)
+plwa05: delete from (plwa05 lj t0) where (lwa05 = wa05)
 
 t0:()
 delete t0 from `.
