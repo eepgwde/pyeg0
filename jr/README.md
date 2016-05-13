@@ -9,6 +9,15 @@ Jnygre.Q.Rnirf@tznvy.pbz
 This is timeseries financial data. 20 portfolios, 800 in-sample points, 200
 out.
 
+First, I analyzed the existing metrics (Analyses:Variable by
+eye). Discovered they were all moving averages (of some kind). No volume
+data, no VWAP, no open/high/low just close.
+
+I decided to not bother with these x01-x24 and added my own metrics.
+
+In the Strategies section, I describe and develop a trading strategy. I've
+re-used an Relative Strength Index metric based one following Caldwell.
+
 * Data organization
 
 I've used q/kdb+ to reshape the data and add some extra variables.  Mostly,
@@ -16,6 +25,8 @@ I renamed to lower-case and padded with zeros, x01. I added some ratios
 dx01 and some moving averages m5x01.
 
 Split up to different portfolios.
+
+Later, in Strategies, I add trading metrics.
 
 * Analyses
 
@@ -76,8 +87,17 @@ anti-correlations.
 
 KI to KG in the last 60 days. Many good pairs here. KN to KL. KQ to KS.
 
-***** m05
+***** r05, r20 and others
 
+Many good plots archived as jr2-syn.zip
+
+These show some of my metrics see jr2.q for what they are, but r?? is
+returns and r05 is 5 day moving average, r20 the 20 day.
+
+s?? is standard deviation.
+
+The synthetic portfolios are in there too. There's also a short data-set
+(last sixty days) of MACD.
 
 *** More Checking
 
@@ -90,7 +110,7 @@ No, all MAs. Some are EWMA, some MA. No indication of VWAP. Nothing.
 
 *** Technicals
 
-I don't have any volume data, so bit limited what I can add
+I don't have any volume data, so bit limited what I can add.
 
 RSI is a good one.
 
@@ -155,6 +175,52 @@ predict the proportions to hold for the next period.
 Calculate the risk and return empirically for a trading window, and from
 the technicals predict what they could be in the next, then find the
 proportions to optimize for the next.
+
+*** On second thoughts: RSI trading with Mediation by Prediction
+
+I'll use the same trading system I develope for the ETFs. Except now we I'm
+not training on fundamentals and correlations, but trading signals from a
+Technical Analytic.
+
+**** RSI trading
+
+I'll implement a Relative Strength Index trading system using Caldwell's
+signals. This worked well for stocks on at bet365. Run it on the in-sample
+data and "mark" it using a binary indicator: profit or loss.
+
+**** Use this as the training set for a binary classifier
+
+I'll then run a machine learning algorithm (probably the Gradient Boosting
+Method) to derive a predictor using time-slice sampling with at least a
+moving 20 day horizon.
+
+I should only give the learning algorithm the information of when the trade
+opened information and *not* when it was closed. That would be all the
+other stuff that hasn't been used by the RSI metric.
+
+(Note: I might add a hold-duration metric to give the learner a helping
+hand.)
+
+**** Trade the Out-of-Sample Data: Generate Candidate Trade Opens and Mediate
+
+Then run the out-of-sample data through the trading engine, generating the
+candidate open decisions, for each one, as it occurs, I use the
+predictor to determine if it will be a profit or a loss. If it is likely to
+be profitable, the trading engine will open the trade. If not, it
+doesn't. Let's call this method the "predictor-mediated" one, or simpler
+still the Mediated trading strategy.
+
+I then run the out-of-sample data to conclusion and compare the total
+profit and loss for Not-Mediated and Mediated.
+
+**** Discussion
+
+The RSI is a trend metric. I'm going to base trades on that. I'm hoping
+that other technical metrics can be inferred by the learner. Because the
+learner has the moving averages on returns and on standard deviation, it
+might apply it has the information to develop its own Bollinger bands.
+
+So that should be enough.
 
 ** To do
 
