@@ -8,7 +8,7 @@
 
 /// State machine table - put the prev value in their own column prefix 'l' for lag
 /// Delete the synthetics 
-state0: ungroup select dt0, p00, fz05, fz20, fc05, fc20, fd05, fd20, lfz05:prev fz05, lfz20:prev fz20, lfc05:prev fc05, lfc20:prev fc20, lfd05:prev fd05, lfd20:prev fd20 by folio0 from (`folio0`dt0 xasc 0!delete from data1 where folio0 in `KA`KB`KC)
+state0: ungroup select dt0, p00, fz05, fz20, fc05, fc20, fd05, fd20, lfz05:prev fz05, lfz20:prev fz20, lfc05:prev fc05, lfc20:prev fc20, lfd05:prev fd05, lfd20:prev fd20 by folio0 from (`folio0`dt0 xasc data1)
 
 delete from `state0 where dt0 < 20
 

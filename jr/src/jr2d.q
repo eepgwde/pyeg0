@@ -20,11 +20,10 @@ plwa05a: ungroup select p00, wa05 by folio0,dt0 from state0 where not null wa05
 /// This needs thorough re-checking. It has to be correct.
 plwa05: ungroup select ldt0:prev dt0, dt0, lp00: prev p00, p00, lwa05: prev wa05, wa05 by folio0 from plwa05a
 
-\
-
 /// Drop the first pair: it will be the first leg of the first trade, so null in ldt0
+/// This is the best table for checking the later logic, I'll snapshot it.
 delete from `plwa05 where null ldt0
-plwa05b: value select by i from plwa05a
+plwa05b: plwa05
 
 /// Drop the trades that start with a close, they're half the last trade and half of the next
 delete from `plwa05 where lwa05 = `close
