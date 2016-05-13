@@ -2,6 +2,10 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+(cols data1) like "f*"
+
+\
+
 // Assign a close number
 
 t0: 0!(select by folio0,dt0 from plwa05) lj 2!ungroup select cidx:i by folio0,dt0 from select by folio0,dt0 from plwa05 where wa05 = `close

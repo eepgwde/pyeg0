@@ -58,29 +58,10 @@ data1: 0!delete from data1 where folio0 in `KA`KB`KC
 /// @class plwa05
 .sys.qreloader enlist "jr2d.q"
 
-
-
-\
-
-data1x: `folio0`dt0 xasc data3
-data1x: delete from data1x where folio0 in `KA`KB`KC
-data1y: `folio0`dt0 xasc ungroup select p00, s05, fl01, fz05, fz20, fc05, fc20, fd05, fd20 by folio0,dt0 from data1x
-
-select count i by folio0,fl01 from data1y where fl01 in  `short0`drop0
-
-/// Tidy up - keep the RSI in, the quantitative changes may help
-
-delete u00, d00, u05, d05, y05, u20, d20, y20 from `data1 
-
-/// Easy view using data2
-
-data1x: `folio0`dt0 xasc data1
-data1x: delete from data1x where folio0 in `KA`KB`KC
-
-select count i by folio0,in0,fz05 from data1
-select count i by folio0,in0,fz20 from data1
-
-\
+/// Now join the trading signals to data1 with the marking they will be in profit or loss.
+/// For this iteration, we are only concerned with profit and loss (a binary classifier)
+update fcst:` from `data1;
+data1: (select by folio0,dt0 from data1) lj (2!ungroup select ft05:lwa05, fp05:pnl1 by folio0,dt0:ldt0 from plwa05)
 
 /// Validation
 /// But only by eye.
@@ -88,6 +69,18 @@ select count i by folio0,in0,fz20 from data1
 show .t00.count @ data1
 
 show select last p00 by folio0 from data1
+
+show select count i by folio0,in0,ft05,fcst from data1
+
+data2: 0!data1
+.sch.t2csv[`data2]
+
+.t.t0:update folio0:string each folio0 from data1
+
+cols data1
+
+// Make file name in the first directory and save a copy to it.
+.sch.mimefile[`data1;"qdb";first (.sys.qpath.list`)] set .t.t0
 
 \
 

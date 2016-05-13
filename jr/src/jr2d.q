@@ -66,6 +66,8 @@ t0:()
 delete t0 from `.
 
 /// See how much I made.
+/// @note
+/// I could add a transaction cost here.
 
 update pnl0:lp00 - p00 from `plwa05 where lwa05 = `short
 update pnl0:p00 - lp00 from `plwa05 where lwa05 = `long
