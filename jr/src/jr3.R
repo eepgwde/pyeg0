@@ -100,6 +100,7 @@ df1 <- predict(ml0.imputer, df0)
 
 ### Data splitting
 ## Time slicing *not* random samples.
+## Go through one by hand.
 
 inTrain <- createTimeSlices(ml0.outcomes, 
                             ml0.window0  + floor(ml0.window0/2), 
@@ -163,11 +164,10 @@ summary(descrCorr[upper.tri(descrCorr)])
 
 ### GBM controllers
 
-fitControl <- trainControl(## 10-fold CV
-    method = "repeatedcv",
-    number = 10,
-    ## repeated ten times
-    repeats = 10,
+fitControl <- trainControl(## timeslicing
+    horizon = ml0.window0,
+    fixedWindow = TRUE,
+    method = "timeslice",
     classProbs = TRUE)
 
 ## Some trial and error with variables to branch and boost.
@@ -183,7 +183,8 @@ gbmGrid <- expand.grid(interaction.depth = 2,
 
 set.seed(seed.mine)
 gbmFit1 <- train(trainDescr, trainClass,
-                 method = "gbm",
+                 method = "pls",
+                 method=c("center", "scale", "knnImpute")
                  trControl = fitControl,
                  ## This last option is actually one
                  ## for gbm() that passes through
