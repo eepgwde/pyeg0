@@ -58,7 +58,7 @@ folios.train0 <- folios.in[,setdiff(colnames(folios.in), ml0.prescient)]
 train.ustk1 <- ustk.folio1(folios.train0)
 
 ## Shorter data set.
-train.ustk2 <- tail(train.ustk1, n = 60)
+train.ustk2 <- tail(train.ustk1, n = 180)
 
 ### Test one portfolio
 
@@ -84,5 +84,23 @@ ml0.imputer <- preProcess(df0, method=c("center", "scale", "knnImpute"))
 ## Apply the imputations.
 df1 <- predict(ml0.imputer, df0)
 
+### Data splitting
 
+inTrain <- createTimeSlices(ml0.outcomes, 
+                            ml0.window0  + floor(ml0.window0/2), 
+                            horizon = ml0.window0, 
+                            fixedWindow = TRUE, skip = 0)
 
+idx <- 1
+
+trainDescr <- df1[inTrain$train[[idx]],]
+testDescr <- df1[-inTrain$test[[idx]],]
+
+trainClass <- ml0.outcomes[inTrain$train[[idx]]]
+testClass <- ml0.outcomes[inTrain$test[[idx]]]
+
+prop.table(table(trainClass))
+dim(trainDescr)
+
+prop.table(table(testClass))
+dim(testDescr)
