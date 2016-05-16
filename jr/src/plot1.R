@@ -291,3 +291,37 @@ jpeg.ustk <- function(ustk, metric0="p00", xtra0="KA",
               ylab0=f.metric, xtra0=f.xtra0, 
               tag0=paste(x.tag0, "-", sep=""))
 }
+
+### Remove a metric from an unstacked frame, mark outcome as an attribute
+## 
+## Two attributes are added ("outcomes" and "folio"), the outcomes is
+## the folio's value for that metric.
+## All metrics of that name are removed.
+ustk.xfolio <- function(df, folio="KF", metric0="fp05", patt=NULL) {
+    outcomec <- paste(folio, metric0, sep=".")
+    outcomes <- df[, outcomec]
+
+    if (is.null(patt)) {
+        patt <- paste("K[A-Z]\\.", metric0, sep="")
+    }
+
+    df0 <- df[, ! grepl(patt, colnames(df))]
+    attr(df0, "outcomes") <- outcomes
+    attr(df0, "folio") <- folio
+    return(df0)
+}
+
+### Delete all columns except for those of the named folio.
+ustk.xfolios <- function(df, folio="KF") {
+    outcomes <- train.ustk2[, outcomec]
+
+    if (is.null(patt)) {
+        patt <- paste("K[A-Z]\\.", metric0, sep="")
+    }
+
+    df0 <- df[, ! grepl(patt, colnames(df))]
+    attr(df0, "outcomes") <- outcomes
+    attr(df0, "folio") <- folio
+    return(df0)
+}
+

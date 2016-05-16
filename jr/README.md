@@ -256,8 +256,7 @@ other portfolios must not be used: they too are prescient.
 (Note: it would be possible to feed-back this information, but it should be
 available in the returns.)
 
-The current return at each time window must be set to NA for the portfolio
-being trained.
+And all the time-series must be lagged by one relative to the outcomes.
 
 ** jr2.q: added a PnL for each portfolio with synthetic trades
 

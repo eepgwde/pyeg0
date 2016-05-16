@@ -49,7 +49,7 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0.window0) {
 ## Target feature is fp05
 ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
 ## Check against the price signal
-ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
+ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
 
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), ml0.prescient)]
 
@@ -60,5 +60,8 @@ train.ustk1 <- ustk.folio1(folios.train0)
 ## Shorter data set.
 train.ustk2 <- tail(train.ustk1, n = 60)
 
+### Test one portfolio
 
+df <- ustk.xfolio(train.ustk2, folio=ml0.folio, metric=ml0.outcomen)
 
+ml0.outcomes <- attr(df, "outcomes")
