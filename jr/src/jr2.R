@@ -15,19 +15,42 @@ if (!is.null(dev.list())) {
     lapply(dev.list(), function(x) dev.off())
 }
 
-## Various kdb loads
+source("plot0.R")
+source("plot1.R")
 
+### Write to local binary disk.
+
+## Samples: various kdb loads
 kdb.url <- "http://m1:5000/q.csv?select from data0 where folio0 = `KF"
 kdb.url <- "http://m1:5000/q.csv?select from data0 where in0"
+
+## Out-of-sample
+kdb.url <- "http://m1:5000/q.csv?select from data1 where not in0"
+
+kdb.url <- URLencode(kdb.url)
+folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
+
+folios.out <- tbl.factorize(folios.in)
+
+save(folios.out, file="folios-out.dat")
+
+## In-sample
 kdb.url <- "http://m1:5000/q.csv?select from data1 where in0"
 
 kdb.url <- URLencode(kdb.url)
 folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
 
-source("plot0.R")
-source("plot1.R")
-
 folios.in <- tbl.factorize(folios.in)
+
+save(folios.in, file="folios-in.dat")
+
+### Graphics displays
+## Load the in-sample set.
+
+rm(folios.in, folios.out)
+
+load("folios-in.dat", envir=.GlobalEnv)
+
 folios.in0 <- head(folios.in)
 
 ### Debug
@@ -102,3 +125,4 @@ xx.mnames <- sort(ustk.patt(folios.ustk0, patt=xx.patt))
 jpeg.ustk(folios.ustk0, mnames=xx.mnames, names.cols = 5,
           xtra0=NULL, metric0=NULL, tag0="macd")
 
+save(folios.ustk, file="folios-ustk.dat")
