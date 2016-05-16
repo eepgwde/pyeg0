@@ -48,10 +48,21 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0.window0) {
 
 ## Target feature is fp05
 ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
+ml0.ignore <- c("l20")
 ## Check against the price signal
 ## ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 
-folios.train0 <- folios.in[,setdiff(colnames(folios.in), ml0.prescient)]
+folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
+                                    union(ml0.prescient, ml0.ignore))]
+
+### Clear up the outcomes to binary
+## Check we have a binary classifier.
+if (length(levels(folios.train0$fp05)) != 2) {
+    warning("Non binary results: forcing loss")
+    x.factors <- unique(factor(folios.train0$fp05))
+    x.idxes <- which(folios.train0$fp05 == unique(factor(folios.train0$fp05))[1])
+    folios.train0[x.idxes, "fp05"] <- x.factors[2]
+}
 
 ### Following jr2.R, unstack 
 
@@ -61,6 +72,9 @@ train.ustk1 <- ustk.folio1(folios.train0)
 train.ustk2 <- tail(train.ustk1, n = 180)
 
 ### Test one portfolio
+
+ml0.folio <- "KF"
+ml0.outcomen <- "fp05"
 
 df <- train.ustk2
 
@@ -85,6 +99,7 @@ ml0.imputer <- preProcess(df0, method=c("center", "scale", "knnImpute"))
 df1 <- predict(ml0.imputer, df0)
 
 ### Data splitting
+## Time slicing *not* random samples.
 
 inTrain <- createTimeSlices(ml0.outcomes, 
                             ml0.window0  + floor(ml0.window0/2), 
@@ -104,3 +119,97 @@ dim(trainDescr)
 
 prop.table(table(testClass))
 dim(testDescr)
+
+### Near zero-vars and correlations
+## PCA would find these, but for this iteration, we want to validate
+## If any at all possible.
+
+err.trainDescr <- list()
+
+nzv <- nearZeroVar(trainDescr, saveMetrics= TRUE)
+if (!any(nzv$nsv)) {
+    warning("overfitting: near-zero var: err.trainDescr: ", paste(colnames(trainDescr)[nzv$nzv], collapse = ", ") )
+    
+    err.trainDescr <- append(err.trainDescr, trainDescr)
+    trainDescr <- trainDescr[, -nzv$nzv ]
+}
+
+# It's imputed and behaves well, no need for this.
+# descrCorr <- cor(scale(trainDescr), use = "pairwise.complete.obs")
+
+descrCorr <- cor(scale(trainDescr))
+
+## This cut-off should be under src.adjust control.
+## There should be many of these. Because all derived from r00.
+highCorr <- findCorrelation(descrCorr, cutoff = .75, verbose = TRUE)
+
+colnames(trainDescr)[highCorr]
+
+descr.ncol0 <- ncol(trainDescr)
+
+# And remove the very highly correlated.
+if (sum(highCorr) > 0) {
+    warning("overfitting: correlations: err.trainDescr: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
+    err.trainDescr <- trainDescr
+    trainDescr <- trainDescr[,-highCorr]
+}
+
+descr.ncol1 <- ncol(trainDescr)
+
+paste("Dropped: ", as.character(descr.ncol0 - descr.ncol1))
+
+descrCorr <- cor(trainDescr)
+summary(descrCorr[upper.tri(descrCorr)])
+
+### GBM controllers
+
+fitControl <- trainControl(## 10-fold CV
+    method = "repeatedcv",
+    number = 10,
+    ## repeated ten times
+    repeats = 10,
+    classProbs = TRUE)
+
+## Some trial and error with variables to branch and boost.
+## Setting the interaction.depth
+## Try all variables with length(colnames(trainDescr))
+
+descr.grid <- floor(3/2 * descr.ncol1)
+
+gbmGrid <- expand.grid(interaction.depth = 2,
+                        n.trees = (1:descr.grid)*30,
+                        shrinkage = 0.1,
+                        n.minobsinnode = 10)
+
+set.seed(seed.mine)
+gbmFit1 <- train(trainDescr, trainClass,
+                 method = "gbm",
+                 trControl = fitControl,
+                 ## This last option is actually one
+                 ## for gbm() that passes through
+                 tuneGrid = gbmGrid,
+                 metric = "Kappa",
+                 verbose = FALSE)
+
+gbmFit1
+
+## The acid test is dissapointing, but I've seen worse.
+
+testPred <- predict(gbmFit1, testDescr)
+postResample(testPred, testClass)
+confusionMatrix(testPred, testClass, positive = "profit")
+
+## The training set is exact even with the correlation cut-offs
+## As one would hope - but 
+trainPred <- predict(gbmFit1, trainDescr)
+postResample(trainPred, trainClass)
+confusionMatrix(trainPred, trainClass, positive = "profit")
+
+## Get a density and a ROC
+
+x.p <- predict(gbmFit1, testDescr, type = "prob")[2]
+test.df <- data.frame(Weak=x.p$Weak, Obs=testClass)
+test.roc <- roc(Obs ~ Weak, test.df)
+
+
+
