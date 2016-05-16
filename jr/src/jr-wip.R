@@ -4,6 +4,10 @@
 
 ### Check price to moving average in jr3.R to see we have like to like.
 
+df <- ustk.xfolio(train.ustk2, folio="KG", metric="fc20")
+
+
+
 grph.pair0(train.ustk2, x=NULL, y1="KF.p00", y2="KF.e20")
 grph.pair0(train.ustk2, x=NULL, y1="KF.p00", y2="KF.s20")
 grph.pair0(train.ustk2, x=NULL, y1="KG.p00", y2="KG.s20")

@@ -311,17 +311,17 @@ ustk.xfolio <- function(df, folio="KF", metric0="fp05", patt=NULL) {
     return(df0)
 }
 
-### Delete all columns except for those of the named folio.
-ustk.xfolios <- function(df, folio="KF") {
-    outcomes <- train.ustk2[, outcomec]
+ustk.xfolios0 <- function(cols, folio=NULL) {
+    patt <- paste(folio, "\\..+$", sep="");
+    return(cols[which(grepl(patt, cols))])
+}
 
-    if (is.null(patt)) {
-        patt <- paste("K[A-Z]\\.", metric0, sep="")
-    }
+### Delete all columns except for those of the named folios.
+ustk.xfolios <- function(df, folios=c("KF")) {
+    cols <- colnames(df)
+    names <- lapply(folios, function(x) ustk.xfolios0(cols, folio=x))
 
-    df0 <- df[, ! grepl(patt, colnames(df))]
-    attr(df0, "outcomes") <- outcomes
-    attr(df0, "folio") <- folio
-    return(df0)
+    names <- unlist(names, use.names = FALSE)
+    return(df[,names])
 }
 
