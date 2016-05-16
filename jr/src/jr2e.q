@@ -37,10 +37,10 @@ t1:update lp00:x.data1[([]folio0;dt0:ldt0);`p00], p00:x.data1[([]folio0;dt0);`p0
 data2: data1 lj select by folio0,dt0 from .f00.pnl[t1]
 update lwa05:`void from `data2 where null lwa05;
 
+/// Drop and rename columns
 update fp05:pnl1, h05:ddt0 from `data2 where null fp05;
-
-data2: ![data2;();0b;(cols data2) except (cols data1)]
-
+data2: ![data2;();0b;(cols data2) except ((cols data1), `pnl0)]
+data2: .sch.rename1[(cols data2);`pnl0;`wapnl05] xcol data2
 data1: data2
 
 \

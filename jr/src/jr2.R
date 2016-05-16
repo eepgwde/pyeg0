@@ -22,12 +22,13 @@ kdb.url <- "http://m1:5000/q.csv?select from data0 where in0"
 kdb.url <- "http://m1:5000/q.csv?select from data1 where in0"
 
 kdb.url <- URLencode(kdb.url)
-folios.in <- read.csv(kdb.url, header=TRUE)
-
-folios.in0 <- tail(folios.in, n=60)
+folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
 
 source("plot0.R")
 source("plot1.R")
+
+folios.in <- tbl.factorize(folios.in)
+folios.in0 <- head(folios.in)
 
 ### Debug
 ## debug(ts1.folio.f0)
@@ -57,9 +58,14 @@ ts0.plot(folios.ustk0, folios.mnames,
 
 jpeg.short <- TRUE
 
+xtra.folio <- NULL
+if (any(grepl("KA\\..+", colnames(folios.ustk0)))) {
+    xtra.folio <- "KA"
+}
+
 if (exists("jpeg.short")) {
 
-    jpeg.ustk(folios.ustk0)
+    jpeg.ustk(folios.ustk0, xtra0=xtra.folio)
 
     jpeg.ustk(folios.ustk0, metric0="r00", xtra0=NULL)
     jpeg.ustk(folios.ustk0, metric0="s05", xtra0=NULL)
@@ -74,7 +80,7 @@ if (exists("jpeg.short")) {
 
 if (!exists("jpeg.short")) {
 
-    jpeg.ustk(folios.ustk)
+    jpeg.ustk(folios.ustk0, xtra0=xtra.folio)
 
     jpeg.ustk(folios.ustk, metric0="s20", xtra0=NULL)
 

@@ -55,7 +55,7 @@ data1: 0!delete from data1 where folio0 in `KA`KB`KC
 
 .sys.qreloader enlist "jr2c.q"
 
-/// Calculate profits and losses on each trade.
+/// Calculate profits and losses on each trade from the strategy table state0
 /// This generates plwa05
 /// @class plwa05
 .sys.qreloader enlist "jr2d.q"
@@ -75,14 +75,29 @@ data1: 0!data1
 
 .sys.qreloader enlist "jr2e.q"
 
+/// Some metrics comparing strategy to non-strategy
+/// s2ns is improvement of strategy trades to non-strategy (by unit)
+/// s2nst0 means is the strategy better (ie. wins more or loses less)
+
+pnl.stratwa05: select strat:sum wapnl05 by folio0,in0 from data2 where fv05 = `strat
+pnl.stratwa05: 0!pnl.stratwa05 lj select nstrat:sum wapnl05 by folio0,in0 from data2 where fv05 = `nstrat
+update s2ns: strat - nstrat by folio0,in0 from `pnl.stratwa05;
+update s2nst0: signum strat * (signum strat) = signum nstrat by folio0,in0 from `pnl.stratwa05;
+update s2nst0: signum strat by folio0,in0 from `pnl.stratwa05 where (signum strat) < signum nstrat;
+update s2nst0: signum strat by folio0,in0 from `pnl.stratwa05 where (signum strat) > signum nstrat;
+update s: strat > 0 by folio0,in0 from `pnl.stratwa05;
+update ns: nstrat > 0 by folio0,in0 from `pnl.stratwa05;
+update n2ns: s2nst0 > 0 by folio0,in0 from `pnl.stratwa05;
+
+// update s2nst1: (signum strat) > signum nstrat by folio0,in0 from `pnl.stratwa05;
+// update s2ns1: strat > nstrat by folio0,in0 from `pnl.stratwa05 where 0 < abs s2ns0t;
+
+show pnl.stratwa05
+
+show select sum strat, sum nstrat, sum s2ns by folio0 from pnl.stratwa05
+show select sum strat, sum nstrat, sum s2ns by in0 from pnl.stratwa05
+
 \
-
-/// Calculate profits and losses on each trade.
-/// This generates plwa05
-/// @class plwa05
-.sys.qreloader enlist "jr2d.q"
-
-
 
 /// Validation
 /// But only by eye.

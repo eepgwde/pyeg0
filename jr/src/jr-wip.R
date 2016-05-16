@@ -129,3 +129,29 @@ pacf(folios.df$r00)                     # 14 day cycle
 
 pacf(folios.df$dr00)                    # really nothing
 
+### EWMA
+
+library(zoo)
+
+ewma <- function(x,lambda = 1, init = x[1]) {
+
+    rval<-filter(lambda * coredata(x),
+                 filter=(1-lambda),method="recursive",
+                 init=init)
+    rval<-zoo(coredata(rval),index(x))
+    rval
+}
+
+sprintf("%.5f", ewma(xin,x.lambda))
+
+library(fTrading)
+
+x.lambda <- 0.60
+xin <- c(1,rep(0, 20))
+
+sprintf("%.5f", EWMA(xin, x.lambda, startup=1) )
+
+x.lambda <- 0.60
+xin <- c(1,rep(1, 20))
+
+sprintf("%.5f", EWMA(xin, x.lambda, startup=1) )

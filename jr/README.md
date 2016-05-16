@@ -243,6 +243,10 @@ developed for Python.
 
 ** ChangeLog
 
+** Addedd a PnL for each portfolio with synthetic trades
+
+See pnl0.
+
 *** Preparing for heuristics
 
 Unfortunately, I can't ask for a binary classifier because not all the

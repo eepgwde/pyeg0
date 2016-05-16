@@ -131,6 +131,18 @@ ts1.folio <- function(tbl, names.idxes,
     dev.off()                           # error trap needed.
 }
 
+tbl.factorize <- function(tbl0) {
+    x.cols <- colnames(tbl0)
+    x.idxes <- as.logical(sapply(tbl0,                                                   is.character, USE.NAMES=FALSE))
+    if (!any(x.idxes)) return (tbl0)
+    
+    ustk.factors <- x.cols[x.idxes]
+
+    lapply(ustk.factors, function(x) tbl0[, x] <<- as.factor(tbl0[, x]));
+
+    return(tbl0)
+}
+
 ### prototyping code.
 
 ## tbl <- folios.ustk0
@@ -165,7 +177,7 @@ ustk.folio <- function(tbl, merge0=NULL,
         folios.ustk <- folios.x00
     }
 
-    return(folios.ustk)
+    return(tbl.factorize(folios.ustk))
 }
 
 ### Unstack all metrics matching pattern.
