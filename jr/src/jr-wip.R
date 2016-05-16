@@ -2,6 +2,19 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### Check price to moving average in jr3.R to see we have like to like.
+
+grph.pair0(train.ustk2, x=NULL, y1="KF.p00", y2="KF.e20")
+grph.pair0(train.ustk2, x=NULL, y1="KF.p00", y2="KF.s20")
+grph.pair0(train.ustk2, x=NULL, y1="KG.p00", y2="KG.s20")
+grph.pair0(train.ustk2, x=NULL, y1="KG.p00", y2="KG.e20")
+
+### Convert to factor
+
+ustk.factors <- colnames(folios.ustk0)[which(as.logical(sapply(folios.ustk0, is.character, USE.NAMES=FALSE)))]
+
+lapply(ustk.factors, function(x) folios.ustk0[, x] <<- as.factor(folios.ustk0[, x]))
+
 ## Plotting
 
 ts0.tbl <- head(folios.ustk, n=180)
@@ -101,6 +114,8 @@ ts.plot(folios.in0[, names.xr],
 ### Check some auto-correlations on the returns
 ## Check the result and the delta.
 ## Can indicate AR process.
+
+# Plot a metric against time.
 
 a0.p1 <- aes(dt0, r00)
 a0.p2 <- aes_(x = as.name("dt0"), y = as.name("x01"))

@@ -46,3 +46,30 @@ grph.pair <- function(x, ref1, other1) {
     return(g)
 }
 
+### Overlay plot
+## Pair the column names as strings.
+grph.pair0 <- function(df, x = NULL, y1=NULL, y2=NULL) {
+    if (is.null(y1)) {
+        y1 <- colnames(df)[1]
+    }
+    
+    if (is.null(y2)) {
+        y2 <- colnames(df)[2]
+    }
+    
+    if (is.null(x)) {
+        df0 <- data.frame(df);
+        x <- "index"
+        df0[, x] <- rownames(df0)
+        df <- df0
+    }
+    
+    par(mar=c(5,4,4,5)+.1)
+    plot(df[, x], df[, y1], type="l",col="red", xlab="", ylab=y1)
+    par(new=TRUE)
+    plot(df[, x], df[, y2], type="l",col="blue", xaxt="n",yaxt="n",xlab="",ylab="")
+    axis(4)
+    mtext(y2,side=4,line=3)
+    legend("topleft",col=c("red","blue"),lty=1,legend=c(y1, y2))
+}
+

@@ -243,9 +243,25 @@ developed for Python.
 
 ** ChangeLog
 
-** Addedd a PnL for each portfolio with synthetic trades
+** jr3.R
 
-See pnl0.
+Load the binary R format of the portfolios. Remove the prescient data,
+including the price, anything that could give the predictor foresight of
+the price.
+
+Now for each portfolio, generate a predictor. The 'profit' fp05 is the
+outcome for the predictor, but, when being trained, the profits of the
+other portfolios must not be used: they too are prescient.
+
+(Note: it would be possible to feed-back this information, but it should be
+available in the returns.)
+
+The current return at each time window must be set to NA for the portfolio
+being trained.
+
+** jr2.q: added a PnL for each portfolio with synthetic trades
+
+See wapnl05 in data1.
 
 *** Preparing for heuristics
 

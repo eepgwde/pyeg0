@@ -182,7 +182,8 @@ ustk.folio <- function(tbl, merge0=NULL,
 
 ### Unstack all metrics matching pattern.
 ## tbl is now the q/kdb+ data as a data.frame ie. folios.in
-##
+## @todo
+## Not entirely sure they're merged in the same order!
 ## @note
 ## Great feature of R is the <<- operator
 
