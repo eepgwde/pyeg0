@@ -297,7 +297,7 @@ jpeg.ustk <- function(ustk, metric0="p00", xtra0="KA",
 ## Two attributes are added ("outcomes" and "folio"), the outcomes is
 ## the folio's value for that metric.
 ## All metrics of that name are removed.
-ustk.xfolio <- function(df, folio="KF", metric0="fp05", patt=NULL) {
+ustk.outcome <- function(df, folio="KF", metric0="fp05", patt=NULL) {
     outcomec <- paste(folio, metric0, sep=".")
     outcomes <- df[, outcomec]
 
