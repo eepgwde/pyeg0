@@ -2,6 +2,23 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+library(caret)
+library(ggplot2)
+library(pls)
+
+data(economics)
+
+myTimeControl <- trainControl(method = "timeslice",
+                               initialWindow = 36,
+                               horizon = 12,
+                               fixedWindow = TRUE)
+ 
+plsFitTime <- train(unemploy ~ pce + pop + psavert,
+                     data = econ0,
+                     method = "pls",
+                     preProc = c("center", "scale"),
+                     trControl = myTimeControl)
+
 ### Check price to moving average in jr3.R to see we have like to like.
 
 df <- ustk.xfolio(train.ustk2, folio="KG", metric="fc20")

@@ -47,10 +47,10 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0.window0) {
 }
 
 ## Target feature is fp05
-ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
+## ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
 ml0.ignore <- c("l20")
 ## Check against the price signal
-## ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
+ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
                                     union(ml0.prescient, ml0.ignore))]
@@ -78,7 +78,7 @@ ml0.outcomen <- "fp05"
 
 df <- train.ustk2
 
-## Get the outcome and remove it.
+## Get the folio outcome and remove the others.
 df <- ustk.outcome(df, folio=ml0.folio, metric=ml0.outcomen)
 
 ml0.outcomes <- attr(df, "outcomes")
@@ -98,117 +98,85 @@ ml0.imputer <- preProcess(df0, method=c("center", "scale", "knnImpute"))
 ## Apply the imputations.
 df1 <- predict(ml0.imputer, df0)
 
-### Data splitting
-## Time slicing *not* random samples.
-## Go through one by hand.
-
-inTrain <- createTimeSlices(ml0.outcomes, 
-                            ml0.window0  + floor(ml0.window0/2), 
-                            horizon = ml0.window0, 
-                            fixedWindow = TRUE, skip = 0)
-
-idx <- 1
-
-trainDescr <- df1[inTrain$train[[idx]],]
-testDescr <- df1[-inTrain$test[[idx]],]
-
-trainClass <- ml0.outcomes[inTrain$train[[idx]]]
-testClass <- ml0.outcomes[inTrain$test[[idx]]]
-
-prop.table(table(trainClass))
-dim(trainDescr)
-
-prop.table(table(testClass))
-dim(testDescr)
-
 ### Near zero-vars and correlations
 ## PCA would find these, but for this iteration, we want to validate
 ## If any at all possible.
 
 err.trainDescr <- list()
 
-nzv <- nearZeroVar(trainDescr, saveMetrics= TRUE)
+nzv <- nearZeroVar(df1, saveMetrics= TRUE)
 if (!any(nzv$nsv)) {
-    warning("overfitting: near-zero var: err.trainDescr: ", paste(colnames(trainDescr)[nzv$nzv], collapse = ", ") )
+    warning("overfitting: near-zero var: err.trainDescr: ", paste(colnames(df1)[nzv$nzv], collapse = ", ") )
     
-    err.trainDescr <- append(err.trainDescr, trainDescr)
-    trainDescr <- trainDescr[, -nzv$nzv ]
+    err.trainDescr <- append(err.trainDescr, df1)
+    df1 <- df1[, -nzv$nzv ]
 }
 
 # It's imputed and behaves well, no need for this.
 # descrCorr <- cor(scale(trainDescr), use = "pairwise.complete.obs")
 
-descrCorr <- cor(scale(trainDescr))
+descrCorr <- cor(scale(df1))
 
 ## This cut-off should be under src.adjust control.
 ## There should be many of these. Because all derived from r00.
 highCorr <- findCorrelation(descrCorr, cutoff = .75, verbose = TRUE)
 
-colnames(trainDescr)[highCorr]
+colnames(df1)[highCorr]
 
-descr.ncol0 <- ncol(trainDescr)
+descr.ncol0 <- ncol(df1)
 
 # And remove the very highly correlated.
 if (sum(highCorr) > 0) {
-    warning("overfitting: correlations: err.trainDescr: ", paste(colnames(trainDescr)[highCorr], collapse = ", ") )
-    err.trainDescr <- trainDescr
-    trainDescr <- trainDescr[,-highCorr]
+    warning("overfitting: correlations: err.trainDescr: ", paste(colnames(df1)[highCorr], collapse = ", ") )
+    err.trainDescr <- append(err.trainDescr, df1)
+    df1 <- df1[,-highCorr]
 }
 
-descr.ncol1 <- ncol(trainDescr)
+descr.ncol1 <- ncol(df1)
 
 paste("Dropped: ", as.character(descr.ncol0 - descr.ncol1))
 
 descrCorr <- cor(trainDescr)
 summary(descrCorr[upper.tri(descrCorr)])
 
-### GBM controllers
+### PLS controllers
 
 fitControl <- trainControl(## timeslicing
+    initialWindow = ml0.window0 + floor(ml0.window0/2),
     horizon = ml0.window0,
     fixedWindow = TRUE,
     method = "timeslice",
     classProbs = TRUE)
 
-## Some trial and error with variables to branch and boost.
-## Setting the interaction.depth
-## Try all variables with length(colnames(trainDescr))
+## Put the outcomes back in and use a global formula.
 
-descr.grid <- floor(3/2 * descr.ncol1)
-
-gbmGrid <- expand.grid(interaction.depth = 2,
-                        n.trees = (1:descr.grid)*30,
-                        shrinkage = 0.1,
-                        n.minobsinnode = 10)
+df1$fp05 <- ml0.outcomes
 
 set.seed(seed.mine)
-gbmFit1 <- train(trainDescr, trainClass,
+modelFit1 <- train(fp05 ~ ., data = df1,
                  method = "pls",
-                 method=c("center", "scale", "knnImpute")
-                 trControl = fitControl,
-                 ## This last option is actually one
-                 ## for gbm() that passes through
-                 tuneGrid = gbmGrid,
-                 metric = "Kappa",
-                 verbose = FALSE)
+                 trControl = fitControl, metric = "Kappa")
 
-gbmFit1
+modelFit1
+
+## The training set should be exact even with the correlation cut-offs.
+
+trainPred <- predict(modelFit1, df1)
+postResample(trainPred, ml0.outcomes)
+confusionMatrix(trainPred, ml0.outcomes, positive = "profit")
+
 
 ## The acid test is dissapointing, but I've seen worse.
 
-testPred <- predict(gbmFit1, testDescr)
-postResample(testPred, testClass)
-confusionMatrix(testPred, testClass, positive = "profit")
+testPred <- predict(modelFit1, testDescr)
 
-## The training set is exact even with the correlation cut-offs
-## As one would hope - but 
-trainPred <- predict(gbmFit1, trainDescr)
-postResample(trainPred, trainClass)
-confusionMatrix(trainPred, trainClass, positive = "profit")
+postResample(testPred, testClass)
+
+confusionMatrix(testPred, testClass, positive = "profit")
 
 ## Get a density and a ROC
 
-x.p <- predict(gbmFit1, testDescr, type = "prob")[2]
+x.p <- predict(modelFit1, testDescr, type = "prob")[2]
 test.df <- data.frame(Weak=x.p$Weak, Obs=testClass)
 test.roc <- roc(Obs ~ Weak, test.df)
 
