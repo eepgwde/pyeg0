@@ -42,6 +42,16 @@ folios.out <- tbl.factorize(folios.in, null0=TRUE)
 
 save(folios.out, file="folios-out.dat")
 
+## All-sample
+kdb.url <- "http://m1:5000/q.csv?select from data1"
+
+kdb.url <- URLencode(kdb.url)
+folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
+
+folios.all <- tbl.factorize(folios.in, null0=TRUE)
+
+save(folios.all, file="folios-all.dat")
+
 ## In-sample
 kdb.url <- "http://m1:5000/q.csv?select from data1 where in0"
 
@@ -55,7 +65,7 @@ save(folios.in, file="folios-in.dat")
 ### Graphics displays
 ## Load the in-sample set.
 
-rm(folios.in, folios.out)
+rm(folios.in, folios.out, folios.all)
 
 load("folios-in.dat", envir=.GlobalEnv)
 

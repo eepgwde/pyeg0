@@ -35,11 +35,20 @@ set.seed(seed.mine)                     # helpful for testing
 source("plot0.R")
 source("plot1.R")
 
-load("folios-in.dat", envir=.GlobalEnv)
+load("folios-all.dat", envir=.GlobalEnv)
 
 ### My experiment control parameters will be ml0
 
 ml0 <- list()
+
+### Take 120 days around the in/out mark.
+
+ml0$lastin <- folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
+ml0$range <- c(ml0$lastin - 90, ml0$lastin + 30)
+
+x.range <- (folios.all$dt0 >= ml0$range[1]) & (folios.all$dt0 <= ml0$range[2])
+
+folios.in <- folios.all[x.range, ]
 
 ## We need to set a sliding window, we must use a least 20 days, but
 ## check none of the trades were held for longer than that.
@@ -179,5 +188,4 @@ testPred <- predict(modelFit1, testDescr)
 postResample(testPred, testDescr)
 confusionMatrix(testPred, testClass, positive = "profit")
 
-## 
 
