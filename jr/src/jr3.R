@@ -67,14 +67,14 @@ if (length(levels(folios.train0$fp05)) != 2) {
 train.ustk1 <- ustk.folio1(folios.train0)
 
 ## Shorter data set.
-## train.ustk2 <- tail(train.ustk1, n = 180)
+train.ustk2 <- tail(train.ustk1, n = 180)
 
 ### Test one portfolio
 
 ml0.folio <- "KF"
 ml0.outcomen <- "fp05"
 
-df <- train.ustk1
+df <- train.ustk2
 
 ## Get the folio outcome and remove the others.
 df <- ustk.outcome(df, folio=ml0.folio, metric=ml0.outcomen)

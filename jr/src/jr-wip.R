@@ -2,35 +2,22 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
-## The acid test is dissapointing, but I've seen worse.
+### The acid test is dissapointing, but I've seen worse.
 
 testPred <- predict(modelFit1, testDescr)
 postResample(testPred, testClass)
 
 confusionMatrix(testPred, testClass, positive = "profit")
 
-## Get a density and a ROC
+### Get a density and a ROC
 
-x.p <- predict(modelFit1, testDescr, type = "prob")[2]
-test.df <- data.frame(Weak=x.p$Weak, Obs=testClass)
-test.roc <- roc(Obs ~ Weak, test.df)
+x.p <- predict(modelFit1, df1, type = "prob")[2]
+test.df <- data.frame(profit=x.p$profit, Obs=ml0.outcomes)
+test.roc <- roc(Obs ~ profit, test.df)
 
-library(caret)
-library(ggplot2)
-library(pls)
+densityplot(~test.df$profit, groups = test.df$Obs, auto.key = TRUE)
 
-data(economics)
-
-myTimeControl <- trainControl(method = "timeslice",
-                               initialWindow = 36,
-                               horizon = 12,
-                               fixedWindow = TRUE)
- 
-plsFitTime <- train(unemploy ~ pce + pop + psavert,
-                     data = econ0,
-                     method = "pls",
-                     preProc = c("center", "scale"),
-                     trControl = myTimeControl)
+plot.roc(test.roc)
 
 ### Check price to moving average in jr3.R to see we have like to like.
 
