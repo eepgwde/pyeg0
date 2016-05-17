@@ -35,7 +35,7 @@ descrCorr <- cor(scale(df1))
 
 ## This cut-off should be under src.adjust control.
 ## There should be many of these. Because all derived from r00.
-highCorr <- findCorrelation(descrCorr, cutoff = .75, verbose = TRUE)
+highCorr <- findCorrelation(descrCorr, cutoff = .75, verbose = FALSE)
 
 colnames(df1)[highCorr]
 

@@ -1,8 +1,16 @@
 ## weaves
 ##
-## File with q/kdb+ generated technicals.
+## Visual validation of q/kdb+ generated technicals.
+##
+## @note Lags
+## The q/kdb+ data has been lagged. And the trading signals derived
+## from that.
+## 
+## @note Technicals and trading signals
+## From the lagged data, q/kdb+ has generated technicals and RSI
+## trading strategy signals.
 
-## No longer used, but knowing me.
+## No longer used, but you can use it to get a portfolio name.
 folios.list <- read.csv("folios0.csv", 
                         stringsAsFactors=FALSE, 
                         header=TRUE)

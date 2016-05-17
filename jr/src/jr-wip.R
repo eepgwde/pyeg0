@@ -2,6 +2,30 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+
+
+## Time-series and lag: zoo is very nearly a data-frame
+
+ts.zoo <- zoo(df)
+ts.zoo1 <- lag(ts.zoo, k=1)
+
+ts.zoo1 <- ts.zoo[, c("fv05", "fp05")]
+
+colnames(ts.zoo)
+
+## sweep is a drag
+
+A <- array(1:24, dim = 4:2)
+
+## no warnings in normal use
+sweep(A, 1, 5)
+
+(A.min <- apply(A, 1, min))  # == 1:4
+sweep(A, 1, A.min)
+
+sweep(A, 1:2, apply(A, 1:2, median))
+
+
 ### Useful trick to see the generic method.
 
 m <- methods(class = class(modelImp))

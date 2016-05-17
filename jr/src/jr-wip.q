@@ -2,6 +2,9 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+select count i by folio0 from data1 where null wapnl05 
+select count i by folio0 from data1 where null fp05
+
 /// Joining in holding times and pnl lookup
 
 .sys.qreloader enlist "jr-f.q"

@@ -88,6 +88,8 @@ data1: 0!data1
 
 .sys.qreloader enlist "jr2e.q"
 
+/// Let R deal with the first blank values.
+
 /// Some metrics comparing strategy to non-strategy
 /// s2ns is improvement of strategy trades to non-strategy (by unit)
 /// s2nst0 means is the strategy better (ie. wins more or loses less)

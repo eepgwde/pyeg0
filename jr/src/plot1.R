@@ -131,16 +131,51 @@ ts1.folio <- function(tbl, names.idxes,
     dev.off()                           # error trap needed.
 }
 
-tbl.factorize <- function(tbl0) {
+### Null factor conversion
+## This is tricky because you can't rely on the factor ordering
+## Convert to character.
+
+null.factor0 <- function(col0) {
+    if (!is.factor(col0)) {
+        return(tbl);
+    }
+
+    lvls = list()
+    lvls$v <- levels(col0)
+    lvls$i <- sapply(lvls$v, function(x) (0 == nchar(x)), USE.NAMES=FALSE)
+
+    if (!any(lvls$i)) {
+        return(col0)
+    }
+    lvls$i <- which(!lvls$i)
+
+    lvls$xxx <- as.character(col0)
+    lvls$idxes <- which(sapply(lvls$xxx, function(x) (0 == nchar(x)), USE.NAMES=FALSE))
+    
+    table(addNA(col0, ifany = TRUE))
+    col0[lvls$idxes] <- NA
+    col0 <- factor(col0)[, drop = TRUE]
+    
+    return(col0)
+}
+
+tbl.factorize <- function(tbl0, null0=FALSE) {
     x.cols <- colnames(tbl0)
     x.idxes <- as.logical(sapply(tbl0,                                                   is.character, USE.NAMES=FALSE))
-    if (!any(x.idxes)) return (tbl0)
-    
-    ustk.factors <- x.cols[x.idxes]
+    tbl1 <- tbl0
+    if (any(x.idxes)) {
+        ustk.factors <- x.cols[x.idxes]
+        lapply(ustk.factors, function(x) tbl1[, x] <<- as.factor(tbl1[, x]));
+    }
 
-    lapply(ustk.factors, function(x) tbl0[, x] <<- as.factor(tbl0[, x]));
+    if (null0) {
+        x.idxes <- as.logical(sapply(tbl1,                                                   is.factor, USE.NAMES=FALSE))
+        ustk.factors <- x.cols[x.idxes]
+        lapply(ustk.factors, function(x) 
+            tbl1[, x] <<- null.factor0(tbl1[, x]));
+    }
 
-    return(tbl0)
+    return(tbl1)
 }
 
 ### prototyping code.
@@ -331,7 +366,7 @@ ustk.factorize <- function(tbl, fmetric0="fp05") {
         return(tbl)
     }
     
-    warning("Non binary results: forcing loss")
+    warning("Non binary results: forcing")
     x.factors <- unique(factor(tbl[, fmetric0]))
     x.idxes <- which(tbl[, fmetric0] == unique(factor(tbl[, fmetric0]))[1])
     tbl[x.idxes, fmetric0] <- x.factors[2]

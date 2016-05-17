@@ -34,8 +34,13 @@ x.data1: select by folio0,dt0 from data1
 
 t1:update lp00:x.data1[([]folio0;dt0:ldt0);`p00], p00:x.data1[([]folio0;dt0);`p00] from t0
 
+/// Do some data cleaning
+
 data2: data1 lj select by folio0,dt0 from .f00.pnl[t1]
 update lwa05:`void from `data2 where null lwa05;
+
+update y20:"f"$0N from `data2 where 100 < abs y20;
+update y05:"f"$0N from `data2 where 100 < abs y05;
 
 /// Drop and rename columns
 update fp05:pnl1, h05:ddt0 from `data2 where null fp05;

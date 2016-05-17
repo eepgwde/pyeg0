@@ -1,7 +1,10 @@
 ## weaves
 ##
 ## Machine learning preparation.
-## File with q/kdb+ generated technicals.
+## Uses a binary data file of q/kdb+ ticks, generated technicals and
+## trading signals.
+##
+## The input data was lagged by q/kdb+, so no need to lag it here.
 
 rm(list = ls())
 if (!is.null(dev.list())) {
@@ -14,6 +17,7 @@ library(mlbench)
 library(pROC)
 library(pls)
 library(zoo)
+library(fTrading)                       # for EWMA
 
 library(ggplot2)
 
@@ -50,16 +54,17 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
 ## learner.
 
 ## Target feature is fp05
-## I can leave the price in, because I lag the data later.
+## I can leave the price in, because the data has been lagged.
+
 ml0$outcomen <- "fp05"
 ml0$prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 ml0$ignore <- c("l20")
-## Tried removing these thinking that z?? would provide info.
-## ml0$derived <- c("u20", "d20", "u20", "y20", "u05", "d05", "u05", "y05")
-## Check against the price signal
-## ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 
 x.removals <- union(ml0$prescient, ml0$ignore)
+
+## I tried removing these thinking that z?? would provide their info.
+## I might try it again on another iteration.
+## ml0$derived <- c("u20", "d20", "u20", "y20", "u05", "d05", "u05", "y05")
 ## x.removals <- union(x.removals, ml0$derived)
 
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
@@ -88,25 +93,13 @@ df <- ustk.outcome(df, folio=ml0$folio, metric=ml0$outcomen)
 
 ml0$outcomes <- attr(df, "outcomes")
 
-### Prescience: 1 day lag on trading variables
-## Enforce the one day trading lag.
-ts.zoo <- zoo(df)
-ts.zoo1 <- lag(ts.zoo, k=-1)
-df0 <- data.frame(ts.zoo1)
-
-## @note
-## Not this one.
-## ml0$outcomes <- ml0$outcomes[2:length(ml0$outcomes)]
-## This one.
-ml0$outcomes <- ml0$outcomes[1:((length(ml0$outcomes)-1))]
-
 ## For testing the learner, use a very small dataset of just two folios
 
 ## df <- ustk.xfolios(df, folios=c(ml0.folio, "KG", "KH"))
 
 factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], as.numeric))
 
-df0 <- factors.numeric(df0)
+df0 <- factors.numeric(df)
 
 ### Find the near-zero variance and high correlation variables
 source("jr3a.R")
