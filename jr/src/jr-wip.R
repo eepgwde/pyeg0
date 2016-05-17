@@ -2,6 +2,19 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+## The acid test is dissapointing, but I've seen worse.
+
+testPred <- predict(modelFit1, testDescr)
+postResample(testPred, testClass)
+
+confusionMatrix(testPred, testClass, positive = "profit")
+
+## Get a density and a ROC
+
+x.p <- predict(modelFit1, testDescr, type = "prob")[2]
+test.df <- data.frame(Weak=x.p$Weak, Obs=testClass)
+test.roc <- roc(Obs ~ Weak, test.df)
+
 library(caret)
 library(ggplot2)
 library(pls)
