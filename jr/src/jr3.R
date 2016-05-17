@@ -32,37 +32,37 @@ source("plot1.R")
 
 load("folios-in.dat", envir=.GlobalEnv)
 
-### Prescience
-## Unlike jr2.R, we remove prescient features for the machine
-## learner.
+### My experiment control parameters will be ml0
+
+ml0 <- list()
 
 ## We need to set a sliding window, we must use a least 20 days, but
 ## check none of the trades were held for longer than that.
 
-ml0.window0 <- 20
-if (max(folios.in$h05, na.rm=TRUE) > ml0.window0) {
-    ml0.window <- max(folios.in$h05, na.rm=TRUE)
+ml0$window0 <- 20
+if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
+    ml0$window <- max(folios.in$h05, na.rm=TRUE)
 }
 
+### Prescience
+## Unlike jr2.R, we remove prescient features for the machine
+## learner.
+
 ## Target feature is fp05
-ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
-ml0.ignore <- c("l20")
+ml0$outcomen <- "fp05"
+ml0$prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
+ml0$ignore <- c("l20")
 ## Check against the price signal
 ## ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
-                                    union(ml0.prescient, ml0.ignore))]
+                                    union(ml0$prescient, ml0$ignore))]
 
-### Clear up the outcomes to binary
-## Check we have a binary classifier.
-if (length(levels(folios.train0$fp05)) != 2) {
-    warning("Non binary results: forcing loss")
-    x.factors <- unique(factor(folios.train0$fp05))
-    x.idxes <- which(folios.train0$fp05 == unique(factor(folios.train0$fp05))[1])
-    folios.train0[x.idxes, "fp05"] <- x.factors[2]
-}
+folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 
 ### Following jr2.R, unstack 
+## The shorter data set works better, so we must add weights
+## or use an iterative evaluator.
 
 train.ustk1 <- ustk.folio1(folios.train0)
 
@@ -71,15 +71,14 @@ train.ustk2 <- tail(train.ustk1, n = 180)
 
 ### Test one portfolio
 
-ml0.folio <- "KF"
-ml0.outcomen <- "fp05"
+ml0$folio <- "KF"
 
 df <- train.ustk2
 
 ## Get the folio outcome and remove the others.
-df <- ustk.outcome(df, folio=ml0.folio, metric=ml0.outcomen)
+df <- ustk.outcome(df, folio=ml0$folio, metric=ml0$outcomen)
 
-ml0.outcomes <- attr(df, "outcomes")
+ml0$outcomes <- attr(df, "outcomes")
 
 ## For testing the learner, use a very small dataset of just two folios
 
@@ -92,31 +91,33 @@ df0 <- factors.numeric(df)
 ### Find the near-zero variance and high correlation variables
 source("jr3a.R")
 
-### PLS controllers
+### PLS controller is a sliding window.
 
 fitControl <- trainControl(## timeslicing
-    initialWindow = ml0.window0 + floor(ml0.window0/2),
-    horizon = ml0.window0,
+    initialWindow = ml0$window0 + floor(ml0$window0/2),
+    horizon = ml0$window0,
     fixedWindow = TRUE,
     method = "timeslice",
     classProbs = TRUE)
 
 ## Put the outcomes back in and use a global formula.
 
-df1$fp05 <- ml0.outcomes
+df1[, ml0$outcomen] <- ml0$outcomes
 
+## @note
+## The formula is the "use-all" statement.
 set.seed(seed.mine)
 modelFit1 <- train(fp05 ~ ., data = df1,
-                 method = "pls",
-                 trControl = fitControl, metric = "Kappa")
+                   method = "pls",
+                   trControl = fitControl, metric = "Kappa")
 
 modelFit1
 
 ## The training set should be exact even with the correlation cut-offs.
 
 trainPred <- predict(modelFit1, df1)
-postResample(trainPred, ml0.outcomes)
-confusionMatrix(trainPred, ml0.outcomes, positive = "profit")
+postResample(trainPred, ml0$outcomes)
+confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 
 
 

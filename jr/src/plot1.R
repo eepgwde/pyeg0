@@ -325,3 +325,16 @@ ustk.xfolios <- function(df, folios=c("KF")) {
     return(df[,names])
 }
 
+## Remove a null factor
+ustk.factorize <- function(tbl, fmetric0="fp05") {
+    if (length(levels(tbl[, fmetric0])) == 2) {
+        return(tbl)
+    }
+    
+    warning("Non binary results: forcing loss")
+    x.factors <- unique(factor(tbl[, fmetric0]))
+    x.idxes <- which(tbl[, fmetric0] == unique(factor(tbl[, fmetric0]))[1])
+    tbl[x.idxes, fmetric0] <- x.factors[2]
+
+    return(tbl)
+}
