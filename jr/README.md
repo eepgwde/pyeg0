@@ -246,6 +246,8 @@ developed for Python.
 ** Increase the window to 30
 
 Accuracy is now 100%
+So I made a mistake in the kdb+. The trading strategy must operate on
+lagged data.
 
 ** Lags
 

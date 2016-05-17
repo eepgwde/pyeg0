@@ -17,6 +17,7 @@ data: ![data1;();0b;x.cols]
 data.folio0: `$data.folio0
 
 /// Add an absolute price signal - all based on a 1000
+/// Assume that it the day's close, so we must lag it
 
 data0: update p00:exp r00  by folio0 from data 
 data0: update p01:prds p00  by folio0 from data0
@@ -24,14 +25,22 @@ data0: update p01:p01 * 1000  by folio0 from data0
 data0: update p00:p01 by folio0 from data0
 data0: delete p01 from data0
 
+/// Add lags - price and returns are now yesterday's close.
+data0: update r00: prev r00 by folio0 from data0
+data0: update p00: prev p00 by folio0 from data0
+
+delete from `data0 where dt0 = 1;
+
 /// Safety info
 .sf.folios: distinct data0.folio0
 
 /// Functions used by all
 .sys.qreloader enlist "jr-f.q"
 
-/// Synthetics
+/// Synthetics introduce some bad values
 .sys.qreloader enlist "jr2a.q"
+
+data1: update r00:0f from data1 where (dt0 = 2),(folio0 in `KA`KB`KC)
 
 /// Metrics and Technical Analytics
 .sys.qreloader enlist "jr2b.q"
@@ -56,12 +65,16 @@ data1: 0!delete from data1 where folio0 in `KA`KB`KC
 .sys.qreloader enlist "jr2c.q"
 
 /// Calculate profits and losses on each trade from the strategy table state0
-/// This generates plwa05
+/// This generates plwa05 and does not change any tables.
 /// @class plwa05
 .sys.qreloader enlist "jr2d.q"
 
 /// Now join the trading signals to data1 with the marking they will be in profit or loss.
 /// For this iteration, we are only concerned with profit and loss (a binary classifier)
+/// @note Lags
+/// We are joining back at the market date, so the strategy has been evaluated
+/// using the past data. This means: we must lag everything for the learner wrt
+/// to the outcomes, ie. fp05
 update fcst:` from `data1;
 data1: (select by folio0,dt0 from data1) lj (2!ungroup select lwa05, fp05:pnl1, h05:ddt0 by folio0,dt0:ldt0 from plwa05)
 

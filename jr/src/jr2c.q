@@ -7,7 +7,10 @@
 /// RSI Wilder
 
 /// State machine table - put the prev value in their own column prefix 'l' for lag
-/// Delete the synthetics 
+/// Delete the synthetics
+/// @note
+/// The source data table has been lagged.
+
 state0: ungroup select dt0, p00, fz05, fz20, fc05, fc20, fd05, fd20, lfz05:prev fz05, lfz20:prev fz20, lfc05:prev fc05, lfc20:prev fc20, lfd05:prev fd05, lfd20:prev fd20 by folio0 from (`folio0`dt0 xasc data1)
 
 /// No need to delete them
