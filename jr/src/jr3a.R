@@ -8,7 +8,8 @@
 
 ## Center, scale, remove any NA using nearest neighbours.
 ## PCA as "pca" is useful here.
-ml0.imputer <- preProcess(df0, method=c("center", "scale", "knnImpute"))
+ml0.imputer <- preProcess(df0, na.remove = TRUE, 
+                          method=c("center", "scale", "knnImpute"))
 
 ## Apply the imputations.
 df1 <- predict(ml0.imputer, df0)
@@ -19,7 +20,7 @@ df1 <- predict(ml0.imputer, df0)
 
 err.trainDescr <- list()
 
-nzv <- nearZeroVar(df1, saveMetrics= TRUE)
+nzv <- nearZeroVar(df1, saveMetrics = TRUE)
 if (any(nzv$nzv)) {
     ml0$nzv <- colnames(df1)[nzv$nzv]
     warning("overfitting: near-zero var: err.trainDescr: ", 

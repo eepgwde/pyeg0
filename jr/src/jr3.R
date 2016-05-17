@@ -65,7 +65,11 @@ x.removals <- union(ml0$prescient, ml0$ignore)
 ## I tried removing these thinking that z?? would provide their info.
 ## I might try it again on another iteration.
 ## ml0$derived <- c("u20", "d20", "u20", "y20", "u05", "d05", "u05", "y05")
-## x.removals <- union(x.removals, ml0$derived)
+## This two were good predictors, but are going because of the NAs
+## Alternatively, I could set them to the max observed, because they are
+## div-by-zero.
+ml0$derived <- c("y20", "y05")
+x.removals <- union(x.removals, ml0$derived)
 
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
                                     x.removals)]
@@ -73,8 +77,7 @@ folios.train0 <- folios.in[,setdiff(colnames(folios.in),
 folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 
 ### Following jr2.R, unstack 
-## The shorter data set works better, so we must add weights
-## or use an iterative evaluator.
+## The shorter data set works better
 
 train.ustk1 <- ustk.folio1(folios.train0)
 
@@ -89,9 +92,10 @@ ml0$folio <- "KF"
 df <- train.ustk2
 
 ## Get the folio outcome and remove the others.
+## And deal with NA
 df <- ustk.outcome(df, folio=ml0$folio, metric=ml0$outcomen)
-
 ml0$outcomes <- attr(df, "outcomes")
+ml0$outcomes[which(is.na(ml0$outcomes))] <- factor(ml0$outcomes)[1]
 
 ## For testing the learner, use a very small dataset of just two folios
 
@@ -132,11 +136,11 @@ modelFit1 <- train(fp05 ~ ., data = df1,
                    trControl = fitControl, metric = "Kappa")
 modelFit1
 
-## For time-slices,
-## use modelFit1$control$index for training data
-## modelFit1$control$indexOut for testing data
-
-
+### Time-slices: training and test is available.
+##
+## use
+##  modelFit1$control$index for training data
+##  modelFit1$control$indexOut for testing data
 
 ## The training set should be near exact even with the correlation
 ## cut-offs.
@@ -149,7 +153,7 @@ modelImp <- varImp(modelFit1, scale = FALSE)
 plot(modelImp, top = 20)
 
 ## The last testing set: this has not been used for training, so should
-## be good.
+## be a good test.
 
 x.idx <- length(modelFit1$control$indexOut) - 1
 x.idxes <- modelFit1$control$indexOut[[x.idx]]

@@ -38,7 +38,7 @@ kdb.url <- "http://m1:5000/q.csv?select from data1 where not in0"
 kdb.url <- URLencode(kdb.url)
 folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
 
-folios.out <- tbl.factorize(folios.in)
+folios.out <- tbl.factorize(folios.in, null0=TRUE)
 
 save(folios.out, file="folios-out.dat")
 
@@ -48,7 +48,7 @@ kdb.url <- "http://m1:5000/q.csv?select from data1 where in0"
 kdb.url <- URLencode(kdb.url)
 folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
 
-folios.in <- tbl.factorize(folios.in)
+folios.in <- tbl.factorize(folios.in, null0=TRUE)
 
 save(folios.in, file="folios-in.dat")
 
