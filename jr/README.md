@@ -243,6 +243,28 @@ developed for Python.
 
 ** ChangeLog
 
+** bak/jr3/
+
+Data and images for 120 days around 780, 90 in, 30 out.
+
+KF low vol, upward trend
+
+KI high, flat
+
+KH high, down
+
+KN high, flat
+
+KL high, flat
+
+KT high, upward 
+
+KP low, upward
+
+KU high, upward, good MACD
+
+KW low, downward, good MACD
+
 ** Increase the window to 30
 
 Accuracy is now 100%

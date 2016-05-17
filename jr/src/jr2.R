@@ -63,13 +63,17 @@ folios.in <- tbl.factorize(folios.in, null0=TRUE)
 save(folios.in, file="folios-in.dat")
 
 ### Graphics displays
-## Load the in-sample set.
+## Load the a mix of the in-sample and out-of-sample set.
 
 rm(folios.in, folios.out, folios.all)
 
-load("folios-in.dat", envir=.GlobalEnv)
+load("folios-all.dat", envir=.GlobalEnv)
+ml0 = list()
+ml0$lastin <- folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
+ml0$range <- c(ml0$lastin - 90, ml0$lastin + 30)
 
-folios.in0 <- head(folios.in)
+x.range <- (folios.all$dt0 >= ml0$range[1]) & (folios.all$dt0 <= ml0$range[2])
+folios.in <- folios.all[x.range, ]
 
 ### Debug
 ## debug(ts1.folio.f0)
@@ -96,8 +100,8 @@ ts0.plot(folios.ustk0, folios.mnames,
 ## disk.
 
 ### Short set analysis
-
-jpeg.short <- TRUE
+rm("jpeg.short")
+# jpeg.short <- TRUE
 
 xtra.folio <- NULL
 if (any(grepl("KA\\..+", colnames(folios.ustk0)))) {
@@ -121,7 +125,7 @@ if (exists("jpeg.short")) {
 
 if (!exists("jpeg.short")) {
 
-    jpeg.ustk(folios.ustk0, xtra0=xtra.folio)
+    jpeg.ustk(folios.ustk, xtra0=xtra.folio)
 
     jpeg.ustk(folios.ustk, metric0="s20", xtra0=NULL)
 

@@ -18,8 +18,7 @@ library(pROC)
 library(pls)
 library(zoo)
 library(fTrading)                       # for EWMA
-
-library(ggplot2)
+library(pracma)                       # for hurstexp()
 
 library(doMC)
 registerDoMC(cores = 4)
@@ -94,7 +93,7 @@ folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 
 train.ustk1 <- ustk.folio1(folios.train0)
 
-ml0$history <- 90
+ml0$history <- 95
 ## Shorter data set.
 train.ustk2 <- tail(train.ustk1, n = ml0$history)
 
@@ -119,6 +118,7 @@ factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], a
 df0 <- factors.numeric(df)
 
 ### Find the near-zero variance and high correlation variables
+## This creates df1
 source("jr3a.R")
 
 ### PLS controller is a sliding window.
@@ -162,9 +162,6 @@ trainPred <- predict(modelFit1, df1)
 postResample(trainPred, ml0$outcomes)
 confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 
-modelImp <- varImp(modelFit1, scale = FALSE)
-plot(modelImp, top = 20)
-
 ## The last testing set: this has not been used for training, so should
 ## be a good test.
 
@@ -175,7 +172,7 @@ testClass <- ml0$outcomes[x.idxes]
 testDescr <- df1[x.idxes,]
 
 testPred <- predict(modelFit1, testDescr)
-postResample(testPred, testDescr)
+postResample(testPred, testClass)
 confusionMatrix(testPred, testClass, positive = "profit")
 
 x.idx <- length(modelFit1$control$indexOut)
@@ -185,7 +182,28 @@ testClass <- ml0$outcomes[x.idxes]
 testDescr <- df1[x.idxes,]
 
 testPred <- predict(modelFit1, testDescr)
-postResample(testPred, testDescr)
+postResample(testPred, testClass)
 confusionMatrix(testPred, testClass, positive = "profit")
 
+### Final plots
+
+## Variable importance
+
+jpeg(filename=paste(ml0$folio, "%03d.jpeg", sep=""), 
+     width=1024, height=768)
+
+modelImp <- varImp(modelFit1, scale = FALSE)
+plot(modelImp, top = 20)
+
+## Get a density and a ROC
+
+x.p <- predict(modelFit1, testDescr, type = "prob")[2]
+test.df <- data.frame(profit=x.p$profit, Obs=testClass)
+test.roc <- roc(Obs ~ profit, test.df)
+
+densityplot(~test.df$profit, groups = test.df$Obs, auto.key = TRUE)
+
+plot.roc(test.roc)
+
+dev.off()
 
