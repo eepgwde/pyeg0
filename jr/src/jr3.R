@@ -113,13 +113,12 @@ modelFit1 <- train(fp05 ~ ., data = df1,
 
 modelFit1
 
-## The training set should be exact even with the correlation cut-offs.
+## The training set should be near exact even with the correlation
+## cut-offs.
 
 trainPred <- predict(modelFit1, df1)
 postResample(trainPred, ml0$outcomes)
 confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 
-
-
-
-
+modelImp <- varImp(modelFit1, scale = FALSE)
+plot(modelImp, top = 20)

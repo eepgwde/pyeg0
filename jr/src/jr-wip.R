@@ -2,6 +2,18 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### Useful trick to see the generic method.
+
+m <- methods(class = class(modelImp))
+> print(m)
+[1] plot  print
+see '?methods' for accessing help and source code
+> print(attr(m, "info"))
+                   visible                from generic  isS4
+plot.varImp.train    FALSE registered S3method    plot FALSE
+print.varImp.train   FALSE registered S3method   print FALSE
+  
+
 ### The acid test is dissapointing, but I've seen worse.
 
 testPred <- predict(modelFit1, testDescr)
