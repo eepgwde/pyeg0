@@ -13,6 +13,7 @@ library(caret)
 library(mlbench)
 library(pROC)
 library(pls)
+library(zoo)
 
 library(ggplot2)
 
@@ -39,18 +40,19 @@ ml0 <- list()
 ## We need to set a sliding window, we must use a least 20 days, but
 ## check none of the trades were held for longer than that.
 
-ml0$window0 <- 20
+ml0$window0 <- 30
 if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
     ml0$window <- max(folios.in$h05, na.rm=TRUE)
 }
 
-### Prescience
+### Prescience: variables
 ## Unlike jr2.R, we remove prescient features for the machine
 ## learner.
 
 ## Target feature is fp05
+## I can leave the price in, because I lag the data later.
 ml0$outcomen <- "fp05"
-ml0$prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
+ml0$prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 ml0$ignore <- c("l20")
 ## Tried removing these thinking that z?? would provide info.
 ## ml0$derived <- c("u20", "d20", "u20", "y20", "u05", "d05", "u05", "y05")
@@ -86,13 +88,25 @@ df <- ustk.outcome(df, folio=ml0$folio, metric=ml0$outcomen)
 
 ml0$outcomes <- attr(df, "outcomes")
 
+### Prescience: 1 day lag on trading variables
+## Enforce the one day trading lag.
+ts.zoo <- zoo(df)
+ts.zoo1 <- lag(ts.zoo, k=-1)
+df0 <- data.frame(ts.zoo1)
+
+## @note
+## Not this one.
+## ml0$outcomes <- ml0$outcomes[2:length(ml0$outcomes)]
+## This one.
+ml0$outcomes <- ml0$outcomes[1:((length(ml0$outcomes)-1))]
+
 ## For testing the learner, use a very small dataset of just two folios
 
 ## df <- ustk.xfolios(df, folios=c(ml0.folio, "KG", "KH"))
 
 factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], as.numeric))
 
-df0 <- factors.numeric(df)
+df0 <- factors.numeric(df0)
 
 ### Find the near-zero variance and high correlation variables
 source("jr3a.R")
@@ -141,9 +155,18 @@ confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 modelImp <- varImp(modelFit1, scale = FALSE)
 plot(modelImp, top = 20)
 
-
 ## The last testing set: this has not been used for training, so should
 ## be good.
+
+x.idx <- length(modelFit1$control$indexOut) - 1
+x.idxes <- modelFit1$control$indexOut[[x.idx]]
+
+testClass <- ml0$outcomes[x.idxes]
+testDescr <- df1[x.idxes,]
+
+testPred <- predict(modelFit1, testDescr)
+postResample(testPred, testDescr)
+confusionMatrix(testPred, testClass, positive = "profit")
 
 x.idx <- length(modelFit1$control$indexOut)
 x.idxes <- modelFit1$control$indexOut[[x.idx]]

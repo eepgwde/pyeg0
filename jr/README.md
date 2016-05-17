@@ -243,10 +243,40 @@ developed for Python.
 
 ** ChangeLog
 
+** Increase the window to 30
+
+Accuracy is now 100%
+
+** Lags
+
+Now lag the trading values except the outcomes
+
+Accuracy drops to 92%, but comparable values for the predictor.
+
 ** First results: partial least squares
 
+Works better with shorter data-set, so has a history weighting.
 
+For KF shows variable importance is 
 
+> ml0
+$window0
+[1] 20
+
+$outcomen
+[1] "fp05"
+
+$prescient
+[1] "fcst"    "wapnl05" "h05"     "fv05"    "in0"     "p00"    
+
+$ignore
+[1] "l20"
+
+$history
+[1] 90
+
+$folio
+[1] "KF"
 
 
 ** jr3a.R

@@ -49,7 +49,7 @@ show select count i by in0 from data1:$[ .sys.undef[`x;`in0]; data1; delete from
 /// Remove the synthetic portfolios (for this design iteration.)
 data1: 0!delete from data1 where folio0 in `KA`KB`KC
 
-/// Apply trading strategy.
+/// Apply trading strategy - it must operate on lagged data.
 /// This generates a state machine table: state0
 /// @class state0
 
