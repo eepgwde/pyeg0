@@ -2,7 +2,7 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
-
+folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
 
 ## Time-series and lag: zoo is very nearly a data-frame
 
@@ -48,7 +48,7 @@ confusionMatrix(testPred, testClass, positive = "profit")
 ### Get a density and a ROC
 
 x.p <- predict(modelFit1, df1, type = "prob")[2]
-test.df <- data.frame(profit=x.p$profit, Obs=ml0.outcomes)
+test.df <- data.frame(profit=x.p$profit, Obs=ml0$outcomes)
 test.roc <- roc(Obs ~ profit, test.df)
 
 densityplot(~test.df$profit, groups = test.df$Obs, auto.key = TRUE)
