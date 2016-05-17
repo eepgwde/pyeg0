@@ -68,13 +68,17 @@ x.removals <- union(ml0$prescient, ml0$ignore)
 ## This two were good predictors, but are going because of the NAs
 ## Alternatively, I could set them to the max observed, because they are
 ## div-by-zero.
-ml0$derived <- c("y20", "y05")
-x.removals <- union(x.removals, ml0$derived)
+## ml0$derived <- c("y20", "y05")
+## x.removals <- union(x.removals, ml0$derived)
 
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
                                     x.removals)]
 
+folios.train0$y05[which(is.na(folios.train0$y05))] <- 2 * max(folios.train0$y05, na.rm=TRUE)
+folios.train0$y20[which(is.na(folios.train0$y20))] <- 2 * max(folios.train0$y20, na.rm=TRUE)
+
 folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
+
 
 ### Following jr2.R, unstack 
 ## The shorter data set works better

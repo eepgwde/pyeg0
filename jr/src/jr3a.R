@@ -8,7 +8,7 @@
 
 ## Center, scale, remove any NA using nearest neighbours.
 ## PCA as "pca" is useful here.
-ml0.imputer <- preProcess(df0, na.remove = TRUE, 
+ml0.imputer <- preProcess(df0, na.remove = FALSE, 
                           method=c("center", "scale", "knnImpute"))
 
 ## Apply the imputations.
