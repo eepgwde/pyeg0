@@ -243,6 +243,16 @@ developed for Python.
 
 ** ChangeLog
 
+** First results: partial least squares
+
+
+
+
+
+** jr3a.R
+
+Put the Near-Zero Variance and high correlation code into a separate file.
+
 ** jr3.R
 
 Load the binary R format of the portfolios. Remove the prescient data,

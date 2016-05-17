@@ -21,9 +21,9 @@ err.trainDescr <- list()
 
 nzv <- nearZeroVar(df1, saveMetrics= TRUE)
 if (any(nzv$nzv)) {
-    ml0.nzv <- colnames(df1)[nzv$nzv]
+    ml0$nzv <- colnames(df1)[nzv$nzv]
     warning("overfitting: near-zero var: err.trainDescr: ", 
-            paste(ml0.nzv, collapse = ", ") )
+            paste(ml0$nzv, collapse = ", ") )
     err.trainDescr <- append(err.trainDescr, df1)
     df1 <- df1[, !nzv$nzv ]
 }
@@ -43,8 +43,8 @@ descr.ncol0 <- ncol(df1)
 
 # And remove the very highly correlated.
 if (length(highCorr) > 0) {
-    ml0.corrs <- colnames(df1)[highCorr]
-    warning("overfitting: correlations: err.trainDescr: ", paste(ml0.corrs, collapse = ", ") )
+    ml0$corrs <- colnames(df1)[highCorr]
+    warning("overfitting: correlations: err.trainDescr: ", paste(ml0$corrs, collapse = ", ") )
     err.trainDescr <- append(err.trainDescr, df1)
     df1 <- df1[,-highCorr]
 }

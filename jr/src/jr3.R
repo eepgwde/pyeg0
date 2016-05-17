@@ -52,11 +52,16 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
 ml0$outcomen <- "fp05"
 ml0$prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0", "p00")
 ml0$ignore <- c("l20")
+## Tried removing these thinking that z?? would provide info.
+## ml0$derived <- c("u20", "d20", "u20", "y20", "u05", "d05", "u05", "y05")
 ## Check against the price signal
 ## ml0.prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
 
+x.removals <- union(ml0$prescient, ml0$ignore)
+## x.removals <- union(x.removals, ml0$derived)
+
 folios.train0 <- folios.in[,setdiff(colnames(folios.in), 
-                                    union(ml0$prescient, ml0$ignore))]
+                                    x.removals)]
 
 folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 
@@ -66,8 +71,9 @@ folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 
 train.ustk1 <- ustk.folio1(folios.train0)
 
+ml0$history <- 90
 ## Shorter data set.
-train.ustk2 <- tail(train.ustk1, n = 180)
+train.ustk2 <- tail(train.ustk1, n = ml0$history)
 
 ### Test one portfolio
 
@@ -94,7 +100,7 @@ source("jr3a.R")
 ### PLS controller is a sliding window.
 
 fitControl <- trainControl(## timeslicing
-    initialWindow = ml0$window0 + floor(ml0$window0/2),
+    initialWindow = ml0$window0,
     horizon = ml0$window0,
     fixedWindow = TRUE,
     method = "timeslice",
@@ -105,13 +111,25 @@ fitControl <- trainControl(## timeslicing
 df1[, ml0$outcomen] <- ml0$outcomes
 
 ## @note
+## Weightings: EWMA don't make any difference
+x.samples <- dim(df1)[1]
+x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.30, startup = 1)
+x.weights <- x.ewma / sum(x.ewma)
+x.weights <- rep(1, x.samples)
+
 ## The formula is the "use-all" statement.
 set.seed(seed.mine)
 modelFit1 <- train(fp05 ~ ., data = df1,
                    method = "pls",
+                   weights = x.weights,
                    trControl = fitControl, metric = "Kappa")
-
 modelFit1
+
+## For time-slices,
+## use modelFit1$control$index for training data
+## modelFit1$control$indexOut for testing data
+
+
 
 ## The training set should be near exact even with the correlation
 ## cut-offs.
@@ -122,3 +140,20 @@ confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 
 modelImp <- varImp(modelFit1, scale = FALSE)
 plot(modelImp, top = 20)
+
+
+## The last testing set: this has not been used for training, so should
+## be good.
+
+x.idx <- length(modelFit1$control$indexOut)
+x.idxes <- modelFit1$control$indexOut[[x.idx]]
+
+testClass <- ml0$outcomes[x.idxes]
+testDescr <- df1[x.idxes,]
+
+testPred <- predict(modelFit1, testDescr)
+postResample(testPred, testDescr)
+confusionMatrix(testPred, testClass, positive = "profit")
+
+## 
+
