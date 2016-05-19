@@ -40,10 +40,10 @@ load("folios-all.dat", envir=.GlobalEnv)
 
 ml0 <- list()
 
-### Take 90 days to train and then test with as many as you wish.
+### Take a few days to train and then test with as many as you wish.
 ## The time-slicing will use the test data too.
 
-ml0$train.size <- 90
+ml0$train.size <- 30
 ml0$test.size <- 180
 
 ml0$lastin <- folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
@@ -144,9 +144,10 @@ df1[, ml0$outcomen] <- ml0$outcomes
 ## @note
 ## Weightings: EWMA don't make any difference
 x.samples <- dim(df1)[1]
-x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.050, startup = 1)
+
+# x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.050, startup = 1)
+# x.weights <- rev(x.ewma) / sum(x.ewma)
 x.weights <- rep(1, x.samples)
-x.weights <- rev(x.ewma) / sum(x.ewma)
 
 ## The formula is the "use-all" statement.
 set.seed(seed.mine)
