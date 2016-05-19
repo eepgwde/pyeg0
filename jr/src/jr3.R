@@ -91,17 +91,17 @@ folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 ### Following jr2.R, unstack 
 ## The shorter data set works better
 
-train.ustk1 <- ustk.folio1(folios.train0)
+train.ustk0 <- ustk.folio1(folios.train0)
 
 ml0$history <- 95
 ## Shorter data set.
-train.ustk2 <- tail(train.ustk1, n = ml0$history)
+train.ustk1 <- tail(train.ustk0, n = ml0$history)
 
 ### Test one portfolio
 
 ml0$folio <- "KF"
 
-df <- train.ustk2
+df <- train.ustk1
 
 ## Get the folio outcome and remove the others.
 ## And deal with NA
