@@ -40,10 +40,16 @@ load("folios-all.dat", envir=.GlobalEnv)
 
 ml0 <- list()
 
-### Take 120 days around the in/out mark.
+### Take 90 days to train and then test with as many as you wish.
+## The time-slicing will use the test data too.
+
+ml0$train.size <- 90
+ml0$test.size <- 180
 
 ml0$lastin <- folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
-ml0$range <- c(ml0$lastin - 90, ml0$lastin + 30)
+ml0$lastout <- folios.all[tail(which(folios.all$in0 == 0), n=1), "dt0"]
+
+ml0$range <- c(ml0$lastin - ml0$train.size, ml0$lastin + ml0$test.size)
 
 x.range <- (folios.all$dt0 >= ml0$range[1]) & (folios.all$dt0 <= ml0$range[2])
 
@@ -91,9 +97,9 @@ folios.train0 <- ustk.factorize(folios.train0, fmetric0=ml0$outcomen)
 ### Following jr2.R, unstack 
 ## The shorter data set works better
 
-train.ustk0 <- ustk.folio1(folios.train0)
+train.ustk0 <- ustk.folio1(folios.train0, rownames0="dt0")
 
-ml0$history <- 95
+ml0$history <- diff(ml0$range)
 ## Shorter data set.
 train.ustk1 <- tail(train.ustk0, n = ml0$history)
 
@@ -167,21 +173,11 @@ trainPred <- predict(modelFit1, df1)
 postResample(trainPred, ml0$outcomes)
 confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 
-## The last testing set: this has not been used for training, so should
-## be a good test.
+## The out-of-sample sets can be selected
 
-x.idx <- length(modelFit1$control$indexOut) - 1
-x.idxes <- modelFit1$control$indexOut[[x.idx]]
+ml0$lastin.idx <- which(as.numeric(rownames(df)) > ml0$lastin)[1]
 
-testClass <- ml0$outcomes[x.idxes]
-testDescr <- df1[x.idxes,]
-
-testPred <- predict(modelFit1, testDescr)
-postResample(testPred, testClass)
-confusionMatrix(testPred, testClass, positive = "profit")
-
-x.idx <- length(modelFit1$control$indexOut)
-x.idxes <- modelFit1$control$indexOut[[x.idx]]
+x.idxes <- as.numeric(modelFit1$control$indexOut[which(modelFit1$control$indexOut >= ml0$lastin.idx)])
 
 testClass <- ml0$outcomes[x.idxes]
 testDescr <- df1[x.idxes,]

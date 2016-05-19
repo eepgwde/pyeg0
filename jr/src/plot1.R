@@ -193,12 +193,29 @@ tbl.factorize <- function(tbl0, null0=FALSE) {
 ## Optionally with merge.
 
 ustk.folio <- function(tbl, merge0=NULL,
-                        folios.metric="p00", rename=TRUE) {
+                        folios.metric="p00", rename=TRUE, rownames0=NULL) {
 
     folios.forml <- as.formula(paste(folios.metric, "~", "folio0"))
 
     ## unstack and find a way of plotting.
     folios.ustk <- unstack(tbl, folios.forml)
+
+    if (!is.null(rownames0)) {
+        folios.forml <- as.formula(paste(rownames0, "~", "folio0"))
+        folios.rows <- unstack(tbl, folios.forml)
+        if (dim(folios.rows)[1] != dim(folios.ustk)[1]) {
+            warning("rownames not same length")
+        } else {
+            ## Just take the first column. Assume all equal.
+            x.nm0 <- colnames(folios.ustk)[1]
+            rowns <- folios.rows[, x.nm0]
+            if (length(unique(rowns)) != length(rowns)) {
+                warning("rownames not unique")
+            } else {
+                rownames(folios.ustk) = rowns
+            }
+        }
+    }
 
     if (rename) {
         x0 <- sapply(names(folios.ustk), 
@@ -222,7 +239,8 @@ ustk.folio <- function(tbl, merge0=NULL,
 ## @note
 ## Great feature of R is the <<- operator
 
-ustk.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$") {
+ustk.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$",
+                        rownames0=NULL) {
 
     x0.all <- colnames(tbl)
     x0.metrics <- sort(x0.all[grepl(patt, x0.all)], decreasing = TRUE)
@@ -237,19 +255,21 @@ ustk.folio1 <- function(tbl, merge0=NULL, patt="[a-z]+[0-9]{2}$") {
     
     if (!is.null(merge0)) {
         t1 <- ustk.folio(tbl, merge0=merge0,
-                          folios.metric=folios.metric)
+                         folios.metric=folios.metric,
+                         rownames0=rownames0)
     } else {
         t1 <- ustk.folio(tbl, 
-                          folios.metric=folios.metric)
+                         folios.metric=folios.metric,
+                         rownames0=rownames0)
     }
 
     ## Note the global assignment operator, it searches for t1
     ## in an environment; here, it will find t1 in the caller.
     sapply(x0.metrics, function(y)
         t1 <<- ustk.folio(tbl, merge0=t1,
-                           folios.metric=y),
+                          folios.metric=y,
+                          rownames0=rownames0),
         simplify=TRUE, USE.NAMES=FALSE)
-    
 
     return(t1)
 }
