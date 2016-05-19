@@ -125,9 +125,10 @@ source("jr3a.R")
 
 fitControl <- trainControl(## timeslicing
     initialWindow = ml0$window0,
-    horizon = ml0$window0,
+    horizon = 1,
     fixedWindow = TRUE,
     method = "timeslice",
+    savePredictions = TRUE,
     classProbs = TRUE)
 
 ## Put the outcomes back in and use a global formula.
@@ -137,9 +138,9 @@ df1[, ml0$outcomen] <- ml0$outcomes
 ## @note
 ## Weightings: EWMA don't make any difference
 x.samples <- dim(df1)[1]
-x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.30, startup = 1)
-x.weights <- x.ewma / sum(x.ewma)
+x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.050, startup = 1)
 x.weights <- rep(1, x.samples)
+x.weights <- rev(x.ewma) / sum(x.ewma)
 
 ## The formula is the "use-all" statement.
 set.seed(seed.mine)
@@ -148,6 +149,10 @@ modelFit1 <- train(fp05 ~ ., data = df1,
                    weights = x.weights,
                    trControl = fitControl, metric = "Kappa")
 modelFit1
+
+## Individual predictions are archived.
+## See the time-series work.
+write.csv(modelFit1$pred, "mf1-pred.csv")
 
 ### Time-slices: training and test is available.
 ##
