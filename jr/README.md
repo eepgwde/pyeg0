@@ -1,8 +1,39 @@
-* Contol
+* Control
 
 weaves
 
 Jnygre.Q.Rnirf@tznvy.pbz
+
+This document is now superceded by the PowerPoint presentation, see the
+Folder Contents following.
+
+* Folder Contents
+
+** jr3.pptx 
+
+PowerPoint presentation - principal results, images, discussion
+
+** jr3-0.pdf jr3-1.pdf jr3-2.pdf 
+
+PDF documents of the presentation - outline, slides, slides and notes
+
+** jr.zip 
+
+This is the source code and an older version of these notes.
+
+** jr2-syn.zip
+
+Charts of prices, volatility and MACD.
+
+** ml0.zip
+
+Charts of machine learning: variable importance, Density and ROC
+
+** ml0.txt
+
+Log file of the R run that fitted the data and produced the charts in ml0.zip 
+
+It's best to start at the end and work backwards. Search for testPred.
 
 * Overview
 
