@@ -46,7 +46,6 @@ tbls:system "a"
 	update mid0:((offer0*bid1) + (bid0*offer1)) % (bid1 + offer1) from t0 }
 
 t0: { .fx.t .fx.e @ value x } each tbls
-
 t1: first t0
 while [ count t0 ; t1,: first t0:1 _ t0 ]
 

@@ -1,11 +1,9 @@
 ## @file bt0Test.py
 # @author weaves
-# @brief Unittest of GMus0: removes older duplicates
+# @brief Unittest of Bt0
 #
-# This is a unittest class that can perform some useful work.
+# This is a unittest class it can perform some useful work.
 # 
-# Objects of GMus0 are used to load the songs data.
-#
 # @note
 # Python modules are imported wholesale with the import name
 # matching the file name. (And you can use a directory.filename). But
@@ -26,8 +24,7 @@ import unittest
 # @see Bt0
 class bt0Test(unittest.TestCase):
     """
-    A test driver for Bt0. If the file songs.json exists, then this class will
-    not try to a login.
+    A test driver for Bt0.
     """
     # If this file exists, we do not login.
     file0 = '/home/weaves/Downloads/archive/Copy/outgoing1/50 years BBC2 Comedy.torrent'
