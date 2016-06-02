@@ -191,8 +191,14 @@ confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 ## Column append to the profit and loss table
 ml0$pnl$pred <- trainPred
 
-ml0$profit.all <- sum(ml0$pnl[which(ml0$pnl$pred == "profit"), "pnl"], na.rm=TRUE)
-ml0$profit.strat <- sum(ml0$pnl[which(ml0$pnl$pred == "profit" & ml0$pnl$strat == "strat"), "pnl"], na.rm=TRUE)
+pnl = list()
+pnl$train = list()
+pnl$test = list()
+
+x.tbl <- ml0$pnl
+
+pnl$train$all <- sum(x.tbl[which(x.tbl$pred == "profit"), "pnl"], na.rm=TRUE)
+pnl$train$strat <- sum(x.tbl[which(x.tbl$pred == "profit" & x.tbl$strat == "strat"), "pnl"], na.rm=TRUE)
 
 ## The out-of-sample sets can be selected
 
@@ -206,6 +212,12 @@ testDescr <- df1[x.idxes,]
 testPred <- predict(modelFit1, testDescr)
 postResample(testPred, testClass)
 confusionMatrix(testPred, testClass, positive = "profit")
+
+x.tbl <- ml0$pnl[x.idxes,]
+
+pnl$test$all <- sum(x.tbl[which(x.tbl$pred == "profit"), "pnl"], na.rm=TRUE)
+pnl$test$strat <- sum(x.tbl[which(x.tbl$pred == "profit" & x.tbl$strat == "strat"), "pnl"], na.rm=TRUE)
+
 
 ### Final plots
 
