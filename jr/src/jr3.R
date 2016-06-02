@@ -234,6 +234,6 @@ profits1 <- pnl.calc(ml0$pnl, ml0$folio)
 if (!exists("profits0")) {
     profits0 <- profits1
 } else {
-    profits0 <- merge(profits0, profits1)
+    profits0 <- rbind(profits0, profits1)
 }
 
