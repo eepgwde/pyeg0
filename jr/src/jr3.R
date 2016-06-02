@@ -69,10 +69,13 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
 
 ## Target feature is fp05
 ## I can leave the price in, because the data has been lagged.
+##
+## we remove these factors later
 ## fv05 is whether strategy or not.
+## wapnl05 is the profit (or loss)
 
 ml0$outcomen <- "fp05"
-ml0$prescient <- c("fcst", "wapnl05", "h05", "in0")
+ml0$prescient <- c("fcst", "h05", "in0")
 ml0$ignore <- c("l20")
 
 x.removals <- union(ml0$prescient, ml0$ignore)
@@ -115,9 +118,16 @@ df <- train.ustk1
 df <- ustk.outcome(df, folio=ml0$folio, metric="fv05")
 ml0$strat <- attr(df, "outcomes")
 
+df <- ustk.outcome(df, folio=ml0$folio, metric="wapnl05")
+ml0$wapnl05 <- attr(df, "outcomes")
+
 df <- ustk.outcome(df, folio=ml0$folio, metric=ml0$outcomen)
 ml0$outcomes <- attr(df, "outcomes")
 ml0$outcomes[which(is.na(ml0$outcomes))] <- factor(ml0$outcomes)[1]
+
+ml0$pnl <- data.frame(ml0$outcomes, ml0$strat, ml0$wapnl05, 
+                      row.names=rownames(df), stringsAsFactors=FALSE)
+colnames(ml0$pnl) <- c("outcomes", "strat", "pnl")
 
 ## For testing the learner, use a very small dataset of just two folios
 
@@ -146,7 +156,7 @@ fitControl <- trainControl(## timeslicing
 df1[, ml0$outcomen] <- ml0$outcomes
 
 ## @note
-## Weightings: EWMA don't make any difference
+## Weightings: EWMA makes no difference
 x.samples <- dim(df1)[1]
 
 # x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.050, startup = 1)
@@ -177,6 +187,12 @@ write.csv(modelFit1$pred, "mf1-pred.csv")
 trainPred <- predict(modelFit1, df1)
 postResample(trainPred, ml0$outcomes)
 confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
+
+## Column append to the profit and loss table
+ml0$pnl$pred <- trainPred
+
+ml0$profit.all <- sum(ml0$pnl[which(ml0$pnl$pred == "profit"), "pnl"], na.rm=TRUE)
+ml0$profit.strat <- sum(ml0$pnl[which(ml0$pnl$pred == "profit" & ml0$pnl$strat == "strat"), "pnl"], na.rm=TRUE)
 
 ## The out-of-sample sets can be selected
 
