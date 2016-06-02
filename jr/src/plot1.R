@@ -393,3 +393,34 @@ ustk.factorize <- function(tbl, fmetric0="fp05") {
 
     return(tbl)
 }
+
+pnl.calc0 <- function(v0, folio0, type0="all") {
+    v1 <- na.omit(v0)
+    l0 <- as.list(summary(v1))
+    l0$nas <- sum(is.na(v0))
+    l0$n <- length(v0)
+    
+    l0$sd <- sd(v1, na.rm=TRUE)
+    l0$sum <- sum(v1, na.rm=TRUE)
+    l0$folio <- folio0
+    l0$type0 <- type0
+    return(rbind(l0))
+}
+
+## Given a Profit and Lost table calculate the different profits.
+pnl.calc <- function(tbl, folio0, metric0="pnl") {
+    idxes <- which(tbl$pred == "profit")
+    df <- data.frame(pnl.calc0(tbl[idxes, metric0], folio0, type0="all"))
+
+    idxes <- which(tbl$pred == "profit" & tbl$strat == "strat")
+    v0 <- pnl.calc0(tbl[idxes, metric0], folio0, type0="strat")
+    df <- rbind(df, as.character(v0))
+
+    idxes <- which(tbl$pred == "profit" & tbl$strat == "nstrat")
+    v0 <- pnl.calc0(tbl[idxes, metric0], folio0, type0="nstrat")
+    df <- rbind(df, as.character(v0))
+
+    return(df)
+}
+
+
