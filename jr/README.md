@@ -272,7 +272,14 @@ I've used GNU R, I haven't got a full Python sci-kit learning setup on my
 home machine. GNU R machine and timeseries tools are the basis of what is
 developed for Python.
 
-** ChangeLog
+* ChangeLog
+
+** Changing window
+
+Major mistake in the methodology.
+
+I was using a 30 day horizon, when it should have been a 30 day
+initialWindow. The horizon should be 1 day.
 
 ** bak/jr3/
 

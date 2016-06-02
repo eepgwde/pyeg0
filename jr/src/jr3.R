@@ -43,7 +43,7 @@ ml0 <- list()
 ### Take a few days to train and then test with as many as you wish.
 ## The time-slicing will use the test data too.
 
-ml0$train.size <- 30
+ml0$train.size <- 25
 ml0$test.size <- 180
 
 ml0$lastin <- folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
@@ -58,7 +58,7 @@ folios.in <- folios.all[x.range, ]
 ## We need to set a sliding window, we must use a least 20 days, but
 ## check none of the trades were held for longer than that.
 
-ml0$window0 <- 30
+ml0$window0 <- ml0$train.size
 if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
     ml0$window <- max(folios.in$h05, na.rm=TRUE)
 }
@@ -69,9 +69,10 @@ if (max(folios.in$h05, na.rm=TRUE) > ml0$window0) {
 
 ## Target feature is fp05
 ## I can leave the price in, because the data has been lagged.
+## fv05 is whether strategy or not.
 
 ml0$outcomen <- "fp05"
-ml0$prescient <- c("fcst", "wapnl05", "h05", "fv05", "in0")
+ml0$prescient <- c("fcst", "wapnl05", "h05", "in0")
 ml0$ignore <- c("l20")
 
 x.removals <- union(ml0$prescient, ml0$ignore)
@@ -109,8 +110,11 @@ ml0$folio <- "KF"
 
 df <- train.ustk1
 
-## Get the folio outcome and remove the others.
+## Get the folio strategty and outcome and remove the others.
 ## And deal with NA
+df <- ustk.outcome(df, folio=ml0$folio, metric="fv05")
+ml0$strat <- attr(df, "outcomes")
+
 df <- ustk.outcome(df, folio=ml0$folio, metric=ml0$outcomen)
 ml0$outcomes <- attr(df, "outcomes")
 ml0$outcomes[which(is.na(ml0$outcomes))] <- factor(ml0$outcomes)[1]
