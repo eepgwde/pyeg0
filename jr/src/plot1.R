@@ -402,29 +402,28 @@ pnl.calc0 <- function(v0) {
     
     l0$sd <- sd(v1)
     l0$sum <- sum(v1)
-    return(rbind(l0))
+    return(as.data.frame(l0))
 }
 
 ## Given a Profit and Lost table calculate the different profits.
 pnl.calc <- function(tbl, folio0, metric0="pnl") {
     idxes <- which(tbl$pred == "profit")
     v0 <- pnl.calc0(tbl[idxes, metric0])
-    df <- data.frame(v0)
-    df$type0 <- "all"
+    v0$type0 <- "all"
+
+    df <- v0
 
     idxes <- which(tbl$pred == "profit" & tbl$strat == "strat")
     v0 <- pnl.calc0(tbl[idxes, metric0])
-    df1 <- data.frame(v0)
-    df1$type0 <- "strat"
+    v0$type0 <- "strat"
     
-    df <- rbind(df, df1)
+    df <- rbind(df, v0)
 
     idxes <- which(tbl$pred == "profit" & tbl$strat == "nstrat")
     v0 <- pnl.calc0(tbl[idxes, metric0])
-    df1 <- data.frame(v0)
-    df1$type0 <- "nstrat"
+    v0$type0 <- "nstrat"
 
-    df <- rbind(df, df1)
+    df <- rbind(df, v0)
 
     df$folio <- folio0
 
