@@ -188,18 +188,6 @@ trainPred <- predict(modelFit1, df1)
 postResample(trainPred, ml0$outcomes)
 confusionMatrix(trainPred, ml0$outcomes, positive = "profit")
 
-## Column append to the profit and loss table
-ml0$pnl$pred <- trainPred
-
-pnl = list()
-pnl$train = list()
-pnl$test = list()
-
-x.tbl <- ml0$pnl
-
-pnl$train$all <- sum(x.tbl[which(x.tbl$pred == "profit"), "pnl"], na.rm=TRUE)
-pnl$train$strat <- sum(x.tbl[which(x.tbl$pred == "profit" & x.tbl$strat == "strat"), "pnl"], na.rm=TRUE)
-
 ## The out-of-sample sets can be selected
 
 ml0$lastin.idx <- which(as.numeric(rownames(df)) > ml0$lastin)[1]
@@ -212,12 +200,6 @@ testDescr <- df1[x.idxes,]
 testPred <- predict(modelFit1, testDescr)
 postResample(testPred, testClass)
 confusionMatrix(testPred, testClass, positive = "profit")
-
-x.tbl <- ml0$pnl[x.idxes,]
-
-pnl$test$all <- sum(x.tbl[which(x.tbl$pred == "profit"), "pnl"], na.rm=TRUE)
-pnl$test$strat <- sum(x.tbl[which(x.tbl$pred == "profit" & x.tbl$strat == "strat"), "pnl"], na.rm=TRUE)
-
 
 ### Final plots
 
@@ -240,4 +222,18 @@ densityplot(~test.df$profit, groups = test.df$Obs, auto.key = TRUE)
 plot.roc(test.roc)
 
 dev.off()
+
+
+## Profit calculation
+
+## Column append to the profit and loss table
+ml0$pnl$pred <- trainPred
+
+profits1 <- pnl.calc(ml0$pnl, ml0$folio)
+
+if (!exists("profits0")) {
+    profits0 <- profits1
+} else {
+    profits0 <- merge(profits0, profits1)
+}
 
