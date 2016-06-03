@@ -274,6 +274,11 @@ developed for Python.
 
 * ChangeLog
 
+** Profit and loss calculations
+
+I've added pnl.calc and collect the results for all the folios over the
+test period only in profits0. This gets written to disk.
+
 ** Changing window
 
 Major mistake in the methodology.

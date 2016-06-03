@@ -46,12 +46,12 @@ ml0 <- list()
 ## The time-slicing will use the test data too.
 
 ml0$train.size <- 25
-ml0$test.size <- 180
+ml0$test.size <- 180 # not used
 
 ml0$lastin <- folios.all[tail(which(folios.all$in0 == 1), n=1), "dt0"]
 ml0$lastout <- folios.all[tail(which(folios.all$in0 == 0), n=1), "dt0"]
 
-ml0$range <- c(ml0$lastin - ml0$train.size, ml0$lastin + ml0$test.size)
+ml0$range <- c(ml0$lastin - ml0$train.size, ml0$lastout)
 
 x.range <- (folios.all$dt0 >= ml0$range[1]) & (folios.all$dt0 <= ml0$range[2])
 
@@ -108,6 +108,9 @@ train.ustk0 <- ustk.folio1(folios.train0, rownames0="dt0")
 ml0$history <- diff(ml0$range)
 ## Shorter data set.
 train.ustk1 <- tail(train.ustk0, n = ml0$history)
+
+rm("profits1")
+rm("profits0")
 
 for (x.folio in folios) {
     print(x.folio)

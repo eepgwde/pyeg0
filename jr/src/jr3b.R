@@ -11,7 +11,7 @@ if (!exists("x.folio")) {
 
 df <- train.ustk1
 
-## Get the folio strategty and outcome and remove the others.
+## Get the folio strategy and outcome and remove the others.
 ## And deal with NA
 df <- ustk.outcome(df, folio=ml0$folio, metric="fv05")
 ml0$strat <- attr(df, "outcomes")
@@ -71,7 +71,7 @@ modelFit1
 
 ## Individual predictions are archived.
 ## See the time-series work.
-write.csv(modelFit1$pred, "mf1-pred.csv")
+write.csv(modelFit1$pred, file="mf1-pred.csv")
 
 ### Time-slices: training and test is available.
 ##
@@ -125,9 +125,11 @@ dev.off()
 ## Profit calculation
 
 ## Column append to the profit and loss table
-ml0$pnl$pred <- trainPred
 
-profits1 <- pnl.calc(ml0$pnl, ml0$folio)
+x.pnl <- ml0$pnl[x.idxes,]
+x.pnl$pred <- testPred
+
+profits1 <- pnl.calc(x.pnl, ml0$folio)
 
 if (!exists("profits0")) {
     profits0 <- profits1
