@@ -114,3 +114,4 @@ for (x.folio in folios) {
     source("jr3b.R")
 }
 
+write.csv(profits0, file = "profits0.csv")
