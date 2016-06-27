@@ -9,18 +9,24 @@ source("brA0.R")
 
 data("AdultUCI")
 
+sapply(AdultUCI, FUN=function(x) { sum(as.integer(is.na(x))) })
+
 ## Preparation: save as CSV from XL
 ## sed -e 's/," /,"/g'
 ## to remove leading spaces in text fields.
 
 ppl00 <- read.csv("../bak/CustomerData1.csv", 
-                stringsAsFactors=TRUE, strip.white=TRUE,
-                header=TRUE, na.strings=c("?"))
+                  stringsAsFactors=TRUE, strip.white=TRUE,
+                  header=TRUE, na.strings=c("?"))
+
+sapply(ppl00, FUN=function(x) { sum(as.integer(is.na(x))) })
+
 
 ppl <- ppl00
 
 ## Re-assurance they are the same:
 stopifnot(all(ppl$age == AdultUCI$age))
+
 
 ## Re-classify the original, 
 adult0 <- adult.class0(AdultUCI)
