@@ -43,7 +43,7 @@ cnames <- colnames(ppl0)
 cnames <- gsub("^capital-", "c.", cnames)
 cnames <- gsub("^native-", "", cnames)
 cnames <- gsub("-per-week", "", cnames)
-cnames <- gsub("-", ".", cnames)
+British-Commonwealthcnames <- gsub("-", ".", cnames)
 
 colnames(ppl0) <- cnames
 
