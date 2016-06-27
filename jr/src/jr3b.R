@@ -129,11 +129,24 @@ dev.off()
 x.pnl <- ml0$pnl[x.idxes,]
 x.pnl$pred <- testPred
 
+x.tag0 <- "lwa05"
+x.tag <- paste(ml0$folio, x.tag0, sep=".")
+
+x.pnl[, x.tag0] <- train.ustk0[rownames(x.pnl), x.tag]
+x.pnl$folio <- ml0$folio
+x.pnl$dt0 <- rownames(x.pnl)
+
 profits1 <- pnl.calc(x.pnl, ml0$folio)
 
 if (!exists("profits0")) {
     profits0 <- profits1
 } else {
     profits0 <- rbind(profits0, profits1)
+}
+
+if (!exists("outcomes0")) {
+    outcomes0 <- x.pnl
+} else {
+    outcomes0 <- rbind(outcomes0, x.pnl)
 }
 
