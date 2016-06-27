@@ -10,88 +10,50 @@ source("brA0.R")
 
 data("AdultUCI")
 
-df0 <- adult.class0(AdultUCI)
-
-AdultUCI[["fnlwgt"]] <- NULL
-AdultUCI[["education-num"]] <- NULL
-
-AdultUCI[[ "age"]] <- ordered(cut(AdultUCI[[ "age"]], c(15,25,45,65,100)),
-                              labels = c("Young", "Middle-aged", "Senior", "Old"))
-
-AdultUCI[[ "hours-per-week"]] <- ordered(cut(AdultUCI[[ "hours-per-week"]],
-                                             c(0,25,40,60,168)),
-                                         labels = c("Part-time", "Full-time", "Over-time", "Workaholic"))
-
-AdultUCI[[ "capital-gain"]] <- ordered(cut(AdultUCI[[ "capital-gain"]],
-                                           c(-Inf,0,median(AdultUCI[[ "capital-gain"]][AdultUCI[[ "capital-gain"]]>0]),Inf)),
-                                       labels = c("None", "Low", "High"))
-
-AdultUCI[[ "capital-loss"]] <- ordered(cut(AdultUCI[[ "capital-loss"]],
-                                           c(-Inf,0,
-                                             median(AdultUCI[[ "capital-loss"]][AdultUCI[[ "capital-loss"]]>0]),Inf)),
-                                       labels = c("none", "low", "high"))
-
 ## Preparation: save as CSV from XL
 ## sed -e 's/," /,"/g'
 ## to remove leading spaces in text fields.
 
-ppl <- read.csv("../bak/CustomerData1.csv", 
+ppl00 <- read.csv("../bak/CustomerData1.csv", 
                 stringsAsFactors=TRUE, strip.white=TRUE,
                 header=TRUE, na.strings=c("?"))
 
-ppl0 <- ppl
+ppl <- ppl00
 
-colnames(ppl) <- colnames(AdultUCI)
-ppl$income <- AdultUCI$income
+## Re-assurance they are the same:
+stopifnot(all(ppl$age == AdultUCI$age))
 
-ppl$education <- ordered(ppl$education, levels(AdultUCI$education))
+## Re-classify the original, 
+adult0 <- adult.class0(AdultUCI)
 
-ppl[[ "age"]] <- ordered(cut(ppl[[ "age"]], c(15,25,45,65,100)),
-                              labels = c("Young", "Middle-aged", "Senior", "Old"))
+## Copy the column names. 
+## Replace the income column
+## Order the education column.
+## Re-class and compare.
+colnames(ppl) <- colnames(adult0)
+ppl$income <- adult0$income
+ppl$education <- ordered(ppl$education, levels(adult0$education))
 
-ppl[[ "hours-per-week"]] <- ordered(cut(ppl[[ "hours-per-week"]],
-                                             c(0,25,40,60,168)),
-                                         labels = c("Part-time", "Full-time", "Over-time", "Workaholic"))
+ppl0 <- adult.class0(ppl)
 
-ppl[[ "capital-gain"]] <- ordered(cut(ppl[[ "capital-gain"]],
-                                           c(-Inf,0,median(ppl[[ "capital-gain"]][ppl[[ "capital-gain"]]>0]),Inf)),
-                                       labels = c("None", "Low", "High"))
+all.equal(ppl0, adult0)
 
-ppl[[ "capital-loss"]] <- ordered(cut(ppl[[ "capital-loss"]],
-                                           c(-Inf,0,
-                                             median(ppl[[ "capital-loss"]][ppl[[ "capital-loss"]]>0]),Inf)),
-                                       labels = c("none", "low", "high"))
+## More simplification
+
+cnames <- colnames(ppl0)
+cnames <- gsub("^capital-", "c.", cnames)
+cnames <- gsub("^native-", "", cnames)
+cnames <- gsub("-per-week", "", cnames)
+cnames <- gsub("-", ".", cnames)
+
+colnames(ppl0) <- cnames
+
+ppl0$workclass <- adult.workclass(ppl0$workclass)
+
+ppl0$occupation <- adult.occupation(ppl0$occupation)
 
 
 
-
-all.equal(ppl, AdultUCI)
-    
-
-## Refactoring
-
-levels(ppl$ed)
-
-levels(ppl$wclass)
-
-levels(ppl$ed)
-
-"Preschool"    
-"1st-4th"
-"5th-6th"
-"7th-8th"
-"9th"
-"10th"
-"11th"
-"12th"
-"HS-grad"
-"Assoc-voc"
-"Assoc-acdm"
-"Some-college"
-"Bachelors"   
-"Masters"
-"Prof-school" 
-"Doctorate"    
 
 ## Source the scripts support scripts.
 
