@@ -71,52 +71,54 @@ adult.occupation <- function(occ) {
     return(occ)
 }
 
+## This helps
+## awk -F= '{ print $3, $4 }' t.lst
+## sed -e 's/"//g' -e 's/]//g'
+## grep Latin | awk '{ print $1 }'
+
 adult.country <- function(country) {
+    cc <- as.character(country)
+    cc[which(cc %in% c("England", "India", "Ireland", "Scotland", "Canada"))] <- "British-Commonwealth"
 
-data$country[data$country=="Cambodia"] = "SE-Asia"
-data$country[data$country=="Canada"] = "British-Commonwealth"    
-data$country[data$country=="China"] = "China"       
-data$country[data$country=="Columbia"] = "South-America"    
-data$country[data$country=="Cuba"] = "Other"        
-data$country[data$country=="Dominican-Republic"] = "Latin-America"
-data$country[data$country=="Ecuador"] = "South-America"     
-data$country[data$country=="El-Salvador"] = "South-America" 
-data$country[data$country=="England"] = "British-Commonwealth"
-data$country[data$country=="France"] = "Euro_1"
-data$country[data$country=="Germany"] = "Euro_1"
-data$country[data$country=="Greece"] = "Euro_2"
-data$country[data$country=="Guatemala"] = "Latin-America"
-data$country[data$country=="Haiti"] = "Latin-America"
-data$country[data$country=="Holand-Netherlands"] = "Euro_1"
-data$country[data$country=="Honduras"] = "Latin-America"
-data$country[data$country=="Hong"] = "China"
-data$country[data$country=="Hungary"] = "Euro_2"
-data$country[data$country=="India"] = "British-Commonwealth"
-data$country[data$country=="Iran"] = "Other"
-data$country[data$country=="Ireland"] = "British-Commonwealth"
-data$country[data$country=="Italy"] = "Euro_1"
-data$country[data$country=="Jamaica"] = "Latin-America"
-data$country[data$country=="Japan"] = "Other"
-data$country[data$country=="Laos"] = "SE-Asia"
-data$country[data$country=="Mexico"] = "Latin-America"
-data$country[data$country=="Nicaragua"] = "Latin-America"
-data$country[data$country=="Outlying-US(Guam-USVI-etc)"] = "Latin-America"
-data$country[data$country=="Peru"] = "South-America"
-data$country[data$country=="Philippines"] = "SE-Asia"
-data$country[data$country=="Poland"] = "Euro_2"
-data$country[data$country=="Portugal"] = "Euro_2"
-data$country[data$country=="Puerto-Rico"] = "Latin-America"
-data$country[data$country=="Scotland"] = "British-Commonwealth"
-data$country[data$country=="South"] = "Euro_2"
-data$country[data$country=="Taiwan"] = "China"
-data$country[data$country=="Thailand"] = "SE-Asia"
-data$country[data$country=="Trinadad&Tobago"] = "Latin-America"
-data$country[data$country=="United-States"] = "United-States"
-data$country[data$country=="Vietnam"] = "SE-Asia"
-    data$country[data$country=="Yugoslavia"] = "Euro_2"
+    cc[which(cc %in% c("Hong", "Taiwan", "China"))] <- "China"
 
-    
+    cc[which(cc %in% c("France", "Germany", "Holland-Netherlands", "Italy"))] <- "Euro1"
 
-    return(country)
+    cc[which(cc %in% c("Greece", "Hungary", "Poland", "Portugal", "South", "Yugoslavia"))] <- "Euro2"
 
+    cc[which(cc %in% c("Dominican-Republic","Guatemala","Haiti","Honduras","Jamaica","Mexico","Nicaragua","Outlying-US(Guam-USVI-etc)","Puerto-Rico","Trinadad&Tobago"))] <- "Latin-America"
+
+    cc[which(cc %in% c("Cambodia","Laos","Philippines","Thailand","Vietnam"))] <- "SE-Asia"
+
+    cc[which(cc %in% c("Peru","El-Salvador","Columbia","Ecuador"))] <- "South-America"
+
+    return(as.factor(cc))
 }
+
+adult.education <- function(edu) {
+    edu <- as.character(edu)
+    
+    edu = gsub("^10th","Dropout",edu)
+    edu = gsub("^11th","Dropout",edu)
+    edu = gsub("^12th","Dropout",edu)
+    edu = gsub("^1st-4th","Dropout",edu)
+    edu = gsub("^5th-6th","Dropout",edu)
+    edu = gsub("^7th-8th","Dropout",edu)
+    edu = gsub("^9th","Dropout",edu)
+    edu = gsub("^Assoc-acdm","Associates",edu)
+    edu = gsub("^Assoc-voc","Associates",edu)
+    edu = gsub("^Bachelors","Bachelors",edu)
+    edu = gsub("^Doctorate","Doctorate",edu)
+    edu = gsub("^HS-Grad","HS-Graduate",edu)
+    edu = gsub("^Masters","Masters",edu)
+    edu = gsub("^Preschool","Dropout",edu)
+    edu = gsub("^Prof-school","Prof-School",edu)
+    edu = gsub("^Some-college","HS-Graduate",edu)
+    edu <- ordered(as.factor(edu), 
+                      levels = c("Dropout", "HS-Graduate", 
+                                 "Associates", "Bachelors",
+                                 "Masters", "Prof-School",
+                                 "Doctorate"))
+    return(edu)
+}
+    

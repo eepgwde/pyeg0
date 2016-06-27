@@ -1,8 +1,7 @@
 ## weaves
 ##
-## Data analysis: look and feel
-## Similar to the AdultUCI data set.
-
+## Data simplification
+## Identical to the AdultUCI data set.
 
 library("arules")
 
@@ -38,7 +37,7 @@ ppl0 <- adult.class0(ppl)
 
 all.equal(ppl0, adult0)
 
-## More simplification
+## Simplify some column names and then some classes
 
 cnames <- colnames(ppl0)
 cnames <- gsub("^capital-", "c.", cnames)
@@ -52,13 +51,16 @@ ppl0$workclass <- adult.workclass(ppl0$workclass)
 
 ppl0$occupation <- adult.occupation(ppl0$occupation)
 
+ppl0$country <- adult.country(ppl0$country)
 
+ppl0$education <- adult.education(ppl0$education)
 
+ppl0$customer <- ppl00$customer
 
-## Source the scripts support scripts.
+## Because we have an extra income field from the Adult data
+## we can use that to help our predictor.
 
-source("brA1.R")
+ppl0$in0 <- ! is.na(ppl0$income)
 
-## 
-
+save(ppl0, file="ppl0.dat")
 
