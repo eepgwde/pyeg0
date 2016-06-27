@@ -3,12 +3,6 @@
 
 ### Test one portfolio
 
-if (!exists("x.folio")) {
-    ml0$folio <- "KF"
-} else {
-    ml0$folio <- x.folio
-}
-
 df <- train.ustk1
 
 ## Get the folio strategy and outcome and remove the others.

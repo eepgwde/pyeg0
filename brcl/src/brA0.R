@@ -78,15 +78,15 @@ adult.occupation <- function(occ) {
 
 adult.country <- function(country) {
     cc <- as.character(country)
-    cc[which(cc %in% c("England", "India", "Ireland", "Scotland", "Canada"))] <- "British-Commonwealth"
+    cc[which(cc %in% c("England", "India", "Ireland", "Scotland", "Canada"))] <- "Commonwealth"
 
-    cc[which(cc %in% c("Hong", "Taiwan", "China"))] <- "China"
+    cc[which(cc %in% c("Japan", "Hong", "Taiwan", "China"))] <- "ChinaJapan"
 
-    cc[which(cc %in% c("France", "Germany", "Holland-Netherlands", "Italy"))] <- "Euro1"
+    cc[which(cc %in% c("France", "Germany", "Holand-Netherlands", "Italy"))] <- "Euro1"
 
-    cc[which(cc %in% c("Greece", "Hungary", "Poland", "Portugal", "South", "Yugoslavia"))] <- "Euro2"
+    cc[which(cc %in% c("Iran", "Greece", "Hungary", "Poland", "Portugal", "South", "Yugoslavia"))] <- "Euro2"
 
-    cc[which(cc %in% c("Dominican-Republic","Guatemala","Haiti","Honduras","Jamaica","Mexico","Nicaragua","Outlying-US(Guam-USVI-etc)","Puerto-Rico","Trinadad&Tobago"))] <- "Latin-America"
+    cc[which(cc %in% c("Cuba", "Dominican-Republic","Guatemala","Haiti","Honduras","Jamaica","Mexico","Nicaragua","Outlying-US(Guam-USVI-etc)","Puerto-Rico","Trinadad&Tobago"))] <- "Latin-America"
 
     cc[which(cc %in% c("Cambodia","Laos","Philippines","Thailand","Vietnam"))] <- "SE-Asia"
 
