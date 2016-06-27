@@ -16,14 +16,13 @@ adult.class0 <- function(df) {
 
     df[[ "capital-gain"]] <- ordered(cut(df[[ "capital-gain"]],
                                          c(-Inf,0,median(df[[ "capital-gain"]][df[[ "capital-gain"]]>0]),Inf)),
-                                     labels = c("None", "Low", "High"))
+                                     labels = c("NoGain", "LowGain", "HighGain"))
 
     df[[ "capital-loss"]] <- ordered(cut(df[[ "capital-loss"]],
                                          c(-Inf,0,
                                            median(df[[ "capital-loss"]][df[[ "capital-loss"]]>0]),Inf)),
-                                     labels = c("none", "low", "high"))
+                                     labels = c("NoLoss", "LowLoss", "HighLoss"))
 
-    
     return(df)
 }
 
@@ -122,3 +121,17 @@ adult.education <- function(edu) {
     return(edu)
 }
     
+adult.capital <- function(df) {
+    df$capital <- as.integer(df[["capital-gain"]])
+    nloss <- df[["capital-loss"]] != "NoLoss"
+    gain <- df[["capital-gain"]] == "NoGain"
+    marks <- intersect(which(gain), which(nloss))
+    df[marks, "capital"] <- -as.integer(df[marks, "capital-loss"])
+    df$capital <- ordered(df$capital, labels=c("HighLoss", "LowLoss", "None", "LowGain", "HighGain"))
+
+    df[["capital-loss"]] <- NULL
+    df[["capital-gain"]] <- NULL
+    
+    return(df)
+}
+

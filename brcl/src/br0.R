@@ -39,11 +39,16 @@ all.equal(ppl0, adult0)
 
 ## Simplify some column names and then some classes
 
+ppl0 <- adult.capital(ppl0)
+
+ppl0[[ "capital-loss" ]] <- NULL
+ppl0[[ "capital-gain" ]] <- NULL
+
 cnames <- colnames(ppl0)
 cnames <- gsub("^capital-", "c.", cnames)
 cnames <- gsub("^native-", "", cnames)
 cnames <- gsub("-per-week", "", cnames)
-British-Commonwealthcnames <- gsub("-", ".", cnames)
+cnames <- gsub("-", ".", cnames)
 
 colnames(ppl0) <- cnames
 
