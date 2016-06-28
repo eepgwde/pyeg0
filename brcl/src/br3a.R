@@ -1,7 +1,6 @@
 ## weaves
 ##
-## Machine learning preparation.
-## File with q/kdb+ generated technicals.
+## Machine learning preparation: common
 ##
 ## This script is a sub-script and finds the Near-Zero Variance
 ## and highly correlated variables.

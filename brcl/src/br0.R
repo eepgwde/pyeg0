@@ -66,7 +66,7 @@ ppl0$country <- adult.country(ppl0$country)
 
 ppl0$education <- adult.education(ppl0$education)
 
-ppl0$customer <- ppl00$customer
+ppl0$customer <- ordered(ppl00$customer, labels = c("no", "yes"))
 
 ## Because we have an extra income field from the Adult data
 ## we can use that to help our predictor.

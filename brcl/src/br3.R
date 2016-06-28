@@ -13,9 +13,6 @@ if (!is.null(dev.list())) {
 
 library(MASS)
 library(caret)
-library(mlbench)
-library(pROC)
-library(gbm)
 
 library(doMC)
 registerDoMC(cores = 4)
@@ -42,10 +39,13 @@ ml0$lastin <- tail(which(ppl0$in0), 1)
 ### Prescience: variables
 
 ml0$outcomen <- "customer"
+ml0$outcomes <- ppl0[[ ml0$outcomen ]]
+
 ml0$prescient <- c("income")
 ml0$ignore <- c("in0")
 
-x.removals <- union(ml0$prescient, union(ml0$ignore, ml0$outcomen))
+x.removals <- union(ml0$prescient, ml0$ignore)
+x.removals <- union(x.removals, ml0$outcomen)
 
 ppl <- ppl0[,setdiff(colnames(ppl0), x.removals)]
 
@@ -53,9 +53,15 @@ factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], a
 
 df0 <- factors.numeric(ppl)
 
-## Usually, one can impute a few values, but despite earlier efforts
-## The NA's are coming through
+## Imputing
+## 
 
 # Function in a script: pass df0 and receive df1
 source("br3a.R")
+
+stopifnot(dim(df0)[1] == dim(df1)[1])
+
+ppl1 <- df1
+
+save(ppl1, ml0, file="ppl1.dat")
 
