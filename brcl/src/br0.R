@@ -73,5 +73,20 @@ ppl0$customer <- ppl00$customer
 
 ppl0$in0 <- ! is.na(ppl0$income)
 
+## Usual issues with NA
+
+idxes <- sapply(colnames(ppl0), function(x) { sum(as.integer(is.na(ppl0[[ x ]]))) }, simplify="array", USE.NAMES=FALSE) > 0
+adult.na <- colnames(ppl0)[idxes]
+adult.na <- adult.na[ adult.na != "income" ]
+
+sapply(adult.na, function(x) sum(as.integer(is.na(ppl0[[ x ]]))))
+
+adult.na0 <- sapply(adult.na, function(x) is.na(ppl0[[x]]), simplify="matrix", USE.NAMES = FALSE)
+
+## All NA
+adult.na1 <- which(apply(adult.na0, 1, all))
+
+ppl0 <- ppl0[ - adult.na1, ]
+
 save(ppl0, file="ppl0.dat")
 

@@ -97,6 +97,7 @@ adult.country <- function(country) {
 adult.education <- function(edu) {
     edu <- as.character(edu)
     
+    edu = gsub("^Preschool","Dropout",edu)
     edu = gsub("^10th","Dropout",edu)
     edu = gsub("^11th","Dropout",edu)
     edu = gsub("^12th","Dropout",edu)
@@ -108,11 +109,11 @@ adult.education <- function(edu) {
     edu = gsub("^Assoc-voc","Associates",edu)
     edu = gsub("^Bachelors","Bachelors",edu)
     edu = gsub("^Doctorate","Doctorate",edu)
-    edu = gsub("^HS-Grad","HS-Graduate",edu)
+    edu = gsub("^HS-grad","HS-Graduate",edu)
     edu = gsub("^Masters","Masters",edu)
-    edu = gsub("^Preschool","Dropout",edu)
     edu = gsub("^Prof-school","Prof-School",edu)
     edu = gsub("^Some-college","HS-Graduate",edu)
+    
     edu <- ordered(as.factor(edu), 
                       levels = c("Dropout", "HS-Graduate", 
                                  "Associates", "Bachelors",
