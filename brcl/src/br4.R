@@ -16,7 +16,6 @@ library(pROC)
 library(gbm)
 
 library(doMC)
-
 registerDoMC(cores = 4)
 
 options(useFancyQuotes = FALSE) 
@@ -31,10 +30,10 @@ if (any(colnames(ppl1) == ml0$outcomen)) {
     ppl1[[ ml0$outcomen ]] <- NULL
 }
 
-df <- as.data.frame(ppl1)
+df <- ppl1
 
 ## Partitioning
-## Because we are using GBM as a classifier mode, we have to use
+## Because we are use GBM in classificatioiin mode, we have to use
 ## the outcome as a separate list (no formula). ml0$outcomes contains
 ## the outcomes.
 
@@ -53,50 +52,47 @@ dim(trainDescr)
 prop.table(table(testClass))
 dim(testDescr)
 
-nzv <- nearZeroVar(trainDescr, saveMetrics = TRUE)
-stopifnot(all(!nzv$zeroVar) & all(!nzv$nzv))
-
 ## Grid
 
 fitControl <- trainControl(## 10-fold CV
     method = "repeatedcv",
-    number = 10,
+    number = 5,
     ## repeated ten times
-    repeats = 10,
-    allowParallel = FALSE,
+    repeats = 5,
     classProbs = TRUE)
 
-## Some trial and error to set interaction and trees.
+## Some trial and error
 
-gbmGrid <- expand.grid(interaction.depth = c(10, 2, 3),
-                       n.trees = (1:50)*50,
+gbmGrid <- expand.grid(interaction.depth = 
+                           c(1, 2, 3),
+                       n.trees = (1:20)*10,
                        shrinkage = 0.1,
-                       n.minobsinnode = 20 )
-nrow(gbmGrid)
+                       n.minobsinnode = 20)
 
 set.seed(seed.mine)
-gbmFit1 <- train(as.data.frame(trainDescr), trainClass,
+gbmFit1 <- train(trainDescr, trainClass,
                  method = "gbm",
                  trControl = fitControl,
                  ## This last option is actually one
                  ## for gbm() that passes through
                  tuneGrid = gbmGrid,
                  metric = "Kappa",
-                 savePredictions = TRUE,
-                 verbose = TRUE)
+                 verbose = FALSE)
 gbmFit1
 
 ## Training set
 
 trainPred <- predict(gbmFit1, trainDescr)
 postResample(trainPred, trainClass)
-confusionMatrix(trainPred, trainClass, positive = ml0$outcome0)
+confusionMatrix(trainPred, trainClass, positive = "yes")
 
 ## Test set
 
 testPred <- predict(gbmFit1, testDescr)
 postResample(testPred, testClass)
-confusionMatrix(testPred, testClass, positive = ml0$outcome0)
+confusionMatrix(testPred, testClass, positive = "yes")
+
+## Charts
 
 fit1 <- gbmFit1
 
@@ -120,11 +116,6 @@ densityplot(~test.df$true0, groups = test.df$Obs, auto.key = TRUE)
 plot.roc(test.roc)
 
 dev.off()
-
-
-
-
-
 
 
 
