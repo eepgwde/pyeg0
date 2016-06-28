@@ -88,5 +88,11 @@ adult.na1 <- which(apply(adult.na0, 1, all))
 
 ppl0 <- ppl0[ - adult.na1, ]
 
+adult.na1 <- which(apply(adult.na0, 1, function(x) { sum(as.integer(x)) >= 2 }))
+
+ppl0 <- ppl0[ - adult.na1, ]
+
 save(ppl0, file="ppl0.dat")
+
+
 

@@ -53,5 +53,9 @@ factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], a
 
 df0 <- factors.numeric(ppl)
 
+## Usually, one can impute a few values, but despite earlier efforts
+## The NA's are coming through
+
+# Function in a script: pass df0 and receive df1
 source("br3a.R")
 
