@@ -16,7 +16,7 @@ library(pROC)
 library(gbm)
 
 library(doMC)
-registerDoMC(cores = 4)
+registerDoMC(cores = detectCores(logical = FALSE))
 
 options(useFancyQuotes = FALSE) 
 
@@ -60,7 +60,7 @@ fitControl <- trainControl(## 10-fold CV
 ## Some trial and error
 
 gbmGrid <- expand.grid(interaction.depth = 
-                           c(1, 2, 3),
+                           c(1, 5, 9),
                        n.trees = (1:20)*10,
                        shrinkage = 0.1,
                        n.minobsinnode = 20)
@@ -73,6 +73,7 @@ gbmFit1 <- train(trainDescr, trainClass,
                  ## for gbm() that passes through
                  tuneGrid = gbmGrid,
                  metric = "Kappa",
+                 savePredictions = TRUE,
                  verbose = FALSE)
 gbmFit1
 
@@ -80,13 +81,13 @@ gbmFit1
 
 trainPred <- predict(gbmFit1, trainDescr)
 postResample(trainPred, trainClass)
-confusionMatrix(trainPred, trainClass, positive = "yes")
+confusionMatrix(trainPred, trainClass, positive = ml0$outcome0)
 
 ## Test set
 
 testPred <- predict(gbmFit1, testDescr)
 postResample(testPred, testClass)
-confusionMatrix(testPred, testClass, positive = "yes")
+confusionMatrix(testPred, testClass, positive = ml0$outcome0)
 
 
 

@@ -37,9 +37,10 @@ ml0 <- list()
 ml0$lastin <- tail(which(ppl0$in0), 1)
 
 ### Prescience: variables
-
+## Name of the variable, the values, the "true" value for a confusion matrix.
 ml0$outcomen <- "customer"
 ml0$outcomes <- ppl0[[ ml0$outcomen ]]
+ml0$outcome0 <- levels(ml0$outcomes)[-1]
 
 ml0$prescient <- c("income")
 ml0$ignore <- c("in0")
@@ -54,7 +55,7 @@ factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], a
 df0 <- factors.numeric(ppl)
 
 ## Imputing
-## 
+## This is a general script.
 
 # Function in a script: pass df0 and receive df1
 source("br3a.R")
