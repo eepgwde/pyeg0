@@ -52,18 +52,17 @@ dim(testDescr)
 
 fitControl <- trainControl(## 10-fold CV
     method = "repeatedcv",
-    number = 5,
+    number = 10,
     ## repeated ten times
-    repeats = 5,
+    repeats = 10,
     classProbs = TRUE)
 
-## Some trial and error
+## Some trial and error to set interaction and trees.
 
-gbmGrid <- expand.grid(interaction.depth = 
-                           c(1, 5, 9),
-                       n.trees = (1:20)*10,
-                       shrinkage = 0.1,
-                       n.minobsinnode = 20)
+gbmGrid <- expand.grid(interaction.depth = c(1, 2),
+                       n.trees = (1:20)*50,
+                       shrinkage = 0.2,
+                       n.minobsinnode = min(20, dim(trainDescr)[2])
 
 set.seed(seed.mine)
 gbmFit1 <- train(trainDescr, trainClass,
@@ -88,6 +87,29 @@ confusionMatrix(trainPred, trainClass, positive = ml0$outcome0)
 testPred <- predict(gbmFit1, testDescr)
 postResample(testPred, testClass)
 confusionMatrix(testPred, testClass, positive = ml0$outcome0)
+
+fit1 <- gbmFit1
+
+### Images
+
+jpeg(filename=paste(ml0$outcomen, "%03d.jpeg", sep=""), 
+     width=1024, height=768)
+
+modelImp <- varImp(fit1, scale = FALSE)
+plot(modelImp, top = min(dim(modelImp$importance)[1], 20) )
+
+## Get a density and a ROC
+
+x.p <- predict(fit1, testDescr, type = "prob")[2]
+
+test.df <- data.frame(true0=x.p[[ ml0$outcome0 ]], Obs=testClass)
+test.roc <- roc(Obs ~ true0, test.df)
+
+densityplot(~test.df$true0, groups = test.df$Obs, auto.key = TRUE)
+
+plot.roc(test.roc)
+
+dev.off()
 
 
 
