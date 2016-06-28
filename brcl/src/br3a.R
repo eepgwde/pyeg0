@@ -5,10 +5,12 @@
 ## This script is a sub-script and finds the Near-Zero Variance
 ## and highly correlated variables.
 
+library("ipred")
+
 ## Center, scale, remove any NA using nearest neighbours.
 ## PCA as "pca" is useful here.
 ml0.imputer <- preProcess(df0, verbose = FALSE, na.remove = TRUE, 
-                          method=c("knnImpute"))
+                          method=c("center", "scale", "bagImpute"))
 
 ## Apply the imputations.
 df1 <- predict(ml0.imputer, df0)

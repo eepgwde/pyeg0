@@ -21,7 +21,6 @@ ppl00 <- read.csv("../bak/CustomerData1.csv",
 
 sapply(ppl00, FUN=function(x) { sum(as.integer(is.na(x))) })
 
-
 ppl <- ppl00
 
 ## Re-assurance they are the same:
@@ -93,6 +92,12 @@ adult.na1 <- which(apply(adult.na0, 1, function(x) { sum(as.integer(x)) >= 2 }))
 ppl0 <- ppl0[ - adult.na1, ]
 
 save(ppl0, file="ppl0.dat")
+
+adult.na1 <- which(apply(adult.na0, 1, function(x) { sum(as.integer(x)) > 0 }))
+
+ppl0 <- ppl0[ - adult.na1, ]
+
+save(ppl0, file="ppl0na.dat")
 
 
 

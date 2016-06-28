@@ -16,7 +16,8 @@ library(pROC)
 library(gbm)
 
 library(doMC)
-registerDoMC(cores = detectCores(logical = FALSE))
+
+registerDoMC(cores = 4)
 
 options(useFancyQuotes = FALSE) 
 
@@ -26,10 +27,14 @@ set.seed(seed.mine)                     # helpful for testing
 load("ppl1.dat", envir=.GlobalEnv)
 ppl00 <- ppl1
 
-df <- ppl1
+if (any(colnames(ppl1) == ml0$outcomen)) {
+    ppl1[[ ml0$outcomen ]] <- NULL
+}
+
+df <- as.data.frame(ppl1)
 
 ## Partitioning
-## Because we are use GBM in classificatioiin mode, we have to use
+## Because we are using GBM as a classifier mode, we have to use
 ## the outcome as a separate list (no formula). ml0$outcomes contains
 ## the outcomes.
 
@@ -48,6 +53,9 @@ dim(trainDescr)
 prop.table(table(testClass))
 dim(testDescr)
 
+nzv <- nearZeroVar(trainDescr, saveMetrics = TRUE)
+stopifnot(all(!nzv$zeroVar) & all(!nzv$nzv))
+
 ## Grid
 
 fitControl <- trainControl(## 10-fold CV
@@ -55,17 +63,19 @@ fitControl <- trainControl(## 10-fold CV
     number = 10,
     ## repeated ten times
     repeats = 10,
+    allowParallel = FALSE,
     classProbs = TRUE)
 
 ## Some trial and error to set interaction and trees.
 
-gbmGrid <- expand.grid(interaction.depth = c(1, 2),
-                       n.trees = (1:20)*50,
-                       shrinkage = 0.2,
-                       n.minobsinnode = min(20, dim(trainDescr)[2])
+gbmGrid <- expand.grid(interaction.depth = c(10, 2, 3),
+                       n.trees = (1:50)*50,
+                       shrinkage = 0.1,
+                       n.minobsinnode = 20 )
+nrow(gbmGrid)
 
 set.seed(seed.mine)
-gbmFit1 <- train(trainDescr, trainClass,
+gbmFit1 <- train(as.data.frame(trainDescr), trainClass,
                  method = "gbm",
                  trControl = fitControl,
                  ## This last option is actually one
@@ -73,7 +83,7 @@ gbmFit1 <- train(trainDescr, trainClass,
                  tuneGrid = gbmGrid,
                  metric = "Kappa",
                  savePredictions = TRUE,
-                 verbose = FALSE)
+                 verbose = TRUE)
 gbmFit1
 
 ## Training set
