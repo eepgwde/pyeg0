@@ -53,8 +53,11 @@ printcp(fit)
 
 plotcp(fit)
 
+jpeg(filename=paste("tree", "%03d.jpeg", sep=""), 
+     width=1024, height=768)
+
 plot(fit, uniform = TRUE, main = "without income")
 text(fit, use.n = TRUE, all = TRUE, cex = .8)
 
-
+dev.off()
 
