@@ -29,6 +29,21 @@ colnames(inc) <- cnames
 
 levels(inc$Categories) <- gsub("_.+$", "", levels(inc$Categories))
 
+## Totals
+## Can show keying errors, we keep those.
+
+inc0 <- inc
+
+## Longitudinal shaping
+inc <- reshape(inc, direction="long", varying = 4:15, sep = "")
+
+ds <- list()
+
+ds$t <- inc[ inc$type0 == "t", ]
+
+ds$h <- inc[ inc$type0 == "h", ]
+
+# inc <- inc[-which(is.na(inc$decile)),]
 
 ## Re-classify the original, 
 adult0 <- adult.class0(AdultUCI)
@@ -80,6 +95,8 @@ inc0$in0 <- ! is.na(inc0$income)
 idxes <- saincy(colnames(inc0), function(x) { sum(as.integer(is.na(inc0[[ x ]]))) }, simplify="array", USE.NAMES=FALSE) > 0
 adult.na <- colnames(inc0)[idxes]
 adult.na <- adult.na[ adult.na != "income" ]
+
+
 
 saincy(adult.na, function(x) sum(as.integer(is.na(inc0[[ x ]]))))
 
