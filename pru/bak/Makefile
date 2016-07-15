@@ -10,5 +10,5 @@ hexp-065.csv0: IndonesiaData1.csv
 	tr -d \" < x.tmp > $@
 
 hexp-065.csv: hexp-065.csv0
-	awk -F, 'BEGIN { OFS=","; } NR == 1 { $$3="type0,decile"; print; next } $$3 ~ /_[ht]$$/ { tag0=$$3; gsub(/^.+_/, "", tag0); tag=$$3; gsub(/[^0-9]+/, "", tag); if (tag == 0) { tag="NA" }; $$3=tag0","tag; print }' $< > $@
+	awk -F, 'BEGIN { OFS=","; } NR == 1 { $$3="type0,decile"; print; next } $$3 ~ /_[ht]$$/ { tag0=$$3; gsub(/^.+_/, "", tag0); tag=$$3; gsub(/[^0-9]+/, "", tag); if (tag == 0) { tag="" }; $$3=tag0","tag; print }' $< > $@
 

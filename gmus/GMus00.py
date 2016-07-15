@@ -70,7 +70,8 @@ class GMus00(object):
         self.cfg = ConfigParser.ConfigParser()
         self.cfg.read(paths)
         self.api.login(self.cfg.get('credentials', 'username'),
-                       self.cfg.get('credentials', 'password'))
+                       self.cfg.get('credentials', 'password'),
+                       Mobileclient.FROM_MAC_ADDRESS)
         return
 
     ## Check if a path is a file and is non-zero.

@@ -35,13 +35,25 @@ levels(inc$Categories) <- gsub("_.+$", "", levels(inc$Categories))
 inc0 <- inc
 
 ## Longitudinal shaping
-inc <- reshape(inc, direction="long", varying = 4:15, sep = "")
+inc <- reshape(inc0, direction="long", varying = 4:15, sep = "")
 
 ds <- list()
 
-ds$t <- inc[ inc$type0 == "t", ]
-
+## Correct rounding error
 ds$h <- inc[ inc$type0 == "h", ]
+ds$h[is.na(ds$h$decile), "X"] <- ds$h[is.na(ds$h$decile), "X"] * 10
+inc.ds0(ds$h)
+
+## Correct miskey - only one in Clothing
+ds$t <- inc[ inc$type0 == "t", ]
+inc.ds0(ds$t)
+
+inc["10.2005", "X" ] <- inc["10.2005", "X"] + max(inc.ds0(ds$t))
+
+ds$t <- inc[ inc$type0 == "t", ]
+inc.ds0(ds$t)
+
+
 
 # inc <- inc[-which(is.na(inc$decile)),]
 

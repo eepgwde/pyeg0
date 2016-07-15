@@ -2,6 +2,24 @@
 
 Using the Gmusic API as a test project.
 
+* Overview
+
+This is a simple example of using the gmusapi. 
+
+* Pre-requisites
+
+To use you need to download gmusapi (or have a URL) see GMus00.py for those.
+Use pip(1) to install it.
+
+ pip install --user . 
+
+will install into ~/.local
+
+Debian packages needed to install are python-setuptools and python-pip.
+
+Then to run this code, you can use the standard Debian packages:
+python-peak.rules and python-requests.
+
 * Running
 
 Debugging is tricky because it is a test case. 
