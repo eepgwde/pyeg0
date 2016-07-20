@@ -59,13 +59,12 @@ if[any 1 <> value exec sum x2tp by type0,time from hexpt0; halt[]]
 
 // elasticities (of spending) will be the change in percentage from year to year
 
-
+update r1: (deltas x2tp) % x2tp by type0,Categories from `hexpt0;
+update r1:0f from `hexpt0 where r1 >= 1;
 
 .sch.t2csv[`hexpt0]
 
-/ 
 
-\
 
 /  Local Variables: 
 /  mode:q 
