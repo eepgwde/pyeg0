@@ -53,7 +53,8 @@ inc["10.2005", "X" ] <- inc["10.2005", "X"] + max(inc.ds0(ds$t))
 ds$t <- inc[ inc$type0 == "t", ]
 inc.ds0(ds$t)
 
+## Save as CSV and perform proportions and deltas
 
+ds <- rbind(ds$h, ds$t)
 
-
-
+write.csv(ds, file="hexp-065.csv1", na = "", row.names = FALSE)
