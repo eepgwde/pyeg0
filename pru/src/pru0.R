@@ -41,7 +41,7 @@ inc <- reshape(inc0, direction="long", varying = 4:15, sep = "")
 
 ds <- list()
 
-## Correct rounding error
+## Correct error in totals
 ds$h <- inc[ inc$type0 == "h", ]
 ds$h[is.na(ds$h$decile), "X"] <- ds$h[is.na(ds$h$decile), "X"] * 10
 inc.ds0(ds$h)

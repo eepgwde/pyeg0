@@ -3,8 +3,9 @@
 / q hexp065.load.q FILE
 / q hexp065.load.q
 / q hexp065.load.q -help
-FILE:LOADFILE:`$":hexp-065.csv1"
+FILE:LOADFILE:`$":hexp0-065.csv"
 o:.Q.opt .z.x;if[count .Q.x;FILE:hsym`${x[where"\\"=x]:"/";x}first .Q.x]
+
 if[`help in key o;-1"usage: q hexp065.load.q [FILE(default:hexp-065.csv1)] [-help] [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] [-exit]\n";exit 1]
 SAVEDB:`:csvdb
 SAVEPTN:`
