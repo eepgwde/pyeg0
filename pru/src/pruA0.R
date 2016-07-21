@@ -28,7 +28,7 @@ wdi.search1 <- function(tag) {
 ## Find all usable income statistics
 wdi.search0 <- function(tag, country=C('ID'), start0=2005, end0=2016) {
 
-    x0 <- WDIsearch('income')
+    x0 <- WDIsearch(tag)
     x1 <- data.frame(x0, stringsAsFactors = FALSE)
     x1$valid <- FALSE
 

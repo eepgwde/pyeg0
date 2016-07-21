@@ -64,3 +64,16 @@ write.csv(ds, file="hexp-065.csv1", na = "", row.names = FALSE)
 wdi <- list()
 
 wdi$income <- wdi.search0('income')
+
+wdi$gdp <- wdi.search0('gdp')
+
+wdi$exp <- wdi.search0('expenditure')
+
+wdi$price <- wdi.search0('price')
+
+wdi$gini <- wdi.search0('gini')
+
+wdi$popn <- wdi.search0('population')
+
+save(wdi, file="wdi.Rdata")
+
