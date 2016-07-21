@@ -42,6 +42,8 @@ wdi$gini <- wdi.search0('gini')
 
 wdi$popn <- wdi.search0('population')
 
+wdi$hh <- wdi.search0('household')
+
 ## This annotates the indicators and adds some counts
 
 wdi$income <- wdi.filter0(wdi$income)
@@ -51,6 +53,7 @@ wdi$exp <- wdi.filter0(wdi$exp)
 wdi$price <- wdi.filter0(wdi$price)
 wdi$gini <- wdi.filter0(wdi$gini)
 wdi$popn <- wdi.filter0(wdi$popn)
+wdi$hh <- wdi.filter0(wdi$hh)
 
 ## Archive to disk, check with a reload
 
@@ -62,5 +65,9 @@ rm(wdi)
 
 ## In another part of the system, use this to load the data.
 load(file="wdi.Rdata", .GlobalEnv)
+
+## See total expenditure and then per capita
+
+plot.ts(ts(data = wdi$hh$values[, c("NE.CON.PETC.KD", "NE.CON.PRVT.PC.KD") ]), plot.type=c("multiple"))
 
 names(wdi)
