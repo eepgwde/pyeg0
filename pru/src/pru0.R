@@ -58,3 +58,9 @@ inc.ds0(ds$t)
 ds <- rbind(ds$h, ds$t)
 
 write.csv(ds, file="hexp-065.csv1", na = "", row.names = FALSE)
+
+## Get WDI dataset
+
+wdi <- list()
+
+wdi$income <- wdi.search0('income')

@@ -8,7 +8,7 @@ wdi = list()
 
 wdi$gdp <- WDI(indicator="NY.GDP.MKTP.CD", country=c('ID', 'CN', 'JP'), start=2005, end=2016)
 
-WDIsearch('gdp')
+WDIsearch('income')
 
 wdi$tpop <- WDI(indicator="SP.POP.TOTL", country=c('ID'), start=2005, end=2016)
 wdi$upop <- WDI(indicator="SP.URB.TOTL.IN.ZS", country=c('ID'), start=2005, end=2016)
