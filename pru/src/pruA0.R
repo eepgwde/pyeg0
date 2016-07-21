@@ -57,3 +57,36 @@ wdi.search0 <- function(tag, country=C('ID'), start0=2005, end0=2016) {
     
     return(r1)
 }
+
+## Many of these figure are too sparse
+## Also we checked for 2016, so we expect one to be blank for all
+wdi.filter0 <- function(w0) {
+    x0 <- w0
+    i0 <- x0$indicators[ x0$indicators$valid, "indicator" ]
+
+    f0 <- function(x) {
+        return( sum( !is.na(x0$values[ x ] )))
+    }
+        
+    c0 <- sapply(i0, f0, simplify=TRUE, USE.NAMES = FALSE)
+
+    x0$indicators$n0 <- 0
+    x0$indicators[ x0$indicators$valid, "n0"] <-  c0
+
+    return(x0)
+}
+
+## Write the whole structure to different CSV files.
+wdi.csv <- function(w1) {
+    n0 <- names(w1)
+
+    f0 <- function(x) {
+        t0 <- w1[[ x ]]
+        t0 <- t0$indicators
+        write.csv(t0, file=paste(x, "csv", sep="."), na="", row.names=FALSE)
+        return(nrow(t0))
+    }
+    
+    r0 <- sapply(n0, f0)
+    return(r0)
+}

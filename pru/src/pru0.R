@@ -2,9 +2,9 @@
 ##
 ## Data simplification
 
-source("pruA0.R")
+## Preparation: save as CSV from XL, be sure to change number format to remove commas.
 
-## Preparation: save as CSV from XL
+rm(list = ls(pattern = "inc*"))
 
 inc00 <- read.csv("../bak/hexp-065.csv", 
                   stringsAsFactors=TRUE, strip.white=TRUE,
@@ -12,7 +12,9 @@ inc00 <- read.csv("../bak/hexp-065.csv",
 
 inc <- inc00
 
-## Column names
+## Simplify column names
+
+source("pruA0.R")
 
 ### Redundant and shorter
 
@@ -44,22 +46,30 @@ ds$h <- inc[ inc$type0 == "h", ]
 ds$h[is.na(ds$h$decile), "X"] <- ds$h[is.na(ds$h$decile), "X"] * 10
 inc.ds0(ds$h)
 
-## Correct miskey - only one in Clothing
-ds$t <- inc[ inc$type0 == "t", ]
-inc.ds0(ds$t)
-
-inc["10.2005", "X" ] <- inc["10.2005", "X"] + max(inc.ds0(ds$t))
+## Split off total expenditure
 
 ds$t <- inc[ inc$type0 == "t", ]
 inc.ds0(ds$t)
 
-## Save as CSV and perform proportions and deltas
+## Save as CSV with totals for q/kdb+ (this will perform proportions and deltas)
 
-ds <- rbind(ds$h, ds$t)
+ds0 <- rbind(data.frame(ds$h), data.frame(ds$t))
 
-write.csv(ds, file="hexp-065.csv1", na = "", row.names = FALSE)
+write.csv(ds0, file="hexp0-065.csv", na = "", row.names = FALSE)
 
-## Get WDI dataset
+## Save without totals for Excel Pivot charts.
+
+ds1 <- ds0[ !is.na(ds0$decile), ]
+ds1$id <- NULL
+
+write.csv(ds1, file="hexp1-065.csv", na = "", row.names = FALSE)
+
+## Get WDI datasets and put them into Excel.
+## Need about 20 useful ones.
+## "Useful" means don't need to impute too much.
+## Their 2016 numbers are probably estimates.
+## 'exp' contains the grand total we have in detail:
+## NE.CON.PETC.CD - household final at current US $
 
 wdi <- list()
 
@@ -75,5 +85,23 @@ wdi$gini <- wdi.search0('gini')
 
 wdi$popn <- wdi.search0('population')
 
+
+wdi$income <- wdi.filter0(wdi$income)
+
+wdi$gdp <- wdi.filter0(wdi$gdp)
+wdi$exp <- wdi.filter0(wdi$exp)
+wdi$price <- wdi.filter0(wdi$price)
+wdi$gini <- wdi.filter0(wdi$gini)
+wdi$popn <- wdi.filter0(wdi$popn)
+
+
 save(wdi, file="wdi.Rdata")
+
+wdi0 <- wdi
+
+rm(wdi)
+
+load(file="wdi.Rdata", .GlobalEnv)
+
+names(wdi)
 
