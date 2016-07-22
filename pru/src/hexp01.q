@@ -64,6 +64,35 @@ update r1:0f from `hexpt0 where r1 >= 1;
 
 .sch.t2csv[`hexpt0]
 
+/// Re-classify the deciles to top two and rest
+
+hexp2: (0!select cls:`upper, x0: sum x0 by Categories,type0,time from hexp1 where decile in (9h, 10h)),0!select cls:`lower, x0: sum x0 by Categories,type0,time from hexp1 where not decile in (9h, 10h)
+
+// Add the other metrics r0, x2tp and r1
+
+// Totals lookup table for x2tp
+
+hexp2t: select sum x0 by type0,time from hexp2
+
+// select x0, total: hexp2t[([]type0;time);`x0] by Categories,time,type0,cls from hexp2
+
+update x2tp: x0 % hexp2t[([]type0;time);`x0] by Categories,time,type0,cls from `hexp2;
+
+if[any 1 <> value exec sum x2tp by time,type0 from `hexp2; halt[]]
+
+`time`type0`Categories`cls xasc hexp2
+
+// And the deltas
+
+update r0: (deltas x0) % x0 by type0,Categories,cls from `hexp2;
+update r0:0f from `hexp2 where r0 >= 1;
+
+update r1: (deltas x2tp) % x2tp by type0,Categories,cls from `hexp2;
+update r1:0f from `hexp2 where r1 >= 1;
+
+`time`type0`Categories`cls xasc `hexp2
+
+.sch.t2csv[`hexp2]
 
 
 /  Local Variables: 
