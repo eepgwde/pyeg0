@@ -2,6 +2,41 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+## Try Gini and Lorentz
+
+x0 <- folios.in[ folios.in$type0 == "h" & folios.in$cls == "lower", ]
+
+x1 <- unstack(x0, x2tp ~ Categories)
+
+x2 <- ts(x1)
+
+sapply(1:nrow(x2), function(x) { return(ineq(x2[x,], type="Gini")) }, simplify=TRUE, USE.NAMES=FALSE)
+
+ineq(x2[1,], type="Gini")
+ineq(x2[2,], type="Gini")
+
+plot(Lc(x2[1,]))
+
+plot(Lc(x2[2,]))
+
+
+##
+
+View(WDI(indicator="NY.GDY.TOTL.KN", country=c('ID'), start=2005, end=2016))
+
+##
+
+r0 <- data.frame(year=2005:2016)
+
+r1 <- merge(r0, m1[[1]], all=TRUE)
+
+start0 <- 2005
+end0 <- 2016
+
+setdiff(colnames(r1), 
+
+##
+
 library(WDI)
 
 wdi = list()

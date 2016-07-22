@@ -1,5 +1,7 @@
 ## weaves
 
+library(ineq)
+
 ## Pru support methods.
 
 ## Total checker for the hexp-065.csv data.
@@ -90,3 +92,53 @@ wdi.csv <- function(w1) {
     r0 <- sapply(n0, f0)
     return(r0)
 }
+
+## Calculate some Gini
+## tbl <- folios.in[ folios.in$type0 == "h" & folios.in$cls == "lower", ]
+
+ts.gini0 <-  function(x1) {
+    x2 <- ts(x1)
+
+    v0 <- sapply(1:nrow(x2), 
+                 function(x) { return(ineq(x2[x,], type="Gini")) }, 
+                 simplify=TRUE, USE.NAMES=FALSE)
+
+    x1$gini <- v0
+    return(data.frame(x1))
+}
+
+## A Gini for each year for each category.
+## ds1 table only "h"
+ds.gini0 <- function(x0, c0="Alcoholic") {
+    x1 <- unstack(x0[ x0$Categories == c0, c("X", "decile", "time") ], X ~ decile)
+    x2 <- ts.gini0(x1)
+    x2 <- data.frame(gini=x2$gini, Categories=c0)
+    x2$Categories <- c0
+    x2$time <- unique(x0[ x0$Categories == c0, c("time")])
+    return(x2)
+}
+
+ds.gini1 <- function(y0) {
+    l0 <- lapply(levels(y0$Categories), function(x) { return(ds.gini0(y0, c0=x)) })
+
+    l1 <- l0[[1]]
+
+    lapply(2:length(l0), function(x) { l1 <<- rbind(l1, l0[[x]]) } )
+
+    l1$Categories <- factor(l1$Categories, levels(y0$Categories), labels = levels(y0$Categories))
+    
+    return(l1)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
