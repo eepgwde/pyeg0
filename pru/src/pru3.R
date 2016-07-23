@@ -27,6 +27,28 @@ set.seed(seed.mine)                     # helpful for testing
 
 load("folios-in.dat", envir=.GlobalEnv)
 
+## Predict a proportion of the total for each category.
+## Stash intermediate results in th.
+
+th <- list()
+
+x0 <- folios.in[ folios.in$type0 == "h", ]
+x0 <- unstack(x0, x2tp ~ Categories)
+
+## The last row is their prediction, we'll be using this to boost-by-hand
+## We store the last row in test and the rest in train.
+## Find the least volatile and begin with that.
+
+th$test <- x0[length(x0),]
+
+th$train <- x0[-nrow(x0),]
+
+th$sd <- stack(sapply(th$train,sd))
+th$sd <- th$sd[order(th$sd$values),]
+
+paste(c("train-order: ", as.character(th$sd$ind)), collapse = "-> ")
+
+
 
 
 ppl00 <- ppl0
