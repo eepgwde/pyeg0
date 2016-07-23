@@ -246,6 +246,51 @@ plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 x1 <- wdi.delta(wdi$demog, m0)
 plot.ts(wdi.deltas(x1), plot.type = "multiple")
 
+## Women in working population (not only until 2014)
+## comment: beware scaling! women are continuing to take more employment from men.
+## People still being employed.
 
+m0 <- c("SP.POP.TOTL", "SP.POP.TOTL.FE.ZS", "SL.EMP.TOTL.SP.FE.ZS", "SL.EMP.TOTL.SP.MA.ZS", "SL.EMP.TOTL.SP.ZS")
+plot.ts(wdi$popn$values[, m0], plot.type="multiple")
+
+x1 <- wdi.delta(wdi$popn, m0)
+plot.ts(wdi.deltas(x1), plot.type = "multiple")
+
+## Poverty
+## comment: beginning to increase after last bust
+
+m0 <- c("SI.POV.NAHC", "SI.POV.RUHC", "SI.POV.URHC")
+plot.ts(wdi$popn$values[, m0], plot.type="multiple")
+
+x1 <- wdi.delta(wdi$popn, m0)
+plot.ts(wdi.deltas(x1), plot.type = "multiple")
+
+## Employment by education
+## comment:
+
+## lower secondary is now YoY going down and flat at 0.0% growth
+
+## But secondary is now flat growth - peaked in 2012
+
+## upper secondary increasing, is now YoY plateau
+## More skilled people in workplace and more women than men.
+
+m0 <- c("SP.SEC.LTOT.FE.IN","SP.SEC.LTOT.IN","SP.SEC.LTOT.MA.IN")
+plot.ts(wdi$popn$values[, m0], plot.type="multiple")
+
+x1 <- wdi.delta(wdi$popn, m0)
+plot.ts(wdi.deltas(x1), plot.type = "multiple")
+
+m0 <- c("SP.SEC.TOTL.FE.IN","SP.SEC.TOTL.IN","SP.SEC.TOTL.MA.IN")
+plot.ts(wdi$popn$values[, m0], plot.type="multiple")
+
+x1 <- wdi.delta(wdi$popn, m0)
+plot.ts(wdi.deltas(x1), plot.type = "multiple")
+
+m0 <- c("SP.SEC.UTOT.FE.IN","SP.SEC.UTOT.IN","SP.SEC.UTOT.MA.IN")
+plot.ts(wdi$popn$values[, m0], plot.type="multiple")
+
+x1 <- wdi.delta(wdi$popn, m0)
+plot.ts(wdi.deltas(x1), plot.type = "multiple")
 
 dev.off()
