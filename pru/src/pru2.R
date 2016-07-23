@@ -84,9 +84,17 @@ par(new=TRUE)
 plot(p2)
 par(new=FALSE)
 
+## GDP and GDP per capita
 m0 <- c("NE.CON.PETC.KD", "NE.CON.PRVT.PC.KD")
-
 wdi.delta(wdi$hh, m0)
 
+
+## Population
+m0 <- c("SP.POP.TOTL", "SP.RUR.TOTL", "SP.URB.TOTL", "SL.TLF.ACTI.1524.ZS", "SL.TLF.ACTI.1524.FE.ZS", "SL.TLF.ACTI.1524.MA.ZS")
+x1 <- wdi.delta(wdi$popn, m0)
+
+dts <- colnames(x1)[grepl("^dt\\..*", colnames(x1))]
+
+x2 <- x1[, union("year", dts)]
 
 
