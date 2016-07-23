@@ -33,11 +33,14 @@ r1 <- merge(r0, m1[[1]], all=TRUE)
 start0 <- 2005
 end0 <- 2016
 
-setdiff(colnames(r1), 
-
-##
+## Working with WDI
 
 library(WDI)
+
+wdi$demog <- wdi.search0('(birth|death|life)')
+
+wdi$struc <- wdi.search0('quintile')
+
 
 wdi = list()
 

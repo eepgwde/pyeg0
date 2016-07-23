@@ -19,18 +19,30 @@ inc.ds0 <- function(df) {
 
 ## WDI delta
 
-wdi.delta <- function(tbl, m0) {
-    m0 <- "NE.CON.PRVT.PC.KD"
-    x0 <- tbl$values[, c("year", m0) ]
-
+## Make a time-series object
+wdi.ts <- function(x0) {
     ts0 <- ts(x0[, setdiff(colnames(x0), "year") ], 
               start=x0$year[1], 
               end=x0$year[length(x0$year)])
+    return(ts0)
+}
 
-    x0$dt <- as.numeric(ts0 / lag(ts0, -1) - 1)
+wdi.delta <- function(tbl, m0) {
+    x0 <- tbl$values[, union("year", m0) ]
+    dt <- wdi.ts(x0)
+    # This adds a prefix
+    dt <- dt / lag(dt, -1) - 1
+
+    lapply(colnames(dt), function(x) { x0[[ x ]] <<- c(NA, as.numeric(dt[,x])) })
+
     return(x0)
 }
 
+## Extract only the delta values and return as a time-series
+wdi.deltas <- function(df) {
+    dts <- colnames(df)[grepl("^dt\\..*", colnames(df))]
+    return(wdi.ts(df[, union("year", dts)]))
+}
 
 ## Find a usable income statistics
 wdi.search1 <- function(tag) {
@@ -93,7 +105,8 @@ wdi.filter0 <- function(w0) {
     return(x0)
 }
 
-## Write the whole structure to different CSV files.
+## Write the whole WDI indicators structure to a CSV file.
+## @param w1 is the top-level wdi structure.
 wdi.csv <- function(w1) {
     n0 <- names(w1)
 
