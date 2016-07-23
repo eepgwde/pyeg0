@@ -17,6 +17,21 @@ inc.ds0 <- function(df) {
     return(df01 - df11)
 }
 
+## WDI delta
+
+wdi.delta <- function(tbl, m0) {
+    m0 <- "NE.CON.PRVT.PC.KD"
+    x0 <- tbl$values[, c("year", m0) ]
+
+    ts0 <- ts(x0[, setdiff(colnames(x0), "year") ], 
+              start=x0$year[1], 
+              end=x0$year[length(x0$year)])
+
+    x0$dt <- as.numeric(ts0 / lag(ts0, -1) - 1)
+    return(x0)
+}
+
+
 ## Find a usable income statistics
 wdi.search1 <- function(tag) {
     y0 <- WDI(indicator=tag, country=c('ID'), start=2005, end=2016)
@@ -130,15 +145,40 @@ ds.gini1 <- function(y0) {
     return(l1)
 }
 
+library(grid)
+library(ggplot2)
 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
 
+  numPlots = length(plots)
 
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
 
+ if (numPlots==1) {
+    print(plots[[1]])
 
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
 
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
 
-
-
-
-
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
