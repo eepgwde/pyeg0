@@ -72,4 +72,3 @@ ggplot(data = x1, aes(x=time, y=r1)) +
 
 dev.off()
 
-## Macroeconomy: figures

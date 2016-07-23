@@ -2,6 +2,27 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### Prediction/Regression
+
+## Using totals values
+
+th <- list()
+
+x0 <- folios.in[ folios.in$type0 == "h", ]
+x0 <- unstack(x0, x2tp ~ Categories)
+
+th$test <- x0[length(x0),]
+
+th$train <- x0[-nrow(x0),]
+
+th$sd <- stack(sapply(th$train,sd))
+th$sd <- th$sd[order(th$sd$values),]
+
+## Order to train
+
+th$sd$ind
+
+
 ### GDP to expenditure: hoping for 60%
 
 ## There is no per-capita for PPP in CD
@@ -16,8 +37,7 @@ g0 <- as.ts.data.frame(gdp0)
 
 ts0 <- e0[, "NE.CON.PETC.KD" ] / g0[, "NY.GDP.MKTP.KD" ]
 
-
-data.frame.delta(as.ts.ts0)
+df0 <- data.frame.delta(as.data.frame.ts(ts0, name0="exp2gdp"))
 
 
 ## Try Gini and Lorentz
