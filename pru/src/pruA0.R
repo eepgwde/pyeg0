@@ -17,32 +17,59 @@ inc.ds0 <- function(df) {
     return(df01 - df11)
 }
 
-## WDI delta
+### Time-series and data-frame delta methods
 
-## Make a time-series object
-wdi.ts <- function(x0) {
-    ts0 <- ts(x0[, setdiff(colnames(x0), "year") ], 
+## Make a time-series object from a data-frame.
+as.ts.data.frame <- function(x0, time0="year") {
+    ts0 <- ts(x0[, setdiff(colnames(x0), time0) ], 
               start=x0$year[1], 
               end=x0$year[length(x0$year)])
     return(ts0)
 }
 
-wdi.delta <- function(tbl, m0) {
-    x0 <- tbl$values[, union("year", m0) ]
-    dt <- wdi.ts(x0)
+## Make a data-frame from a time-series object
+## 
+as.data.frame.ts <- function(ts0, time0="year", name0="metric0") {
+    invisible(require("zoo"))
+    d0 <- dim(coredata(ts0))
+    df <- NULL
+    if (is.null(d0)) {
+        df <- data.frame(name0=coredata(ts0))
+        colnames(df)[1] <- name0
+    } else {
+        df <- as.data.frame(coredata(ts0))
+    }
+    df[[ time0 ]] <- as.vector(time(ts0))
+    return(df)
+}
+
+## Delta a data frame's columns
+data.frame.delta <- function(tbl, m0=NULL, time0="year", metric0=NULL) {
+    if (is.null(m0)) {
+        m0 <- colnames(tbl)
+    }
+    x0 <- tbl[, union(time0, m0) ]
+    dt <- as.ts.data.frame(x0, time0=time0)
     # This adds a prefix
     dt <- dt / lag(dt, -1) - 1
-
-    lapply(colnames(dt), function(x) { x0[[ x ]] <<- c(NA, as.numeric(dt[,x])) })
+    if (is.null(colnames(dt))) {
+        metric0 <- setdiff(m0, time0)
+        x0[[ metric0 ]] <- c(NA, as.numeric(dt))
+    } else {
+        lapply(colnames(dt), function(x) { x0[[ x ]] <<- c(NA, as.numeric(dt[,x])) })
+    }
 
     return(x0)
 }
 
 ## Extract only the delta values and return as a time-series
-wdi.deltas <- function(df) {
-    dts <- colnames(df)[grepl("^dt\\..*", colnames(df))]
-    return(wdi.ts(df[, union("year", dts)]))
+## Only works with output of data.frame.delta use prefix0 otherwise.
+ts.data.frame.deltas <- function(df, time0="year", prefix0="^dt\\..*") {
+    dts <- colnames(df)[grepl(prefix0, colnames(df))]
+    return(as.ts.data.frame(df[, union(time0, dts)], time0=time0))
 }
+
+### WDI datasets
 
 ## Find a usable income statistics
 wdi.search1 <- function(tag) {

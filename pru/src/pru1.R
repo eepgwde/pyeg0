@@ -22,60 +22,65 @@ source('pruA0.R')
 ## 'exp' contains the grand total we have in detail:
 ## NE.CON.PETC.CD - household final at current US $
 
-wdi <- list()
+## This is FALSE because we now use the disk copy.
+## Run this block to re-create it.
+if (FALSE) {
 
-## This loads into big data-frames
+    wdi <- list()
 
-## wdi$groupname has these sub-names:
-## indicators: is those found in a data-frame with description and presence
-## values: for those indicators that have values, those values in a data-frame.
+    ## This loads into big data-frames
 
-wdi$income <- wdi.search0('income')
+    ## wdi$groupname has these sub-names:
+    ## indicators: is those found in a data-frame with description and presence
+    ## values: for those indicators that have values, those values in a data-frame.
 
-wdi$gdp <- wdi.search0('gdp')
+    wdi$income <- wdi.search0('income')
 
-wdi$exp <- wdi.search0('expenditure')
+    wdi$gdp <- wdi.search0('gdp')
 
-wdi$price <- wdi.search0('price')
+    wdi$exp <- wdi.search0('expenditure')
 
-wdi$gini <- wdi.search0('gini')
+    wdi$price <- wdi.search0('price')
 
-wdi$popn <- wdi.search0('population')
+    wdi$gini <- wdi.search0('gini')
 
-## This annotates the indicators and adds some counts
+    wdi$popn <- wdi.search0('population')
 
-wdi$income <- wdi.filter0(wdi$income)
+    ## This annotates the indicators and adds some counts
 
-wdi$gdp <- wdi.filter0(wdi$gdp)
-wdi$exp <- wdi.filter0(wdi$exp)
-wdi$price <- wdi.filter0(wdi$price)
-wdi$gini <- wdi.filter0(wdi$gini)
-wdi$popn <- wdi.filter0(wdi$popn)
+    wdi$income <- wdi.filter0(wdi$income)
 
-## Later additions
+    wdi$gdp <- wdi.filter0(wdi$gdp)
+    wdi$exp <- wdi.filter0(wdi$exp)
+    wdi$price <- wdi.filter0(wdi$price)
+    wdi$gini <- wdi.filter0(wdi$gini)
+    wdi$popn <- wdi.filter0(wdi$popn)
 
-wdi$hh <- wdi.search0('household')
+    ## Later additions
 
-wdi$hh <- wdi.filter0(wdi$hh)
+    wdi$hh <- wdi.search0('household')
 
-wdi$demog <- wdi.search0('(birth|death|life)')
+    wdi$hh <- wdi.filter0(wdi$hh)
 
-wdi$demog <- wdi.filter0(wdi$demog)
+    wdi$demog <- wdi.search0('(birth|death|life)')
 
-wdi$struc <- wdi.search0('quintile')
+    wdi$demog <- wdi.filter0(wdi$demog)
 
-wdi$struc <- wdi.filter0(wdi$struc)
+    wdi$struc <- wdi.search0('quintile')
 
-## Write to CSV for browsing
-wdi.csv(wdi)
+    wdi$struc <- wdi.filter0(wdi$struc)
 
-## Archive to disk, check with a reload
+    ## Write to CSV for browsing
+    wdi.csv(wdi)
 
-save(wdi, file="wdi.Rdata")
+    ## Archive to disk, check with a reload
 
-wdi0 <- wdi
+    save(wdi, file="wdi.Rdata")
 
-rm(wdi)
+    wdi0 <- wdi
+
+    rm(wdi)
+}
 
 ## In another part of the system, use this to load the data.
 load(file="wdi.Rdata", .GlobalEnv)
@@ -87,18 +92,17 @@ plot.ts(ts(data = wdi$hh$values[, c("NE.CON.PETC.KD", "NE.CON.PRVT.PC.KD") ]), p
 
 names(wdi)
 
-
 jpeg(width=1024, height=768, filename = "ind-%03d.jpeg")
 
 ## HFCE
+## comment: slow exponential, GDPpc unaffected by financial because
+## population growth increased to compensate.
+
 m0 <- c("NE.CON.PETC.CD", "NE.CON.PRVT.PP.CD")
 plot.ts(wdi$hh$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$hh, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
-
-## comment: slow exponential, GDPpc unaffected by financial because
-## population growth increased to compensate.
+x1 <- data.frame.delta(wdi$hh$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Income
 
@@ -106,16 +110,16 @@ plot.ts(wdi.deltas(x1), plot.type = "multiple")
 m0 <- c("BM.GSR.TOTL.CD","BX.GSR.TOTL.CD")
 plot.ts(wdi$income$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$income, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$income$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Income: payments (imports), net, receipts (exports)
 
 m0 <- c("BM.GSR.FCTY.CD","BN.GSR.FCTY.CD","BX.GSR.FCTY.CD")
 plot.ts(wdi$income$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$income, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$income$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## comment: exports starting to lag imports => manufacturing
 
@@ -134,24 +138,24 @@ plot.ts(wdi$income$values[, m0], plot.type="multiple")
 
 ## Income: delta: net, GDI, from abroad - local
 m0 <- c("NY.ADJ.NNTY.CD","NY.GDY.TOTL.KN","NY.GSR.NFCY.CN")
-x1 <- wdi.delta(wdi$income, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$income$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 ## comment: income from abroad spiked into GDI in 2011. Typhoon year?
 
 ## Merchandise: from G9 %, imports and exports
 m0 <- c("TM.VAL.MRCH.HI.ZS","TX.VAL.MRCH.HI.ZS")
 plot.ts(wdi$income$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$income, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$income$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 ## comment: export led recovery in 2013, crisis of 2008 saw large imports.
 
 ## Population: total, rural, urban, 15-24 year-olds entering work, total, female, male
 m0 <- c("SP.POP.TOTL", "SP.RUR.TOTL", "SP.URB.TOTL", "SL.TLF.ACTI.1524.ZS", "SL.TLF.ACTI.1524.FE.ZS", "SL.TLF.ACTI.1524.MA.ZS")
 plot.ts(wdi$popn$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$popn, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$popn$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## comment: move to the city, rural movement stopped after crisis.
 ## proportionally more young women in workplace. women replaced men during crisis.
@@ -162,9 +166,9 @@ m0 <- c("CPTOTSAXN","CPTOTSAXNZGY","FP.CPI.TOTL","FP.CPI.TOTL.ZG","FP.WPI.TOTL")
 plot.ts(wdi$price$values[, m0], plot.type="multiple")
 
 m0 <- c("CPTOTSAXN", "FP.WPI.TOTL")
-x1 <- wdi.delta(wdi$price, m0)
+x1 <- data.frame.delta(wdi$price$values, m0)
 
-plot.ts(wdi.deltas(x1), plot.type = "single")
+plot.ts(ts.data.frame.deltas(x1), plot.type = "single")
 
 ## comment: [CPI@2005 is shorter than CPI], WPI shows economy downturn in 2008
 
@@ -208,16 +212,16 @@ if (exists("demog.check")) {
 m0 <- c("SP.DYN.CBRT.IN","SP.DYN.CDRT.IN","SP.DYN.IMRT.IN")
 plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$demog, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$demog$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Life quality: AIDS, Tuberculosis
 ## comment: more people surviving, strange glitch in TB.
 m0 <- c("SH.DYN.AIDS.DH","SH.TBS.MORT")
 plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$demog, m0)
-plot.ts(wdi.deltas(x1), plot.type = "single")
+x1 <- data.frame.delta(wdi$demog$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "single")
 
 ## Life quality: infant/maternal mortality: under-5, neonatal,
 ## maternal: 1 in N risk, % risk, lifetime, per 100,000
@@ -225,16 +229,16 @@ plot.ts(wdi.deltas(x1), plot.type = "single")
 m0 <- c("SH.DYN.MORT","SH.DYN.NMRT","SH.MMR.DTHS","SH.MMR.RISK","SH.MMR.RISK.ZS","SH.STA.MMRT")
 plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$demog, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$demog$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Fertility
 ## comment: less children
 m0 <- c("SP.ADO.TFRT","SP.DYN.TFRT.IN")
 plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$demog, m0)
-plot.ts(wdi.deltas(x1), plot.type = "single")
+x1 <- data.frame.delta(wdi$demog$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "single")
 
 ## Life expectancy
 ## comment: all continuing to live longer; rates of improvement: men's
@@ -243,8 +247,8 @@ plot.ts(wdi.deltas(x1), plot.type = "single")
 m0 <- c("SP.DYN.LE00.FE.IN","SP.DYN.LE00.IN","SP.DYN.LE00.MA.IN")
 plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$demog, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$demog$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Women in working population (not only until 2014)
 ## comment: beware scaling! women are continuing to take more employment from men.
@@ -253,8 +257,8 @@ plot.ts(wdi.deltas(x1), plot.type = "multiple")
 m0 <- c("SP.POP.TOTL", "SP.POP.TOTL.FE.ZS", "SL.EMP.TOTL.SP.FE.ZS", "SL.EMP.TOTL.SP.MA.ZS", "SL.EMP.TOTL.SP.ZS")
 plot.ts(wdi$popn$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$popn, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$popn$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Poverty
 ## comment: beginning to increase after last bust
@@ -262,8 +266,8 @@ plot.ts(wdi.deltas(x1), plot.type = "multiple")
 m0 <- c("SI.POV.NAHC", "SI.POV.RUHC", "SI.POV.URHC")
 plot.ts(wdi$popn$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$popn, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$popn$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 ## Employment by education
 ## comment:
@@ -278,19 +282,28 @@ plot.ts(wdi.deltas(x1), plot.type = "multiple")
 m0 <- c("SP.SEC.LTOT.FE.IN","SP.SEC.LTOT.IN","SP.SEC.LTOT.MA.IN")
 plot.ts(wdi$popn$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$popn, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$popn$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 m0 <- c("SP.SEC.TOTL.FE.IN","SP.SEC.TOTL.IN","SP.SEC.TOTL.MA.IN")
 plot.ts(wdi$popn$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$popn, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$popn$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 m0 <- c("SP.SEC.UTOT.FE.IN","SP.SEC.UTOT.IN","SP.SEC.UTOT.MA.IN")
 plot.ts(wdi$popn$values[, m0], plot.type="multiple")
 
-x1 <- wdi.delta(wdi$popn, m0)
-plot.ts(wdi.deltas(x1), plot.type = "multiple")
+x1 <- data.frame.delta(wdi$popn$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
+
+## GDP: total, per capita, per capita PPP, savings %, GDP per capita employed (1990) 
+## comment: 
+
+m0 <- c("NY.GDP.MKTP.CD","NY.GDP.PCAP.CD","NY.GDP.PCAP.PP.CD","NY.GDS.TOTL.ZS", "SL.GDP.PCAP.EM.KD")
+plot.ts(wdi$gdp$values[, m0], plot.type="multiple")
+
+x1 <- data.frame.delta(wdi$gdp$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
 dev.off()

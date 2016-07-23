@@ -2,6 +2,24 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### GDP to expenditure: hoping for 60%
+
+## There is no per-capita for PPP in CD
+##  per-capita value "NE.CON.PRVT.PP.CD" would be best but it has wrong scale.
+m0 <- c("NE.CON.PETC.KD", "NE.CON.PRVT.PC.KD", "NE.CON.PETC.CD", "NE.CON.PRVT.PP.CD")
+exp0 <- wdi$exp$values[, union("year", m0) ]
+e0 <- as.ts.data.frame(exp0)
+
+m0 <- c("NY.GDP.MKTP.KD", "NY.GDP.MKTP.KD", "NY.GDP.MKTP.CD","NY.GDP.PCAP.PP.KD", "NY.GDP.PCAP.CD")
+gdp0 <- wdi$gdp$values[, union("year", m0) ]
+g0 <- as.ts.data.frame(gdp0)
+
+ts0 <- e0[, "NE.CON.PETC.KD" ] / g0[, "NY.GDP.MKTP.KD" ]
+
+
+data.frame.delta(as.ts.ts0)
+
+
 ## Try Gini and Lorentz
 
 x0 <- folios.in[ folios.in$type0 == "h" & folios.in$cls == "lower", ]
