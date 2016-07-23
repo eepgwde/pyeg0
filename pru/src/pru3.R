@@ -13,6 +13,7 @@ if (!is.null(dev.list())) {
 
 library(MASS)
 library(caret)
+library(fTrading)                       # for EWMA
 
 library(doMC)
 registerDoMC(cores = 4)
@@ -32,6 +33,8 @@ load("folios-in.dat", envir=.GlobalEnv)
 
 th <- list()
 
+## @note
+## It's difficult to choose between using the value or the proportion.
 x0 <- folios.in[ folios.in$type0 == "h", ]
 x0 <- unstack(x0, x2tp ~ Categories)
 
@@ -40,63 +43,58 @@ x0 <- unstack(x0, x2tp ~ Categories)
 ## Find the least volatile and begin with that.
 
 th$test <- x0[length(x0),]
-
 th$train <- x0[-nrow(x0),]
 
 th$sd <- stack(sapply(th$train,sd))
 th$sd <- th$sd[order(th$sd$values),]
+th$order0 <- as.character(th$sd$ind)
 
-paste(c("train-order: ", as.character(th$sd$ind)), collapse = "-> ")
+## Train with the whole set for this methodology
+th$train <- x0
 
+paste(c("train-order: ", th$order0), collapse = "-> ")
 
+df1 <- th$train
 
-
-ppl00 <- ppl0
-
-sapply(ppl00, FUN=function(x) { sum(as.integer(is.na(x))) })
-
-### My experiment control parameters will be ml0
-
+## Machine learning parameters
 ml0 <- list()
+ml0$window0 <- 5
+ml0$factor0 <- th$order0[1]
 
-### Sizing up
-## 
-ml0$lastin <- tail(which(ppl0$in0), 1)
+fitControl <- trainControl(## timeslicing
+    initialWindow = ml0$window0,
+    horizon = 1,
+    fixedWindow = FALSE,
+    method = "timeslice",
+    savePredictions = TRUE)
 
-### Prescience: variables
-## Name of the variable, the values, the "true" value for a confusion matrix.
-ml0$outcomen <- "customer"
-ml0$outcomes <- ppl0[[ ml0$outcomen ]]
-ml0$outcome0 <- levels(ml0$outcomes)[-1]
+## @note
+## Weightings: EWMA makes no difference
+x.samples <- nrow(df1)
 
-ml0$prescient <- c("income")
-ml0$ignore <- c("in0")
+x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.050, startup = 1)
+x.weights <- rev(x.ewma) / sum(x.ewma)
 
-x.removals <- union(ml0$prescient, ml0$ignore)
+## Or just
+## x.weights <- rep(1, x.samples)
 
-## we keep the outcome variable in to help the imputation.
+ml0$fmla <- as.formula(paste(ml0$factor0, "~ ."))
 
-ppl <- ppl0[,setdiff(colnames(ppl0), x.removals)]
+set.seed(seed.mine)
+modelFit1 <- train(ml0$fmla, data = df1,
+                   method = "pls",
+                   preProc = c("center", "scale"),
+                   weights = x.weights,
+                   trControl = fitControl)
+modelFit1
 
-factors.numeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)], as.integer))
+predict(modelFit1, df1)
 
-df0 <- factors.numeric(ppl)
+modelImp <- varImp(modelFit1, scale = FALSE)
+plot(modelImp, top = min(20, length(colnames(df1))))
 
-## Centering, scaling and imputing
+plot.ts(ts(data.frame(pred=predict(modelFit1, df1),obs=th$train[[ ml0$factor0 ]])), 
+        plot.type="multiple")
 
-## This uses a general script. It drops columns. The stop conditions
-## tests if we have accidentally dropped some rows.
 
-## This will add extra levels.
-
-sapply(ppl, function(x) sum(as.integer(is.na(x))))
-
-# Function in a script: pass df0 and receive df1
-source("br3a.R")
-
-stopifnot(dim(df0)[1] == dim(df1)[1])
-
-ppl1 <- df1
-
-save(ppl1, ml0, file="ppl1.dat")
 
