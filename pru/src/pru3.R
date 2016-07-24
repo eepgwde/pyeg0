@@ -61,23 +61,19 @@ if (exists("x.wdi")) {
     ## @note
     ## It doesn't help at all!
     m0 <- c("SP.ADO.TFRT","SP.DYN.TFRT.IN")
-    x1 <- data.frame.delta(wdi$demog$values, m0)
-    x1 <- na.locf(x1, fromLast=TRUE)    # fill back
-    x1 <- na.locf(x1)                   # fill forward
-    x1 <- as.data.frame.ts(ts.data.frame.deltas(x1))
+    x1 <- wdi.filled(wdi0=wdi$demog$values, metrics0=m0)
 
     stopifnot(nrow(x0) == nrow(x1))
-    x1$year <- NULL
+    x1$year <- NULL                     # I kept the year in for debugging.
 
     x0 <- cbind(x0, x1)                 # add the columns
 
-    ## The GDP data is nearly complete
+    ## The GDP data is nearly complete, we add an industry estimate
+    ## So different from the stable demographics.
     ## @todo
     ## I've had to add a second GDP metric to make my code work.
     m0 <- c("NY.GDP.PCAP.PP.CD","SL.GDP.PCAP.EM.KD")
-    x2 <- data.frame.delta(wdi$gdp$values, m0)
-    x2 <- na.locf(x2, fromLast=TRUE)
-    x2 <- as.data.frame.ts(ts.data.frame.deltas(x2))
+    x2 <- wdi.filled(wdi0=wdi$gdp$values, metrics0=m0)
 
     ## Use just one prediction from above 
     gdp <- gdp.predictions$gdp[1]
