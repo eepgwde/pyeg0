@@ -46,8 +46,11 @@ th <- list()
 ## @note
 ## Weirdly, we work on proportions and not exact values.
 ## The proportions may not be exact, but will scale them to be so.
+## There are 3 sample sets, try one
 
+x0 <- folios.in[ folios.in$type0 == "t", ]
 x0 <- folios.in[ folios.in$type0 == "h", ]
+x0 <- folios.in[ , ]
 
 ## you have to re-classify for unstack to work correctly.
 x0$Categories <- as.factor(as.character(x0$Categories)) 
