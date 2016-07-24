@@ -104,8 +104,8 @@ stopifnot(sum(th$test[1, th$classes]) == 1)
 
 ## We only predict the expenditure classes
 th$sd <- stack(sapply(th$train[, th$classes],sd))
-th$sd <- th$sd[order(th$sd$values),]    # least
 th$sd <- th$sd[order(-th$sd$values),]   # most volatile is first
+th$sd <- th$sd[order(th$sd$values),]    # least
 
 th$order0 <- as.character(th$sd$ind)
 
@@ -114,84 +114,19 @@ th$order0 <- as.character(th$sd$ind)
 
 paste(c("train-order: ", th$order0), collapse = "-> ")
 
-th$step <- 1
 df1 <- th$train
 
 ### Run: Iterate: from here
-th$step <- th$step + 1
+x.steps <- 4
 
-stopifnot(th$step <= length(th$classes))
+for (x.step in 1:x.steps) {
+    print(x.step)
+    for (x.folio in th$order0) {
+        print(x.folio)
+        source("pru3b.R")
+    }
 
-## Machine learning parameters
-## Some tuning needed to minimize
-ml0 <- list()
-ml0$window0 <- 6
-ml0$factor0 <- th$order0[th$step]
+    e0 <- sum(as.numeric(th$test0[, th$classes] - th$test[, th$classes ])^2)
+    print(paste("error: ", as.character(e0)))
+}
 
-fitControl <- trainControl(             # timeslicing
-    initialWindow = ml0$window0,
-    horizon = 1,
-    fixedWindow = TRUE,
-    method = "timeslice",
-    savePredictions = TRUE)
-
-## @note
-## Weightings: try EWMA
-x.samples <- nrow(df1)
-
-x.ewma <- EWMA(c(1, rep(0,x.samples-1)), lambda = 0.050, startup = 1)
-x.weights <- rev(x.ewma) / sum(x.ewma)
-
-## For the results accuracy, make the same weighting a bit longer.
-x.ewma <- EWMA(c(1, rep(0,x.samples)), lambda = 0.050, startup = 1)
-x.rweights <- rev(x.ewma) / sum(x.ewma)
-    
-## Or just
-## x.weights <- rep(1, x.samples)
-
-ml0$fmla <- as.formula(paste(ml0$factor0, "~ ."))
-
-set.seed(seed.mine)
-modelFit1 <- train(ml0$fmla, data = df1,
-                   method = "pls",
-                   preProc = c("center", "scale"),
-                   weights = x.weights,
-                   trControl = fitControl)
-modelFit1
-
-ml0$model0 <- modelFit1
-ml0$preds <- c(predict(modelFit1, df1), predict(modelFit1, th$test))
-
-ml0$modelImp <- varImp(modelFit1, scale = FALSE)
-
-jpeg(width=1024, height=768, filename = "totals-%03d.jpeg")
-
-plot(modelFit1)
-
-plot(ml0$modelImp, top = min(20, length(colnames(df1))))
-
-plot.ts(ts(data.frame(pred=predict(modelFit1, df1),obs=th$train[[ ml0$factor0 ]])), 
-        plot.type="multiple")
-
-dev.off()
-
-## Make up my own exponential accuracy metric and we hope to improve this by adding more
-## WDI data.
-
-r0 <- data.frame(pred=ml0$preds, obs = c(th$train[[ ml0$factor0 ]], th$test[[ ml0$factor0 ]]))
-
-ml0$var1 <- sum((r0$pred - r0$obs)^2 * x.rweights)
-ml0$var1
-
-## Now we have estimated one expenditure, we put it into the test sample
-## renormalize so we can then estimate the next expenditure.
-
-s0 <- tail(ml0$preds, 1)
-
-sum(th$test[, th$classes ])
-
-th$test[[ ml0$factor0 ]] <- s0
-th$test[1, th$classes ] <- th$test[1, th$classes] / sum(th$test[1, th$classes])
-
-th$step 
-ml0$factor0

@@ -1,11 +1,15 @@
 ### weaves
 ## Fitting
 
+if (!exists("x.folio")) {
+    x.folio <- head(th$order0, 1)
+}
+
 ## Machine learning parameters
 ## Some tuning needed to minimize
 ml0 <- list()
 ml0$window0 <- 6
-ml0$factor0 <- th$order0[th$step]
+ml0$factor0 <- x.folio
 
 fitControl <- trainControl(             # timeslicing
     initialWindow = ml0$window0,
@@ -34,7 +38,6 @@ set.seed(seed.mine)
 modelFit1 <- train(ml0$fmla, data = df1,
                    method = "pls",
                    preProc = c("center", "scale"),
-                   weights = x.weights,
                    trControl = fitControl)
 modelFit1
 
@@ -43,7 +46,10 @@ ml0$preds <- c(predict(modelFit1, df1), predict(modelFit1, th$test))
 
 ml0$modelImp <- varImp(modelFit1, scale = FALSE)
 
-jpeg(width=1024, height=768, filename = "totals-%03d.jpeg")
+spec.fname <- gsub("\\.", "-", ml0$factor0)
+spec.fname <- paste(spec.fname, "%03d.jpeg", sep="-")
+
+jpeg(width=1024, height=768, filename = spec.fname)
 
 plot(modelFit1)
 
@@ -72,5 +78,4 @@ sum(th$test[, th$classes ])
 th$test[[ ml0$factor0 ]] <- s0
 th$test[1, th$classes ] <- th$test[1, th$classes] / sum(th$test[1, th$classes])
 
-th$step 
 ml0$factor0
