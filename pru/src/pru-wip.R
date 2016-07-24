@@ -2,6 +2,43 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+
+
+## plsreg2 - see pru3d.R - no prediction
+
+library(plsdepot)
+
+rownames(x0) <- as.character(2005:2016)
+
+x1 <- x0[2:nrow(x0), th$classes]
+rownames(x1) <- as.character(as.integer(rownames(x1)) - 1)
+
+x2 <- x0[1:(nrow(x0)-1),]
+
+x3 <- cbind(x2, x1)
+
+right <- (ncol(x3) - length(th$classes) + 1):ncol(x3)
+
+left <- 1:(head(right, 1) - 1)
+
+p1 <- plsreg2(x3[, left], x3[, right], comps=2, crosval=FALSE)
+
+plot(p1)
+
+## Reset the training set every time.
+df1 <- th$train
+
+## Give the pruner a dataset with the target removed
+## Because it will scale()
+df0 <- df1[, setdiff(colnames(df1), x.folio)]
+source("pru3c.R")
+df1 <- df1[, union(x.folio, colnames(df0))]
+
+plsr(ml0$fmla, ncomp=9, data=df1, validation="LOO")
+
+source("pru3b.R")
+
+
 err.train <- list()
 
 df0 <- df1[, setdiff(colnames(df1), x.folio)]

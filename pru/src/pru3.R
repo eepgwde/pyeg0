@@ -18,6 +18,7 @@ library(MASS)
 library(caret)
 library(fTrading)                       # for EWMA
 library(zoo)
+library(pls)
 
 library(doMC)
 registerDoMC(cores = 4)
@@ -27,7 +28,6 @@ options(useFancyQuotes = FALSE)
 ### GDP predictions from industry analysts
 ## GDP annual growth rate for next two years (2016 to 2017), an ARIMA from tradingeconomics.com
 gdp.predictions <- data.frame(gdp=c(0.052, 0.053), year=c(2016, 2017))
-
 
 source("pruA0.R")
 
@@ -69,6 +69,8 @@ x.demog <- FALSE                        # and do not zero fill
 x.price <- FALSE                        # and do not zero fill
 x.fx <- FALSE                           # and do not zero fill
 
+x.plsreg2 <- TRUE                       # get the PLS chart.
+
 ## This is how to switch them off
 ## rm(x.wdi)
 ## rm(x.demog)
@@ -87,6 +89,10 @@ if (exists("x.wdi")) {
 
 th$test <- x0[nrow(x0),]
 th$train <- x0[-nrow(x0),]
+
+if (exists("x.plsreg2")) {
+    source("pru3d.R")
+}
 
 ## test: We can make it harder rather than use their forecasts, I can
 ## make th$test expenditures the max of the last few
@@ -114,14 +120,15 @@ th$order0 <- as.character(th$sd$ind)
 
 paste(c("train-order: ", th$order0), collapse = "-> ")
 
-
 ### Run: Iterate: from here
-x.steps <- 4
+x.steps <- 10
+
+th$cutoff <- .9
 
 for (x.step in 1:x.steps) {
-    print(x.step)
+    ## print(x.step)
     for (x.folio in th$order0) {
-        print(x.folio)
+        ## print(x.folio)
 
         ## Reset the training set every time.
         df1 <- th$train

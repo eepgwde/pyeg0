@@ -28,7 +28,7 @@ descrCorr <- cor(scale(df0))
 
 ## This cut-off should be under src.adjust control.
 ## There should be many of these. 
-highCorr <- findCorrelation(descrCorr, cutoff = 0.75, verbose = FALSE)
+highCorr <- findCorrelation(descrCorr, cutoff = th$cutoff, verbose = FALSE)
 
 colnames(df0)[highCorr]
 
@@ -37,7 +37,8 @@ descr.ncol0 <- ncol(df0)
 # And remove the very highly correlated.
 if (length(highCorr) > 0) {
     err.train$corrs <- colnames(df0)[highCorr]
-    warning("overfitting: correlations: err.trainDescr: ", paste(err.train$corrs, collapse = ", ") )
+    warning("overfitting: correlations: err.trainDescr: ", 
+            paste(x.folio, err.train$corrs, collapse = ", ") )
     df0 <- df0[,-highCorr]
 }
 
