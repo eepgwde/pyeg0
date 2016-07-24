@@ -86,6 +86,14 @@ if (exists("x.wdi")) {
         ## These are important.
         ## The data isn't very complete.
         m0 <- c("SP.POP.TOTL", "SP.POP.TOTL.FE.ZS", "SL.EMP.TOTL.SP.FE.ZS", "SL.EMP.TOTL.SP.MA.ZS", "SL.EMP.TOTL.SP.ZS")
+
+        ## @note
+        ## These might slow it down.
+        if (TRUE) {
+            m1 <- c("SP.RUR.TOTL", "SP.URB.TOTL", "SL.TLF.ACTI.1524.ZS", "SL.TLF.ACTI.1524.FE.ZS", "SL.TLF.ACTI.1524.MA.ZS")
+            m0 <- c(m0, m1)
+        }
+
         x1 <- wdi.filled(wdi0=wdi$popn$values, metrics0=m0, zero0=x.demog)
 
         stopifnot(nrow(x0) == nrow(x1))
@@ -107,33 +115,6 @@ if (exists("x.wdi")) {
         x1$year <- NULL                     # I kept the year in for debugging.
 
         x0 <- cbind(x0, x1)                 # add the columns
-    }
-
-    ## @note
-    ## The demographic data doesn't help much - might be better for deciles?
-    if (exists("x.price")) {
-
-        ## Some demographic data, added as deltas, this is relatively
-        ## stable and we can fill forward
-        ## @note
-        ## These are not so important.
-        m0 <- c("SP.ADO.TFRT","SP.DYN.TFRT.IN")
-        x1 <- wdi.filled(wdi0=wdi$demog$values, metrics0=m0, zero0=x.demog)
-
-        stopifnot(nrow(x0) == nrow(x1))
-        x1$year <- NULL                     # I kept the year in for debugging.
-
-        x0 <- cbind(x0, x1)                 # add the columns
-
-        ## Some more about male/female in population
-        ## This isn't very complete data, but does improve accuracy.
-        m0 <- c("SP.POP.TOTL", "SP.POP.TOTL.FE.ZS", "SL.EMP.TOTL.SP.FE.ZS", "SL.EMP.TOTL.SP.MA.ZS", "SL.EMP.TOTL.SP.ZS")
-        x1 <- wdi.filled(wdi0=wdi$popn$values, metrics0=m0, zero0=x.demog)
-
-        stopifnot(nrow(x0) == nrow(x1))
-        x1$year <- NULL                     
-
-        x0 <- cbind(x0, x1)
     }
 
     ## The GDP data is nearly complete, we add an industry estimate
@@ -182,13 +163,13 @@ df1 <- th$train
 
 ## Machine learning parameters
 ml0 <- list()
-ml0$window0 <- 5
+ml0$window0 <- 6
 ml0$factor0 <- th$order0[1]
 
 fitControl <- trainControl(## timeslicing
     initialWindow = ml0$window0,
     horizon = 1,
-    fixedWindow = FALSE,
+    fixedWindow = TRUE,
     method = "timeslice",
     savePredictions = TRUE)
 
