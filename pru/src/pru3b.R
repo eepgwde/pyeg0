@@ -14,7 +14,7 @@ ml0$factor0 <- x.folio
 fitControl <- trainControl(             # timeslicing
     initialWindow = ml0$window0,
     horizon = 1,
-    fixedWindow = TRUE,
+    fixedWindow = FALSE,
     method = "timeslice",
     savePredictions = TRUE)
 

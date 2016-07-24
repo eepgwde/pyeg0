@@ -114,7 +114,6 @@ th$order0 <- as.character(th$sd$ind)
 
 paste(c("train-order: ", th$order0), collapse = "-> ")
 
-df1 <- th$train
 
 ### Run: Iterate: from here
 x.steps <- 4
@@ -123,6 +122,16 @@ for (x.step in 1:x.steps) {
     print(x.step)
     for (x.folio in th$order0) {
         print(x.folio)
+
+        ## Reset the training set every time.
+        df1 <- th$train
+
+        ## Give the pruner a dataset with the target removed
+        ## Because it will scale()
+        df0 <- df1[, setdiff(colnames(df1), x.folio)]
+        source("pru3c.R")
+        df1 <- df1[, union(x.folio, colnames(df0))]
+        
         source("pru3b.R")
     }
 

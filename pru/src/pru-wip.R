@@ -2,6 +2,11 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+err.train <- list()
+
+df0 <- df1[, setdiff(colnames(df1), x.folio)]
+source("pru3c.R")
+
 ### Checking whether we can be free with initialization.
 
 ## They do still sum to one
@@ -386,3 +391,4 @@ x.lambda <- 0.60
 xin <- c(1,rep(1, 20))
 
 sprintf("%.5f", EWMA(xin, x.lambda, startup=1) )
+
