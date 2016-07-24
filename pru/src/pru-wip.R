@@ -41,6 +41,20 @@ n98 <- matrix(1:10 + 1, ncol=2)
 
 predict(pls1, newdata = I(n98))
 
+## Multiple output
+
+n96 <- matrix(1:10, ncol=2)
+frame2 <- data.frame(I(n96), I(n98))
+
+names(frame2)
+
+pls2 <- plsr(n96 ~ n98, data = frame2, scale = FALSE)
+pls2
+
+plot(RMSEP(pls2), legendpos="topright")
+
+n100 <- matrix(1:10 + 2, ncol=2)
+predict(pls2, newdata = I(n100))
 
 
 ## Partial least squares regression , fitted with the kernel algorithm.
