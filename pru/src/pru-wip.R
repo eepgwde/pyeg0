@@ -62,6 +62,7 @@ predict(pls2, newdata = I(n100))
 ## plsr(formula = gushVM ~ n96, data = frame1)
 
 
+
 ## vars
 
 library("vars")

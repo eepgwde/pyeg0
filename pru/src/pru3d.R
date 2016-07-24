@@ -57,3 +57,11 @@ plot(RMSEP(xpls), legendpos="topright")
 xin1 <- as.matrix(as.matrix(th$test))
 
 pred <- predict(xpls, newdata = I(xin1))
+
+## Take the last ncomps value
+t0 <- as.data.frame(pred[,,dim(pred)[3]])
+colnames(t0) <- "pred"
+
+t0 <- as.data.frame(t(as.matrix(t0)))
+
+sum((t0 - th$test0[, th$classes])^2)
