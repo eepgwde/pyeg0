@@ -2,6 +2,26 @@
 
 library(ineq)
 
+## pls - prediction slicing on ncomp
+
+## Given the output of a pls::predict() convert one slice into a data frame.
+as.data.frame.pls.pred <- function(pred0, i0=NULL, name0="pred") {
+    if (is.null(i0)) {
+        i0 <- dim(pred0)[3]             # the last
+    }
+    t0 <- as.data.frame(pred0[,,i0])
+    colnames(t0) <- name0
+
+    t0 <- as.data.frame(t(as.matrix(t0)))
+    return(t0)
+}
+
+## RMSE error ratio
+
+err.rmser <- function(obs0, true0) {
+    return( sqrt(mean((as.numeric(obs0) / as.numeric(true0) - 1)^2)) )
+}
+
 ## Pru support methods.
 
 ## Total checker for the hexp-065.csv data.

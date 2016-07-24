@@ -59,9 +59,12 @@ xin1 <- as.matrix(as.matrix(th$test))
 pred <- predict(xpls, newdata = I(xin1))
 
 ## Take the last ncomps value
-t0 <- as.data.frame(pred[,,dim(pred)[3]])
-colnames(t0) <- "pred"
+t0 <- sapply(1:dim(pred)[3], 
+             function(x) { return(as.data.frame.pls.pred(pred, i0=x)) })
 
-t0 <- as.data.frame(t(as.matrix(t0)))
+t0 <- as.data.frame(t0)
 
-sum((t0 - th$test0[, th$classes])^2)
+e0 <- sapply(t0, function(x) { return(err.rmser(x, th$test0[, th$classes])) })
+e1 <- as.integer(which(min(e0) == e0))
+
+print(sprintf("min-error: %5.2f%% ; ncomps: %d", 100 * as.numeric(e0[e1]), e1))
