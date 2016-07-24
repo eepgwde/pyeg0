@@ -148,6 +148,21 @@ wdi.csv <- function(w1) {
     return(r0)
 }
 
+## Add some stable WDI data for use within prediction.
+##
+## see pru3.R. We can safely add relatively stable demographic data.
+## @param wdi which WDI table to use
+wdi.filled <- function(wdi0=wdi$demog$values, metrics0=NULL) {
+    if (is.null(metrics0)) { return(NULL) }
+    
+    x2 <- data.frame.delta(wdi0, metrics0)
+    x2 <- na.locf(x2, fromLast=TRUE)
+    x2 <- as.data.frame.ts(ts.data.frame.deltas(x2))
+    x2 <- na.locf(x2)
+    
+    return(x2)
+}
+
 ## Calculate some Gini
 ## tbl <- folios.in[ folios.in$type0 == "h" & folios.in$cls == "lower", ]
 

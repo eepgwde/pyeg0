@@ -32,6 +32,10 @@ set.seed(seed.mine)                     # helpful for testing
 load("folios-in.dat", envir=.GlobalEnv) # the expenditures
 load("wdi.Rdata", envir=.GlobalEnv)     # the WDI data
 
+### GDP predictions from industry analysts
+## GDP annual growth rate for next two years (2016 to 2017), an ARIMA from tradingeconomics.com
+gdp.predictions <- c(0.052, 0.053)
+
 ## Predict a proportion of the total for each category.
 ## Stash intermediate results in th.
 
@@ -57,11 +61,11 @@ if (exists("x.wdi")) {
     x1 <- as.data.frame.ts(ts.data.frame.deltas(x1))
     x1 <- x1[, setdiff(colnames(x1), "year")]
 
-    ## Predictions: GDP annual growth rate, an ARIMA from tradingeconomics.com
-    gdp <- 0.05
+    ## Use just one prediction from above 
+    gdp <- 0.052
 
     x2 <- x1[nrow(x1)-1,]
-    f0 <- gdp/x2[1,1]
+    f0 <- gdp/x2[1,1]                   # just a scaling factor
     x2 <- f0 * x2
 
     x1[nrow(x1),] <- x2
