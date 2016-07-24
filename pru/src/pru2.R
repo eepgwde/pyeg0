@@ -54,7 +54,31 @@ save(folios.in, file="folios-ul.dat")
 
 ## We can just look at the household data.
 
-x0 <- folios.in[ folios.in$type0 == "h" & folios.in$cls == "upper", ]
+m0 <- "upper"
+t0 <- "h"
+
+x0 <- folios.in[ folios.in$type0 == t0 & folios.in$cls == m0, ]
+
+x1 <- unstack(x0, x2tp ~ Categories)
+colnames(x1) <- sapply(colnames(x1), function(x) paste(m0, x, sep="."), USE.NAMES=FALSE)
+
+left <- x1
+
+m0 <- "lower"
+x0 <- folios.in[ folios.in$type0 == t0 & folios.in$cls == m0, ]
+
+x1 <- unstack(x0, x2tp ~ Categories)
+colnames(x1) <- sapply(colnames(x1), function(x) paste(m0, x, sep="."), USE.NAMES=FALSE)
+
+right <- x1
+
+{
+    folios.in <- stack(cbind(left, right))
+    folios.in$type0 <- as.factor(t0)
+    colnames(folios.in) <- c("x2tp", "Categories", "type0")
+
+    save(folios.in, file="folios-ul2.dat")
+}
 
 plot.ts(unstack(x0, r1 ~ Categories)[, 1:6], plot.type = "single")
 
