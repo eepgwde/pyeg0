@@ -2,7 +2,57 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+gushVM <- 1:5
 
+n96 <- matrix(1:10, ncol=2)
+n96
+
+##      [,1] [,2]
+## [1,]    1    6
+## [2,]    2    7
+## [3,]    3    8
+## [4,]    4    9
+## [5,]    5   10
+
+frame1 <- data.frame(gushVM, I(n96))
+
+## frame1
+
+##   gushVM n96.1 n96.2
+## 1      1     1     6
+## 2      2     2     7
+## 3      3     3     8
+## 4      4     4     9
+## 5      5     5    10
+
+dim(frame1)
+# [1] 5 2
+
+names(frame1)
+# [1] "gushVM" "n96"   
+
+rm(n96)
+pls1 <- plsr(gushVM ~ n96, data = frame1)
+pls1
+
+## Partial least squares regression , fitted with the kernel algorithm.
+## Call:
+## plsr(formula = gushVM ~ n96, data = frame1)
+
+
+## vars
+
+library("vars")
+
+data("Canada")
+
+summary(Canada)
+
+plot(Canada, nc=2, xlab="")
+
+x1 <- x0
+x1$year <- as.integer(rownames(x0))
+x2 <- as.ts.data.frame(x1)
 
 ## plsreg2 - see pru3d.R - no prediction
 
