@@ -148,5 +148,7 @@ dev.off()
 
 r0 <- data.frame(pred=ml0$preds, obs = c(th$train[[ ml0$factor0 ]], th$test[[ ml0$factor0 ]]))
 
-ml0$d0 <- sum((r0$pred - r0$obs) * x.rweights)
-ml0$d0
+ml0$var1 <- sum((r0$pred - r0$obs)^2 * x.rweights)
+ml0$var1
+
+
