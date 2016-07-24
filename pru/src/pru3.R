@@ -34,7 +34,7 @@ load("wdi.Rdata", envir=.GlobalEnv)     # the WDI data
 
 ### GDP predictions from industry analysts
 ## GDP annual growth rate for next two years (2016 to 2017), an ARIMA from tradingeconomics.com
-gdp.predictions <- c(0.052, 0.053)
+gdp.predictions <- data.frame(gdp=c(0.052, 0.053), year=c(2016, 2017))
 
 ## Predict a proportion of the total for each category.
 ## Stash intermediate results in th.
@@ -54,25 +54,46 @@ x0 <- unstack(x0, x2tp ~ Categories)
 
 if (exists("x.wdi")) {
 
-    ## The GDP data is nearly complete, I'll just use the deltas and fill-back.
-    m0 <- c("NY.GDP.PCAP.PP.CD","SL.GDP.PCAP.EM.KD")
-    x1 <- data.frame.delta(wdi$gdp$values, m0)
-    x1 <- na.locf(x1, fromLast=TRUE)
+    ## I'll just use the deltas and fill-back.
+
+    ## Some demographic data, added as deltas, this is relatively
+    ## stable and we can fill forward
+    ## @note
+    ## It doesn't help at all!
+    m0 <- c("SP.ADO.TFRT","SP.DYN.TFRT.IN")
+    x1 <- data.frame.delta(wdi$demog$values, m0)
+    x1 <- na.locf(x1, fromLast=TRUE)    # fill back
+    x1 <- na.locf(x1)                   # fill forward
     x1 <- as.data.frame.ts(ts.data.frame.deltas(x1))
-    x1 <- x1[, setdiff(colnames(x1), "year")]
-
-    ## Use just one prediction from above 
-    gdp <- 0.052
-
-    x2 <- x1[nrow(x1)-1,]
-    f0 <- gdp/x2[1,1]                   # just a scaling factor
-    x2 <- f0 * x2
-
-    x1[nrow(x1),] <- x2
 
     stopifnot(nrow(x0) == nrow(x1))
+    x1$year <- NULL
 
-    x0 <- cbind(x0, x1)
+    x0 <- cbind(x0, x1)                 # add the columns
+
+    ## The GDP data is nearly complete
+    ## @todo
+    ## I've had to add a second GDP metric to make my code work.
+    m0 <- c("NY.GDP.PCAP.PP.CD","SL.GDP.PCAP.EM.KD")
+    x2 <- data.frame.delta(wdi$gdp$values, m0)
+    x2 <- na.locf(x2, fromLast=TRUE)
+    x2 <- as.data.frame.ts(ts.data.frame.deltas(x2))
+
+    ## Use just one prediction from above 
+    gdp <- gdp.predictions$gdp[1]
+
+    ## Copy a blank row, make a scaling factor and apply it
+    x3 <- x2[nrow(x2)-1,]
+    f0 <- gdp/x3[1,1]                   # just a scaling factor
+    x3 <- f0 * x3
+
+    x2[nrow(x2),] <- x3
+    x2 <- x2[, c(1,3)]                  # get rid of the superfluous column
+
+    stopifnot(nrow(x0) == nrow(x2))
+    x2$year <- NULL
+
+    x0 <- cbind(x0, x2)
 }
 
 ## The last row is their prediction, we'll be using this to boost-by-hand
