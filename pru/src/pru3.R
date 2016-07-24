@@ -55,11 +55,13 @@ x0 <- unstack(x0, x2tp ~ Categories)
 x.wdi <- TRUE
 x.demog <- FALSE                        # and do not zero fill
 x.price <- FALSE                        # and do not zero fill
+x.fx <- FALSE                           # and do not zero fill
 
 ## This is how to switch them off
 ## rm(x.wdi)
 ## rm(x.demog)
 ## rm(x.price)
+rm(x.fx)
 
 if (exists("x.wdi")) {
 
@@ -110,6 +112,18 @@ if (exists("x.wdi")) {
         m0 <- c("CPTOTSAXN", "FP.WPI.TOTL")
         x1 <- wdi.filled(wdi0=wdi$price$values, metrics0=m0, zero0=x.price)
         x1[((nrow(x1)-2):nrow(x1)),2] <- x1[((nrow(x1)-2):nrow(x1)),1] # short set kludge
+
+        stopifnot(nrow(x0) == nrow(x1))
+        x1$year <- NULL                     # I kept the year in for debugging.
+
+        x0 <- cbind(x0, x1)                 # add the columns
+    }
+
+    if (exists("x.fx")) {
+
+        ## CPI and Wholesale, wholesale is a very short set, so I've set it equal to CPI.
+        m0 <- c("DPANUSSPB", "PA.NUS.PPPC.RF")
+        x1 <- wdi.filled(wdi0=wdi$fx$values, metrics0=m0, zero0=x.price)
 
         stopifnot(nrow(x0) == nrow(x1))
         x1$year <- NULL                     # I kept the year in for debugging.

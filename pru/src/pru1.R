@@ -70,6 +70,10 @@ if (FALSE) {
 
     wdi$struc <- wdi.filter0(wdi$struc)
 
+    wdi$fx <- wdi.search0('exchange')
+
+    wdi$fx <- wdi.filter0(wdi$fx)
+
     ## Write to CSV for browsing
     wdi.csv(wdi)
 
