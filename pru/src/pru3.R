@@ -24,33 +24,36 @@ registerDoMC(cores = 4)
 
 options(useFancyQuotes = FALSE) 
 
-source("pruA0.R")
-
-seed.mine = 107
-set.seed(seed.mine)                     # helpful for testing
-
-load("wdi.Rdata", envir=.GlobalEnv)     # the WDI data
-
-load("folios-in.dat", envir=.GlobalEnv) # the expenditures totals
-
-load("folios-ul2.dat", envir=.GlobalEnv) # the expenditures classed see pru2.R
-
 ### GDP predictions from industry analysts
 ## GDP annual growth rate for next two years (2016 to 2017), an ARIMA from tradingeconomics.com
 gdp.predictions <- data.frame(gdp=c(0.052, 0.053), year=c(2016, 2017))
+
+
+source("pruA0.R")
+
+load("wdi.Rdata", envir=.GlobalEnv)     # the WDI data
+load("folios-in.dat", envir=.GlobalEnv) # the expenditures totals
+load("folios-ul2.dat", envir=.GlobalEnv) # the expenditures classed see pru2.R
+
+seed.mine = 107
+set.seed(seed.mine)                     # helpful for testing
 
 ## Predict a proportion of the total for each category.
 ## Stash intermediate results in th.
 
 th <- list()
 
-th$classes <- levels(folios.in$Categories)
-
 ## @note
 ## Weirdly, we work on proportions and not exact values.
 ## The proportions may not be exact, but will scale them to be so.
 
 x0 <- folios.in[ folios.in$type0 == "h", ]
+
+## you have to re-classify for unstack to work correctly.
+x0$Categories <- as.factor(as.character(x0$Categories)) 
+
+th$classes <- levels(x0$Categories)
+
 x0 <- unstack(x0, x2tp ~ Categories)
 
 ## Extend x0 with WDI data and demographics

@@ -2,6 +2,28 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### Unstacking for samples
+
+x0 <- folios.in[,]
+
+## you have to re-classify for unstack to work correctly.
+x0$Categories <- as.factor(as.character(x0$Categories)) 
+
+th$classes <- levels(x0$Categories)
+
+x0 <- unstack(x0, x2tp ~ Categories)
+
+
+x0 <- folios.in[ folios.in$type0 == "t", ]
+
+## you have to re-classify for unstack to work correctly.
+x0$Categories <- as.factor(as.character(x0$Categories)) 
+
+th$classes <- levels(x0$Categories)
+
+x0 <- unstack(x0, x2tp ~ Categories)
+
+
 ### Prefix strings
 
 m0 <- "upper"

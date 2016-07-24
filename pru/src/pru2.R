@@ -65,20 +65,45 @@ load("folios-ul.dat", .GlobalEnv)
 
 ## fortunately, lower and upper will be 1 and 2
 
-t0 <- levels(folios.in$cls)[1]
-v0 <- hexp.ustk(folios.in, type0=t0)
-t0 <- levels(folios.in$cls)[2]
-v1 <- hexp.ustk(folios.in, type0=t0)
+## Forming samples
 
-folios.in <- cbind(v0, v1)
+## This concatenates for us; ifelse() didn't work.
+x.cond0 <- function(x, y) {
+    if (is.null(x)) {
+        return(y)
+    }
+
+    return(rbind(x, y))
+}
+
+metric0 <- "x2tp"
+
+r0 <- NULL
+i0 <- 0
+
+i0 <- i0+1
+t0 <- levels(folios.in$type0)[i0]
+left <- hexp.ustk(folios.in, type0=t0)
+left1 <- stack(left)
+colnames(left1) <- c(metric0, "Categories")
+left1$type0 <- t0
+r0 <- x.cond0(r0, left1)
+
+i0 <- i0+1
+t0 <- levels(folios.in$type0)[i0]
+left <- hexp.ustk(folios.in, type0=t0)
+left1 <- stack(left)
+colnames(left1) <- c(metric0, "Categories")
+left1$type0 <- t0
+r0 <- x.cond0(r0, left1)
 
 {
-    folios.in <- stack(cbind(left, right))
-    folios.in$type0 <- as.factor(t0)
-    colnames(folios.in) <- c("x2tp", "Categories", "type0")
-
+    r0$type0 <- as.factor(r0$type0)
+    folios.in <- r0
     save(folios.in, file="folios-ul2.dat")
 }
+
+load("folios-ul2.dat", .GlobalEnv)
 
 plot.ts(unstack(x0, r1 ~ Categories)[, 1:6], plot.type = "single")
 
