@@ -47,12 +47,19 @@ set.seed(seed.mine)                     # helpful for testing
 
 th <- list()
 
+## I lost track of the date range somewhere along the line.
+## This is train 2015, test 2016
+th$years <- 2005:2016
+
 ## @note
-## Weirdly, we work on proportions and not exact values.
-## The proportions may not be exact, but will scale them to be so.
+## We work on proportions and not exact values.
+## The proportions may not be exact, but will scale them to be so - sum to one
 ## There are 3 sample sets, but either h or t is sufficient.
 ## x0 <- folios.in[ folios.in$type0 == "t", ]
 ## x0 <- folios.in[ , ]
+
+th$sum1 <- 1
+
 x0 <- folios.in[ folios.in$type0 == "h", ]
 
 ## you have to re-classify for unstack to work correctly.
@@ -61,6 +68,7 @@ x0$Categories <- as.factor(as.character(x0$Categories))
 th$classes <- levels(x0$Categories)
 
 x0 <- unstack(x0, x2tp ~ Categories)
+rownames(x0) <- th$years
 
 ## Extend x0 with WDI data and demographics
 
@@ -69,80 +77,36 @@ x.demog <- FALSE                        # and do not zero fill
 x.price <- FALSE                        # and do not zero fill
 x.fx <- FALSE                           # and do not zero fill
 
-x.plsreg2 <- TRUE                       # get the PLS chart.
-
 ## This is how to switch them off
 ## rm(x.wdi)
 ## rm(x.demog)
 ## rm(x.price)
 rm(x.fx)
 
+## This script puts the GDP figure in, so must be run.
 if (exists("x.wdi")) {
-    ## @todo
-    ## This could be function call now, but I won't be re-using it elsewhere.
     source("pru3a.R")
 }
 
-## The last row is their prediction, we'll be using this to boost-by-hand
-## We store the last row in test and the rest in train.
-## Find the least volatile and begin with that.
+## Currently only corroborating the last 2016 numbers from 2015
 
 th$test <- x0[nrow(x0),]
 th$train <- x0[-nrow(x0),]
+x0 <- NULL
+rm("x0")
 
-if (exists("x.plsreg2")) {
-    source("pru3d.R")
-}
+## test: we make our best guess of th$test expenditures
+## the max of the last few entries of the training set.
 
-## test: We can make it harder rather than use their forecasts, I can
-## make th$test expenditures the max of the last few
-## entries of the training set.
-
-th$test0 <- th$test                     # make a backup
+th$test0 <- th$test                     # make a backup that is true
 
 ## So take the min from the last 5 years
-## [Easy to understand, it should shift down if the GDP has gone up.]
 t1 <- sapply(th$train[ (nrow(th$train)-4):nrow(th$train), th$classes], min)
 ## renormalize and make it the test sample
 th$test[1, th$classes] <- t1/sum(t1)
 
-stopifnot(sum(th$test[1, th$classes]) == 1)
+t1 <- NULL
+rm("t1")
 
-## We only predict the expenditure classes
-th$sd <- stack(sapply(th$train[, th$classes],sd))
-th$sd <- th$sd[order(-th$sd$values),]   # most volatile is first
-th$sd <- th$sd[order(th$sd$values),]    # least
-
-th$order0 <- as.character(th$sd$ind)
-
-## Train with the whole set for testing.
-##  th$train <- x0
-
-paste(c("train-order: ", th$order0), collapse = "-> ")
-
-### Run: Iterate: from here
-x.steps <- 10
-
-th$cutoff <- .9
-
-for (x.step in 1:x.steps) {
-    ## print(x.step)
-    for (x.folio in th$order0) {
-        ## print(x.folio)
-
-        ## Reset the training set every time.
-        df1 <- th$train
-
-        ## Give the pruner a dataset with the target removed
-        ## Because it will scale()
-        df0 <- df1[, setdiff(colnames(df1), x.folio)]
-        source("pru3c.R")
-        df1 <- df1[, union(x.folio, colnames(df0))]
-        
-        source("pru3b.R")
-    }
-
-    e0 <- sum(as.numeric(th$test0[, th$classes] - th$test[, th$classes ])^2)
-    print(paste("error: ", as.character(e0)))
-}
+source("pru3d.R")
 
