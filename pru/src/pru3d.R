@@ -42,3 +42,18 @@ jpeg(width=1024, height=768, filename = "plsreg2-%03d.jpeg")
 plot(p1)
 
 dev.off()
+
+
+xin <- as.matrix(x3[, left])
+yout <- as.matrix(x3[, right])
+
+xdf <- data.frame(I(yout), I(xin))
+
+xpls <- plsr(yout ~ xin, data = xdf, scale = FALSE)
+xpls
+
+plot(RMSEP(xpls), legendpos="topright")
+
+xin1 <- as.matrix(as.matrix(th$test))
+
+pred <- predict(xpls, newdata = I(xin1))
