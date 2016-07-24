@@ -4,6 +4,27 @@
 
 ### Prefix strings
 
+m0 <- "upper"
+t0 <- "h"
+
+x0 <- folios.in[ folios.in$type0 == t0 & folios.in$cls == m0, ]
+
+x1 <- unstack(x0, x2tp ~ Categories)
+colnames(x1) <- sapply(colnames(x1), function(x) paste(m0, x, sep="."), USE.NAMES=FALSE)
+
+left <- x1
+
+m0 <- "lower"
+x0 <- folios.in[ folios.in$type0 == t0 & folios.in$cls == m0, ]
+
+x1 <- unstack(x0, x2tp ~ Categories)
+colnames(x1) <- sapply(colnames(x1), function(x) paste(m0, x, sep="."), USE.NAMES=FALSE)
+
+right <- x1
+
+v0 <- lapply(levels(folios.in$cls), 
+             function(cls0) { return(hexp.ustk1(folios.in, cls0=cls0, type0=t0)) })
+
 sapply(colnames(x1), function(x) paste("upper", x, sep="."), USE.NAMES=FALSE)
 
 ### Prediction/Regression

@@ -52,25 +52,25 @@ folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
 
 save(folios.in, file="folios-ul.dat")
 
+rm("folios.in")
+
+load("folios-ul.dat", .GlobalEnv)
+
 ## We can just look at the household data.
+##
+## @todo
+##
+## When I do this for deciles, I will need to change "decile" to "cls"
+## and make it a factor.
 
-m0 <- "upper"
-t0 <- "h"
+## fortunately, lower and upper will be 1 and 2
 
-x0 <- folios.in[ folios.in$type0 == t0 & folios.in$cls == m0, ]
+t0 <- levels(folios.in$cls)[1]
+v0 <- hexp.ustk(folios.in, type0=t0)
+t0 <- levels(folios.in$cls)[2]
+v1 <- hexp.ustk(folios.in, type0=t0)
 
-x1 <- unstack(x0, x2tp ~ Categories)
-colnames(x1) <- sapply(colnames(x1), function(x) paste(m0, x, sep="."), USE.NAMES=FALSE)
-
-left <- x1
-
-m0 <- "lower"
-x0 <- folios.in[ folios.in$type0 == t0 & folios.in$cls == m0, ]
-
-x1 <- unstack(x0, x2tp ~ Categories)
-colnames(x1) <- sapply(colnames(x1), function(x) paste(m0, x, sep="."), USE.NAMES=FALSE)
-
-right <- x1
+folios.in <- cbind(v0, v1)
 
 {
     folios.in <- stack(cbind(left, right))
