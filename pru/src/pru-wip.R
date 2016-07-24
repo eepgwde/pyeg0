@@ -2,6 +2,8 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+## plsr from pls how to use multi-variate input and output. 
+
 gushVM <- 1:5
 
 n96 <- matrix(1:10, ncol=2)

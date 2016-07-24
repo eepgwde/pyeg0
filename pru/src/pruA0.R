@@ -5,9 +5,12 @@ library(ineq)
 ## pls - prediction slicing on ncomp
 
 ## Given the output of a pls::predict() convert one slice into a data frame.
-as.data.frame.pls.pred <- function(pred0, i0=NULL, name0="pred") {
+as.data.frame.pls.pred <- function(pred0, i0=NULL, name0=NULL) {
     if (is.null(i0)) {
         i0 <- dim(pred0)[3]             # the last
+    }
+    if (is.null(name0)) {
+        name0 <- as.character(i0)
     }
     t0 <- as.data.frame(pred0[,,i0])
     colnames(t0) <- name0

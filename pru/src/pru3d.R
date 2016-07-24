@@ -1,38 +1,53 @@
 ### weaves
 ## 
 ## Partial Least Squares - multi-variate input and output
-## Fast, accurate and stable.
-
-require(plsdepot)
-require(pls)
-require(parallel)
-
-## This is some quite inventive data modelling. We use a data.frame() with duplicate column
-## names to represent the Predictors and Responses for a multi-variate output PLS system.
-## It doesn't do any predicting, but it's okay.
+## Fast, accurate and stable unlike Vector Auto-Regressive Models - arima() and others.
 ## 
-## The idea is a state-machine. We column join x0 (the unstacked data-frame) with itself lagged.
 
-## Predictors: add some rownames.
+require(pls)                            # This is for fitting
+require(plsdepot)                       # This has a very good chart.
+require(parallel)                       # This speeds up cross-validation.
 
-x0 <- th$train
+## This is some quite inventive data modelling. We use a data.frame()
+## with duplicate column names to represent the Predictors and
+## Responses for a multi-variate output PLS system.  This is for the
+## plsdepot chart, but it is re-used to produce the fitting predictors
+## and responses. 
+## 
+## The idea is the same as finite state-machine, ie.
+##
+## next-state <- fsm(current-state); then
+## current-state <- next-state.
+##
+## For the training the Responses (on the Right) are the lead of the Predictors (on the left).
+## 
+## The Predictors are therefore last year's Responses together with GDP and demographics.
+##
+## plsdepot uses this a single data-frame for both.
 
-## Responses: take all the years after the first and only take the expenditure classes.
-## Decrement the rownames (you don't use them, but they help if you get lost.)
+## predictors
+prdrs <- th$train
 
-x1 <- x0[2:nrow(x0), th$classes]
+## responses: take all the years after the first and only take the expenditure classes.
+resps <- prdrs[2:nrow(prdrs), th$classes]
 
+## Now remove the last year from the predictors
+prdrs <- prdrs[-nrow(prdrs),]
+
+## predictors to responses
 ## Bind by column - allows duplicate columns.
-x3 <- cbind(x2, x1)
+p2r <- cbind(prdrs, resps)
+
+## Remember which columns belong to what
 
 ## Responses are on the Right
-right <- (ncol(x3) - length(th$classes) + 1):ncol(x3)
+right <- (ncol(p2r) - length(th$classes) + 1):ncol(p2r)
 
 ## Predictors are on the left.
 left <- 1:(head(right, 1) - 1)
 
 ## Invoke plsreg2
-p1 <- plsreg2(x3[, left], x3[, right], comps=2, crosval=FALSE)
+p1 <- plsreg2(p2r[, left], p2r[, right], comps=2, crosval=FALSE)
 
 ## Plot the circle of correlations.
 jpeg(width=1024, height=768, filename = "plsreg2-%03d.jpeg")
@@ -41,27 +56,29 @@ plot(p1)
 
 dev.off()
 
+## @note plsreg2 cannot predict, so we use the pls package and the
+## same data structure is re-used.
+
+prdrs1 <- as.matrix(p2r[, left])           # ie. with GDP and other WDI
+resps1 <- as.matrix(p2r[, right])          # only the expenditures, but from next year
+
 ## @note
-## plsreg2 cannot predict, so we use the pls package and the same data structure.
+##
+## The use of the protect I() operator, it loads the whole matrix as
+## one entity into the data frame
 
-xin <- as.matrix(x3[, left])            # ie. with GDP and other WDI
-yout <- as.matrix(x3[, right])          # only the expenditures, but from next year
-
-## Note the use of the protect I() operator, it loads the whole matrix
-## as one entity into the data frame
-
-xdf <- data.frame(I(yout), I(xin))
+p2r1 <- data.frame(I(resps1), I(prdrs1))
 
 ## Parallel
 pls.options(parallel = 4)               # use mclapply
 
 ## Then ask it to apply a formula
-xpls <- plsr(yout ~ xin, data = xdf, scale = FALSE, validation = "CV")
-xpls
+x.pls <- plsr(resps1 ~ prdrs1, data = p2r1, scale = FALSE, validation = "CV")
+x.pls
 
 jpeg(width=1024, height=768, filename = "pls-%03d.jpeg")
 
-plot(RMSEP(xpls), legendpos="topright")
+plot(RMSEP(x.pls), legendpos="topright")
 
 ## @todo
 ## Variable importance
@@ -69,23 +86,23 @@ plot(RMSEP(xpls), legendpos="topright")
 dev.off()
 
 ## Predict
-## Take the test data-set - our best guess for 2016
+## Take the test data-set. The 2015 consumption are used with the demographics
+## to produce 2016.
 
-xin1 <- as.matrix(th$test)
+prdrs2 <- as.matrix(th$test)
 
 ## Note again the use of the protect operator I()
-pred <- predict(xpls, newdata = I(xin1))
+pred <- predict(x.pls, newdata = I(prdrs2))
 
+## More data presentation work.
 ## Go through the ncomps predictions
-t0 <- sapply(1:dim(pred)[3], 
+preds <- lapply(1:dim(pred)[3], 
              function(x) { return(as.data.frame.pls.pred(pred, i0=x)) })
 
-t0 <- as.data.frame(t0)
+th$preds <- preds[[1]]
 
-## Find the one with the least error relative to their predictions
+lapply(2:length(preds), function(x) { th$preds <<- rbind(th$preds, preds[[x]]) })
 
-e0 <- sapply(t0, function(x) { return(err.rmser(x, th$test0[, th$classes])) })
-e1 <- as.integer(which(min(e0) == e0))
+preds <- NULL
+rm("preds")
 
-fmt0 <- "Min Root Mean Square Ratio: %5.2f%% ; ncomps: %d"
-print(sprintf(fmt0, 100 * as.numeric(e0[e1]), e1))
