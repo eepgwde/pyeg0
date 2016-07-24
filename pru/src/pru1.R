@@ -310,4 +310,12 @@ plot.ts(wdi$gdp$values[, m0], plot.type="multiple")
 x1 <- data.frame.delta(wdi$gdp$values, m0)
 plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
+m0 <- c("DPANUSSPB", "PA.NUS.PPPC.RF")
+plot.ts(wdi$fx$values[, m0], plot.type="multiple")
+
+x1 <- data.frame.delta(wdi$fx$values, m0)
+plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
+
+
+
 dev.off()

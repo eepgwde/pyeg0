@@ -29,8 +29,10 @@ source("pruA0.R")
 seed.mine = 107
 set.seed(seed.mine)                     # helpful for testing
 
-load("folios-in.dat", envir=.GlobalEnv) # the expenditures
 load("wdi.Rdata", envir=.GlobalEnv)     # the WDI data
+
+load("folios-in.dat", envir=.GlobalEnv) # the expenditures totals
+load("folios-ul2.dat", envir=.GlobalEnv) # the expenditures classed
 
 ### GDP predictions from industry analysts
 ## GDP annual growth rate for next two years (2016 to 2017), an ARIMA from tradingeconomics.com
