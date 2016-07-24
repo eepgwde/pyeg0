@@ -172,6 +172,21 @@ wdi.filled <- function(wdi0=wdi$demog$values, metrics0=NULL, zero0=FALSE) {
     return(x2)
 }
 
+## Unstacking to form samples
+##
+
+hexp.ustk <- function(folios, cls0=NULL, type0="h") {
+    if (is.null(cls0)) {
+        cls0 <- levels(folios$cls)[1]
+    } else if(is.integer(cls0)) {
+        cls0 <- levels(folios$cls)[cls0]
+    }
+
+    y0 <- folios[ folios$type0 == type0 & folios$cls == cls0,]
+    return(y0)
+}
+
+
 ## Calculate some Gini
 ## tbl <- folios.in[ folios.in$type0 == "h" & folios.in$cls == "lower", ]
 
