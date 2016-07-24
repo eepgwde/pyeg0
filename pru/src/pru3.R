@@ -38,19 +38,24 @@ load("folios-ul2.dat", envir=.GlobalEnv) # the expenditures classed see pru2.R
 seed.mine = 107
 set.seed(seed.mine)                     # helpful for testing
 
+## Set-up the learner's results holder: ml0
 ## Predict a proportion of the total for each category.
 ## Stash intermediate results in th.
+## @note
+## Run from here
 
+if (exists("ml0")) {
+    rm("ml0")
+}
 th <- list()
 
 ## @note
 ## Weirdly, we work on proportions and not exact values.
 ## The proportions may not be exact, but will scale them to be so.
-## There are 3 sample sets, try one
-
-x0 <- folios.in[ folios.in$type0 == "t", ]
+## There are 3 sample sets, but either h or t is sufficient.
+## x0 <- folios.in[ folios.in$type0 == "t", ]
+## x0 <- folios.in[ , ]
 x0 <- folios.in[ folios.in$type0 == "h", ]
-x0 <- folios.in[ , ]
 
 ## you have to re-classify for unstack to work correctly.
 x0$Categories <- as.factor(as.character(x0$Categories)) 
@@ -87,7 +92,7 @@ th$train <- x0[-nrow(x0),]
 
 ## We only predict the expenditure classes
 th$sd <- stack(sapply(th$train[, th$classes],sd))
-th$sd <- th$sd[order(th$sd$values),]
+th$sd <- th$sd[order(-th$sd$values),]
 
 th$order0 <- as.character(th$sd$ind)
 
@@ -99,11 +104,12 @@ paste(c("train-order: ", th$order0), collapse = "-> ")
 df1 <- th$train
 
 ## Machine learning parameters
+## Some tuning needed to minimize
 ml0 <- list()
 ml0$window0 <- 6
 ml0$factor0 <- th$order0[1]
 
-fitControl <- trainControl(## timeslicing
+fitControl <- trainControl(             # timeslicing
     initialWindow = ml0$window0,
     horizon = 1,
     fixedWindow = TRUE,
