@@ -113,17 +113,21 @@ rm("x0")
 ## The R package caret is a facade package. It is better organised but
 ## is broken for anything other than binary predictors.
 ##
-## It has some good diagrams explaining time-series. We are using a
-## full window with a horizon of one.
+## At its website, it has some good diagrams explaining
+## time-series. In that respect, we are using a full window with a
+## horizon of one.
 
 ## This runs the training and prediction and returns th$preds
 source("pru3d.R")
 
 ## th$preds is over all comparisons
+## These have to be renormalized - very small errors introduced
 ## Find the one with the least error relative to their predictions
 
-err.f0 <- function(x) { return(err.rmser(x, th$test0[, th$classes])) }
+renorm.f0 <- function(x) { return(x/sum(x)) }
+th$preds <- as.data.frame(t(apply(th$preds, 1, renorm.f0)))
 
+err.f0 <- function(x) { return(err.rmser(x, th$test0[, th$classes])) }
 e0 <- apply(th$preds, 1, err.f0)
 
 e1 <- as.integer(which(min(e0) == e0))
