@@ -175,7 +175,8 @@ wdi.filled <- function(wdi0=wdi$demog$values, metrics0=NULL, zero0=FALSE) {
 ## Unstacking to form samples
 ##
 
-hexp.ustk <- function(folios, cls0=NULL, type0="h") {
+hexp.ustk <- function(folios, cls0=NULL, type0="h", 
+                      left0="x2tp", right0="Categories") {
     if (is.null(cls0)) {
         cls0 <- levels(folios$cls)[1]
     } else if(is.integer(cls0)) {
@@ -183,7 +184,18 @@ hexp.ustk <- function(folios, cls0=NULL, type0="h") {
     }
 
     y0 <- folios[ folios$type0 == type0 & folios$cls == cls0,]
-    return(y0)
+
+    f0 <- as.formula(paste(left0, " ~ ", right0))
+    
+    y1 <- unstack(y0, f0)
+
+    i0 <- which(levels(folios$cls) == cls0)
+    
+    f1 <- function(c0) { return(sprintf("%s.%s.%02d", c0, type0, i0)) }
+
+    colnames(y1) <- sapply(colnames(y1), f1, USE.NAMES=FALSE)
+    
+    return(y1)
 }
 
 
