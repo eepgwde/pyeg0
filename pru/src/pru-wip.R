@@ -2,6 +2,20 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+### Checking whether we can be free with initialization.
+
+## They do still sum to one
+sum(th$train[nrow(th$train), th$classes])
+
+## So take the max from the last 5 years
+t1 <- sapply(th$train[ (nrow(th$train)-4):nrow(th$train), th$classes], max)
+## renormalize and make it the test sample
+th$test[1, th$classes] <- t1/sum(1)
+
+## Demonstrate only the expenditure deltas have changed
+colnames(th$test)[which((th$test - th$test0) != 0)]
+
+
 ### Unstacking for samples
 
 x0 <- folios.in[,]

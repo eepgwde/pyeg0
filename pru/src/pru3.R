@@ -42,11 +42,9 @@ set.seed(seed.mine)                     # helpful for testing
 ## Predict a proportion of the total for each category.
 ## Stash intermediate results in th.
 ## @note
-## Run from here
 
-if (exists("ml0")) {
-    rm("ml0")
-}
+### Run: Complete: from here
+
 th <- list()
 
 ## @note
@@ -90,10 +88,24 @@ if (exists("x.wdi")) {
 th$test <- x0[nrow(x0),]
 th$train <- x0[-nrow(x0),]
 
+## test: We can make it harder rather than use their forecasts, I can
+## make th$test expenditures the max of the last few
+## entries of the training set.
+
+th$test0 <- th$test                     # make a backup
+
+## So take the min from the last 5 years
+## [Easy to understand, it should shift down if the GDP has gone up.]
+t1 <- sapply(th$train[ (nrow(th$train)-4):nrow(th$train), th$classes], min)
+## renormalize and make it the test sample
+th$test[1, th$classes] <- t1/sum(t1)
+
+stopifnot(sum(th$test[1, th$classes]) == 1)
+
 ## We only predict the expenditure classes
 th$sd <- stack(sapply(th$train[, th$classes],sd))
-th$sd <- th$sd[order(-th$sd$values),]   # most volatile is first
 th$sd <- th$sd[order(th$sd$values),]    # least
+th$sd <- th$sd[order(-th$sd$values),]   # most volatile is first
 
 th$order0 <- as.character(th$sd$ind)
 
@@ -102,13 +114,19 @@ th$order0 <- as.character(th$sd$ind)
 
 paste(c("train-order: ", th$order0), collapse = "-> ")
 
+th$step <- 1
 df1 <- th$train
+
+### Run: Iterate: from here
+th$step <- th$step + 1
+
+stopifnot(th$step <= length(th$classes))
 
 ## Machine learning parameters
 ## Some tuning needed to minimize
 ml0 <- list()
 ml0$window0 <- 6
-ml0$factor0 <- th$order0[1]
+ml0$factor0 <- th$order0[th$step]
 
 fitControl <- trainControl(             # timeslicing
     initialWindow = ml0$window0,
@@ -165,4 +183,15 @@ r0 <- data.frame(pred=ml0$preds, obs = c(th$train[[ ml0$factor0 ]], th$test[[ ml
 ml0$var1 <- sum((r0$pred - r0$obs)^2 * x.rweights)
 ml0$var1
 
+## Now we have estimated one expenditure, we put it into the test sample
+## renormalize so we can then estimate the next expenditure.
 
+s0 <- tail(ml0$preds, 1)
+
+sum(th$test[, th$classes ])
+
+th$test[[ ml0$factor0 ]] <- s0
+th$test[1, th$classes ] <- th$test[1, th$classes] / sum(th$test[1, th$classes])
+
+th$step 
+ml0$factor0
