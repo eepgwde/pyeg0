@@ -32,8 +32,16 @@ names(frame1)
 # [1] "gushVM" "n96"   
 
 rm(n96)
-pls1 <- plsr(gushVM ~ n96, data = frame1)
+pls1 <- plsr(gushVM ~ n96, data = frame1, scale = FALSE)
 pls1
+
+plot(RMSEP(pls1), legendpos="topright")
+
+n98 <- matrix(1:10 + 1, ncol=2)
+
+predict(pls1, newdata = I(n98))
+
+
 
 ## Partial least squares regression , fitted with the kernel algorithm.
 ## Call:
