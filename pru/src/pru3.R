@@ -92,7 +92,8 @@ th$train <- x0[-nrow(x0),]
 
 ## We only predict the expenditure classes
 th$sd <- stack(sapply(th$train[, th$classes],sd))
-th$sd <- th$sd[order(-th$sd$values),]
+th$sd <- th$sd[order(-th$sd$values),]   # most volatile is first
+th$sd <- th$sd[order(th$sd$values),]    # least
 
 th$order0 <- as.character(th$sd$ind)
 
