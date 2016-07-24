@@ -50,23 +50,44 @@ th$classes <- levels(folios.in$Categories)
 x0 <- folios.in[ folios.in$type0 == "h", ]
 x0 <- unstack(x0, x2tp ~ Categories)
 
-## Extend x0 with WDI data.
+## Extend x0 with WDI data and demographics
+
+x.wdi <- TRUE
+x.demog <- FALSE                        # and do not zero fill
+
+## This is how to switch them off
+## rm(x.wdi)
+## rm(x.demog)
 
 if (exists("x.wdi")) {
 
     ## I'll just use the deltas and fill-back.
 
-    ## Some demographic data, added as deltas, this is relatively
-    ## stable and we can fill forward
     ## @note
-    ## It doesn't help at all!
-    m0 <- c("SP.ADO.TFRT","SP.DYN.TFRT.IN")
-    x1 <- wdi.filled(wdi0=wdi$demog$values, metrics0=m0)
+    ## The demographic data doesn't help much - might be better for deciles?
+    if (exists("x.demog")) {
+        ## Some demographic data, added as deltas, this is relatively
+        ## stable and we can fill forward
+        ## @note
+        ## It doesn't help at all!
+        m0 <- c("SP.ADO.TFRT","SP.DYN.TFRT.IN")
+        x1 <- wdi.filled(wdi0=wdi$demog$values, metrics0=m0, zero0=x.demog)
 
-    stopifnot(nrow(x0) == nrow(x1))
-    x1$year <- NULL                     # I kept the year in for debugging.
+        stopifnot(nrow(x0) == nrow(x1))
+        x1$year <- NULL                     # I kept the year in for debugging.
 
-    x0 <- cbind(x0, x1)                 # add the columns
+        x0 <- cbind(x0, x1)                 # add the columns
+
+        ## Some more about male/female in population
+        ## This isn't very complete
+        m0 <- c("SP.POP.TOTL", "SP.POP.TOTL.FE.ZS", "SL.EMP.TOTL.SP.FE.ZS", "SL.EMP.TOTL.SP.MA.ZS", "SL.EMP.TOTL.SP.ZS")
+        x1 <- wdi.filled(wdi0=wdi$popn$values, metrics0=m0, zero0=x.demog)
+
+        stopifnot(nrow(x0) == nrow(x1))
+        x1$year <- NULL                     
+
+        x0 <- cbind(x0, x1)
+    }
 
     ## The GDP data is nearly complete, we add an industry estimate
     ## So different from the stable demographics.

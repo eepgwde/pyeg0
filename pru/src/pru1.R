@@ -250,7 +250,7 @@ plot.ts(wdi$demog$values[, m0], plot.type="multiple")
 x1 <- data.frame.delta(wdi$demog$values, m0)
 plot.ts(ts.data.frame.deltas(x1), plot.type = "multiple")
 
-## Women in working population (not only until 2014)
+## Women in working population (note only until 2014)
 ## comment: beware scaling! women are continuing to take more employment from men.
 ## People still being employed.
 
