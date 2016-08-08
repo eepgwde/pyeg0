@@ -29,11 +29,11 @@ source("plot1.R")
 ### Write to local binary disk.
 
 ## Samples: various kdb loads
-kdb.url <- "http://m1:5000/q.csv?select from data0 where folio0 = `KF"
-kdb.url <- "http://m1:5000/q.csv?select from data0 where in0"
+kdb.url <- "http://localhost:5000/q.csv?select from data0 where folio0 = `KF"
+kdb.url <- "http://localhost:5000/q.csv?select from data0 where in0"
 
 ## Out-of-sample
-kdb.url <- "http://m1:5000/q.csv?select from data1 where not in0"
+kdb.url <- "http://localhost:5000/q.csv?select from data1 where not in0"
 
 kdb.url <- URLencode(kdb.url)
 folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
@@ -43,7 +43,7 @@ folios.out <- tbl.factorize(folios.in, null0=TRUE)
 save(folios.out, file="folios-out.dat")
 
 ## All-sample
-kdb.url <- "http://m1:5000/q.csv?select from data1"
+kdb.url <- "http://localhost:5000/q.csv?select from data1"
 
 kdb.url <- URLencode(kdb.url)
 folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)
@@ -53,7 +53,7 @@ folios.all <- tbl.factorize(folios.in, null0=TRUE)
 save(folios.all, file="folios-all.dat")
 
 ## In-sample
-kdb.url <- "http://m1:5000/q.csv?select from data1 where in0"
+kdb.url <- "http://localhost:5000/q.csv?select from data1 where in0"
 
 kdb.url <- URLencode(kdb.url)
 folios.in <- read.csv(kdb.url, header=TRUE, stringsAsFactors=TRUE)

@@ -36,7 +36,7 @@ source("plot1.R")
 
 load("folios-all.dat", envir=.GlobalEnv)
 
-folios <- as.character(unique(folios.all$folio0))
+folios <- levels(folios.all$folio0)
 
 ### My experiment control parameters will be ml0
 
