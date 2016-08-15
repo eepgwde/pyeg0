@@ -1,3 +1,6 @@
+drop table cmpl2;
+drop table trans;
+
 create table cmpl2 (
 party_id INT,
 date_created DATE,
@@ -37,3 +40,4 @@ ignore 1 lines
 	event_id,
 	amount0
 );
+
