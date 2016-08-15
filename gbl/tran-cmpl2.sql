@@ -41,3 +41,6 @@ ignore 1 lines
 	amount0
 );
 
+select count(*) from trans;
+
+select count(*) from cmpl2;
