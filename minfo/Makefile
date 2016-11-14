@@ -1,13 +1,11 @@
-PYTHON ?= python
+PYTHON ?= python3
+FILE ?= minfo
 
 all::
 	true
 
-doc::
-	doxygen gmus0-doc.cfg
-
 check::
-	:> gmus.log
+	:> $(FILE).log
 	$(PYTHON) -m unittest -v -f MInfoTestCase
 
 clean::

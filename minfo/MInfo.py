@@ -18,7 +18,10 @@
 
 from __future__ import print_function
 
+from MediaInfoDLL3 import MediaInfo, Stream, Info
+
 import logging
+
 
 class MInfo(object):
     """
@@ -33,27 +36,43 @@ class MInfo(object):
 
 
     _cum0 = []
+    _slv = None
 
     def __init__(self, n):
         if n == None:
             return
 
+        self._slv = MediaInfo()
+        logging.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
         return
 
     def dispose(self):
+        if _slv == None:
+            return
+        _slv.Close()
         pass
 
-    def next_num(self, l0 = None):
+    def open(self, l0 = None):
         """
-        Returns one of the randomNums. When this method is called
-        multiple times over a long period, it should return the
-        numbers roughly with the initialized probabilities.
-
-        If you pass a l0 value, you can test the extremeties of the range.
         """
+        if l0 == None:
+            return
 
-        # This isn't very efficient, for large lists use blist
-        # the enumeration could be made re-used in some way.
-
+        self._slv.Open(l0)
         logging.info(l0)
-        return 0
+        return
+
+    def duration(self, l0 = None):
+        """
+        """
+        self._slv.Option_Static("Inform", 
+                                "Audio;%Duration/String3%")
+        return(self._slv.Inform())
+
+    def info(self, l0 = None):
+        """
+        """
+        self._slv.Option_Static("Complete", "1")
+        return(self._slv.Inform())
+
+
