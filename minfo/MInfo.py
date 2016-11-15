@@ -21,7 +21,7 @@ from __future__ import print_function
 from MediaInfoDLL3 import MediaInfo, Stream, Info
 
 import logging
-
+from datetime import datetime, date
 
 class MInfo(object):
     """
@@ -30,10 +30,9 @@ class MInfo(object):
     frequency.
     """
     # Values that may be returned by next_num()
-
+    epoch = datetime.utcfromtimestamp(0)
 
     # Probability of the occurence of random_nums
-
 
     _cum0 = []
     _slv = None
@@ -68,6 +67,23 @@ class MInfo(object):
         self._slv.Option_Static("Inform", 
                                 "Audio;%Duration/String3%")
         return(self._slv.Inform())
+
+    @classmethod
+    def tm2dt(cls, tm):
+        return datetime.combine(MInfo.epoch, tm)
+
+    @classmethod
+    def dtadvance(cls, dt, tm):
+        return dt + (cls.tm2dt(tm) - MInfo.epoch)
+
+    @classmethod
+    def dofy(cls, d):
+        return d.toordinal() - date(d.year, 1, 1).toordinal() + 1
+
+    @classmethod
+    def dt2tm1(cls, d):
+        hr0 = MInfo.dofy(d) * 24 + d.hour
+        return "{0:02d}:{1:02d}:{2:02d}.{3:02d}".format(hr0, d.minute, d.second, int(d.microsecond / 1000))
 
     def info(self, l0 = None):
         """
