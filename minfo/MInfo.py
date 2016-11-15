@@ -38,22 +38,27 @@ class MInfo(object):
     _slv = None
 
     def __init__(self, n):
+        self._slv = MediaInfo()
         if n == None:
             return
 
-        self._slv = MediaInfo()
         logging.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
+        if not isinstance(n, str):
+            return
+
+        self.open(n)
         return
 
     def dispose(self):
-        if _slv == None:
+        if self._slv is None:
             return
-        _slv.Close()
+        self._slv.Close()
         pass
 
     def open(self, l0 = None):
         """
         """
+        self.dispose()
         if l0 == None:
             return
 
@@ -61,11 +66,11 @@ class MInfo(object):
         logging.info(l0)
         return
 
-    def duration(self, l0 = None):
+    def duration(self, l0 = "String3"):
         """
         """
-        self._slv.Option_Static("Inform", 
-                                "Audio;%Duration/String3%")
+        s0 = "Audio;%Duration/{:s}%".format(l0)
+        self._slv.Option_Static("Inform", s0)
         return(self._slv.Inform())
 
     @classmethod
