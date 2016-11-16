@@ -134,6 +134,16 @@ class MInfoTestCase(unittest.TestCase):
         logging.info("x0: " + '; '.join(x0))
         x0 = MInfoTestCase.test0.next(self.file0)
         logging.info("x0: " + '; '.join(x0))
+
+        x0 = MInfoTestCase.test0.get()
+        logging.info("x0: " + '; '.join(x0))
+        
+        x0 = MInfoTestCase.test0.reset()
+        logging.info("x0: " + '; '.join(x0))
+
+        x0 = MInfoTestCase.test0.get()
+        logging.info("x0: " + '; '.join(x0))
+        
         return
     
 #

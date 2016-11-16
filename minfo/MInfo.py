@@ -94,7 +94,16 @@ class MInfo(object):
 
         if l0 is not None:
             self.open(l0)
+        return self._cum0[-1]
+
+    def get(self, l0 = None):
         return self._cum0
+
+    def reset(self, l0 = None):
+        x0 = self._cum0
+        self._cum0 = []
+        self._dt = None
+        return x0
 
     @classmethod
     def tm2dt(cls, tm):
