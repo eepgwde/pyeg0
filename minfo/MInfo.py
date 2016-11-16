@@ -94,20 +94,20 @@ class MInfo(object):
             self._logger.info("ntf: " + l1.name)
 
             os.unlink(l1.name)
-            os.symlink(l0, l1.name)
+            os.symlink(os.path.abspath(l0), l1.name)
 
             self._slv.Open(l1.name)
+            self._slv.Option_Static("Inform", self.quality0)
+            self._logger.info("quality: x: " + self._slv.Inform())
+                
             self._logger.info("file: Open: " + unidecode(l0))
             
-            slv0 = MediaInfo()
-            slv0.Open(l0)
-            slv0.Option_Static("Inform", self.quality0)
-            self._logger.info("quality: x: " + slv0.Inform())
-                
         except:
             self._logger.warning("file: Open: fail: " + 
                                  unidecode(l0) + "; " + 
-                                 sys.exc_info()[0].__name__)
+                                 sys.exc_info()[0].__name__ + "; " +
+                                 sys.exc_info()[2] "; " +
+                                 "." )
 
         self._file0 = l1
         return

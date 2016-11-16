@@ -83,38 +83,6 @@ class MInfoTestCase2(unittest.TestCase):
         self.test0.open(MInfoTestCase2.files[1])
         return
 
-    ## Open two
-    def test_04(self):
-        logger.info("test_04")
-        self.assertIsNotNone(self.test0)
-        self.test0.open(MInfoTestCase2.files[0])
-        self.test0.open(MInfoTestCase2.files[1])
-        logger.info("quality: " + self.test0.quality())
-        return
-
-    def test_05(self):
-        logger.info("test_05")
-        self.assertIsNotNone(self.test0)
-        for f in MInfoTestCase2.files:
-            try:
-                self.test0.open(f)
-            except:
-                raise
-            
-        return
-    
-    def test_07(self):
-        logger.info("test_07")
-        self.assertIsNotNone(self.test0)
-        files = MInfoTestCase2.files
-        self.test0.open(files[0])
-        for f in files[1:]:
-            try:
-                print(self.test0.next(l0 = f))
-            except:
-                raise
-        
-        return
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
