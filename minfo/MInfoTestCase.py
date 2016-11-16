@@ -19,6 +19,11 @@ from MediaInfoDLL3 import MediaInfo
 
 import unittest
 
+logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
+logger = logging.getLogger('MInfo1')
+sh = logging.StreamHandler()
+logger.addHandler(sh)
+
 ## A test driver for GMus0
 #
 # @see GMus0
@@ -34,7 +39,6 @@ class MInfoTestCase(unittest.TestCase):
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
-        logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
         return
     
     ## Logs out.
@@ -44,13 +48,13 @@ class MInfoTestCase(unittest.TestCase):
 
     ## Null setup. Create a new one.
     def setUp(self):
-        logging.info('setup')
+        logger.info('setup')
         MInfoTestCase.test0 = MInfo(self.file0)
         return
 
     ## Null setup.
     def tearDown(self):
-        logging.info('tearDown')
+        logger.info('tearDown')
         return
 
     ## Loaded?
@@ -63,86 +67,86 @@ class MInfoTestCase(unittest.TestCase):
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
         str0 = MInfoTestCase.test0.info()
-        logging.info(str0)
+        logger.info(str0)
         return
 
     def test_02(self):
         format = "%a %b %d %H:%M:%S %Y"
 
         today = datetime.today()
-        logging.info('ISO     :' + str(today))
+        logger.info('ISO     :' + str(today))
 
         s = today.strftime(format)
-        logging.info('strftime:' + s)
+        logger.info('strftime:' + s)
 
         d = today
         yday = d.toordinal() - date(d.year, 1, 1).toordinal() + 1
-        logging.info('yday: ' + str(yday))
+        logger.info('yday: ' + str(yday))
 
-        logging.info('dofy: ' + str(MInfo.dofy(d)))
+        logger.info('dofy: ' + str(MInfo.dofy(d)))
 
         format = "%H:%M:%S.%f"
         s = d.strftime(format)
 
-        logging.info('time-today:' + s)
+        logger.info('time-today:' + s)
 
         hr0 = MInfo.dofy(d) * 24 + d.hour
         s1 = "{0:02d}:{1:02d}:{2:02d}.{3:02d}".format(hr0, d.minute, d.second, int(d.microsecond / 1000))
         
-        logging.info('time-today:' + s1)
-        logging.info('time-today:' + MInfo.dt2tm1(d) )
+        logger.info('time-today:' + s1)
+        logger.info('time-today:' + MInfo.dt2tm1(d) )
         return
     
     def test_03(self):
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
         str0 = MInfoTestCase.test0.duration()
-        logging.info(str0)
+        logger.info(str0)
 
         format0 = "%H:%M:%S.%f"
         d = datetime.strptime(str0, format0)
-        logging.info('strptime:' + d.strftime(format0))
+        logger.info('strptime:' + d.strftime(format0))
         return
 
     def test_04(self):
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
         str0 = MInfoTestCase.test0.duration()
-        logging.info(str0)
+        logger.info(str0)
 
         format0 = "%H:%M:%S.%f"
         d = datetime.strptime(str0, format0)
-        logging.info('strptime:' + d.strftime(format0))
+        logger.info('strptime:' + d.strftime(format0))
         t0 = datetime.time(d)
-        logging.info('time:' + t0.isoformat())
+        logger.info('time:' + t0.isoformat())
 
         d0 = MInfo.tm2dt(t0)
-        logging.info('d0: ' + d0.isoformat())
+        logger.info('d0: ' + d0.isoformat())
 
         d1 = MInfo.dtadvance(d0, t0)
-        logging.info('d1: ' + d1.isoformat())
+        logger.info('d1: ' + d1.isoformat())
         d1 = MInfo.dtadvance(d1, t0)
-        logging.info('d1: ' + d1.isoformat())
+        logger.info('d1: ' + d1.isoformat())
         return
 
     def test_05(self):
         self.assertIsNotNone(MInfoTestCase.test0)
         d = MInfoTestCase.test0.duration1()
-        logging.info("duration1: " + d.isoformat())
+        logger.info("duration1: " + d.isoformat())
 
         x0 = MInfoTestCase.test0.next(self.file0)
-        logging.info("x0: " + '; '.join(x0))
+        logger.info("x0: " + '; '.join(x0))
         x0 = MInfoTestCase.test0.next(self.file0)
-        logging.info("x0: " + '; '.join(x0))
+        logger.info("x0: " + '; '.join(x0))
 
         x0 = MInfoTestCase.test0.get()
-        logging.info("x0: " + '; '.join(x0))
+        logger.info("x0: " + '; '.join(x0))
         
         x0 = MInfoTestCase.test0.reset()
-        logging.info("x0: " + '; '.join(x0))
+        logger.info("x0: " + '; '.join(x0))
 
         x0 = MInfoTestCase.test0.get()
-        logging.info("x0: " + '; '.join(x0))
+        logger.info("x0: " + '; '.join(x0))
         
         return
     

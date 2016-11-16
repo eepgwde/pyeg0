@@ -39,17 +39,18 @@ class MInfo(object):
     _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:02d}"
     _dt = None
     _format0 = "%H:%M:%S.%f"
+    _logger = logging.getLogger('MInfo')
     
-    def __init__(self, n = None):
+    def __init__(self, l0 = None):
         self._slv = MediaInfo()
-        if n == None:
+        if l0 == None:
             return
 
-        logging.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
-        if not isinstance(n, str):
+        self._logger.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
+        if not isinstance(l0, str):
             return
 
-        self.open(n)
+        self.open(l0 = l0)
         return
 
     def dispose(self):
@@ -66,7 +67,7 @@ class MInfo(object):
             return
 
         self._slv.Open(l0)
-        logging.info(l0)
+        self._logger.info(l0)
         return
 
     def duration(self, l0 = "String3"):
@@ -80,6 +81,7 @@ class MInfo(object):
         """
         """
         s0 = self.duration()
+        self._logger.debug("duration: s0: " + s0)
         d = datetime.strptime(s0, MInfo._format0)
         return MInfo.tm2dt(datetime.time(d))
 

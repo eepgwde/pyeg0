@@ -50,6 +50,7 @@ Patterns can be any valid Python regex patterns.
 import logging
 import os
 import sys
+from unidecode import unidecode
 
 from docopt import docopt
 
@@ -58,10 +59,10 @@ from MInfo import MInfo
 QUIET = 25
 logging.addLevelName(25, "QUIET")
 
+logging.basicConfig(filename='minfo.log', level=QUIET)
 logger = logging.getLogger('MInfo1')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
-
 
 def main():
     cli = dict((key.lstrip("-<").rstrip(">"), value) for key, value in docopt(__doc__).items())
@@ -69,7 +70,7 @@ def main():
     enable_logging = cli['log']
 
     if cli['quiet']:
-        logger.setLevel(logging.QUIET)
+        logger.setLevel(QUIET)
     else:
         logger.setLevel(logging.INFO)
 
@@ -83,9 +84,14 @@ def main():
         with open(x0[0], encoding="utf-8") as f:
             files = f.read().splitlines()
 
-    logger.info("files: " + '; '.join(files))
+    logger.info("files: " + unidecode('; '.join(files)))
 
-    minfo = MInfo()
+    minfo = MInfo(l0 = files[0])
+    for f in files[1:]:
+        minfo.next(l0 = f)
+
+    if cli['dry-run']:
+        return
 
     logger.info("\nAll done!")
 
