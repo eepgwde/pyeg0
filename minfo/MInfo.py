@@ -82,7 +82,7 @@ class MInfo(object):
         """
         """
         s0 = self.duration()
-        self._logger.debug("duration: s0: " + s0)
+        self._logger.info("duration: s0: " + s0)
         d = datetime.strptime(s0, MInfo._format0)
         return MInfo.tm2dt(datetime.time(d))
 
