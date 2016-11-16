@@ -1,19 +1,16 @@
-## @file RndDist.py
-# @brief Random numbers
+## @file MInfo.py
+# @brief Media Info fetching.
 # @author weaves
 #
 # @details
-# This class uses no special API.
+# This class uses the MediaInfo library for Python.
 #
 # @note
 #
-# A better version of this class would implement __next__ and thus be
-# iterable and be usable within a for-each.
-# It might also be desirable to allow for its use as a list
-# comprehension.
+# The library has a limitation that it cannot handle UTF-8 names very
+# well. To side-step that, I make a temporary symlink using the 'os'
+# module and then use MediaInfo on that.
 #
-# @see
-# http://
 # 
 
 from __future__ import print_function
@@ -23,6 +20,10 @@ from MediaInfoDLL3 import MediaInfo, Stream, Info
 
 import logging
 from datetime import datetime, date
+from tempfile import NamedTemporaryFile
+
+import os
+import sys
 
 class MInfo(object):
     """
@@ -42,6 +43,7 @@ class MInfo(object):
     _format0 = "%H:%M:%S.%f"
     _logger = logging.getLogger('MInfo')
     _loaded = False
+    _file0 = None
     
     def __init__(self, l0 = None):
         self._slv = MediaInfo()
@@ -60,32 +62,55 @@ class MInfo(object):
         return
 
     def dispose(self):
+        """
+        The media info has to be re-created for every file.
+        """
+        if self._file0 is not None:
+            os.unlink(self._file0.name)
+        self._file0 = None
         if self._slv is None:
             return
         self._slv.Close()
-        pass
+        return
 
+    def open(self, x0):
+        """
+        """
+        self.open(l0=x0)
+        return
+    
     def open(self, l0 = None):
         """
+        The mediainfo object has to be recreated every time.
         """
+        l1 = None
         try:
-            self._loaded = False
             self.dispose()
             if l0 == None:
                 return
+            self._slv = MediaInfo()
 
-            self._slv.Open(l0)
-            self._logger.info("file: " + unidecode(l0))
+            l1 = NamedTemporaryFile()
+            self._logger.info("ntf: " + l1.name)
+
+            os.unlink(l1.name)
+            os.symlink(l0, l1.name)
+
+            self._slv.Open(l1.name)
+            self._logger.info("file: Open: " + unidecode(l0))
+                
         except:
-            raise
+            self._logger.warning("file: Open: fail: " + 
+                                 unidecode(l0) + "; " + 
+                                 sys.exc_info()[0].__name__)
 
-        self._loaded = True
+        self._file0 = l1
         return
 
     def duration(self, l0 = "String3"):
         """
         """
-        if not self._loaded:
+        if self._file0 is None:
             raise RuntimeError("last file did not load")
         
         s0 = "Audio;%Duration/{:s}%".format(l0)

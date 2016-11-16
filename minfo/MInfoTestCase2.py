@@ -17,6 +17,7 @@ from collections import Counter
 
 from MediaInfoDLL3 import MediaInfo
 import os
+from unidecode import unidecode
 
 import unittest
 
@@ -32,7 +33,7 @@ class MInfoTestCase2(unittest.TestCase):
     """
     Test MInfo
     """
-    dir0 = './media'
+    dir0 = './media1'
     test0 = None
     gmus0 = None
     nums = [-1, 0, 1, 2, 3]
@@ -45,7 +46,8 @@ class MInfoTestCase2(unittest.TestCase):
             for name in files:
                 cls.files.append(os.path.join(root, name))
 
-        logger.info('files: ' + '; '.join(cls.files))
+        cls.files.sort()
+        logger.info('files: ' + unidecode('; '.join(cls.files)))
         return
     
     ## Logs out.
@@ -56,6 +58,7 @@ class MInfoTestCase2(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
+        self.test0 = MInfo()
         return
 
     ## Null setup.
@@ -63,101 +66,39 @@ class MInfoTestCase2(unittest.TestCase):
         logger.info('tearDown')
         return
 
-    ## Loaded?
+    ## Open one
     def test_00(self):
-        self.assertIsNotNone(MInfoTestCase2.test0)
-        MInfoTestCase2.test0.open(self.file0)
+        self.assertIsNotNone(self.test0)
+        self.test0.open(MInfoTestCase2.files[0])
         return
 
-    def test_01(self):
-        self.assertIsNotNone(MInfoTestCase2.test0)
-        MInfoTestCase2.test0.open(self.file0)
-        str0 = MInfoTestCase2.test0.info()
-        logger.info(str0)
-        return
-
-    def test_02(self):
-        format = "%a %b %d %H:%M:%S %Y"
-
-        today = datetime.today()
-        logger.info('ISO     :' + str(today))
-
-        s = today.strftime(format)
-        logger.info('strftime:' + s)
-
-        d = today
-        yday = d.toordinal() - date(d.year, 1, 1).toordinal() + 1
-        logger.info('yday: ' + str(yday))
-
-        logger.info('dofy: ' + str(MInfo.dofy(d)))
-
-        format = "%H:%M:%S.%f"
-        s = d.strftime(format)
-
-        logger.info('time-today:' + s)
-
-        hr0 = MInfo.dofy(d) * 24 + d.hour
-        s1 = "{0:02d}:{1:02d}:{2:02d}.{3:02d}".format(hr0, d.minute, d.second, int(d.microsecond / 1000))
-        
-        logger.info('time-today:' + s1)
-        logger.info('time-today:' + MInfo.dt2tm1(d) )
-        return
-    
+    ## Open two 
     def test_03(self):
-        self.assertIsNotNone(MInfoTestCase2.test0)
-        MInfoTestCase2.test0.open(self.file0)
-        str0 = MInfoTestCase2.test0.duration()
-        logger.info(str0)
-
-        format0 = "%H:%M:%S.%f"
-        d = datetime.strptime(str0, format0)
-        logger.info('strptime:' + d.strftime(format0))
+        logger.info("test_03")
+        self.assertIsNotNone(self.test0)
+        self.test0.open(MInfoTestCase2.files[0])
+        self.test0 = MInfo()
+        self.test0.open(MInfoTestCase2.files[1])
         return
 
+    ## Open two
     def test_04(self):
-        self.assertIsNotNone(MInfoTestCase2.test0)
-        MInfoTestCase2.test0.open(self.file0)
-        str0 = MInfoTestCase2.test0.duration()
-        logger.info(str0)
-
-        format0 = "%H:%M:%S.%f"
-        d = datetime.strptime(str0, format0)
-        logger.info('strptime:' + d.strftime(format0))
-        t0 = datetime.time(d)
-        logger.info('time:' + t0.isoformat())
-
-        d0 = MInfo.tm2dt(t0)
-        logger.info('d0: ' + d0.isoformat())
-
-        d1 = MInfo.dtadvance(d0, t0)
-        logger.info('d1: ' + d1.isoformat())
-        d1 = MInfo.dtadvance(d1, t0)
-        logger.info('d1: ' + d1.isoformat())
+        logger.info("test_03")
+        self.assertIsNotNone(self.test0)
+        self.test0.open(MInfoTestCase2.files[0])
+        self.test0.open(MInfoTestCase2.files[1])
         return
 
     def test_05(self):
-        self.assertIsNotNone(MInfoTestCase2.test0)
-        d = MInfoTestCase2.test0.duration1()
-        logger.info("duration1: " + d.isoformat())
-
-        x0 = MInfoTestCase2.test0.next(self.file0)
-        logger.info("x0: " + '; '.join(x0))
-        x0 = MInfoTestCase2.test0.next(self.file0)
-        logger.info("x0: " + '; '.join(x0))
-        x0 = MInfoTestCase2.test0.next(self.file0)
-        logger.info("x0: " + '; '.join(x0))
-
-        x0 = MInfoTestCase2.test0.get()
-        logger.info("x0: " + '; '.join(x0))
-        
-        x0 = MInfoTestCase2.test0.reset()
-        logger.info("x0: " + '; '.join(x0))
-
-        x0 = MInfoTestCase2.test0.get()
-        logger.info("x0: " + '; '.join(x0))
-        
+        logger.info("test_05")
+        self.assertIsNotNone(self.test0)
+        for f in MInfoTestCase2.files:
+            try:
+                self.test0.open(f)
+            except:
+                raise
+            
         return
-
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
