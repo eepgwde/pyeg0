@@ -60,7 +60,7 @@ QUIET = 25
 logging.addLevelName(25, "QUIET")
 
 logging.basicConfig(filename='minfo.log', level=QUIET)
-logger = logging.getLogger('MInfo1')
+logger = logging.getLogger('MInfo')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 

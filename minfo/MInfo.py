@@ -17,6 +17,7 @@
 # 
 
 from __future__ import print_function
+from unidecode import unidecode
 
 from MediaInfoDLL3 import MediaInfo, Stream, Info
 
@@ -43,10 +44,10 @@ class MInfo(object):
     
     def __init__(self, l0 = None):
         self._slv = MediaInfo()
+        self._logger.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
         if l0 == None:
             return
 
-        self._logger.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
         if not isinstance(l0, str):
             return
 
@@ -67,7 +68,7 @@ class MInfo(object):
             return
 
         self._slv.Open(l0)
-        self._logger.info(l0)
+        self._logger.info("file: " + unidecode(l0))
         return
 
     def duration(self, l0 = "String3"):
