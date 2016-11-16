@@ -89,6 +89,8 @@ class MInfoTestCase2(unittest.TestCase):
         self.assertIsNotNone(self.test0)
         self.test0.open(MInfoTestCase2.files[0])
         self.test0.open(MInfoTestCase2.files[1])
+        self.test0.open(MInfoTestCase2.files[0])
+        print(self.test0.quality())
         return
 
     def test_05(self):
@@ -109,7 +111,7 @@ class MInfoTestCase2(unittest.TestCase):
         self.test0.open(files[0])
         for f in files[1:]:
             try:
-                self.test0.next(l0 = f)
+                print(self.test0.next(l0 = f))
             except:
                 raise
         

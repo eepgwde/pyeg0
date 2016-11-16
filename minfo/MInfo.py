@@ -67,8 +67,6 @@ class MInfo(object):
         """
         The media info has to be re-created for every file.
         """
-        if self._file0 is not None:
-            os.unlink(self._file0.name)
         self._file0 = None
         if self._slv is None:
             return
@@ -147,8 +145,8 @@ class MInfo(object):
             self.open(l0)
         return self._cum0[-1]
 
-    def get(self, l0 = None):
-        return self._cum0
+    def get(self, l0 = -1):
+        return self._cum0[l0]
 
     def reset(self, l0 = None):
         x0 = self._cum0
