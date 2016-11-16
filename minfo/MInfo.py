@@ -98,6 +98,11 @@ class MInfo(object):
 
             self._slv.Open(l1.name)
             self._logger.info("file: Open: " + unidecode(l0))
+            
+            slv0 = MediaInfo()
+            slv0.Open(l0)
+            slv0.Option_Static("Inform", self.quality0)
+            self._logger.info("quality: x: " + slv0.Inform())
                 
         except:
             self._logger.warning("file: Open: fail: " + 
@@ -112,10 +117,11 @@ class MInfo(object):
         """
         if self._file0 is None:
             raise RuntimeError("last file did not load")
-        
-        s0 = self.quality0
-        self._slv.Option_Static("Inform", s0)
-        return(self._slv.Inform())
+
+        ## self._logger.info("quality: key: " + self.quality0)
+        self._slv.Option_Static("Inform", self.quality0)
+        self._logger.info("quality: " + self._slv.Inform())
+        return self._slv.Inform()
 
     def duration(self):
         """

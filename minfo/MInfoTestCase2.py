@@ -85,12 +85,11 @@ class MInfoTestCase2(unittest.TestCase):
 
     ## Open two
     def test_04(self):
-        logger.info("test_03")
+        logger.info("test_04")
         self.assertIsNotNone(self.test0)
         self.test0.open(MInfoTestCase2.files[0])
         self.test0.open(MInfoTestCase2.files[1])
-        self.test0.open(MInfoTestCase2.files[0])
-        print(self.test0.quality())
+        logger.info("quality: " + self.test0.quality())
         return
 
     def test_05(self):
