@@ -31,7 +31,7 @@ class MInfoTestCase(unittest.TestCase):
     """
     Test MInfo
     """
-    file0 = './media/01.The_best_is_yet_to_come.m4a'
+    file0 = '01.The_best_is_yet_to_come.m4a'
     test0 = None
     gmus0 = None
     nums = [-1, 0, 1, 2, 3]
@@ -138,6 +138,8 @@ class MInfoTestCase(unittest.TestCase):
         logger.info("x0: " + '; '.join(x0))
         x0 = MInfoTestCase.test0.next(self.file0)
         logger.info("x0: " + '; '.join(x0))
+        x0 = MInfoTestCase.test0.next(self.file0)
+        logger.info("x0: " + '; '.join(x0))
 
         x0 = MInfoTestCase.test0.get()
         logger.info("x0: " + '; '.join(x0))
@@ -149,7 +151,7 @@ class MInfoTestCase(unittest.TestCase):
         logger.info("x0: " + '; '.join(x0))
         
         return
-    
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
