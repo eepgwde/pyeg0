@@ -81,8 +81,7 @@ def main():
         x0 = cli['files']
         logger.info('files: ' + type(x0).__name__)
         with open(x0[0], encoding="utf-8") as f:
-            for line in f:
-                files.append(line)
+            files = f.read().splitlines()
 
     logger.info("files: " + '; '.join(files))
 
