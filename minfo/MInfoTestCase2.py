@@ -1,4 +1,4 @@
-## @file MInfoTestCase.py
+## @file MInfoTestCase2.py
 # @author weaves
 # @brief Unittest of MInfo
 #
@@ -16,29 +16,36 @@ from datetime import datetime, timezone, timedelta, date
 from collections import Counter
 
 from MediaInfoDLL3 import MediaInfo
+import os
 
 import unittest
 
 logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
-logger = logging.getLogger('MInfoTestCase')
+logger = logging.getLogger('MInfoTestCase2')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
 ## A test driver for GMus0
 #
 # @see GMus0
-class MInfoTestCase(unittest.TestCase):
+class MInfoTestCase2(unittest.TestCase):
     """
     Test MInfo
     """
-    file0 = '01.The_best_is_yet_to_come.m4a'
+    dir0 = './media'
     test0 = None
     gmus0 = None
     nums = [-1, 0, 1, 2, 3]
+    files = []
 
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
+        for root, dirs, files in os.walk(cls.dir0, topdown=True):
+            for name in files:
+                cls.files.append(os.path.join(root, name))
+
+        logger.info('files: ' + '; '.join(cls.files))
         return
     
     ## Logs out.
@@ -49,7 +56,6 @@ class MInfoTestCase(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
-        MInfoTestCase.test0 = MInfo(l0 = self.file0)
         return
 
     ## Null setup.
@@ -59,14 +65,14 @@ class MInfoTestCase(unittest.TestCase):
 
     ## Loaded?
     def test_00(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
+        self.assertIsNotNone(MInfoTestCase2.test0)
+        MInfoTestCase2.test0.open(self.file0)
         return
 
     def test_01(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.info()
+        self.assertIsNotNone(MInfoTestCase2.test0)
+        MInfoTestCase2.test0.open(self.file0)
+        str0 = MInfoTestCase2.test0.info()
         logger.info(str0)
         return
 
@@ -98,9 +104,9 @@ class MInfoTestCase(unittest.TestCase):
         return
     
     def test_03(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.duration()
+        self.assertIsNotNone(MInfoTestCase2.test0)
+        MInfoTestCase2.test0.open(self.file0)
+        str0 = MInfoTestCase2.test0.duration()
         logger.info(str0)
 
         format0 = "%H:%M:%S.%f"
@@ -109,9 +115,9 @@ class MInfoTestCase(unittest.TestCase):
         return
 
     def test_04(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.duration()
+        self.assertIsNotNone(MInfoTestCase2.test0)
+        MInfoTestCase2.test0.open(self.file0)
+        str0 = MInfoTestCase2.test0.duration()
         logger.info(str0)
 
         format0 = "%H:%M:%S.%f"
@@ -130,24 +136,24 @@ class MInfoTestCase(unittest.TestCase):
         return
 
     def test_05(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        d = MInfoTestCase.test0.duration1()
+        self.assertIsNotNone(MInfoTestCase2.test0)
+        d = MInfoTestCase2.test0.duration1()
         logger.info("duration1: " + d.isoformat())
 
-        x0 = MInfoTestCase.test0.next(self.file0)
+        x0 = MInfoTestCase2.test0.next(self.file0)
         logger.info("x0: " + '; '.join(x0))
-        x0 = MInfoTestCase.test0.next(self.file0)
+        x0 = MInfoTestCase2.test0.next(self.file0)
         logger.info("x0: " + '; '.join(x0))
-        x0 = MInfoTestCase.test0.next(self.file0)
+        x0 = MInfoTestCase2.test0.next(self.file0)
         logger.info("x0: " + '; '.join(x0))
 
-        x0 = MInfoTestCase.test0.get()
+        x0 = MInfoTestCase2.test0.get()
         logger.info("x0: " + '; '.join(x0))
         
-        x0 = MInfoTestCase.test0.reset()
+        x0 = MInfoTestCase2.test0.reset()
         logger.info("x0: " + '; '.join(x0))
 
-        x0 = MInfoTestCase.test0.get()
+        x0 = MInfoTestCase2.test0.get()
         logger.info("x0: " + '; '.join(x0))
         
         return
@@ -163,4 +169,4 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='MInfoTestCase', verbosity=3, failfast=True, exit=False)
+        unittest.main(module='MInfoTestCase2', verbosity=3, failfast=True, exit=False)

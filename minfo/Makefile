@@ -1,12 +1,13 @@
 PYTHON ?= python3
-FILE ?= minfo
+UUT ?= MInfoTestCase2
+FILE ?= minfo.log
 
 all::
 	true
 
 check::
 	:> $(FILE).log
-	$(PYTHON) -m unittest -v -f MInfoTestCase
+	$(PYTHON) -m unittest -v -f $(UUT)
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
