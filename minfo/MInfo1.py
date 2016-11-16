@@ -91,7 +91,8 @@ def main():
 
     minfo = MInfo(l0 = files[0])
     for f in files[1:]:
-        minfo.next(l0 = f)
+        s0 = minfo.next(l0 = f)
+        print(s0 + " - " + f)
 
     if cli['dry-run']:
         return
