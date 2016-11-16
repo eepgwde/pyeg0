@@ -2,7 +2,7 @@
 # @author weaves
 # @brief Unittest of MInfo
 #
-# This is a unittest class that can perform some useful work.
+# This checks multiple file opening using SDIR as a source directory.
 # 
 # @note
 #
@@ -33,7 +33,7 @@ class MInfoTestCase2(unittest.TestCase):
     """
     Test MInfo
     """
-    dir0 = './media1'
+    dir0 = None
     test0 = None
     gmus0 = None
     nums = [-1, 0, 1, 2, 3]
@@ -42,6 +42,8 @@ class MInfoTestCase2(unittest.TestCase):
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
+        cls.dir0 = os.environ['SDIR'] if os.environ.get('SDIR') is not None else './media' 
+        
         for root, dirs, files in os.walk(cls.dir0, topdown=True):
             for name in files:
                 cls.files.append(os.path.join(root, name))

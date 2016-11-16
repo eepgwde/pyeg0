@@ -1,6 +1,7 @@
 PYTHON ?= python3
 UUT ?= MInfoTestCase2
 FILE ?= minfo.log
+SDIR ?= media
 
 all::
 	true
