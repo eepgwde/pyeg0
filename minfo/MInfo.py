@@ -40,7 +40,7 @@ class MInfo(object):
     _dt = None
     _format0 = "%H:%M:%S.%f"
     
-    def __init__(self, n):
+    def __init__(self, n = None):
         self._slv = MediaInfo()
         if n == None:
             return
