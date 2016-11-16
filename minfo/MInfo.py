@@ -41,6 +41,7 @@ class MInfo(object):
     _dt = None
     _format0 = "%H:%M:%S.%f"
     _logger = logging.getLogger('MInfo')
+    _loaded = False
     
     def __init__(self, l0 = None):
         self._slv = MediaInfo()
@@ -51,7 +52,11 @@ class MInfo(object):
         if not isinstance(l0, str):
             return
 
-        self.open(l0 = l0)
+        try:
+            self.open(l0)
+        except:
+            raise
+        
         return
 
     def dispose(self):
@@ -63,17 +68,26 @@ class MInfo(object):
     def open(self, l0 = None):
         """
         """
-        self.dispose()
-        if l0 == None:
-            return
+        try:
+            self._loaded = False
+            self.dispose()
+            if l0 == None:
+                return
 
-        self._slv.Open(l0)
-        self._logger.info("file: " + unidecode(l0))
+            self._slv.Open(l0)
+            self._logger.info("file: " + unidecode(l0))
+        except:
+            raise
+
+        self._loaded = True
         return
 
     def duration(self, l0 = "String3"):
         """
         """
+        if not self._loaded:
+            raise RuntimeError("last file did not load")
+        
         s0 = "Audio;%Duration/{:s}%".format(l0)
         self._slv.Option_Static("Inform", s0)
         return(self._slv.Inform())

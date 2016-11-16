@@ -20,7 +20,7 @@ from MediaInfoDLL3 import MediaInfo
 import unittest
 
 logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
-logger = logging.getLogger('MInfo1')
+logger = logging.getLogger('MInfoTestCase')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
@@ -49,7 +49,7 @@ class MInfoTestCase(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
-        MInfoTestCase.test0 = MInfo(self.file0)
+        MInfoTestCase.test0 = MInfo(l0 = self.file0)
         return
 
     ## Null setup.
@@ -138,6 +138,8 @@ class MInfoTestCase(unittest.TestCase):
         logger.info("x0: " + '; '.join(x0))
         x0 = MInfoTestCase.test0.next(self.file0)
         logger.info("x0: " + '; '.join(x0))
+        x0 = MInfoTestCase.test0.next(self.file0)
+        logger.info("x0: " + '; '.join(x0))
 
         x0 = MInfoTestCase.test0.get()
         logger.info("x0: " + '; '.join(x0))
@@ -149,7 +151,7 @@ class MInfoTestCase(unittest.TestCase):
         logger.info("x0: " + '; '.join(x0))
         
         return
-    
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

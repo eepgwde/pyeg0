@@ -64,6 +64,8 @@ logger = logging.getLogger('MInfo')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
+minfo0 = None
+
 def main():
     cli = dict((key.lstrip("-<").rstrip(">"), value) for key, value in docopt(__doc__).items())
 
@@ -87,17 +89,38 @@ def main():
         with open(x0[0], encoding="utf-8") as f:
             files = f.read().splitlines()
 
-    logger.info("files: " + unidecode('; '.join(files)))
+    h0, t0 = files[0], files[1:]
 
-    minfo = MInfo(l0 = files[0])
-    for f in files[1:]:
-        s0 = minfo.next(l0 = f)
-        print(s0 + " - " + f)
+    logger.info("files: " + unidecode('; '.join(t0)))
 
-    if cli['dry-run']:
-        return
+    global minfo
+    minfo = MInfo(l0 = h0)
+
+    for f in t0:
+        if cli['dry-run']:
+            logger.info("file: f: " + unidecode(f))
+            continue
+        duration(f)
 
     logger.info("\nAll done!")
+    return
+
+def duration(file0):
+    global minfo
+
+    s0 = "-"
+    try:
+        s1 = minfo.next(l0 = file0)
+        s0 = s0 if s1 is not None else s0
+        print(s0 + " - " + file0)
+    except OSError as err:
+        print("OS error: {0}".format(err))
+    except ValueError:
+        print("Could not convert data to an integer.")
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
+    return
 
 if __name__ == '__main__':
     main()
