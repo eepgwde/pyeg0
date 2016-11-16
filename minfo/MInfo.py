@@ -82,12 +82,17 @@ class MInfo(object):
         """
         """
         s0 = self.duration()
-        self._logger.info("duration: s0: " + s0)
+        if len(s0) <= 0:
+            return None
+        self._logger.debug("duration: s0: " + s0)
         d = datetime.strptime(s0, MInfo._format0)
         return MInfo.tm2dt(datetime.time(d))
 
     def next(self, l0 = None):
         d = self.duration1()
+        if d is None:
+            return None
+        
         if self._dt is None:
             self._dt = d
         else:

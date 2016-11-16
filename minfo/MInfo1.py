@@ -74,6 +74,9 @@ def main():
     else:
         logger.setLevel(logging.INFO)
 
+    if enable_logging:
+        logger.setLevel(logging.DEBUG)
+
     for k in cli.items():
         logger.info(k)
         
