@@ -40,10 +40,12 @@ class MInfo(object):
     _slv = None
     _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:02d}"
     _dt = None
-    _format0 = "%H:%M:%S.%f"
     _logger = logging.getLogger('MInfo')
     _loaded = False
     _file0 = None
+
+    format0 = "%H:%M:%S.%f"
+    quality0 = "Audio;%Duration/String3%"
     
     def __init__(self, l0 = None):
         self._slv = MediaInfo()
@@ -107,28 +109,30 @@ class MInfo(object):
         self._file0 = l1
         return
 
-    def duration(self, l0 = "String3"):
+    def quality(self):
         """
         """
         if self._file0 is None:
             raise RuntimeError("last file did not load")
         
-        s0 = "Audio;%Duration/{:s}%".format(l0)
+        s0 = self.quality0
         self._slv.Option_Static("Inform", s0)
         return(self._slv.Inform())
 
-    def duration1(self, l0 = None):
+    def duration(self):
         """
+        If the quality has been correctly set, update a time
+        used the format.
         """
-        s0 = self.duration()
+        s0 = self.quality()
         if len(s0) <= 0:
             return None
         self._logger.debug("duration: s0: " + s0)
-        d = datetime.strptime(s0, MInfo._format0)
+        d = datetime.strptime(s0, self.format0)
         return MInfo.tm2dt(datetime.time(d))
 
     def next(self, l0 = None):
-        d = self.duration1()
+        d = self.duration()
         if d is None:
             return None
         

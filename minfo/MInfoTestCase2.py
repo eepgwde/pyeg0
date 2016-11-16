@@ -101,6 +101,19 @@ class MInfoTestCase2(unittest.TestCase):
                 raise
             
         return
+    
+    def test_07(self):
+        logger.info("test_07")
+        self.assertIsNotNone(self.test0)
+        files = MInfoTestCase2.files
+        self.test0.open(files[0])
+        for f in files[1:]:
+            try:
+                self.test0.next(l0 = f)
+            except:
+                raise
+        
+        return
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
