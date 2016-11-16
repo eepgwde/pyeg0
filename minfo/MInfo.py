@@ -36,7 +36,10 @@ class MInfo(object):
 
     _cum0 = []
     _slv = None
-
+    _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:02d}"
+    _dt = None
+    _format0 = "%H:%M:%S.%f"
+    
     def __init__(self, n):
         self._slv = MediaInfo()
         if n == None:
@@ -73,6 +76,26 @@ class MInfo(object):
         self._slv.Option_Static("Inform", s0)
         return(self._slv.Inform())
 
+    def duration1(self, l0 = None):
+        """
+        """
+        s0 = self.duration()
+        d = datetime.strptime(s0, MInfo._format0)
+        return MInfo.tm2dt(datetime.time(d))
+
+    def next(self, l0 = None):
+        d = self.duration1()
+        if self._dt is None:
+            self._dt = d
+        else:
+            self._dt = MInfo.dtadvance(self._dt, datetime.time(d))
+
+        self._cum0.append(self.dt2tm1(self._dt))
+
+        if l0 is not None:
+            self.open(l0)
+        return self._cum0
+
     @classmethod
     def tm2dt(cls, tm):
         return datetime.combine(MInfo.epoch, tm)
@@ -83,12 +106,16 @@ class MInfo(object):
 
     @classmethod
     def dofy(cls, d):
-        return d.toordinal() - date(d.year, 1, 1).toordinal() + 1
+        """
+        Day of year, indexed from zero.
+        """
+        return d.toordinal() - date(d.year, 1, 1).toordinal()
 
     @classmethod
     def dt2tm1(cls, d):
-        hr0 = MInfo.dofy(d) * 24 + d.hour
-        return "{0:02d}:{1:02d}:{2:02d}.{3:02d}".format(hr0, d.minute, d.second, int(d.microsecond / 1000))
+        hr0 = cls.dofy(d) * 24 + d.hour
+        return cls._hrfmt.format(hr0, d.minute,
+                                 d.second, int(d.microsecond / 1000))
 
     def info(self, l0 = None):
         """

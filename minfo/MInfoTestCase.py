@@ -125,12 +125,23 @@ class MInfoTestCase(unittest.TestCase):
         logging.info('d1: ' + d1.isoformat())
         return
 
+    def test_05(self):
+        self.assertIsNotNone(MInfoTestCase.test0)
+        d = MInfoTestCase.test0.duration1()
+        logging.info("duration1: " + d.isoformat())
+
+        x0 = MInfoTestCase.test0.next(self.file0)
+        logging.info("x0: " + '; '.join(x0))
+        x0 = MInfoTestCase.test0.next(self.file0)
+        logging.info("x0: " + '; '.join(x0))
+        return
+    
 #
-# The sys.argv line will complain you if you run it with ipython
+# The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
 
 if __name__ == '__main__':
-    if len(sys.argv) and not(sys.argv[0].endswith("ipython")):
+    if len(sys.argv) and "ipython" not in sys.argv[0]:
         # If this is not ipython, run as usual
         unittest.main(sys.argv)
     else:
