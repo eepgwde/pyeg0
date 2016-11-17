@@ -1,4 +1,11 @@
 ## @file GMus00.py
+# @author weaves
+# @brief GMus00
+#
+# Wrapper module
+
+
+## @file GMus00.py
 # @brief Application support class for the Unofficial Google Music API.
 # @author weaves
 #
@@ -17,7 +24,6 @@ from __future__ import print_function
 
 import codecs
 
-import logging
 import os, logging
 
 from io import StringIO
@@ -72,6 +78,8 @@ class GMus00(object):
     s0 = None
     ## Cached results: \c pandas data-frame.
     _df = None
+    _files0 = []
+    _logger = None
 
     @property
     def df(self, which=0):
@@ -89,32 +97,45 @@ class GMus00(object):
     def _config0(self, paths):
         self.cfg = ConfigParser()
         self.cfg.read(paths)
+
+    def _login(self):
         x0 = self.cfg.get('logging', 'level', fallback=None)
         self.mmw = MusicManagerWrapper(enable_logging=x0)
         x0 = self.cfg.get('credentials', 'filename', fallback="oauth")
         x1 = self.cfg.get('credentials', 'uploader-id', fallback=None)
         self.mmw.login(oauth_filename=x0, uploader_id=x1)
         if not self.mmw.is_authenticated:
-            raise RuntimeException('Not authenticated')
-        return
+            raise RuntimeError('Not authenticated')
 
     ## Check if a path is a file and is non-zero.
     # @param fpath a path string.
     @classmethod
     def is_valid(cls, fpath):
-        logging.debug("fpath: {0}; {1} {2}".
-                      format(fpath, os.path.isfile(fpath),
-                             (os.path.getsize(fpath) if os.path.isfile(fpath) else 0) ))
+        logging.getLogger('gmus0').debug("fpath: {0}; {1} {2}".
+               format(fpath, os.path.isfile(fpath),
+                      (os.path.getsize(fpath) if os.path.isfile(fpath) else 0) ))
         return (os.path.isfile(fpath) and (os.path.getsize(fpath) > 0))
-    
-    def __init__(self, file0):
-        if file0 != None and GMus00.is_valid(file0):
-            logging.info("init: not-logging-in" )
+
+    def _load(self, file0):
+        if file0 is not None and GMus00.is_valid(file0):
+            self._logger.info("init: not-logging-in" )
             self.read(file0)
-            return
-            
-        logging.info("init: logging-in" )
+            return True
+        return False
+    
+    def __init__(self, files0):
+        self._logger = logging.getLogger('gmus0')
+        self._logger.info('GMus00: ctr')
         self._config0(paths)
+
+        if files0 is None or len(files0) <= 0:
+            self._logger.info("init: logging-in" )
+            self._login()
+            return
+
+        file0, *self._files0 = files0
+        if not self._load(file0):
+            raise RuntimeException('failed to load: ' + file0)
         return
 
     def dispose(self):
@@ -144,12 +165,12 @@ class GMus00(object):
  
     @add.register(int)
     def _(self, a, b):
-        logging.debug("First argument is of type " + type(a).__name__)
+        self._logger.debug("First argument is of type " + type(a).__name__)
         return a * b
         
     @add.register(str)
     def _(self, a, b):
-        logging.debug("First argument is of type " + type(a).__name__)
+        self._logger.debug("First argument is of type " + type(a).__name__)
         return "(\"{0:s}\", \"{1:s}\"".format(a, b)
 
     @singledispatch1
@@ -158,7 +179,7 @@ class GMus00(object):
 
     @read0.register(str)
     def _(self, file0):
-        logging.info("read0: str")
+        self._logger.info("read0: str")
         s0 = None
         with open(file0, 'rb') as infile:
             reader = codecs.getreader("utf-8")
@@ -168,7 +189,7 @@ class GMus00(object):
 
     @read0.register(StringIO)
     def _(self, file0):
-        logging.info("read0: StringIO")
+        self._logger.info("read0: StringIO")
         return json.load(file0)
 
     def read(self, file0):
@@ -204,7 +225,7 @@ class GMus00(object):
         s1 = [ track for track in self.s0
                if name in track[field] ]
         
-        logging.info("in0: filter: {0}".format(len(s1)))
+        self._logger.info("in0: filter: {0}".format(len(s1)))
         return s1
 
     ## General method to filter by an exact match.
@@ -214,7 +235,7 @@ class GMus00(object):
         s1 = [ track for track in self.s0
                if track[field] == name ]
         
-        logging.info("exact0: filter: {0}".format(len(s1)))
+        self._logger.info("exact0: filter: {0}".format(len(s1)))
         return s1
         
     ## Retrieve all the songs and cache them.
@@ -230,20 +251,20 @@ class GMus00(object):
                                             all_excludes=False,
                                             uploaded=True, 
                                             purchased=True)
-        logging.info("songs: {0}".format(len(self.s0)))
+        self._logger.info("songs: {0}".format(len(self.s0)))
         return self.s0
 
     ## Load a file (or buffer) of indices, filter the caches to just them.
     # 
     def indices(self, file0):
         s1 = self.read0(file0)
-        logging.info("indices: {0}".format(len(s1)))
+        self._logger.info("indices: {0}".format(len(s1)))
         return s1
 
     def delete(self, file0):
         with open(file0, 'rb') as infile:
             d0 = json.load(infile)
-        logging.info("delete: {0}: {1}".format(file0, len(d0)))
+        self._logger.info("delete: {0}: {1}".format(file0, len(d0)))
         self.mmw.delete_songs(d0)
         return
 
