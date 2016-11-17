@@ -15,6 +15,8 @@
 
 from __future__ import print_function
 
+import codecs
+
 import logging
 import os, logging
 
@@ -155,13 +157,17 @@ class GMus00(object):
 
     @read0.register(str)
     def _(self, file0):
+        logging.info("read0: str")
         s0 = None
         with open(file0, 'rb') as infile:
-            s0 = json.load(infile)
-        return s0
+            reader = codecs.getreader("utf-8")
+            s0 = json.load(reader(infile))
         
+        return s0
+
     @read0.register(StringIO)
     def _(self, file0):
+        logging.info("read0: StringIO")
         return json.load(file0)
 
     def read(self, file0):
