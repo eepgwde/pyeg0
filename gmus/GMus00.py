@@ -246,3 +246,8 @@ class GMus00(object):
         logging.info("delete: {0}: {1}".format(file0, len(d0)))
         self.mmw.delete_songs(d0)
         return
+
+    @classmethod
+    def main(cls, args):
+        cls.args = args
+        return
