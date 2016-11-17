@@ -106,7 +106,7 @@ class MInfo(object):
             self._logger.warning("file: Open: fail: " + 
                                  unidecode(l0) + "; " + 
                                  sys.exc_info()[0].__name__ + "; " +
-                                 sys.exc_info()[2] "; " +
+                                 sys.exc_info()[2] + "; " +
                                  "." )
 
         self._file0 = l1
