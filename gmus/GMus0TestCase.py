@@ -57,6 +57,7 @@ class GMus0TestCase(unittest.TestCase):
         logging.info('tearDown')
 
     ## Login or load from file.
+    ## Test singledispatch1 methods.
     def test_00(self):
         self.assertIsNotNone(GMus0TestCase.gmus0)
         self.assertIsNotNone(GMus0TestCase.gmus0.add(1,2))
@@ -69,8 +70,7 @@ class GMus0TestCase(unittest.TestCase):
     def test_01(self):
         self.assertIsNotNone(GMus0TestCase.gmus0)
         GMus0TestCase.gmus0.songs()
-        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
-                            'no songs')
+        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0, 'no songs')
         GMus0TestCase.gmus0.write('all-songs.json')
         self.assertEqual(len(GMus0TestCase.gmus0.s0),
                          len(GMus0TestCase.gmus0.df), 'data-frame invalid')
@@ -79,8 +79,7 @@ class GMus0TestCase(unittest.TestCase):
     # Show that the data-frame is a dynamic property based on s0.
     def test_02(self):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
-        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
-                            'no songs')
+        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0, 'no songs')
         self.assertEqual(len(GMus0TestCase.gmus0.s0),
                          len(GMus0TestCase.gmus0.df), 'data-frame invalid')
         return

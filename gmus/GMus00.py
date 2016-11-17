@@ -74,11 +74,12 @@ class GMus00(object):
     _df = None
 
     @property
-    def df(self):
-        if self.s0 is None or len(self.s0) <= 0:
+    def df(self, which=0):
+        if self.s0 is None or which >= len(self.s0):
             return None
-        ids = [ x['id'] for x in self.s0 ]
-        self._df = pd.DataFrame(self.s0, index=ids)
+        s1 = self.s0[which]
+        ids = [ x['id'] for x in s1 ]
+        self._df = pd.DataFrame(s1, index=ids)
         return self._df
 
     ## The configuration method.

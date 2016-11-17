@@ -1,10 +1,16 @@
-*weaves
+* weaves
 
-Using the Gmusic API as a test project.
+Using the GMusic API with Pandas
 
 * Overview
 
-This is a simple example of using the gmusapi. 
+This is a simple example of using the gmusapi. Recently updated to Python
+3.
+
+It uses the GMusic Manager Wrapper now to provide logon and handle the new
+application specific logon.
+
+The idea is to download a catalogue of your songs and work with it using Pandas.
 
 * Pre-requisites
 
@@ -28,7 +34,7 @@ Debugging is tricky because it is a test case.
 
 To run from the command-line under unittest.
 
- $ python -m unittest GMus0TestCase
+ $ python3 -m unittest GMus0TestCase
 
 ** Within Emacs
 
