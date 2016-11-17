@@ -36,17 +36,17 @@ class GMus0TestCase(unittest.TestCase):
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
-        pd.set_option('display.height', 1000)
         pd.set_option('display.max_rows', 500)
         pd.set_option('display.max_columns', 500)
         pd.set_option('display.max_colwidth', 80)
         pd.set_option('display.width', 1000)
         logging.basicConfig(filename='gmus.log', level=logging.DEBUG)
+        cls.gmus0 = GMus0(cls.file0)
     
     ## Logs out.
     @classmethod
     def tearDownClass(cls):
-        GMus0TestCase.gmus0.dispose()
+        cls.gmus0.dispose()
 
     ## Null setup.
     def setUp(self):
@@ -58,11 +58,16 @@ class GMus0TestCase(unittest.TestCase):
 
     ## Login or load from file.
     def test_00(self):
-        GMus0TestCase.gmus0 = GMus0(self.file0)
         self.assertIsNotNone(GMus0TestCase.gmus0)
+        self.assertIsNotNone(GMus0TestCase.gmus0.add(1,2))
+        x0 = GMus0TestCase.gmus0.add(1,2)
+        logging.info('add: ' + str(x0) )
+        x0 = GMus0TestCase.gmus0.add("1", "2")
+        logging.info('add: ' + x0 )
 
     ## List songs.
     def test_01(self):
+        self.assertIsNotNone(GMus0TestCase.gmus0)
         GMus0TestCase.gmus0.songs()
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
                             'no songs')

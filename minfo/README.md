@@ -39,9 +39,25 @@ Open(f), Close(), Open(g) on the same MediaInfo object.
 
 * Development
 
+** unittest under make
+
 I've packaged some testing files: MInfoTestCase and MInfoTestCase2. They
 are invoked using make(1).
 
+There are logging messages sent to minfo.log.
+
+MInfoTestCase2 tries to process all the files in a directory named by SDIR
+
+** unidecode
+
+The UTF-8 encoding on some of the test file names could not be simplified
+using the module unidecode. I only use this for logging, but you may see
+messages like
+
+ site-packages/unidecode/__init__.py:50:
+ RuntimeWarning: Surrogate character '\udcbc' will be ignored. 
+ You might be using a narrow Python build.
+  return _unidecode(string)
 
 
 

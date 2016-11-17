@@ -100,7 +100,7 @@ class MInfoTestCase(unittest.TestCase):
     def test_03(self):
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.duration()
+        str0 = MInfoTestCase.test0.quality()
         logger.info(str0)
 
         format0 = "%H:%M:%S.%f"
@@ -111,7 +111,7 @@ class MInfoTestCase(unittest.TestCase):
     def test_04(self):
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.duration()
+        str0 = MInfoTestCase.test0.quality()
         logger.info(str0)
 
         format0 = "%H:%M:%S.%f"
@@ -131,23 +131,8 @@ class MInfoTestCase(unittest.TestCase):
 
     def test_05(self):
         self.assertIsNotNone(MInfoTestCase.test0)
-        d = MInfoTestCase.test0.duration1()
-        logger.info("duration1: " + d.isoformat())
-
-        x0 = MInfoTestCase.test0.next(self.file0)
-        logger.info("x0: " + '; '.join(x0))
-        x0 = MInfoTestCase.test0.next(self.file0)
-        logger.info("x0: " + '; '.join(x0))
-
-        x0 = MInfoTestCase.test0.get()
-        logger.info("x0: " + '; '.join(x0))
-        
-        x0 = MInfoTestCase.test0.reset()
-        logger.info("x0: " + '; '.join(x0))
-
-        x0 = MInfoTestCase.test0.get()
-        logger.info("x0: " + '; '.join(x0))
-        
+        d = MInfoTestCase.test0.duration()
+        logger.info("duration: " + d.isoformat())
         return
     
 #

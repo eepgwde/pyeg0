@@ -16,7 +16,7 @@
 from __future__ import print_function
 from GMus00 import GMus00
 import logging
-import ConfigParser, os, logging
+import configparser, os, logging
 import pandas as pd
 import json
 

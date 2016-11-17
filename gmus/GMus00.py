@@ -14,20 +14,37 @@
 # http://unofficial-google-music-api.readthedocs.org/en/latest/
 
 from __future__ import print_function
+
 import logging
-import ConfigParser, os, logging
+import os, logging
+
 from io import StringIO
+
+from configparser import ConfigParser
+
 import pandas as pd
 import json
 
-from peak.rules import abstract, when, around, before, after
+from gmusicapi_wrapper import MusicManagerWrapper
 
-from gmusicapi import Mobileclient
+from functools import singledispatch, update_wrapper
+
+def singledispatch1(func):
+    """
+    This provides a method attribution that allows a single dispatch from an
+    object.
+    """
+    dispatcher = singledispatch(func)
+    def wrapper(*args, **kw):
+        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
+    wrapper.register = dispatcher.register
+    update_wrapper(wrapper, dispatcher)
+    return wrapper
 
 ## Set of file paths for the configuration file.
 paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
   
-## Google Music API login, search and result cache.
+## Google Music Manager Wrapper login, search and result cache.
 #
 # The class needs to find a configuration file with these contents. (The
 # values of the keys must be a valid Google Play account.)
@@ -37,18 +54,18 @@ paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
 #
 # <pre>
 # [credentials]
-# username=username\@gmail.com
-# password=SomePassword9
+# filename=oauth-nb
+# uploader-id=0xAABBCCDDEEFF
 # </pre>
 class GMus00(object):
     """
     The Google Music API login and cache class.
     """
     ## The parsed configuration file.
-    # An instance of ConfigParser.ConfigParser
+    # An instance of configparser.ConfigParser
     cfg = None
     ## The \c gmusicapi instance.
-    api = Mobileclient()
+    mmw = None
     ## Cached results: dictionary list.
     s0 = None
     ## Cached results: \c pandas data-frame.
@@ -67,11 +84,15 @@ class GMus00(object):
     # and uses that to login.
     # @param paths usually the GMus00.paths.
     def _config0(self, paths):
-        self.cfg = ConfigParser.ConfigParser()
+        self.cfg = ConfigParser()
         self.cfg.read(paths)
-        self.api.login(self.cfg.get('credentials', 'username'),
-                       self.cfg.get('credentials', 'password'),
-                       Mobileclient.FROM_MAC_ADDRESS)
+        x0 = self.cfg.get('logging', 'level', fallback=None)
+        self.mmw = MusicManagerWrapper(enable_logging=x0)
+        x0 = self.cfg.get('credentials', 'filename', fallback="oauth")
+        x1 = self.cfg.get('credentials', 'uploader-id', fallback=None)
+        self.mmw.login(oauth_filename=x0, uploader_id=x1)
+        if not self.mmw.is_authenticated:
+            raise RuntimeException('Not authenticated')
         return
 
     ## Check if a path is a file and is non-zero.
@@ -94,7 +115,7 @@ class GMus00(object):
         return
 
     def dispose(self):
-        self.api.logout()
+        self.mmw.logout()
         self.s0 = None
 
     ## Write out the file to a JSON file.
@@ -113,24 +134,39 @@ class GMus00(object):
             json.dump(s1, outfile, sort_keys = True, indent = 4,
                       ensure_ascii=True)
 
-    def read(self, file0):
-        self.s0 = self.read0(file0)
-        return
+    @singledispatch1
+    def add(self, a, b):
+        raise NotImplementedError('Unsupported type')
+    
+ 
+    @add.register(int)
+    def _(self, a, b):
+        logging.debug("First argument is of type " + type(a).__name__)
+        return a * b
+        
+    @add.register(str)
+    def _(self, a, b):
+        logging.debug("First argument is of type " + type(a).__name__)
+        return "(\"{0:s}\", \"{1:s}\"".format(a, b)
 
-    @abstract    
+    @singledispatch1
     def read0(self, file0):
-      """The read method from a file named by a string or from a StringIO"""
+        raise NotImplementedError('Unsupported type')
 
-    @when(read0, "isinstance(file0,str)")
-    def _read0_filename(self, file0):
+    @read0.register(str)
+    def _(self, file0):
         s0 = None
         with open(file0, 'rb') as infile:
             s0 = json.load(infile)
         return s0
         
-    @when(read0, "isinstance(file0,StringIO)")
-    def _read0_buffer(self, file0):
+    @read0.register(StringIO)
+    def _(self, file0):
         return json.load(file0)
+
+    def read(self, file0):
+        self.s0 = self.read0(file0)
+        return
     
     ## Load up the records given only a JSON file of indices.
     # The file of indices should come from indices()
@@ -181,7 +217,12 @@ class GMus00(object):
         if self.s0 is not None and len(self.s0) and not(force):
             return self.s0
             
-        self.s0 = self.api.get_all_songs()
+        self.s0 = self.mmw.get_google_songs(include_filters=None, 
+                                            exclude_filters=None, 
+                                            all_includes=False, 
+                                            all_excludes=False,
+                                            uploaded=True, 
+                                            purchased=True)
         logging.info("songs: {0}".format(len(self.s0)))
         return self.s0
 
@@ -196,5 +237,5 @@ class GMus00(object):
         with open(file0, 'rb') as infile:
             d0 = json.load(infile)
         logging.info("delete: {0}: {1}".format(file0, len(d0)))
-        self.api.delete_songs(d0)
+        self.mmw.delete_songs(d0)
         return
