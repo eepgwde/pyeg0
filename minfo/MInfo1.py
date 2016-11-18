@@ -45,14 +45,19 @@ class MInfo1(MInfo):
     _delegate = None
 
     format0 = "%H:%M:%S.%f"
+    format1 = " {1:s} Chapter_{0:d}"
+    format10 = "{:s} Chapter"
     quality0 = "Audio;%Duration/String3%"
 
-    def _set_delegate(self, name0):
+    null_tm = None
+
+    def set_delegate(self, name0):
         self._delegate = getattr(self, name0)
     
-    def __init__(self, l0 = None):
+    def __init__(self, l0 = None, delegate0="duration1"):
         super().__init__(l0=l0)
-        self._set_delegate("duration1")
+        self.null_tm = self.dt2tm1(self.epoch)
+        self.set_delegate(delegate0)
 
     def dispose(self):
         """
@@ -62,8 +67,9 @@ class MInfo1(MInfo):
 
     def duration(self):
         """
-        If the quality has been correctly set, update a time
-        used the format.
+        If the quality string has been correctly set, this will collect a
+        time string from the file using MediaInfo and format it as a
+        time instance.
         """
         s0 = self.quality()
         if len(s0) <= 0:
@@ -71,21 +77,12 @@ class MInfo1(MInfo):
         self._logger.debug("duration: s0: " + s0)
         d = datetime.strptime(s0, self.format0)
         return self.tm2dt(datetime.time(d))
-
+        
     def duration1(self):
         """
-        Maintain a cumulative duration
+        This accumulates the time collected by duration()
         """
-        s0 = self.quality()
-        if s0 is None or len(s0) <= 0:
-            return None
-        self._logger.debug("duration: s0: " + s0)
-        d = datetime.strptime(s0, self.format0)
-        return self.tm2dt(datetime.time(d))
-
-    def next(self, l0 = None):
-        d = self._delegate()
-        
+        d = self.duration()
         if self._dt is None:
             self._dt = d
         else:
@@ -93,9 +90,30 @@ class MInfo1(MInfo):
 
         self._cum0.append(self.dt2tm1(self._dt))
 
+        return self._cum0[-1]
+
+    def duration2(self):
+        """
+        Returns a list with a formatted string. If this is the initial call, then
+        returns two strings within it.
+        """
+        r0 = []
+        t0 = self.duration1()
+        if len(self._cum0) == 1:
+            r0 = [ self.format10.format(self.null_tm) ]
+
+        if t0 is None:
+            return r0
+        s0 = self.format1.format(len(self._cum0), t0)
+        r0.append(s0)
+        self._logger.info('duration2: ' + str(len(r0)))
+        return r0
+
+    def next(self, l0):
+        s0 = self._delegate()
         if l0 is not None:
             self.open(l0)
-        return self._cum0[-1]
+        return s0
 
     def get(self, l0 = -1):
         return self._cum0[l0]
@@ -126,4 +144,3 @@ class MInfo1(MInfo):
         hr0 = cls.dofy(d) * 24 + d.hour
         return cls._hrfmt.format(hr0, d.minute,
                                  d.second, int(d.microsecond / 1000))
-

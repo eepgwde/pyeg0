@@ -126,7 +126,9 @@ class MInfoTestCase1(unittest.TestCase):
 
         format0 = "%H:%M:%S.%f"
         d = datetime.strptime(str0, format0)
-        logger.info('strptime:' + d.strftime(format0))
+        logger.info('strptime: quality: ' + d.strftime(format0))
+        d = type(MInfoTestCase1.test0).epoch
+        logger.info('strptime: epoch: ' + type(MInfoTestCase1.test0).dt2tm1(d))
         return
 
     def test_04(self):
@@ -167,11 +169,13 @@ class MInfoTestCase1(unittest.TestCase):
         self.files.sort()
         self.file0, *self.files = self.files
         minfo = MInfo1(self.file0)
+        minfo.set_delegate("duration2")
 
         for f in self.files:
             logger.info("load: " + f)
-            minfo.next(f)
-            print(str(minfo.get()))
+            x0 = minfo.next(f)
+            logging.info("duration: cum: " + type(x0).__name__ +
+                         "; " + "; ".join(x0))
 
 #
 # The sys.argv line will complain to you if you run it with ipython
