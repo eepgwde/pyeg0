@@ -1,4 +1,4 @@
-## @file MInfo.py
+# @file MInfo.py
 # @brief Media Info fetching.
 # @author weaves
 #
@@ -38,14 +38,14 @@ class MInfo1(MInfo):
 
     _cum0 = []
     _slv = None
-    _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:02d}"
+    _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:03d}"
     _dt = None
     _logger = logging.getLogger('MInfo')
     _loaded = False
     _delegate = None
 
     format0 = "%H:%M:%S.%f"
-    format1 = " {1:s} Chapter_{0:d}"
+    format1 = "{1:s} Chapter_{0:d}"
     format10 = "{:s} Chapter"
     quality0 = "Audio;%Duration/String3%"
 
