@@ -47,21 +47,12 @@ class MInfo1(MInfo):
     format0 = "%H:%M:%S.%f"
     quality0 = "Audio;%Duration/String3%"
 
-    @property
-    def delegate(self):
-        return self._delegate
-
-    @property
-    def delegate(self):
-        return self._delegate
-
-    @delegate.setter
-    def delegate(self, name0):
+    def _set_delegate(self, name0):
         self._delegate = getattr(self, name0)
     
     def __init__(self, l0 = None):
         super().__init__(l0=l0)
-        self._delegate = "duration1"
+        self._set_delegate("duration1")
 
     def dispose(self):
         """
@@ -79,18 +70,18 @@ class MInfo1(MInfo):
             return None
         self._logger.debug("duration: s0: " + s0)
         d = datetime.strptime(s0, self.format0)
-        return type(self).tm2dt(datetime.time(d))
+        return self.tm2dt(datetime.time(d))
 
     def duration1(self):
         """
         Maintain a cumulative duration
         """
         s0 = self.quality()
-        if len(s0) <= 0:
+        if s0 is None or len(s0) <= 0:
             return None
         self._logger.debug("duration: s0: " + s0)
         d = datetime.strptime(s0, self.format0)
-        return MInfo.tm2dt(datetime.time(d))
+        return self.tm2dt(datetime.time(d))
 
     def next(self, l0 = None):
         d = self._delegate()
@@ -98,7 +89,7 @@ class MInfo1(MInfo):
         if self._dt is None:
             self._dt = d
         else:
-            self._dt = MInfo.dtadvance(self._dt, datetime.time(d))
+            self._dt = self.dtadvance(self._dt, datetime.time(d))
 
         self._cum0.append(self.dt2tm1(self._dt))
 

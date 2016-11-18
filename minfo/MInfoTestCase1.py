@@ -158,6 +158,14 @@ class MInfoTestCase1(unittest.TestCase):
         logger.info("duration: " + d.isoformat())
         return
     
+    def test_10(self):
+        self.file0, *MInfoTestCase1.files = MInfoTestCase1.files
+        minfo = MInfo1(self.file0)
+
+        for f in MInfoTestCase1.files:
+            logger.info("load: " + f)
+            minfo.next(f)
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
