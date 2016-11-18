@@ -135,11 +135,12 @@ class GMus00(object):
 
         file0, *self._files0 = files0
         if not self._load(file0):
-            raise RuntimeException('failed to load: ' + file0)
+            raise RuntimeError('failed to load: ' + file0)
         return
 
     def dispose(self):
-        self.mmw.logout()
+        if self.mmw is not None:
+            self.mmw.logout()
         self.s0 = None
 
     ## Write out the file to a JSON file.
