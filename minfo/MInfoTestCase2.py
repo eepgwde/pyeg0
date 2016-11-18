@@ -23,8 +23,10 @@ import unittest
 
 logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
 logger = logging.getLogger('MInfoTestCase2')
-sh = logging.StreamHandler()
-logger.addHandler(sh)
+
+if False:
+    sh = logging.StreamHandler()
+    logger.addHandler(sh)
 
 ## A test driver for GMus0
 #
@@ -81,6 +83,26 @@ class MInfoTestCase2(unittest.TestCase):
         self.test0.open(MInfoTestCase2.files[0])
         self.test0 = MInfo()
         self.test0.open(MInfoTestCase2.files[1])
+        return
+
+    ## Open two 
+    def test_03(self):
+        logger.info("test_03")
+        self.assertIsNotNone(self.test0)
+        self.test0.open(MInfoTestCase2.files[0])
+        logger.info("quality: " + self.test0.quality())
+        logger.info("duration: " + type(self.test0.duration()).__name__)
+
+        return
+
+    ## Open two 
+    def test_03(self):
+        logger.info("test_03")
+        self.assertIsNotNone(self.test0)
+        self.test0.open(MInfoTestCase2.files[0])
+        logger.info("quality: " + self.test0.quality())
+        logger.info("duration: " + type(self.test0.duration()).__name__)
+
         return
 
 #
