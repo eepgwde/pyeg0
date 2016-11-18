@@ -159,13 +159,19 @@ class MInfoTestCase1(unittest.TestCase):
         return
     
     def test_10(self):
-        self.file0, *MInfoTestCase1.files = MInfoTestCase1.files
+        self.files = []
+        for root, dirs, files in os.walk(self.dir0, topdown=True):
+            for name in files:
+                self.files.append(os.path.join(root, name))
+
+        self.files.sort()
+        self.file0, *self.files = self.files
         minfo = MInfo1(self.file0)
 
-        for f in MInfoTestCase1.files:
+        for f in self.files:
             logger.info("load: " + f)
             minfo.next(f)
-            minfo.get()
+            print(str(minfo.get()))
 
 #
 # The sys.argv line will complain to you if you run it with ipython
