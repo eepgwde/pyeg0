@@ -42,7 +42,6 @@ class MInfo(object):
     _dt = None
     _logger = logging.getLogger('MInfo')
     _loaded = False
-    _file0 = None
 
     format0 = "%H:%M:%S.%f"
     quality0 = "Audio;%Duration/String3%"
@@ -67,7 +66,6 @@ class MInfo(object):
         """
         The media info has to be re-created for every file.
         """
-        self._file0 = None
         if self._slv is None:
             return
         self._slv.Close()
@@ -90,17 +88,8 @@ class MInfo(object):
                 return
             self._slv = MediaInfo()
 
-            l1 = NamedTemporaryFile()
-            self._logger.info("ntf: " + l1.name)
-
-            os.unlink(l1.name)
-            os.symlink(os.path.abspath(l0), l1.name)
-
-            self._slv.Open(l1.name)
-            self._slv.Option_Static("Inform", self.quality0)
-            self._logger.info("quality: x: " + self._slv.Inform())
-                
             self._logger.info("file: Open: " + unidecode(l0))
+            self._slv.Open(l0)
             
         except:
             self._logger.warning("file: Open: fail: " + 
@@ -109,14 +98,13 @@ class MInfo(object):
                                  sys.exc_info()[2] + "; " +
                                  "." )
 
-        self._file0 = l1
         return
 
     def quality(self):
         """
+        Hoping to obtain
+        mediainfo --Inform='Audio;%Duration/String3%' media/01.The_best_is_yet_to_come.m4a
         """
-        if self._file0 is None:
-            raise RuntimeError("last file did not load")
 
         ## self._logger.info("quality: key: " + self.quality0)
         self._slv.Option_Static("Inform", self.quality0)

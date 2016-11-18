@@ -11,7 +11,7 @@ all::
 	true
 
 check::
-	:> $(FILE).log
+	:> $(FILE)
 	$(PYTHON) -m unittest -v -f $(UUT)
 
 clean::

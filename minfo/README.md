@@ -29,8 +29,20 @@ contain UTF-8 characters.
 
 I've tried setting PYTHONIOENCODING=utf-8 but to no avail.
 
-Because of that, the MInfo goes through some tortuous logic to create a
-symlink to the file and then invoke the MediaInfo Open() on that.
+This seems to be a file-system encoding issue. There's a test for it in
+MInfoTestCase.
+
+I have tried to see if a symlink could be used to access the file and then
+invoke the MediaInfo Open() on that. This doesn't work either.
+
+Because of that, you need to move all the files over to non-UTF-8 names
+before you call this script.
+
+The MediaInfo library doesn't resolve symbolic links and I've not done so
+either.
+
+On GNU/Linux, I use recode, in a shell script, to rename UTF-8 filenames to
+ASCII before I use this method.
 
 ** New object for each file, so Close() is redundant
 

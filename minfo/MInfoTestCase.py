@@ -2,15 +2,16 @@
 # @author weaves
 # @brief Unittest of MInfo
 #
-# This is a unittest class that can perform some useful work.
+# This module tests the ancillary operations and the 
 # 
 # @note
 #
 # Relatively complete test.
 
-from __future__ import print_function
 from MInfo import MInfo
-import sys, logging
+import sys, logging, os
+from unidecode import unidecode
+
 from datetime import datetime, timezone, timedelta, date
 
 from collections import Counter
@@ -31,15 +32,23 @@ class MInfoTestCase(unittest.TestCase):
     """
     Test MInfo
     """
-    file0 = './media/01.The_best_is_yet_to_come.m4a'
     test0 = None
     gmus0 = None
     nums = [-1, 0, 1, 2, 3]
+    dir0 = None
+    files = []
 
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
-        return
+        cls.dir0 = os.environ['SDIR'] if os.environ.get('SDIR') is not None else './media' 
+        
+        for root, dirs, files in os.walk(cls.dir0, topdown=True):
+            for name in files:
+                cls.files.append(os.path.join(root, name))
+
+        cls.files.sort()
+        logger.info('files: ' + unidecode('; '.join(cls.files)))
     
     ## Logs out.
     @classmethod
@@ -49,6 +58,7 @@ class MInfoTestCase(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
+        self.file0, *MInfoTestCase.files = MInfoTestCase.files
         MInfoTestCase.test0 = MInfo(l0 = self.file0)
         return
 
@@ -58,10 +68,20 @@ class MInfoTestCase(unittest.TestCase):
         return
 
     ## Loaded?
-    def test_00(self):
+    ## Is utf-8 available as a filesystemencoding()
+    def test_000(self):
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
         return
+
+    def test_003(self):
+        logger.info("encoding: " + sys.getfilesystemencoding())
+        with self.assertRaises(UnicodeEncodeError):
+            filename = 'filename\u4500abc'
+            with open(filename, 'w') as f:
+                f.write('blah\n')
+
+        logger.info('No UTF-8')
 
     def test_01(self):
         self.assertIsNotNone(MInfoTestCase.test0)
@@ -98,10 +118,11 @@ class MInfoTestCase(unittest.TestCase):
         return
     
     def test_03(self):
+        logger.info('test_03')
         self.assertIsNotNone(MInfoTestCase.test0)
         MInfoTestCase.test0.open(self.file0)
         str0 = MInfoTestCase.test0.quality()
-        logger.info(str0)
+        logger.info('str0:' + self.file0 + "; " + str0)
 
         format0 = "%H:%M:%S.%f"
         d = datetime.strptime(str0, format0)
