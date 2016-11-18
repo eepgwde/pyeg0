@@ -25,7 +25,9 @@ from tempfile import NamedTemporaryFile
 import os
 import sys
 
-class MInfo(object):
+from MInfo import MInfo
+
+class MInfo1(MInfo):
     """
     Given a set of frequencies and a set of numbers provides
     a stream of randomly chosen numbers from the set with the given
@@ -58,32 +60,14 @@ class MInfo(object):
         self._delegate = getattr(self, name0)
     
     def __init__(self, l0 = None):
+        super().__init__(l0=l0)
         self._delegate = "duration1"
-        
-        self._slv = MediaInfo()
-        self._logger.info(self._slv.Option_Static("Info_Version", "0.7.7.0;MediaInfoDLL_Example_Python;0.7.7.0"))
-        if l0 == None:
-            return
-
-        if not isinstance(l0, str):
-            return
-
-        try:
-            self.open(l0)
-        except:
-            raise
-        
-        return
 
     def dispose(self):
         """
-        The media info has to be re-created for every file.
+        Base class only
         """
-        if self._slv is None:
-            return
-        self._slv.Close()
-        return
-
+        super().dispose()
 
     def duration(self):
         """
@@ -95,7 +79,7 @@ class MInfo(object):
             return None
         self._logger.debug("duration: s0: " + s0)
         d = datetime.strptime(s0, self.format0)
-        return MInfo.tm2dt(datetime.time(d))
+        return type(self).tm2dt(datetime.time(d))
 
     def duration1(self):
         """
@@ -133,11 +117,11 @@ class MInfo(object):
 
     @classmethod
     def tm2dt(cls, tm):
-        return datetime.combine(MInfo.epoch, tm)
+        return datetime.combine(cls.epoch, tm)
 
     @classmethod
     def dtadvance(cls, dt, tm):
-        return dt + (cls.tm2dt(tm) - MInfo.epoch)
+        return dt + (cls.tm2dt(tm) - cls.epoch)
 
     @classmethod
     def dofy(cls, d):
