@@ -165,6 +165,7 @@ class MInfoTestCase1(unittest.TestCase):
         for f in MInfoTestCase1.files:
             logger.info("load: " + f)
             minfo.next(f)
+            minfo.get()
 
 #
 # The sys.argv line will complain to you if you run it with ipython
