@@ -8,7 +8,8 @@
 #
 # Relatively complete test.
 
-from minfo import MInfo
+import minfo 
+
 import sys, logging, os
 from unidecode import unidecode
 
@@ -59,7 +60,7 @@ class MInfoTestCase(unittest.TestCase):
     def setUp(self):
         logger.info('setup')
         self.file0, *MInfoTestCase.files = MInfoTestCase.files
-        MInfoTestCase.test0 = MInfo(l0 = self.file0)
+        MInfoTestCase.test0 = minfo.MInfo(l0 = self.file0)
         return
 
     ## Null setup.

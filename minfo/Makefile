@@ -2,18 +2,20 @@
 # Test make file for MInfo.py module testing.
 
 PYTHON ?= python3
-UUT ?= MInfoTestCase2
+UUT ?= MInfoTestCase
 FILE ?= minfo.log
-SDIR ?= media
+SDIR ?= tests/media
 PYTHONIOENCODING=utf-8
 PYTHONPATH=..
+
+export SDIR
 
 all::
 	true
 
 check::
 	:> $(FILE)
-	$(PYTHON) -m unittest -v -f $(UUT)
+	$(PYTHON) -m unittest -v tests.$(UUT)
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
