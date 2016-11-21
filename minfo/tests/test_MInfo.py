@@ -26,6 +26,8 @@ logger = logging.getLogger('MInfoTestCase')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
+media0 = os.path.join(os.path.dirname(__file__), "media")
+
 ## A test driver for GMus0
 #
 # @see GMus0
@@ -42,7 +44,7 @@ class MInfoTestCase(unittest.TestCase):
     ## Sets pandas options and logging.
     @classmethod
     def setUpClass(cls):
-        cls.dir0 = os.environ['SDIR'] if os.environ.get('SDIR') is not None else './media' 
+        cls.dir0 = os.environ['SDIR'] if os.environ.get('SDIR') is not None else media0
         
         for root, dirs, files in os.walk(cls.dir0, topdown=True):
             for name in files:

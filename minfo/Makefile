@@ -13,9 +13,20 @@ export SDIR
 all::
 	true
 
+ifneq ($(UUT),)
+
 check::
 	:> $(FILE)
 	$(PYTHON) -m unittest -v tests.$(UUT)
+
+else
+
+check::
+	:> $(FILE)
+	$(PYTHON) -m unittest -v tests
+
+
+endif 
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
