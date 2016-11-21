@@ -1,146 +1,105 @@
-# @file __main__.py
-# @brief Media Info fetching.
+#!/usr/bin/env python3
+# coding=utf-8
+#
+## @file MInfo0
 # @author weaves
+# @brief MInfo0
 #
-# @details
-# This class uses the MediaInfo library for Python.
-#
-# @note
-#
-# The library has a limitation that it cannot handle UTF-8 names very
-# well. To side-step that, I make a temporary symlink using the 'os'
-# module and then use MediaInfo on that.
-#
-# 
+# CLI to MInfo itself an interface to MediaInterface
 
-from __future__ import print_function
+"""
+An upload script for Google Music using https://github.com/simon-weber/gmusicapi.
+More information at https://github.com/thebigmunch/gmusicapi-scripts.
+
+Usage:
+  minfo (-h | --help)
+  minfo [-e PATTERN]... [-f FILTER]... [-F FILTER]... [options] [<input>]...
+
+Arguments:
+  input                                 Files, directories, or glob patterns to upload.
+                                        Defaults to current directory.
+
+Options:
+  -h, --help                            Display help message.
+  -l, --log                             Enable gmusicapi logging.
+  -d, --dry-run                         Output list of songs that would be uploaded.
+  -q, --quiet                           Don't output status messages.
+                                        With -l,--log will display warnings.
+                                        With -d,--dry-run will parameters.
+  -f FILE, --files FILE                 File containing files.
+  -c COMMAND, --command COMMAND         What to do: chapters
+
+Patterns can be any valid Python regex patterns.
+"""
+
+import logging, os, sys, re
+
 from unidecode import unidecode
+from docopt import docopt
 
-from MediaInfoDLL3 import MediaInfo, Stream, Info
+from minfo import MInfo1
 
-import logging
-from datetime import datetime, date
-from tempfile import NamedTemporaryFile
+QUIET = 25
+logging.addLevelName(25, "QUIET")
 
-import os
-import sys
+logging.basicConfig(filename='minfo.log', level=QUIET)
+logger = logging.getLogger('MInfo')
+sh = logging.StreamHandler()
+logger.addHandler(sh)
 
-from minfo import MInfo
+minfo = None
+cli = None
 
-class MInfo1(MInfo):
-    """
-    Given a set of frequencies and a set of numbers provides
-    a stream of randomly chosen numbers from the set with the given
-    frequency.
-    """
-    # Values that may be returned by next_num()
-    epoch = datetime.utcfromtimestamp(0)
+def main():
+    global cli
+    cli = dict((key.lstrip("-<").rstrip(">"), value) for key, value in docopt(__doc__).items())
 
-    _cum0 = []
-    _slv = None
-    _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:03d}"
-    _dt = None
-    _logger = logging.getLogger('MInfo')
-    _loaded = False
-    _delegate = None
+    enable_logging = cli['log']
 
-    format0 = "%H:%M:%S.%f"
-    format1 = "{1:s} Chapter_{0:d}"
-    format10 = "{:s} Chapter"
-    quality0 = "Audio;%Duration/String3%"
+    if cli['quiet']:
+        logger.setLevel(QUIET)
+    else:
+        logger.setLevel(logging.INFO)
 
-    null_tm = None
+    if enable_logging:
+        logger.setLevel(logging.DEBUG)
 
-    def set_delegate(self, name0):
-        self._delegate = getattr(self, name0)
-    
-    def __init__(self, l0 = None, delegate0="duration1"):
-        super().__init__(l0=l0)
-        self.null_tm = self.dt2tm1(self.epoch)
-        self.set_delegate(delegate0)
-
-    def dispose(self):
-        """
-        Base class only
-        """
-        super().dispose()
-
-    def duration(self):
-        """
-        If the quality string has been correctly set, this will collect a
-        time string from the file using MediaInfo and format it as a
-        time instance.
-        """
-        s0 = self.quality()
-        if len(s0) <= 0:
-            return None
-        self._logger.debug("duration: s0: " + s0)
-        d = datetime.strptime(s0, self.format0)
-        return self.tm2dt(datetime.time(d))
+    for k in cli.items():
+        logger.info(k)
         
-    def duration1(self):
-        """
-        This accumulates the time collected by duration()
-        """
-        d = self.duration()
-        if self._dt is None:
-            self._dt = d
-        else:
-            self._dt = self.dtadvance(self._dt, datetime.time(d))
+    files = []
+    if cli['files']:
+        x0 = cli['files']
+        logger.info('files: ' + type(x0).__name__)
+        with open(x0[0], encoding="utf-8") as f:
+            files = f.read().splitlines()
 
-        self._cum0.append(self.dt2tm1(self._dt))
+    if len(files) <= 0:
+        raise RuntimeError('files is a required argument')
 
-        return self._cum0[-1]
+    if cli['command']:
+        chapter(files)
 
-    def duration2(self):
-        """
-        Returns a list with a formatted string. If this is the initial call, then
-        returns two strings within it.
-        """
-        r0 = []
-        t0 = self.duration1()
-        if len(self._cum0) == 1:
-            r0 = [ self.format10.format(self.null_tm) ]
+    return
 
-        if t0 is None:
-            return r0
-        s0 = self.format1.format(len(self._cum0), t0)
-        r0.append(s0)
-        self._logger.info('duration2: ' + str(len(r0)))
-        return r0
+def chapter(files):
+    global cli
 
-    def next(self, l0):
-        s0 = self._delegate()
-        if l0 is not None:
-            self.open(l0)
-        return s0
+    ## The new split operator
+    h0, *t0 = files
 
-    def get(self, l0 = -1):
-        return self._cum0[l0]
+    logger.info("files: " + unidecode('; '.join(t0)))
 
-    def reset(self, l0 = None):
-        x0 = self._cum0
-        self._cum0 = []
-        self._dt = None
-        return x0
+    minfo = MInfo1(l0 = h0, delegate0="duration2")
 
-    @classmethod
-    def tm2dt(cls, tm):
-        return datetime.combine(cls.epoch, tm)
+    for f in t0:
+        if cli['dry-run']:
+            logger.info("file: f: " + unidecode(f))
+            continue
+        x0 = minfo.next(f)
+        for x in x0:
+            print(x)
 
-    @classmethod
-    def dtadvance(cls, dt, tm):
-        return dt + (cls.tm2dt(tm) - cls.epoch)
-
-    @classmethod
-    def dofy(cls, d):
-        """
-        Day of year, indexed from zero.
-        """
-        return d.toordinal() - date(d.year, 1, 1).toordinal()
-
-    @classmethod
-    def dt2tm1(cls, d):
-        hr0 = cls.dofy(d) * 24 + d.hour
-        return cls._hrfmt.format(hr0, d.minute,
-                                 d.second, int(d.microsecond / 1000))
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

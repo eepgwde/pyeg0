@@ -22,12 +22,15 @@ distclean::
 	$(RM) -rf html
 	$(RM) $(wildcard *.json)
 
+## Install
+
+SFILE ?= dist/minfo-0.1.0.tar.gz
+
 .PHONY: uninstall
 
 uninstall::
+	rm -f $(SFILE)
 	-pip3 uninstall --yes minfo
-
-SFILE ?= dist/minfo-0.1.0.tar.gz
 
 $(SFILE):
 	python setup.py sdist
