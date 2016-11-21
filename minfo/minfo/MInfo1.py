@@ -55,7 +55,7 @@ class MInfo1(MInfo):
         self._delegate = getattr(self, name0)
     
     def __init__(self, **kwargs):
-        super().__init__(kwargs)
+        super(MInfo1,self).__init__(kwargs)
         self.null_tm = self.dt2tm1(self.epoch)
         self.set_delegate(kwargs.get('delegate0', "duration1"))
 
