@@ -61,8 +61,8 @@ class Test(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
-        self.file0, *Test.files = Test.files
-        Test.test0 = minfo.MInfo(l0 = self.file0)
+        self.file0, *type(self).files = type(self).files
+        self.test0 = minfo.MInfo(l0 = self.file0)
         return
 
     ## Null setup.
@@ -73,8 +73,8 @@ class Test(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_000(self):
-        self.assertIsNotNone(Test.test0)
-        Test.test0.open(self.file0)
+        self.assertIsNotNone(self.test0)
+        self.test0.open(self.file0)
         return
 
     def test_003(self):
@@ -87,9 +87,9 @@ class Test(unittest.TestCase):
         logger.info('No UTF-8')
 
     def test_01(self):
-        self.assertIsNotNone(Test.test0)
-        Test.test0.open(self.file0)
-        str0 = Test.test0.info()
+        self.assertIsNotNone(self.test0)
+        self.test0.open(self.file0)
+        str0 = self.test0.info()
         logger.info(str0)
         return
 
@@ -109,9 +109,9 @@ class Test(unittest.TestCase):
     
     def test_03(self):
         logger.info('test_03')
-        self.assertIsNotNone(Test.test0)
-        Test.test0.open(self.file0)
-        str0 = Test.test0.quality()
+        self.assertIsNotNone(self.test0)
+        self.test0.open(self.file0)
+        str0 = self.test0.quality()
         logger.info('str0:' + self.file0 + "; " + str0)
 
         format0 = "%H:%M:%S.%f"
