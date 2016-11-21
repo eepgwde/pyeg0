@@ -168,7 +168,7 @@ class MInfoTestCase1(unittest.TestCase):
 
         self.files.sort()
         self.file0, *self.files = self.files
-        minfo = MInfo1(self.file0)
+        minfo = MInfo1(l0 = self.file0)
         minfo.set_delegate("duration2")
 
         for f in self.files:
