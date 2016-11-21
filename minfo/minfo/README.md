@@ -30,7 +30,7 @@ contain UTF-8 characters.
 I've tried setting PYTHONIOENCODING=utf-8 but to no avail.
 
 This seems to be a file-system encoding issue. There's a test for it in
-MInfoTestCase.
+Test.
 
 I have tried to see if a symlink could be used to access the file and then
 invoke the MediaInfo Open() on that. This doesn't work either.
@@ -53,12 +53,12 @@ Open(f), Close(), Open(g) on the same MediaInfo object.
 
 ** unittest under make
 
-I've packaged some testing files: MInfoTestCase and MInfoTestCase2. They
+I've packaged some testing files: Test and Test2. They
 are invoked using make(1).
 
 There are logging messages sent to minfo.log.
 
-MInfoTestCase2 tries to process all the files in a directory named by SDIR
+Test2 tries to process all the files in a directory named by SDIR
 
 ** unidecode
 

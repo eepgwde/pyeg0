@@ -1,4 +1,4 @@
-## @file MInfoTestCase1.py
+## @file Test1.py
 # @author weaves
 # @brief Unittest of MInfo
 #
@@ -21,7 +21,7 @@ from MediaInfoDLL3 import MediaInfo
 import unittest
 
 logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
-logger = logging.getLogger('MInfoTestCase1')
+logger = logging.getLogger('Test1')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
@@ -30,7 +30,7 @@ media0 = os.path.join(os.path.dirname(__file__), "media")
 ## A test driver for GMus0
 #
 # @see GMus0
-class MInfoTestCase1(unittest.TestCase):
+class Test1(unittest.TestCase):
     """
     Test MInfo
     """
@@ -61,8 +61,8 @@ class MInfoTestCase1(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
-        self.file0, *MInfoTestCase1.files = MInfoTestCase1.files
-        MInfoTestCase1.test0 = MInfo1(l0 = self.file0)
+        self.file0, *Test1.files = Test1.files
+        Test1.test0 = MInfo1(l0 = self.file0)
         return
 
     ## Null setup.
@@ -73,8 +73,8 @@ class MInfoTestCase1(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_000(self):
-        self.assertIsNotNone(MInfoTestCase1.test0)
-        MInfoTestCase1.test0.open(self.file0)
+        self.assertIsNotNone(Test1.test0)
+        Test1.test0.open(self.file0)
         return
 
     def test_003(self):
@@ -87,9 +87,9 @@ class MInfoTestCase1(unittest.TestCase):
         logger.info('No UTF-8')
 
     def test_01(self):
-        self.assertIsNotNone(MInfoTestCase1.test0)
-        MInfoTestCase1.test0.open(self.file0)
-        str0 = MInfoTestCase1.test0.info()
+        self.assertIsNotNone(Test1.test0)
+        Test1.test0.open(self.file0)
+        str0 = Test1.test0.info()
         logger.info(str0)
         return
 
@@ -122,21 +122,21 @@ class MInfoTestCase1(unittest.TestCase):
     
     def test_03(self):
         logger.info('test_03')
-        self.assertIsNotNone(MInfoTestCase1.test0)
-        MInfoTestCase1.test0.open(self.file0)
-        str0 = MInfoTestCase1.test0.quality()
+        self.assertIsNotNone(Test1.test0)
+        Test1.test0.open(self.file0)
+        str0 = Test1.test0.quality()
         logger.info('str0:' + self.file0 + "; " + str0)
 
         format0 = "%H:%M:%S.%f"
         d = datetime.strptime(str0, format0)
         logger.info('strptime: quality: ' + d.strftime(format0))
-        d = type(MInfoTestCase1.test0).epoch
-        logger.info('strptime: epoch: ' + type(MInfoTestCase1.test0).dt2tm1(d))
+        d = type(Test1.test0).epoch
+        logger.info('strptime: epoch: ' + type(Test1.test0).dt2tm1(d))
         return
 
     def test_04(self):
-        self.assertIsNotNone(MInfoTestCase1.test0)
-        minfo = MInfoTestCase1.test0
+        self.assertIsNotNone(Test1.test0)
+        minfo = Test1.test0
         minfo.open(self.file0)
         str0 = minfo.quality()
         logger.info(str0)
@@ -157,8 +157,8 @@ class MInfoTestCase1(unittest.TestCase):
         return
 
     def test_05(self):
-        self.assertIsNotNone(MInfoTestCase1.test0)
-        minfo = MInfoTestCase1.test0
+        self.assertIsNotNone(Test1.test0)
+        minfo = Test1.test0
         d = minfo.duration()
         logger.info("duration: " + d.isoformat())
         return
@@ -191,4 +191,4 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='MInfoTestCase1', verbosity=3, failfast=True, exit=False)
+        unittest.main(module='Test1', verbosity=3, failfast=True, exit=False)

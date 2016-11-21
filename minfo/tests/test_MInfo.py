@@ -1,4 +1,4 @@
-## @file MInfoTestCase.py
+## @file Test.py
 # @author weaves
 # @brief Unittest of MInfo
 #
@@ -22,7 +22,7 @@ from MediaInfoDLL3 import MediaInfo
 import unittest
 
 logging.basicConfig(filename='minfo.log', level=logging.DEBUG)
-logger = logging.getLogger('MInfoTestCase')
+logger = logging.getLogger('Test')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
@@ -31,7 +31,7 @@ media0 = os.path.join(os.path.dirname(__file__), "media")
 ## A test driver for GMus0
 #
 # @see GMus0
-class MInfoTestCase(unittest.TestCase):
+class Test(unittest.TestCase):
     """
     Test MInfo
     """
@@ -61,8 +61,8 @@ class MInfoTestCase(unittest.TestCase):
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
-        self.file0, *MInfoTestCase.files = MInfoTestCase.files
-        MInfoTestCase.test0 = minfo.MInfo(l0 = self.file0)
+        self.file0, *Test.files = Test.files
+        Test.test0 = minfo.MInfo(l0 = self.file0)
         return
 
     ## Null setup.
@@ -73,8 +73,8 @@ class MInfoTestCase(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_000(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
+        self.assertIsNotNone(Test.test0)
+        Test.test0.open(self.file0)
         return
 
     def test_003(self):
@@ -87,9 +87,9 @@ class MInfoTestCase(unittest.TestCase):
         logger.info('No UTF-8')
 
     def test_01(self):
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.info()
+        self.assertIsNotNone(Test.test0)
+        Test.test0.open(self.file0)
+        str0 = Test.test0.info()
         logger.info(str0)
         return
 
@@ -109,9 +109,9 @@ class MInfoTestCase(unittest.TestCase):
     
     def test_03(self):
         logger.info('test_03')
-        self.assertIsNotNone(MInfoTestCase.test0)
-        MInfoTestCase.test0.open(self.file0)
-        str0 = MInfoTestCase.test0.quality()
+        self.assertIsNotNone(Test.test0)
+        Test.test0.open(self.file0)
+        str0 = Test.test0.quality()
         logger.info('str0:' + self.file0 + "; " + str0)
 
         format0 = "%H:%M:%S.%f"
@@ -129,4 +129,4 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='MInfoTestCase', verbosity=3, failfast=True, exit=False)
+        unittest.main(module='Test', verbosity=3, failfast=True, exit=False)
