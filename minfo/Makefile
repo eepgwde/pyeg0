@@ -6,6 +6,7 @@ UUT ?= MInfoTestCase2
 FILE ?= minfo.log
 SDIR ?= media
 PYTHONIOENCODING=utf-8
+PYTHONPATH=..
 
 all::
 	true
@@ -20,3 +21,16 @@ clean::
 distclean::
 	$(RM) -rf html
 	$(RM) $(wildcard *.json)
+
+.PHONY: uninstall
+
+uninstall::
+	-pip3 uninstall --yes minfo
+
+SFILE ?= dist/minfo-0.1.0.tar.gz
+
+$(SFILE):
+	python setup.py sdist
+
+install: uninstall $(SFILE) 
+	pip3 install $(SFILE) --user

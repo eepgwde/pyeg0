@@ -37,7 +37,7 @@ import logging, os, sys, re
 from unidecode import unidecode
 from docopt import docopt
 
-from MInfo1 import MInfo1
+from minfo import MInfo1
 
 QUIET = 25
 logging.addLevelName(25, "QUIET")

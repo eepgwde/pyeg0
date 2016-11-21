@@ -1,4 +1,4 @@
-# @file MInfo.py
+# @file __main__.py
 # @brief Media Info fetching.
 # @author weaves
 #
@@ -25,7 +25,7 @@ from tempfile import NamedTemporaryFile
 import os
 import sys
 
-from MInfo import MInfo
+from minfo import MInfo
 
 class MInfo1(MInfo):
     """

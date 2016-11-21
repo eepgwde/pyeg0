@@ -9,7 +9,7 @@
 # Relatively complete test.
 
 from __future__ import print_function
-from MInfo import MInfo
+from minfo import MInfo
 import sys, logging
 from datetime import datetime, timezone, timedelta, date
 
