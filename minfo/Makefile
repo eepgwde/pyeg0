@@ -23,8 +23,7 @@ else
 
 check::
 	:> $(FILE)
-	$(PYTHON) -m unittest -v tests
-
+	$(PYTHON) -m unittest discover -v -s tests
 
 endif 
 
@@ -43,7 +42,7 @@ SFILE ?= dist/minfo-0.1.0.tar.gz
 
 uninstall::
 	rm -f $(SFILE)
-	-pip3 uninstall --yes minfo
+	-$(shell -c "cd $(HOME)/.local; -pip3 uninstall --yes minfo")
 
 $(SFILE):
 	python setup.py sdist
