@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # coding=utf-8
 #
-## @file minfo0
+## @file MInfo0
 # @author weaves
-# @brief minfo0
+# @brief MInfo0
 #
 # CLI to MInfo itself an interface to MediaInterface
 
@@ -12,8 +12,8 @@ An upload script for Google Music using https://github.com/simon-weber/gmusicapi
 More information at https://github.com/thebigmunch/gmusicapi-scripts.
 
 Usage:
-  minfo0 (-h | --help)
-  minfo0 [-e PATTERN]... [-f FILTER]... [-F FILTER]... [options] [<input>]...
+  minfo (-h | --help)
+  minfo [-e PATTERN]... [-f FILTER]... [-F FILTER]... [options] [<input>]...
 
 Arguments:
   input                                 Files, directories, or glob patterns to upload.
