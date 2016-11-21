@@ -1,6 +1,9 @@
 # Include the license file
 include LICENSE.txt
 
+# Source files?
+include minfo/*.py
+
 # Include the data files
 recursive-include data *
 
