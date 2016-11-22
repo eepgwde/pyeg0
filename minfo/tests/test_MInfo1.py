@@ -70,7 +70,7 @@ class Test1(Test):
 
         self.files.sort()
         self.file0, *self.files = self.files
-        minfo = MInfo1(l0 = self.file0)
+        minfo = MInfo1(l0 = self.file0, delegate0 = "duration2")
         minfo.set_delegate("duration2")
 
         for f in self.files:
