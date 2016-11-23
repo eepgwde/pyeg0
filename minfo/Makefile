@@ -38,14 +38,14 @@ distclean::
 
 SFILE ?= dist/minfo-0.1.0.tar.gz
 
-.PHONY: uninstall
+.PHONY: uninstall dist-local
 
 uninstall::
-	rm -f $(SFILE)
+	rm -f $(wildcard dist/*.tar.gz)
 	-$(shell -c "cd $(HOME)/.local; -pip3 uninstall --yes minfo")
 
-$(SFILE):
+dist-local:
 	python setup.py sdist
 
-install: uninstall $(SFILE) 
-	pip3 install $(SFILE) --user
+install: uninstall dist-local
+	pip3 install $(wildcard dist/*.tar.gz) --user

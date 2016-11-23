@@ -1,0 +1,5 @@
+This package provides the Python script 'minfo' that uses a local
+module MInfo1 to extract information from media files. 
+This is then used to produce a chapters file for MP4Box to produce an Apple
+audiofile (an .m4b) that can be a full audiobook with chapters.
+
