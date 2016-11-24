@@ -51,6 +51,12 @@ class Test1(unittest.TestCase):
         logger.info("dofy: " + str(s0))
         return
 
+    def test_05(self):
+        adv = 1.525
+        s0 = Singleton.instance().dtadvance2(seconds=adv)
+        logger.info("epoch: " + str(adv) + "; " + str(s0))
+        return
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

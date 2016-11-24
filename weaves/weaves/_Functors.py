@@ -14,7 +14,7 @@
 # 
 
 import logging
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from tempfile import NamedTemporaryFile
 
 import os
@@ -66,6 +66,10 @@ class _Impl(object):
         hr0 = self.dofy(d) * 24 + d.hour
         return self._hrfmt.format(hr0, d.minute,
                                  d.second, int(d.microsecond / 1000))
+
+    def dtadvance2(self, **kwargs):
+        dt = self.epoch
+        return dt + timedelta(**kwargs)
 
 class Singleton(object):
     _impl = None
