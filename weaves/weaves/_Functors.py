@@ -16,6 +16,7 @@
 import logging
 from datetime import datetime, date, timedelta
 from tempfile import NamedTemporaryFile
+from cached_property import cached_property
 
 import os
 import sys
@@ -39,6 +40,8 @@ class _Impl(object):
     Date methods
     """
     epoch = datetime.utcfromtimestamp(0)
+    _hrfmt = "{0:02d}:{1:02d}:{2:02d}.{3:03d}"
+
     _logger = logging.getLogger('weaves')
 
     def __init__(self, **kwargs):
@@ -53,19 +56,25 @@ class _Impl(object):
     def tm2dt(self, tm):
         return datetime.combine(self.epoch, tm)
 
-    def dtadvance(self, dt, tm):
-        return dt + (self.tm2dt(tm) - cls.epoch)
+    @cached_property
+    def zulu(self):
+        """Zero time"""
+        return self.dt2tm1(self.epoch)
 
-    def dofy(self, d):
+    def dtadvance(self, dt, tm):
+        return dt + (self.tm2dt(tm) - self.epoch)
+
+    def dofy(self, dt):
         """
         Day of year, indexed from zero.
         """
+        d = dt.date() if isinstance(dt, datetime) else dt
         return d.toordinal() - date(d.year, 1, 1).toordinal()
 
     def dt2tm1(self, d):
         hr0 = self.dofy(d) * 24 + d.hour
         return self._hrfmt.format(hr0, d.minute,
-                                 d.second, int(d.microsecond / 1000))
+                                  d.second, int(d.microsecond / 1000))
 
     def dtadvance2(self, **kwargs):
         dt = self.epoch

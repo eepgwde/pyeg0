@@ -52,6 +52,9 @@ class Test1(unittest.TestCase):
         return
 
     def test_05(self):
+        """
+        How to get a datetime that is an advance 
+        """
         adv = 1.525
         s0 = Singleton.instance().dtadvance2(seconds=adv)
         logger.info("epoch: " + str(adv) + "; " + str(s0))

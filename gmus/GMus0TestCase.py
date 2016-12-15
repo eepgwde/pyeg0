@@ -83,15 +83,17 @@ class GMus0TestCase(unittest.TestCase):
     def test_02(self):
         GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
         self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0, 'no songs')
-        self.assertEqual(len(GMus0TestCase.gmus0.s0),
+        logging.info('s0: ' + str(len(GMus0TestCase.gmus0.s0[0])))
+        logging.info('df: ' + str(len(GMus0TestCase.gmus0.df)))
+        self.assertEqual(len(GMus0TestCase.gmus0.s0[0]),
                          len(GMus0TestCase.gmus0.df), 'data-frame invalid')
         return
 
     ## Check that composer is iPlayer
     def test_03(self):
         GMus0TestCase.gmus0.s0 = \
-        GMus0TestCase.gmus0.exact0('composer', 'BBC iPlayer')
-        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0,
+        GMus0TestCase.gmus0.exact0('album_artist', 'BBC Radio')
+        self.assertNotEqual(len(GMus0TestCase.gmus0.s0[0]), 0,
                             'no songs')
 
     ## Test write and read.

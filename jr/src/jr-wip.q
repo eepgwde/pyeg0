@@ -2,6 +2,38 @@
 ///
 /// Validation and prototyping code for jr2.q
 
+// More things you never knew you could do with q/kdb+
+
+// directory, partition, field, table
+.Q.dpft
+
+// Quick factorial
+
+fact0: { [n] 1*/1 + til n }
+
+// Using a dictionary for memoize
+// then this will delete key `a from a dict abc, enlist `a _ abc
+
+
+memoize: { [d;l;r] d[l] :: }
+
+// Initialize the memo table 
+if[.sys.undef . `.memo`fact0; .memo.fact0: (`long$())!`long$() ]
+
+fact1: { [n] $[null r:.memo.fact0[n]; { r:fact0[x]; .memo.fact0[x]::r; r }[n]; r] }
+
+n: 3
+
+fact1[n]
+
+.memo.fact0
+
+x:10; while[x-:1; fact1[x]]
+
+.memo.fact0
+
+\
+
 select count i by folio0 from data1 where null wapnl05 
 select count i by folio0 from data1 where null fp05
 

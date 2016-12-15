@@ -223,21 +223,25 @@ class GMus00(object):
     # @param field name of the field in each song.
     # @param name a key field to test.
     def in0(self, field, name):
-        s1 = [ track for track in self.s0
+        s0 = self.s0[0]
+        s1 = [ track for track in s0
                if name in track[field] ]
         
         self._logger.info("in0: filter: {0}".format(len(s1)))
-        return s1
+        return [ s1 ]
 
     ## General method to filter by an exact match.
     # The name of the field is given by the string field.
     # The value it must match is given with the name.
     def exact0(self, field, name):
-        s1 = [ track for track in self.s0
+        s1 = [ track for track in self.s0[0]
+               if track.get(field, None) != None ]
+
+        s1 = [ track for track in s1
                if track[field] == name ]
         
         self._logger.info("exact0: filter: {0}".format(len(s1)))
-        return s1
+        return [ s1 ]
         
     ## Retrieve all the songs and cache them.
     # The songs are stored in GMus00.s0
