@@ -1,4 +1,4 @@
-## @file GMus0TestCase.py
+## @file GMus00TestCase.py
 # @author weaves
 # @brief Unittest of GMus0: removes older duplicates
 #
@@ -29,7 +29,7 @@ logger.addHandler(sh)
 ## A test driver for GMus0
 #
 # @see GMus0
-class GMus0TestCase(unittest.TestCase):
+class GMus00TestCase(unittest.TestCase):
     """
     A test driver for GMus0. If the file songs.json exists, then this class will
     not try to a login.
@@ -65,53 +65,53 @@ class GMus0TestCase(unittest.TestCase):
     ## Login or load from file.
     ## Test singledispatch1 methods.
     def test_00(self):
-        self.assertIsNotNone(GMus0TestCase.gmus0)
-        self.assertIsNotNone(GMus0TestCase.gmus0.add(1,2))
-        x0 = GMus0TestCase.gmus0.add(1,2)
+        self.assertIsNotNone(GMus00TestCase.gmus0)
+        self.assertIsNotNone(GMus00TestCase.gmus0.add(1,2))
+        x0 = GMus00TestCase.gmus0.add(1,2)
         logging.info('add: ' + str(x0) )
-        x0 = GMus0TestCase.gmus0.add("1", "2")
+        x0 = GMus00TestCase.gmus0.add("1", "2")
         logging.info('add: ' + x0 )
 
     ## List songs.
     def test_01(self):
-        self.assertIsNotNone(GMus0TestCase.gmus0)
-        GMus0TestCase.gmus0.songs()
-        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0, 'no songs')
-        GMus0TestCase.gmus0.write('all-songs.json')
+        self.assertIsNotNone(GMus00TestCase.gmus0)
+        GMus00TestCase.gmus0.songs()
+        self.assertNotEqual(len(GMus00TestCase.gmus0.s0), 0, 'no songs')
+        GMus00TestCase.gmus0.write('all-songs.json')
         ## This is broken
-        # self.assertEqual(len(GMus0TestCase.gmus0.s0),
-        #   len(GMus0TestCase.gmus0.df), 'data-frame invalid')
+        # self.assertEqual(len(GMus00TestCase.gmus0.s0),
+        #   len(GMus00TestCase.gmus0.df), 'data-frame invalid')
 
     ## All these are broken.
     
     ## Check that artist is BBC Radio
     # Show that the data-frame is a dynamic property based on s0.
     def test_02(self):
-        GMus0TestCase.gmus0.s0 = GMus0TestCase.gmus0.in0('artist', "BBC Radio")
-        self.assertNotEqual(len(GMus0TestCase.gmus0.s0), 0, 'no songs')
-        logging.info('s0: ' + str(len(GMus0TestCase.gmus0.s0[0])))
-        logging.info('df: ' + str(len(GMus0TestCase.gmus0.df)))
-        self.assertEqual(len(GMus0TestCase.gmus0.s0[0]),
-                         len(GMus0TestCase.gmus0.df), 'data-frame invalid')
+        GMus00TestCase.gmus0.s0 = GMus00TestCase.gmus0.in0('artist', "BBC Radio")
+        self.assertNotEqual(len(GMus00TestCase.gmus0.s0), 0, 'no songs')
+        logging.info('s0: ' + str(len(GMus00TestCase.gmus0.s0[0])))
+        logging.info('df: ' + str(len(GMus00TestCase.gmus0.df)))
+        self.assertEqual(len(GMus00TestCase.gmus0.s0[0]),
+                         len(GMus00TestCase.gmus0.df), 'data-frame invalid')
         return
 
     ## Check that composer is iPlayer
     def test_03(self):
-        GMus0TestCase.gmus0.s0 = \
-        GMus0TestCase.gmus0.exact0('album_artist', 'BBC Radio')
-        self.assertNotEqual(len(GMus0TestCase.gmus0.s0[0]), 0,
+        GMus00TestCase.gmus0.s0 = \
+        GMus00TestCase.gmus0.exact0('album_artist', 'BBC Radio')
+        self.assertNotEqual(len(GMus00TestCase.gmus0.s0[0]), 0,
                             'no songs')
 
     ## Test write and read.
     def test_04(self):
-        ns0 = len(GMus0TestCase.gmus0.s0)
-        GMus0TestCase.gmus0.write('songs.json')
-        GMus0TestCase.gmus0.read('songs.json')
-        ns1 = len(GMus0TestCase.gmus0.s0)
+        ns0 = len(GMus00TestCase.gmus0.s0)
+        GMus00TestCase.gmus0.write('songs.json')
+        GMus00TestCase.gmus0.read('songs.json')
+        ns1 = len(GMus00TestCase.gmus0.s0)
         self.assertEqual(ns0, ns1, "not equal")
 
     def test_06(self):
-        api0 = GMus0TestCase.gmus0.api
+        api0 = GMus00TestCase.gmus0.api
         logger.info("api: " + type(api0).__name__)
 
 
@@ -125,4 +125,4 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='GMus0TestCase', verbosity=3, failfast=True, exit=False)
+        unittest.main(module='GMus00TestCase', verbosity=3, failfast=True, exit=False)

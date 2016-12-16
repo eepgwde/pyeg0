@@ -8,7 +8,7 @@ doc::
 
 check::
 	:> gmus.log
-	$(PYTHON) -m unittest -v -f GMus0TestCase
+	$(PYTHON) -m unittest -v -f GMus00TestCase
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
