@@ -14,11 +14,17 @@
 
 from __future__ import print_function
 from GMus0 import GMus0
-import sys, logging
+import sys, logging, os
 import pandas as pd
 from collections import Counter
 
 import unittest
+
+logfile = os.environ['X_LOGFILE'] if os.environ.get('X_LOGFILE') is not None else "gmus.log"
+logging.basicConfig(filename=logfile, level=logging.DEBUG)
+logger = logging.getLogger('Test')
+sh = logging.StreamHandler()
+logger.addHandler(sh)
 
 ## A test driver for GMus0
 #
@@ -104,19 +110,23 @@ class GMus0TestCase(unittest.TestCase):
         ns1 = len(GMus0TestCase.gmus0.s0)
         self.assertEqual(ns0, ns1, "not equal")
 
+    def test_06(self):
+        api0 = GMus0TestCase.gmus0.api
+        logger.info("api: " + type(api0).__name__)
+
     ## List duplicates and write to file.
-    def test_05(self):
+    def test_15(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.duplicated()
         self.assertTrue(len(GMus0TestCase.s1)>0)
         GMus0TestCase.gmus0.write('dsongs.json', GMus0TestCase.s1)
 
     ## Get indices from file.
-    def test_06(self):
+    def test_17(self):
         GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
         self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
 
     ## Filter based on indices
-    def test_07(self):
+    def test_19(self):
         i0 =  GMus0TestCase.gmus0.indices('dsongs.json')
         GMus0TestCase.s0 = GMus0TestCase.gmus0.load('dsongs.json',
                                                    source='all-songs.json')

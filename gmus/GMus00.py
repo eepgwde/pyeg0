@@ -82,6 +82,10 @@ class GMus00(object):
     _logger = None
 
     @property
+    def api(self):
+        return self.mmw.api
+        
+    @property
     def df(self, which=0):
         if self.s0 is None or which >= len(self.s0):
             return None
@@ -101,6 +105,7 @@ class GMus00(object):
     def _login(self):
         x0 = self.cfg.get('logging', 'level', fallback=None)
         self.mmw = MusicManagerWrapper(enable_logging=x0)
+        self._logger.info("mmw: " + type(self.mmw).__name__)
         x0 = self.cfg.get('credentials', 'filename', fallback="oauth")
         x1 = self.cfg.get('credentials', 'uploader-id', fallback=None)
         self.mmw.login(oauth_filename=x0, uploader_id=x1)
@@ -125,10 +130,14 @@ class GMus00(object):
     
     def __init__(self, files0):
         self._logger = logging.getLogger('gmus0')
-        self._logger.info('GMus00: ctr')
+        self._logger.info('GMus00: ctr: ' + files0)
         self._config0(paths)
 
-        if files0 is None or len(files0) <= 0:
+        hasFile = files0 is not None
+        if hasFile:
+            hasFile = os.path.exists(files0)
+
+        if not hasFile:
             self._logger.info("init: logging-in" )
             self._login()
             return
@@ -249,13 +258,9 @@ class GMus00(object):
     def songs(self, force=False):
         if self.s0 is not None and len(self.s0) and not(force):
             return self.s0
+
+        self.s0 = [ self.mmw.api.get_uploaded_songs() ]
             
-        self.s0 = self.mmw.get_google_songs(include_filters=None, 
-                                            exclude_filters=None, 
-                                            all_includes=False, 
-                                            all_excludes=False,
-                                            uploaded=True, 
-                                            purchased=True)
         self._logger.info("songs: {0}".format(len(self.s0)))
         return self.s0
 
