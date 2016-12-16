@@ -37,6 +37,17 @@ paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
 # </pre>
 class GMus0(GMus00):
 
+    def _login(self):
+        self._logger.info("GMus00: login")
+        x0 = self.cfg.get('logging', 'level', fallback=None)
+        self.mmw = MusicManagerWrapper(enable_logging=x0)
+        self._logger.info("mmw: " + type(self.mmw).__name__)
+        x0 = self.cfg.get('credentials', 'filename', fallback="oauth")
+        x1 = self.cfg.get('credentials', 'uploader-id', fallback=None)
+        self.mmw.login(oauth_filename=x0, uploader_id=x1)
+        if not self.mmw.is_authenticated:
+            raise RuntimeError('Not authenticated')
+
     ## Ad-hoc method to find the indices of duplicated entries.
     def duplicated(self):
         # self._df = self._df.sort(['album', 'title', 'creationTimestamp'],

@@ -13,7 +13,7 @@
 # file import class.
 
 from __future__ import print_function
-from GMus0 import GMus0
+from GMus00 import GMus00
 import sys, logging, os
 import pandas as pd
 from collections import Counter
@@ -47,7 +47,7 @@ class GMus0TestCase(unittest.TestCase):
         pd.set_option('display.max_colwidth', 80)
         pd.set_option('display.width', 1000)
         logging.basicConfig(filename='gmus.log', level=logging.DEBUG)
-        cls.gmus0 = GMus0(cls.file0)
+        cls.gmus0 = GMus00(cls.file0)
     
     ## Logs out.
     @classmethod
@@ -114,23 +114,6 @@ class GMus0TestCase(unittest.TestCase):
         api0 = GMus0TestCase.gmus0.api
         logger.info("api: " + type(api0).__name__)
 
-    ## List duplicates and write to file.
-    def test_15(self):
-        GMus0TestCase.s1 = GMus0TestCase.gmus0.duplicated()
-        self.assertTrue(len(GMus0TestCase.s1)>0)
-        GMus0TestCase.gmus0.write('dsongs.json', GMus0TestCase.s1)
-
-    ## Get indices from file.
-    def test_17(self):
-        GMus0TestCase.s1 = GMus0TestCase.gmus0.indices('dsongs.json')
-        self.assertTrue(len(GMus0TestCase.gmus0.s0)>0)
-
-    ## Filter based on indices
-    def test_19(self):
-        i0 =  GMus0TestCase.gmus0.indices('dsongs.json')
-        GMus0TestCase.s0 = GMus0TestCase.gmus0.load('dsongs.json',
-                                                   source='all-songs.json')
-        self.assertEqual(len(GMus0TestCase.gmus0.s0), len(i0))
 
 # The sys.argv line will complain you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
