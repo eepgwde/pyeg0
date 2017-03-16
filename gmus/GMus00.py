@@ -50,7 +50,7 @@ def singledispatch1(func):
     return wrapper
 
 ## Set of file paths for the configuration file.
-paths = ['site.cfg', os.path.expanduser('~/share/site/.safe/gmusic.cfg')]
+paths = ['site.cfg', os.path.expanduser('~/share/site/any/gmusic.cfg')]
   
 ## Google Music Manager Wrapper login, search and result cache.
 #

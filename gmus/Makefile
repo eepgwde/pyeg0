@@ -1,4 +1,5 @@
 PYTHON ?= python3
+TEST0 ?= GMus0TestCase
 
 all::
 	true
@@ -8,7 +9,7 @@ doc::
 
 check::
 	:> gmus.log
-	$(PYTHON) -m unittest -v -f GMus00TestCase
+	$(PYTHON) -m unittest -v -f $(TEST0)
 
 clean::
 	$(RM) $(wildcard *.pyc *.log *~ nohup.out)

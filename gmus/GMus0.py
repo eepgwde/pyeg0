@@ -39,14 +39,25 @@ class GMus0(GMus00):
 
     def _login(self):
         self._logger.info("GMus00: login")
-        x0 = self.cfg.get('logging', 'level', fallback=None)
-        self.mmw = MusicManagerWrapper(enable_logging=x0)
+        x0 = self.cfg.get('logging', 'level', fallback=False)
+        self.mmw = Mobileclient(debug_logging=x0, 
+                                validate=False, verify_ssl=False)
         self._logger.info("mmw: " + type(self.mmw).__name__)
-        x0 = self.cfg.get('credentials', 'filename', fallback="oauth")
-        x1 = self.cfg.get('credentials', 'uploader-id', fallback=None)
-        self.mmw.login(oauth_filename=x0, uploader_id=x1)
+        x0 = self.cfg.get('credentials', 'username', fallback=None)
+        x1 = self.cfg.get('credentials', 'password', fallback=None)
+        self._logger.info("creds: " + x0 + "; " + x1)
+        self.mmw.login(x0,x1,Mobileclient.FROM_MAC_ADDRESS)
         if not self.mmw.is_authenticated:
             raise RuntimeError('Not authenticated')
+
+    def songs(self, force=False):
+        if self.s0 is not None and len(self.s0) and not(force):
+            return self.s0
+
+        self.s0 = [ self.mmw.get_all_songs() ]
+            
+        self._logger.info("songs: {0}".format(len(self.s0)))
+        return self.s0
 
     ## Ad-hoc method to find the indices of duplicated entries.
     def duplicated(self):

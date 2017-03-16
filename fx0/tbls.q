@@ -38,7 +38,7 @@ while[1 < count .t.tbls;
       .t.tbl: $[1<count .t.tbl; .t.tbl,tbl; tbl];
       :: ]
 
-
+fx0:value select by i from .t.tbl
 
 asc select n:count i by sym0,dt0 from .t.tbl
 

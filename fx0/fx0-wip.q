@@ -9,12 +9,49 @@
 t:([] name:(); iq:())
 `t insert (`Dent;98)
 
+// Example functions
+
+// A factorial of all integers up to 8.
+
+{ (*) over 1 + til x } each til 8
+
+// First 10 fibonacci numbers.
+
 10 {x,sum -2#x}/ 1 1
 
-x0:{ $[3 = count x; x,","; x] } each 3 cut reverse string 100000
-reverse raze x0
+// First 10 powers of 3 - note use float.
+
+6 {x,prd -2#x}/ 3f
+
+// String formatting
+
+x1:100000
+x0:{ $[3 = count x; x,","; x] } each 3 cut reverse string x1
+x3: reverse raze x0
+x3: $[x3[0] = ","; 1_x3; x3] 
+
+// Using each prior
+
+({(x;y)}':) 1 2 3 4
+
+batch:{[rt;tn;recs] hsym[`$rt,"/",tn,"/"] upsert .Q.en[hsym `$rt;] recs}
+
+dayrecs:{([] dt:x; ti:asc 100?24:00:00; sym:100?`ibm`aapl; qty:100*1+100?1000)}
+
+appday:batch["./db";"t";]
+
+appday dayrecs 2015.01.01
+
+appday dayrecs 2015.01.02
+
+appday dayrecs 2015.01.03
+
+\l ./db
+select from t
+_
 
 \
+
 
 // directory, partition, field, table
 .Q.dpft
