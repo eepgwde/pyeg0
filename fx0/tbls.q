@@ -18,31 +18,69 @@
 // @{
 
 
+.sys.exit: {[x] 2 "fail"; if[not .sys.is_arg`halt; exit x]; :: }
+
 if[.sys.is_arg`verbose; show .sys.i.args]
 
-.t.usage: { [m;v]
-	   0N!m;
-	   .sys.exit[v] }
+.t.usage: { [m;v] 2 m; .sys.exit[v] }
+
+.sys.assert: { [x] if[ -1h <> type x; .sys.exit 3]; if[not x; .sys.exit 2]; :: }
 
 \c 200 200
 
-.t.tbls: value "\\a"
+.t.tbls: tables `.
+
+.sys.assert 0 < count .t.tbls
+  
+.t.tbls: string each .t.tbls
+
+.sys.assert 0 < count .t.tbls
+
+.sys.assert 0 < sum .t.tbls like "???0???"
+
+.t.tbls: .t.tbls where .t.tbls like "???0???" 
+
+.t.tbls0: .t.tbls / a backup
 
 .t.tbl: ()
 
 // Concatenate a set of tables together.
+// This is iterative and may be more memory efficient
 
-while[1 < count .t.tbls;
-      tn: first .t.tbls; .t.tbls: 1 _ .t.tbls; 0N!(tn; string count .t.tbl);
-      tbl: value select by i from value tn;
+while[0 < count .t.tbls;
+      tn: first .t.tbls; .t.tbls: 1 _ .t.tbls;
+      2 ":" sv (tn; string count .t.tbl; string "\n");
+      tbl: () xkey select by i from value tn;
       .t.tbl: $[1<count .t.tbl; .t.tbl,tbl; tbl];
       :: ]
+
+2 ":" sv ("t.tbl"; string count .t.tbl; string "\n");
+
+show select count i by dt0,sym0 from .t.tbl
+
+// Concatenate a set of tables together.
+// This is the list way of doing it
+
+ftbl: { () xkey select by i from value x }
+
+.t.tbls: .t.tbls0
+
+.t.tbl: raze ftbl each .t.tbls
+
+2 ":" sv ("t.tbl"; string count .t.tbl; string "\n");
+
+show select count i by dt0,sym0 from .t.tbl
+
+
+
+\
 
 fx0:value select by i from .t.tbl
 
 asc select n:count i by sym0,dt0 from .t.tbl
 
 \
+
 
 if[(not .sys.is_arg`cmd) and (not .sys.is_arg`rload);
    .t.usage["no -cmd or -rload given";1] ]
