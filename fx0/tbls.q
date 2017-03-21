@@ -42,9 +42,11 @@ if[.sys.is_arg`verbose; show .sys.i.args]
 
 .t.tbls0: .t.tbls / a backup
 
+
 // Filtering the table.
+
 // Each day may have records time-stamped from the previous.
-// And we remove dull days.
+// And we remove dull days ie. next to no records.
 // @param x table name (string)
 // @param y number of records required (int)
 ftbl0: { [x;y] t: select from (value x) where dt0 = (max;dt0) fby date;
@@ -52,23 +54,29 @@ ftbl0: { [x;y] t: select from (value x) where dt0 = (max;dt0) fby date;
 
 ftbl: ftbl0[;1]
 
-// Concatenate a set of tables together.
-// This is the list way of doing it
+/
+Iterate over the days
 
+I'll use a script because it's easier to edit.
+\
+
+.Q.view[]
 .t.ts: date
 
-\l fx01.q
+.t.tbl0: ()
 
-.t.ts: .t.ts except date
+while[ 0 < count .t.ts;
+      .Q.view[];
+      value "\\l fx01.q";
+      .t.tbl0: $[0 < count .t.tbl0; .t.tbl0,.t.tbl; .t.tbl] ;
+      .t.ts: .t.ts except date ]
 
 .Q.view[]
 
-\l fx01.q
+show select max dt0, min dt0 from .t.tbl0
 
-
-\
-
-.t.tbl: raze ftbl each .t.tbls
+.t.tbl: .t.tbl0
+.t.tbl0: ()
 
 2 ":" sv ("t.tbl"; string count .t.tbl; string "\n");
 
