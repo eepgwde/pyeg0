@@ -42,35 +42,37 @@ if[.sys.is_arg`verbose; show .sys.i.args]
 
 .t.tbls0: .t.tbls / a backup
 
-.t.tbl: ()
+// Filtering the table.
+// Each day may have records time-stamped from the previous.
+// And we remove dull days.
+// @param x table name (string)
+// @param y number of records required (int)
+ftbl0: { [x;y] t: select from (value x) where dt0 = (max;dt0) fby date;
+	$[y < count t; t; 0#t] }
 
-// Concatenate a set of tables together.
-// This is iterative and may be more memory efficient
-
-while[0 < count .t.tbls;
-      tn: first .t.tbls; .t.tbls: 1 _ .t.tbls;
-      2 ":" sv (tn; string count .t.tbl; string "\n");
-      tbl: () xkey select by i from value tn;
-      .t.tbl: $[1<count .t.tbl; .t.tbl,tbl; tbl];
-      :: ]
-
-2 ":" sv ("t.tbl"; string count .t.tbl; string "\n");
-
-show select count i by dt0,sym0 from .t.tbl
+ftbl: ftbl0[;1]
 
 // Concatenate a set of tables together.
 // This is the list way of doing it
 
-ftbl: { () xkey select by i from value x }
+.t.ts: date
 
-.t.tbls: .t.tbls0
+\l fx01.q
+
+.t.ts: .t.ts except date
+
+.Q.view[]
+
+\l fx01.q
+
+
+\
 
 .t.tbl: raze ftbl each .t.tbls
 
 2 ":" sv ("t.tbl"; string count .t.tbl; string "\n");
 
 show select count i by dt0,sym0 from .t.tbl
-
 
 
 \
