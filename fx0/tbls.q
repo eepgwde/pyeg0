@@ -99,17 +99,37 @@ update offer0:8h$0N from `fx1 where 0 = doffer0;
 bfx1: select from fx1 where not null bid0 
 ofx1: select from fx1 where not null offer0
 
+// Drop offer columns from bid table and ditto for the offer table.
+
 x0: (cols bfx1) where (string cols bfx1) like "*offer?"
 ![`bfx1;();0b;x0];
 
 x0: (cols ofx1) where (string cols ofx1) like "*bid?"
 ![`ofx1;();0b;x0];
 
+.me.rename: {[fxx;tag;str0]
+	     tfx: select from fxx where "D" = type0;
+	     tfx: update type0:tag from tfx;
+	     c0: cols tfx;
+	     i0: where (string c0) like "*",str0,"?";
+	     c0[i0]: `${ ssr[x;y;"order"] }[;str0] each string c0 @ i0;
+	     c0 xcol tfx }
 
-tfx1: select from bfx1 where "D" = type0
-update type0:"B" from `tfx1;
+`dt0`tm0`sym0`type0 xasc select from bfx1 where type0 = "D"
 
-(string cols tfx1) where (string cols tfx1) like "*bid?"
+meta .me.rename[bfx1;"B";"bid"]
+
+meta .me.rename[ofx1;"O";"offer"]
+
+tfx: `dt0`tm0`sym0`type0 xasc .me.rename[bfx1;"B";"bid"],.me.rename[ofx1;"O";"offer"]
+
+\
+
+,.me.rename[bfx1;"B";"bid"]
+
+meta (.me.rename[ofx1;"O";"offer"])
+
+\
 
 (select from ofx1 where "D" = type0)
 
@@ -152,7 +172,7 @@ if[not .sys.is_arg`verbose; .t.status]
 
 .t.status
 
-.sys.exit 0
+.sys.exit 0/ help.q
 
 // @}
 
