@@ -19,9 +19,14 @@ t:([] name:(); iq:())
 
 10 {x,sum -2#x}/ 1 1
 
-// First 10 powers of 3 - note use float.
+// a^b using scan 
+{[a;b] (*\) b#a }[3;10]
 
-6 {x,prd -2#x}/ 3f
+// a^b using scan and over, b must be integer, normally use xexp
+{[a;b] (*\) b#a }[3;10]
+{[a;b] (*/) b#a }[3;10]
+
+3 xexp 10 
 
 // String formatting
 
