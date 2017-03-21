@@ -93,8 +93,8 @@ fx1: select from fx0 where dt0 in enlist .t.ts[n0]
 update dbid0:signum deltas bid0, doffer0:signum deltas offer0 by sym0 from `fx1;
 update dbid1:signum deltas bid1, doffer1:signum deltas offer1 by sym0 from `fx1;
 
-update bid0:8h$0N from `fx1 where 0 = dbid0;
-update offer0:8h$0N from `fx1 where 0 = doffer0;
+update bid0:8h$0N from `fx1 where (0 = dbid0),(0 = dbid1);
+update offer0:8h$0N from `fx1 where (0 = doffer0),(0 = doffer1);
 
 bfx1: select from fx1 where not null bid0 
 ofx1: select from fx1 where not null offer0
@@ -115,23 +115,26 @@ x0: (cols ofx1) where (string cols ofx1) like "*bid?"
 	     c0[i0]: `${ ssr[x;y;"order"] }[;str0] each string c0 @ i0;
 	     c0 xcol tfx }
 
-`dt0`tm0`sym0`type0 xasc select from bfx1 where type0 = "D"
+/
+
+// Check around the first deal mark
+
+.t.tbl: fx0
+
+i0: 1
+x0: (where .t.tbl[;`type0] = "D")[i0]
+
+`dt0`tm0`sym0`type0 xasc select from .t.tbl where i within x0 + (-5;5)
+
+// Check types
 
 meta .me.rename[bfx1;"B";"bid"]
 
 meta .me.rename[ofx1;"O";"offer"]
 
+\
+
 tfx: `dt0`tm0`sym0`type0 xasc .me.rename[bfx1;"B";"bid"],.me.rename[ofx1;"O";"offer"]
-
-\
-
-,.me.rename[bfx1;"B";"bid"]
-
-meta (.me.rename[ofx1;"O";"offer"])
-
-\
-
-(select from ofx1 where "D" = type0)
 
 \
 
