@@ -75,22 +75,45 @@ while[ 0 < count .t.ts;
 
 show select max dt0, min dt0 from .t.tbl0
 
-.t.tbl: .t.tbl0
-.t.tbl0: ()
+fx0: delete date from .t.tbl0
+.t.tbl0:.t.tbl: ()
 
-2 ":" sv ("t.tbl"; string count .t.tbl; string "\n");
+2 ":" sv ("fx0"; string count fx0; string "\n");
 
-show select count i by dt0,sym0 from .t.tbl
+show asc select n:count i by sym0,dt0 from fx0
 
+// Daily tick distribution
+
+.t.ts: asc distinct fx0[;`dt0]
+
+n0:0
+
+fx1: select from fx0 where dt0 in enlist .t.ts[n0]
+
+update dbid0:signum deltas bid0, doffer0:signum deltas offer0 by sym0 from `fx1;
+update dbid1:signum deltas bid1, doffer1:signum deltas offer1 by sym0 from `fx1;
+
+update bid0:8h$0N from `fx1 where 0 = dbid0;
+update offer0:8h$0N from `fx1 where 0 = doffer0;
+
+bfx1: select from fx1 where not null bid0 
+ofx1: select from fx1 where not null offer0
+
+x0: (cols bfx1) where (string cols bfx1) like "*offer?"
+![`bfx1;();0b;x0];
+
+x0: (cols ofx1) where (string cols ofx1) like "*bid?"
+![`ofx1;();0b;x0];
+
+
+tfx1: select from bfx1 where "D" = type0
+update type0:"B" from `tfx1;
+
+(string cols tfx1) where (string cols tfx1) like "*bid?"
+
+(select from ofx1 where "D" = type0)
 
 \
-
-fx0:value select by i from .t.tbl
-
-asc select n:count i by sym0,dt0 from .t.tbl
-
-\
-
 
 if[(not .sys.is_arg`cmd) and (not .sys.is_arg`rload);
    .t.usage["no -cmd or -rload given";1] ]
@@ -135,7 +158,7 @@ if[not .sys.is_arg`verbose; .t.status]
 
 /  Local Variables: 
 /  mode:q 
-/  q-prog-args: "-halt -verbose -load /opt/src/db"
+/  q-prog-args: "-p 9051 -halt -verbose -load /opt/src/db"
 /  fill-column: 75
 /  comment-column:50
 /  comment-start: "/  "
