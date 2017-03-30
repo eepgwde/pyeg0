@@ -24,6 +24,7 @@ t:([] name:(); iq:())
 
 // a^b using scan and over, b must be integer, normally use xexp
 {[a;b] (*\) b#a }[3;10]
+
 {[a;b] (*/) b#a }[3;10]
 
 3 xexp 10 
