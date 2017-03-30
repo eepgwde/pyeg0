@@ -4,26 +4,76 @@ author: weaves
 
 following
 
-https://github.com/scala/scala-module-dependency-sample.git 
+ https://github.com/scala/scala-module-dependency-sample.git
 
-* Depend on Scala modules like a pro
+** With Spark
+
+This looks useful.
+
+https://nosqlnocry.wordpress.com/2015/02/27/how-to-build-a-spark-fat-jar-in-scala-and-submit-a-job/
+
+https://github.com/H4ml3t/spark-scala-maven-boilerplate-project
+
+git clone git@github.com:H4ml3t/spark-scala-maven-boilerplate-project.git
+cd spark-scala-maven-boilerplate-project
+
+
+** sbt basics
+
+sbt uses ivy to manage dependencies. (Ivy is Apache project adding
+dependency management to Ant builds.)
+
+The Hello template can be created with this:
+
+ sbt new sbt/scala-seed.g8
+
+prompted for a project name "hello" after that
+
+ sbt run
+
+should build. Populates an ~/.ivy2 cache directory.
+
+ sbt test
+
+should run the tests. And there's clean and package tasks.
+
+Because of Java spin-up costs it's best to run multiple goals, either on
+the command line or in the interpreter.
+
+http://www.scala-sbt.org/0.13/docs/Running.html
+
+It might be an idea to use sbt to run and test Scala components in the
+Emacs interpreter.
+
+
+
+** With Spark 2.1.0 - currently uses 2.11.* Scala
+
+https://nosqlnocry.wordpress.com/2015/02/27/how-to-build-a-spark-fat-jar-in-scala-and-submit-a-job/
+
+https://github.com/H4ml3t/spark-scala-maven-boilerplate-project
+
+** Depend on Scala modules like a pro
 
 This repository shows how to use these build tools:
 
-  * sbt
-  * Maven
+  - sbt
+  - Maven
 
 to depend on Scala standard modules such as:
 
-  * scala-xml, containing the `scala.xml` package
-  * scala-parser-combinators, containing the `scala.util.parsing` package
-  * scala-swing, containing the `scala.swing` package
+  - scala-xml, containing the `scala.xml` package
+  - scala-parser-combinators, containing the `scala.util.parsing` package
+  - scala-swing, containing the `scala.swing` package
 
 These modules were split out from the Scala standard library, beginning with Scala 2.11.
 
-** Sbt sample
+*** Sbt sample
 
-This sample demonstrates how to conditionally depend on all modules. If use only on some of the modules just edit the `libraryDependencies` definition accordingly. If you are just looking for a copy&paste snippet for your `build.sbt` file, here it is:
+This sample demonstrates how to conditionally depend on all modules. If use
+only on some of the modules just edit the `libraryDependencies` definition
+accordingly. If you are just looking for a copy&paste snippet for your
+`build.sbt` file, here it is:
 
 ```scala
 // add dependencies on standard Scala modules, in a way
@@ -49,7 +99,7 @@ libraryDependencies := {
 }
 ```
 
-** Maven sample
+*** Maven sample
 
 The following `pom.xml` snippet assumes you define a `scalaBinaryVersion` property in your pom.xml file. For example, the `scalaBinaryVersion` should be set to `2.11` for any Scala 2.11.x version.
 
@@ -72,7 +122,7 @@ The following `pom.xml` snippet assumes you define a `scalaBinaryVersion` proper
 </dependency>
 ```
 
-*** NOTE
+**** NOTE
 
 Due to an [issue](https://issues.scala-lang.org/browse/SI-8358) in the
 Scala compiler, a project that uses scala-xml will compile
@@ -84,7 +134,7 @@ scala-xml invisible to compilation classpath and your code will fail
 to compile when the dependency on `scala-xml` is missing. Check sample
 pom.xml for details.
 
-*** Scala cross-versioning with Maven
+**** Scala cross-versioning with Maven
 
 The snippet provided above allows you to declare dependencies on
 modules shipped against Scala 2.11. If you would like to support
@@ -93,6 +143,7 @@ time you'll need to use [Maven
 profiles](http://maven.apache.org/guides/introduction/introduction-to-profiles.html). Check
 the `pom.xml` file in the sample project for details how to set up
 Maven profiles for supporting different Scala versions.
+
 
 ** This file's Emacs file variables
 
