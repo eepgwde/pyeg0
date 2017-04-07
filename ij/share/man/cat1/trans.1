@@ -1,0 +1,33 @@
+usage: iTMSTransporter [-help <arg> | -info | -m <arg> | -version]   [-o <arg>] [-v
+       <arg>]  [-WONoPause <arg>] [-Xmx4096m]
+iTMSTransporter : iTunes Store Transporter 1.9.2
+ -help <arg>        Show this help.  If a mode value is specified, show help specific
+                    to that mode.
+ -info              The -info option should be used by itself and returns the
+                    copyright notice and acknowledgements.
+ -m <arg>           The -m option specifies the tool's mode.  The valid values are:
+                    verify, upload, provider, diagnostic, lookupMetadata,
+                    lookupArtist, status, statusAll, createMetadataTicket,
+                    queryTickets, generateSchema, transferTest,
+                    downloadMetadataGuides, iTunesExtraQCDownload, iTunesLPQCDownload,
+                    listReports, requestReport
+ -o <arg>           The -o option specifies the directory and filename you want to use
+                    to log output information.  By default, Transporter logs output
+                    information to standard out. If you specify a filename,
+                    Transporter logs the output to the specified file, as well as to
+                    standard out.
+ -v <arg>           The -v option specifies the level of logging.  The five values
+                    are: off, detailed, informational, critical, eXtreme.
+ -version           The -version option should be used by itself and returns the
+                    version of the tool.
+ -WONoPause <arg>   The -WONoPause option is only valid on Windows and its value can
+                    be 'true' or 'false'.  If an error occurs during script execution,
+                    the process idles because the message 'Press any key...' is
+                    displayed on the console and the system awaits a keypress. To
+                    avoid this behavior, set this property to true
+ -Xmx4096m          Specifies that you want to change the Java Virtual Machine's (JVM)
+                    allocated memory by increasing the JVM heap size.  By default,
+                    Transporter uses a 2048MB heap size. You can use the -Xmx4096m
+                    option to specify a 4-gigabyte (GB) heap size. Apple recommends,
+                    if needed, increasing the heap size to 4096MB by specifying the
+                    -Xmx4096m (or -Xmx4g) option and adjusting as needed.

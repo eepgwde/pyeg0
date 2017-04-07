@@ -1,0 +1,8 @@
+export PATH=.:$HOME/share/bin:$PATH:/usr/local/itms/bin
+
+export MANPATH=$(manpath):$HOME/share/man
+
+alias transs='trans.sh -m generateSchema -schema $X_SCHEMA -schemaType transitional -s $X_PROV '
+
+export X_SCHEMA=music5.1
+export X_PROV=DittoMusic
