@@ -16,7 +16,7 @@
         <xs:element ref="importer:clone_assets"/>
       </xs:choice>
     </xs:choice>
-    <xs:attribute name="version" use="required" type="importer:PackageVersion"/>
+    <xs:attribute name="version"  type="importer:PackageVersion"/>
     <xs:attribute name="generator" type="importer:String255"/>
     <xs:attribute name="generator_version" type="importer:String255"/>
   </xs:complexType>
@@ -50,7 +50,7 @@
     <xs:restriction base="importer:Formatted24HourTime"/>
   </xs:simpleType>
   <xs:attributeGroup name="Time">
-    <xs:attribute name="zone" use="required">
+    <xs:attribute name="zone" >
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="central"/>
@@ -95,8 +95,8 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
-    <xs:attribute name="origin_provider" use="required" type="importer:ProviderType"/>
-    <xs:attribute name="origin_vendor_id" use="required" type="importer:VendorIdType"/>
+    <xs:attribute name="origin_provider"  type="importer:ProviderType"/>
+    <xs:attribute name="origin_vendor_id"  type="importer:VendorIdType"/>
     <xs:attribute name="target_vendor_id" type="importer:VendorIdType"/>
   </xs:complexType>
   <xs:element name="clone_asset" type="importer:CloneAssetItem"/>
@@ -223,8 +223,8 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="AccessibilityDetail">
-    <xs:attribute name="role" use="required" type="importer:AccessibilityRole"/>
-    <xs:attribute name="available" use="required" type="xs:boolean"/>
+    <xs:attribute name="role"  type="importer:AccessibilityRole"/>
+    <xs:attribute name="available"  type="xs:boolean"/>
     <xs:attribute name="locale" type="importer:Locale"/>
     <xs:attribute name="reason_code" type="importer:AccessibilityReasonCode"/>
   </xs:attributeGroup>
@@ -254,7 +254,7 @@
       </xs:choice>
       <xs:element name="phonetic_title" type="xs:string"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:element name="designated_fallback" type="importer:FormattedBoolean"/>
   <xs:element name="short_description" type="importer:String255"/>
@@ -337,7 +337,7 @@
   </xs:group>
   <xs:element name="character_name" type="importer:String250"/>
   <xs:attributeGroup name="MovieParticipantLocale">
-    <xs:attribute name="name" use="required" type="importer:Locale"/>
+    <xs:attribute name="name"  type="importer:Locale"/>
   </xs:attributeGroup>
   <!-- End film and tv-specific definitions -->
   <xs:complexType name="AssetItem">
@@ -524,7 +524,7 @@
       <xs:element ref="importer:products"/>
       <xs:element name="track" type="importer:Track"/>
     </xs:choice>
-    <xs:attribute name="name" use="required"/>
+    <xs:attribute name="name" />
   </xs:complexType>
   <xs:complexType name="TrackGroup">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -669,7 +669,7 @@
         <xs:element name="description" type="xs:string"/>
       </xs:choice>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="importer:Locale"/>
+    <xs:attribute name="name"  type="importer:Locale"/>
     <xs:attribute name="default" type="importer:FormattedBoolean"/>
     <xs:attribute name="remove" type="importer:FormattedBoolean"/>
   </xs:complexType>
@@ -892,7 +892,7 @@
   </xs:element>
   <xs:element name="attribute">
     <xs:complexType mixed="true">
-      <xs:attribute name="name" use="required">
+      <xs:attribute name="name" >
         <xs:simpleType>
           <xs:restriction base="xs:token">
             <xs:enumeration value="crop.left"/>
@@ -1294,7 +1294,7 @@
       <xs:element name="title_version" type="xs:string"/>
       <xs:element name="phonetic_title" type="xs:string"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:Locale"/>
+    <xs:attribute name="name"  type="importer:Locale"/>
   </xs:complexType>
   <xs:complexType name="ArtistLocalizationItem">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -1302,7 +1302,7 @@
       <xs:element ref="importer:artist_name"/>
       <xs:element name="phonetic_name" type="xs:string"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:Locale"/>
+    <xs:attribute name="name"  type="importer:Locale"/>
   </xs:complexType>
   <xs:complexType name="GalleryList">
     <xs:sequence>
@@ -1357,7 +1357,7 @@
       <xs:element ref="importer:designated_fallback"/>
       <xs:element name="display_name" type="xs:string"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:complexType name="GalleryItem">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -1382,7 +1382,7 @@
       <xs:element ref="importer:highlight"/>
       <xs:element ref="importer:cleared_for_preorder"/>
     </xs:choice>
-    <xs:attribute name="type" use="required">
+    <xs:attribute name="type" >
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="image"/>
@@ -1425,7 +1425,7 @@
     </xs:simpleType>
   </xs:element>
   <xs:attributeGroup name="LegacyVideo">
-    <xs:attribute name="vendor_id" use="required" type="importer:VendorIdType"/>
+    <xs:attribute name="vendor_id"  type="importer:VendorIdType"/>
   </xs:attributeGroup>
   <xs:complexType name="GalleryItemLocale">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -1436,7 +1436,7 @@
       <xs:element name="display_name" type="xs:string"/>
       <xs:element ref="importer:alt_description"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:complexType name="HeroImage">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -1456,7 +1456,7 @@
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="importer:value"/>
       </xs:sequence>
-      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="name" />
     </xs:complexType>
   </xs:element>
   <xs:element name="value" type="xs:string"/>
@@ -1485,7 +1485,7 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="ReadOnlyValue">
-    <xs:attribute name="key" use="required" type="xs:string"/>
+    <xs:attribute name="key"  type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="TerritoryExclusions">
     <xs:sequence>
@@ -1536,7 +1536,7 @@
       <xs:sequence>
         <xs:element ref="importer:vendor_id"/>
       </xs:sequence>
-      <xs:attribute name="content_type" use="required">
+      <xs:attribute name="content_type" >
         <xs:simpleType>
           <xs:restriction base="xs:token">
             <xs:enumeration value="video"/>
@@ -1555,7 +1555,7 @@
       <xs:element name="title" type="xs:string"/>
       <xs:element name="description" type="xs:string"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:complexType name="ExtraScreenshot">
     <xs:complexContent>
@@ -1614,7 +1614,7 @@
   <xs:element name="navnodes" type="importer:NavnodeList"/>
   <xs:element name="version_whats_new" type="xs:string"/>
   <xs:attributeGroup name="GalleryLink">
-    <xs:attribute name="vendor_id" use="required"/>
+    <xs:attribute name="vendor_id" />
   </xs:attributeGroup>
   <xs:attributeGroup name="ColorsType">
     <xs:attribute name="background"/>
@@ -1640,7 +1640,7 @@
       <xs:element ref="importer:movie_label"/>
       <xs:element ref="importer:version_whats_new"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:element name="preview_label" type="xs:string"/>
   <xs:element name="movie_label" type="xs:string"/>
@@ -1676,7 +1676,7 @@
       <xs:element ref="importer:preview_label"/>
       <xs:element ref="importer:movie_label"/>
     </xs:choice>
-    <xs:attribute name="type" use="required">
+    <xs:attribute name="type" >
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="cast"/>
@@ -1755,13 +1755,13 @@
             <xs:element minOccurs="0" ref="importer:character_name"/>
             <xs:element minOccurs="0" ref="importer:character_note"/>
           </xs:all>
-          <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+          <xs:attribute name="name"  type="importer:LanguageType"/>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
   </xs:complexType>
   <xs:attributeGroup name="Description">
-    <xs:attribute name="format" use="required">
+    <xs:attribute name="format" >
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="html"/>
@@ -1797,7 +1797,7 @@
       <xs:element ref="importer:designated_fallback"/>
       <xs:element name="title" type="xs:string"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:complexType name="SceneLinkCollection">
     <xs:sequence>
@@ -1810,7 +1810,7 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="SceneLink">
-    <xs:attribute name="vendor_id" use="required" type="importer:VendorIdType"/>
+    <xs:attribute name="vendor_id"  type="importer:VendorIdType"/>
     <xs:attribute name="key_scene" type="importer:FormattedBoolean"/>
   </xs:attributeGroup>
   <xs:complexType name="SceneCollection">
@@ -1848,14 +1848,14 @@
       <xs:element name="description" type="xs:string"/>
       <xs:element ref="importer:alt_description"/>
     </xs:choice>
-    <xs:attribute name="name" use="required" type="importer:LanguageType"/>
+    <xs:attribute name="name"  type="importer:LanguageType"/>
   </xs:complexType>
   <xs:attributeGroup name="MediaReference">
-    <xs:attribute name="start" use="required" type="importer:FormattedTime"/>
-    <xs:attribute name="end" use="required" type="importer:FormattedTime"/>
+    <xs:attribute name="start"  type="importer:FormattedTime"/>
+    <xs:attribute name="end"  type="importer:FormattedTime"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="ProviderReviewer">
-    <xs:attribute name="reviewer_id" use="required"/>
+    <xs:attribute name="reviewer_id" />
   </xs:attributeGroup>
   <xs:group name="ProviderReview">
     <xs:sequence>
@@ -1891,7 +1891,7 @@
   </xs:element>
   <xs:element name="review_problem" type="importer:ReviewProblem"/>
   <xs:attributeGroup name="ReviewProblemCode">
-    <xs:attribute name="value" use="required"/>
+    <xs:attribute name="value" />
   </xs:attributeGroup>
   <xs:complexType name="ReviewProblem">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -1925,7 +1925,7 @@
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="importer:review_component_item"/>
       </xs:sequence>
-      <xs:attribute name="type" use="required" type="xs:token"/>
+      <xs:attribute name="type"  type="xs:token"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="review_component_item">
@@ -1935,6 +1935,6 @@
   </xs:element>
   <xs:attributeGroup name="ReviewComponentItem">
     <xs:attribute name="locale" type="importer:LanguageType"/>
-    <xs:attribute name="type" use="required"/>
+    <xs:attribute name="type" />
   </xs:attributeGroup>
 </xs:schema>
