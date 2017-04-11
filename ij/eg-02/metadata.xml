@@ -1,0 +1,368 @@
+<package xmlns="http://apple.com/itunes/importer" version="music5.1">
+<language>en-US</language> 
+<provider>AbsoluteMarketingInternationalLtd</provider> 
+<album> 
+<upc>0000768690659</upc> 
+<title>Legacy - Part One: Alive Again</title> 
+<original_release_date>2017-03-17</original_release_date>
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<copyright_cline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<artwork_files> 
+<file> 
+<file_name>cover.jpg</file_name> 
+<size>4918265</size> 
+<checksum type="md5">a989c9e3a536255dc799d33b2bbe9870</checksum> 
+</file> 
+</artwork_files> 
+<track_count>6</track_count> 
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product> 
+</products> 
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+<tracks> 
+<track> 
+<isrc>US25L1700306</isrc> 
+<title>Alive Again</title> 
+<title_version>Live in Manila</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+</products>  
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>1</track_number>   
+<audio_file> 
+<file_name>0000768690659_US25L1700306.wav</file_name> 
+<size>48412672</size> 
+<checksum type="md5">51e4a3b279a7c068c4615ae72e8013c6</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<isrc>US25L1700307</isrc> 
+<title>Drawing Closer</title> 
+<title_version>Live in Kuala Lumpur</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+</products>  
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>2</track_number>   
+<audio_file> 
+<file_name>0000768690659_US25L1700307.wav</file_name> 
+<size>52853500</size> 
+<checksum type="md5">d9e7c84c7027739d4565b283d97a13b7</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<isrc>US25L1700308</isrc> 
+<title>You Are Here</title> 
+<title_version>Live in Manila</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+</products>  
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>3</track_number>   
+<audio_file> 
+<file_name>0000768690659_US25L1700308.wav</file_name> 
+<size>73067436</size> 
+<checksum type="md5">55c431f54965675b47f35d775dc7139d</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<isrc>US25L1700309</isrc> 
+<title>All On the Altar</title> 
+<title_version>Live in Kuala Lumpur</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+</products>  
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>4</track_number>   
+<audio_file> 
+<file_name>0000768690659_US25L1700309.wav</file_name> 
+<size>74421368</size> 
+<checksum type="md5">68fc50e9fbfbad026fc6b5924db3abee</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+</track> 
+<video> 
+<isrc>US25M1700028</isrc> 
+<title>Alive Again</title>
+<release_date>2017-03-17</release_date> 
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_cline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<preview starttime="30"/> 
+<assets> 
+<asset type="full"> 
+<data_file role="source"> 
+ <file_name>0000768690659_US25M1700028.mov</file_name>
+ <size>5985545462</size>
+<checksum type="md5">b40959b4ed7b33cb0b664f0c6dcb9fe6</checksum>
+ <attribute name="crop.top">140</attribute>
+  <attribute name="crop.bottom">140</attribute>
+  <attribute name="crop.left">0</attribute>
+  <attribute name="crop.right">0</attribute>
+</data_file> 
+</asset> 
+<asset type="artwork"> 
+<data_file> 
+<file_name>US25M1700028.jpg</file_name>
+<size>275051</size><checksum type="md5">8d546becb6b749c68c93c939bca101ad</checksum>
+</data_file> 
+</asset> 
+</assets>
+<track_number>5</track_number>  
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+</products>
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+</video> 
+<video> 
+<isrc>US25M1700029</isrc> 
+<title>Drawing Closer</title>
+<release_date>2017-03-17</release_date> 
+<label_name>Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_cline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<copyright_pline>2016 Planetshakers Ministries, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<preview starttime="30"/> 
+<assets> 
+<asset type="full"> 
+<data_file role="source"> 
+ <file_name>0000768690659_US25M1700029.mov</file_name>
+ <size>6129381370</size>
+<checksum type="md5">ac25718fdca6090f15550f9726818704</checksum>
+<attribute name="crop.top">140</attribute>
+  <attribute name="crop.bottom">140</attribute>
+  <attribute name="crop.left">0</attribute>
+  <attribute name="crop.right">0</attribute>
+</data_file> 
+</asset> 
+<asset type="artwork"> 
+<data_file> 
+<file_name>US25M1700029.jpg</file_name>
+<size>165222</size><checksum type="md5">a264ec23a5355a592d9534a1caec1127</checksum>
+ </data_file> 
+</asset> 
+</assets>
+<track_number>6</track_number>  
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+<product> 
+<territory>AU</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+<product> 
+<territory>NZ</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-03-17</sales_start_date>
+<cleared_for_sale>false</cleared_for_sale> 
+</product>
+</products>
+<artists> 
+<artist> 
+<name>Planetshakers</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+</video> 
+</tracks> 
+</album> 
+</package> 
+
+

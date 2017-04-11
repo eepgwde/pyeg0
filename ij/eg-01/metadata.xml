@@ -1,0 +1,936 @@
+<package xmlns="http://apple.com/itunes/importer" version="music5.1">
+<language>en-US</language> 
+<provider>AbsoluteMarketingInternationalLtd</provider> 
+<album> 
+<mastered_for_itunes>true</mastered_for_itunes>
+<upc>0000768689837</upc> 
+<title>Sand and Stars (Live)</title> 
+<title_version>Deluxe Edition</title_version>
+<original_release_date>2017-04-14</original_release_date>
+<label_name>Integrity Music</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<copyright_cline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<artwork_files> 
+<file> 
+<file_name>cover.jpg</file_name> 
+<size>3848089</size> 
+<checksum type="md5">66507a805589b599cd1e26ec3958f10c</checksum> 
+</file> 
+</artwork_files> 
+<track_count>14</track_count> 
+<preorder_previews>false</preorder_previews>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>4</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<preorder_sales_start_date>2017-03-24</preorder_sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+ </products> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+</artists> 
+<tracks> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700296</isrc> 
+<title>Gate of Heaven</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>1</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700296.wav</file_name> 
+<size>124394326</size> 
+<checksum type="md5">3c8358fb98cc101a22195b793d22af6c</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700297</isrc> 
+<title>All Things</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>2</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700297.wav</file_name> 
+<size>84020074</size> 
+<checksum type="md5">b0577c9f7d1a7ee399034844aa436a70</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700298</isrc> 
+<title>Back to the Father</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>3</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700298.wav</file_name> 
+<size>114644650</size> 
+<checksum type="md5">494dcbe15f596660dccc02f313738264</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Colin Edge</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700299</isrc> 
+<title>Song of My Heart</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>4</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700299.wav</file_name> 
+<size>87126010</size> 
+<checksum type="md5">c8a503f6f7bad0f8458a8962e84e101f</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Nathan Walker</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700300</isrc> 
+<title>Love Has Overcome</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>5</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700300.wav</file_name> 
+<size>72227998</size> 
+<checksum type="md5">ab3707518daad27f3b38ad8cb3c4424f</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Colin Edge</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Israel Houghto</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700301</isrc> 
+<title>Highest Praise</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>6</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700301.wav</file_name> 
+<size>86438674</size> 
+<checksum type="md5">b3de92e716454dfb95243c8cc4ecf9f9</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Nathan Walker</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700302</isrc> 
+<title>Persuaded</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>7</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700302.wav</file_name> 
+<size>122419534</size> 
+<checksum type="md5">24f38b395f9e2d949b15cd2a0b013b7c</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Colin Edge</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Israel Houghton</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700303</isrc> 
+<title>Sand and Stars</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>8</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700303.wav</file_name> 
+<size>128231170</size> 
+<checksum type="md5">1cd159a6771aeef3ba9342028af25964</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Colin Edge</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Nathan Walker</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700304</isrc> 
+<title>All Honor</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>9</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700304.wav</file_name> 
+<size>138066706</size> 
+<checksum type="md5">cf46d57752045bc48bef009565c13c28</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Nathan Walker</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<track> 
+<mastered_by>mastering@ambientdigital.com</mastered_by>
+<isrc>US25L1700305</isrc> 
+<title>Doxology</title> 
+<title_version>Live</title_version>
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>  
+<preorder_type>standard</preorder_type> 
+<label_name>Integrity Music</label_name> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<track_number>10</track_number>   
+<audio_file> 
+<file_name>0000768689837_US25L1700305.wav</file_name> 
+<size>137578306</size> 
+<checksum type="md5">0464c9736dd0fbda66f9e3a949263027</checksum> 
+</audio_file> 
+<preview_start_index>30</preview_start_index> 
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Aaron Lindsey</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>John Gray</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</track> 
+<video> 
+<isrc>US25M1700039</isrc> 
+<title>Gate of Heaven</title>
+<title_version>Live</title_version>
+<release_date>2017-04-14</release_date> 
+<label_name>Integrity Music</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_cline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<preview starttime="30"/> 
+<assets> 
+<asset type="full"> 
+<data_file role="source"> 
+ <file_name>0000768689837_US25M1700039.mov</file_name>
+ <size>9026402362</size>
+<checksum type="md5">41eba5782c1cf80f6517873581f563b2</checksum>
+<attribute name="crop.top">0</attribute>
+  <attribute name="crop.bottom">0</attribute>
+  <attribute name="crop.left">0</attribute>
+  <attribute name="crop.right">0</attribute>
+</data_file> 
+</asset> 
+<asset type="artwork"> 
+<data_file> 
+<file_name>US25M1700039.jpg</file_name>
+<size>127971</size><checksum type="md5">4de33b9dbdf372c98e231e44345a3110</checksum>
+ </data_file> 
+</asset> 
+</assets>
+<track_number>11</track_number>  
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>
+<preorder_type>standard</preorder_type>
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</video>
+<video> 
+<isrc>US25M1700040</isrc> 
+<title>Back to the Father</title>
+<title_version>Live</title_version>
+<release_date>2017-04-14</release_date> 
+<label_name>Integrity Music</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_cline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<preview starttime="30"/> 
+<assets> 
+<asset type="full"> 
+<data_file role="source"> 
+ <file_name>0000768689837_US25M1700040.mov</file_name>
+ <size>8438129958</size>
+<checksum type="md5">1b75ab54862101ccf3afde1e99ce1ca2</checksum>
+<attribute name="crop.top">0</attribute>
+  <attribute name="crop.bottom">0</attribute>
+  <attribute name="crop.left">0</attribute>
+  <attribute name="crop.right">0</attribute>
+</data_file> 
+</asset> 
+<asset type="artwork"> 
+<data_file> 
+<file_name>US25M1700040.jpg</file_name>
+<size>48898</size><checksum type="md5">cc6f202570bf6cea0012c682088aa245</checksum>
+ </data_file> 
+</asset> 
+</assets>
+<track_number>12</track_number>  
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>
+<preorder_type>standard</preorder_type>
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Colin Edge</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</video>
+<video> 
+<isrc>US25M1700041</isrc> 
+<title>Sand and Stars</title>
+<title_version>Live</title_version>
+<release_date>2017-04-14</release_date> 
+<label_name>Integrity Music</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_cline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<preview starttime="30"/> 
+<assets> 
+<asset type="full"> 
+<data_file role="source"> 
+ <file_name>0000768689837_US25M1700041.mov</file_name>
+ <size>9209019270</size>
+<checksum type="md5">66c62223e000dbafad44746ffdb6e9b5</checksum>
+<attribute name="crop.top">0</attribute>
+  <attribute name="crop.bottom">0</attribute>
+  <attribute name="crop.left">0</attribute>
+  <attribute name="crop.right">0</attribute>
+</data_file> 
+</asset> 
+<asset type="artwork"> 
+<data_file> 
+<file_name>US25M1700041.jpg</file_name>
+<size>56175</size><checksum type="md5">344daa02a1e689640d59ea933fe5ee17</checksum>
+ </data_file> 
+</asset> 
+</assets>
+<track_number>13</track_number>  
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>
+<preorder_type>standard</preorder_type>
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Colin Edge</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Nathan Walke</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</video>
+<video> 
+<isrc>US25M1700042</isrc> 
+<title>All Honor</title>
+<title_version>Live</title_version>
+<release_date>2017-04-14</release_date> 
+<label_name>Integrity Music</label_name> 
+<genres> 
+<genre code="CHRISTIAN-GOSPEL-00"/> 
+</genres>
+<copyright_cline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_cline> 
+<copyright_pline>2017 Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright_pline> 
+<explicit_content>none</explicit_content> 
+<preview starttime="30"/> 
+<assets> 
+<asset type="full"> 
+<data_file role="source"> 
+ <file_name>0000768689837_US25M1700042.mov</file_name>
+ <size>10303832898</size>
+<checksum type="md5">c35187760f6de7ecc6222723d9aad736</checksum>
+<attribute name="crop.top">0</attribute>
+  <attribute name="crop.bottom">0</attribute>
+  <attribute name="crop.left">0</attribute>
+  <attribute name="crop.right">0</attribute>
+</data_file> 
+</asset> 
+<asset type="artwork"> 
+<data_file> 
+<file_name>US25M1700042.jpg</file_name>
+<size>167002</size><checksum type="md5">5067524eacce4b17de27bd169651bcb9</checksum>
+ </data_file> 
+</asset> 
+</assets>
+<track_number>14</track_number>  
+<products> 
+<product> 
+<territory>WW</territory> 
+<wholesale_price_tier>30</wholesale_price_tier> 
+<sales_start_date>2017-04-14</sales_start_date>
+<cleared_for_sale>true</cleared_for_sale> 
+</product>
+</products>
+<preorder_type>standard</preorder_type>
+<artists> 
+<artist> 
+<name>Covenant Worship</name> 
+<roles> 
+<role>Performer</role> 
+</roles> 
+<primary>true</primary> 
+</artist> 
+<artist> 
+<name>David Binion</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Joshua Dufrene</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+<artist> 
+<name>Nathan Walker</name> 
+<roles> 
+<role>Songwriter</role> 
+</roles> 
+<primary>false</primary> 
+</artist> 
+</artists> 
+</video>
+<bonus_material> 
+<bonus_material_name>Digital Booklet</bonus_material_name> 
+<copyright>Covenant Church, under exclusive license to Integrity Music (part of the David C Cook family)</copyright> 
+<file> 
+<file_name>0000768689837.pdf</file_name> 
+<size>9589869</size> 
+<checksum type="md5">e0989d25f6082b8461efb3ce86da7287</checksum> 
+</file> 
+</bonus_material>  
+</tracks> 
+</album> 
+</package> 
+
+
