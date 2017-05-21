@@ -11,30 +11,51 @@ t:([] name:(); iq:())
 
 // Example functions
 
-// A factorial of all integers up to 8.
+// A factorial of all integers up to 8, or use prd
 
 { (*) over 1 + til x } each til 8
 
-// First 10 fibonacci numbers.
+{ prd 1 + til x } each til 8
 
+// First 10 fibonacci numbers.
+// This uses "repeat": x f/y apply f to y x times.
 10 {x,sum -2#x}/ 1 1
 
-// a^b using scan 
+# From zero as a function
+fibonacci:{x,sum -2#x}/[;0 1]
+
+fibonacci 10
+
+fibonacci1: { last fibonacci x } 
+
+fibonacci1 10
+
+// raised to the power a^b using scan, b must be integer
+// normally use xexp
 {[a;b] (*\) b#a }[3;10]
 
-// a^b using scan and over, b must be integer, normally use xexp
-{[a;b] (*\) b#a }[3;10]
+// For just the last use over
+// note the default for integers is now long 
+x0:{[a;b] (*/) b#a }[3;10]
+type x0
 
-{[a;b] (*/) b#a }[3;10]
+type `long$3 xexp 10 
 
-3 xexp 10 
+ // String formatting of numbers
+ // cut by 3 and take account of negatives
+ 
+x1:-100000.01
 
-// String formatting
+ s1:signum x1
+ x1:abs x1
 
-x1:100000
-x0:{ $[3 = count x; x,","; x] } each 3 cut reverse string x1
+ x0:{ $[3 = count x; x,","; x] } each 3 cut reverse string x1
 x3: reverse raze x0
-x3: $[x3[0] = ","; 1_x3; x3] 
+x3: $[x3[0] = ","; 1_x3; x3]
+ x3
+ s1
+ x3: $[0 > s1; "-";""],x3
+ x3
 
 // Using each prior
 

@@ -1,4 +1,4 @@
-// @file commander.q
+// @file tbls.q
 // @author weaves
 // @brief Loadable file invokes a function on a named host and port
 //
