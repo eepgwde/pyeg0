@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS=-I m4
 
 bin_PROGRAMS=corv
-corv_SOURCES=corv.c xmalloc.c system.h aclocal.m4 corv-opt.c corv-opt.h
+corv_SOURCES=corv.c xmalloc.c system.h aclocal.m4 corv-opt.c corv-opt.h llist.c
 
 #  add " -lm" to the following if corv requires the math library
 corv_LDADD=-lopts

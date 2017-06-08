@@ -15,3 +15,7 @@ jr/src/csvdb
 
 # Scala
 **/target/*
+
+# automake
+
+**/autom4te.cache/*
