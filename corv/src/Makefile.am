@@ -1,1 +1,1 @@
-SUBDIRS = rb
+SUBDIRS = rb equi0

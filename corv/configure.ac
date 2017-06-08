@@ -11,7 +11,6 @@ dnl create a config.h file (Automake will add -DHAVE_CONFIG_H)
 AM_CONFIG_HEADER(config.h)
 
 
-
 AC_SUBST(VERSION)
 
 ISODATE=`date +%Y-%m-%d`
@@ -23,6 +22,7 @@ dnl Checks for programs.
 AC_PROG_INSTALL
 AC_PROG_CC
 AC_PROG_AWK
+AC_PROG_CXX
 
 dnl Checks for libraries.
 
@@ -48,4 +48,5 @@ dnl Checks for library functions.
 AC_OUTPUT([Makefile
 src/Makefile
 src/rb/Makefile 
+src/equi0/Makefile 
 corv.lsm corv.spec])
