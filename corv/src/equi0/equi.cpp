@@ -71,7 +71,9 @@ namespace weaves {
     Diff(T total) : total(total) {}
 
     T operator() (const T& x, T& y) {
-      T diff = total - y;
+      std::cout << "sum: " << total << "; " << x << "; " << y << std::endl;
+      
+      T diff = abs((total - y) - y) ;
       return diff;
     }
     const T total;
