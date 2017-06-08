@@ -19,7 +19,19 @@ jr/src/csvdb
 # automake
 
 **/autom4te.cache/*
+**/.libs/*
+**/.deps/*
 *.o
+*.lo
+*.Plo
+*.Po
+*.trs
+*.sh.log
+
+**/rb/logfile
+**/rb/in-file.lst
+**/rb/test-suite.log
+**/rb/unfreed.txt
 
 INSTALL
 compile

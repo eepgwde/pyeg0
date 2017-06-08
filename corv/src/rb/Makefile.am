@@ -9,15 +9,22 @@
 lib_LTLIBRARIES = libredblack.la
 libredblack_la_SOURCES = red_black_tree.c stack.c misc.c
 
-noinst_PROGRAMS = redblack
+noinst_PROGRAMS = redblack textrb
+
+
 redblack_SOURCES = test_red_black_tree.c 
 redblack_LDADD = libredblack.la
+
+textrb_SOURCES = text_red_black_tree.c 
+textrb_LDADD = libredblack.la
+
 
 AM_TESTS_ENVIRONMENT = 
 LOG_COMPILER = $(SHELL)
 AM_LOG_FLAGS = -x
 
-TESTS = simple_test.sh
+TESTS = text_rb.sh
+# TESTS = simple_test.sh
 
 
 
