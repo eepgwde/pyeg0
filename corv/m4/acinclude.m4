@@ -39,10 +39,4 @@ AC_DEFUN([jm_CHECK_TYPE_STRUCT_UTIMBUF],
   fi
 ])
 
-acinclude([/usr/share/aclocal/libtool.m4])
-acinclude([/usr/share/aclocal/ltoptions.m4])
-acinclude([/usr/share/aclocal/ltversion.m4])
-acinclude([/usr/share/aclocal/ltsugar.m4])
-acinclude([/usr/share/aclocal/lt~obsolete.m4])
-
 acinclude([/usr/share/aclocal-1.14/dmalloc.m4])

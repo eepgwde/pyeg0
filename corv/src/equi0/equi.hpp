@@ -1,3 +1,6 @@
+#ifndef _EQUI
+#define _EQUI
+
 #include <iostream>
 #include <iterator>
 #include <fstream>
@@ -36,5 +39,4 @@ namespace weaves {
 
 }
 
-int Partials::maxN = 10;
-
+#endif 
