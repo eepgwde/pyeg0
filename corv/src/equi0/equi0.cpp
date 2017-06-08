@@ -54,6 +54,7 @@ int main( int argc,      // Number of strings in array argv
 
     std::vector<int> A(N0);
     std::vector<int> sums;
+    std::vector<int> sums1;
 
     switch (t0) {
     case 1: 
@@ -65,9 +66,14 @@ int main( int argc,      // Number of strings in array argv
       std::cout << sums.back() << std::endl;
       break;
     case 3:
-      sums = p0.apply1(eg0);
+      // partial sums
+      sums = p0.apply(eg0);
       p0.show("A:                 ", eg0);
       p0.show("Deltas: sums of A: ", sums);
+      sums1 = p0.apply2(eg0, sums);
+
+      p0.show("A:                 ", eg0);
+      p0.show("Deltas: sums of A: ", sums1);
       break;
     case 4: 
       break;

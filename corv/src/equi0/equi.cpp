@@ -14,7 +14,7 @@ namespace weaves {
     std::cout << endl;
   }
 
-  const std::vector<int> Partials::apply(const vector<int> &A) {
+  std::vector<int> Partials::apply(const vector<int> &A) {
     vector<int> B(A.size());
     partial_sum(A.begin(), A.end(), B.begin());
     return B;
@@ -40,7 +40,7 @@ namespace weaves {
     return A0;
   };
 
-  template<class T> struct bias : public unary_function<T, void>
+  template<class T> struct bias : public unary_function<T, T>
   {
     bias(T& total) : total(total) {}
 
@@ -55,11 +55,33 @@ namespace weaves {
     const int N = A0.size();
     double A[N];
     iota(A, A+N, 1);
+
     vector<int> B(A, A+N);
+    show("iota: ", B);
 
     bias<int> b0(B.back());
+    cout << "last: " << B.back() << endl;
 
     transform(B.begin(), B.end(), B.begin(), b0);
+    return B;
+  };
+
+  template<class T> struct Diff : public binary_function<T, T, T>
+  {
+    Diff(T total) : total(total) {}
+
+    T operator() (const T& x, T& y) {
+      T diff = total - y;
+      return diff;
+    }
+    const T total;
+  };
+
+  std::vector<int> Partials::apply2(const vector<int> &A, vector<int> &B) {
+    Diff<int> b0(B.back());
+
+    transform(A.begin(), A.end(), B.begin(), B.end(),
+	      b0);
     return B;
   };
 
