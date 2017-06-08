@@ -8,21 +8,10 @@ ifile=$(tempfile)
 for i in $(seq 1 5)
 do
     let r0=$RANDOM
-    echo add $r0
+    echo $r0
 done > $tfile
 
-cat $tfile | awk '{ $1="del"; print }' | tac > $ifile
-cat $ifile >> $tfile
-
-(
-echo find $r0 
-echo print 0
-echo quit 0 
-echo add 1 
-echo del 1 
-) >> $tfile
-
-./equi0 < $tfile
+./equi0 $tfile
 
 grep "not freed" logfile | tee unfreed.txt
 
