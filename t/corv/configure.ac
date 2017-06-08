@@ -1,11 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(corv.c)
+AC_INIT(corv, 0.1.0)
 dnl Every other copy of the package version number gets its value from here
-AM_INIT_AUTOMAKE(corv, 0.1.0)
+AM_INIT_AUTOMAKE
 
 LT_INIT()
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIRS([m4])
 
 dnl create a config.h file (Automake will add -DHAVE_CONFIG_H)
 AM_CONFIG_HEADER(config.h)
