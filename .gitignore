@@ -23,6 +23,7 @@ jr/src/csvdb
 **/.deps/*
 *.o
 *.lo
+*.la
 *.Plo
 *.Po
 *.trs
