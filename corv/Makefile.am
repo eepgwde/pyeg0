@@ -1,5 +1,7 @@
 ACLOCAL_AMFLAGS=-I m4
 
+SUBDIRS = src
+
 bin_PROGRAMS=corv
 corv_SOURCES=corv.c xmalloc.c system.h aclocal.m4 corv-opt.c corv-opt.h llist.c
 

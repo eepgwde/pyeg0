@@ -19,3 +19,15 @@ jr/src/csvdb
 # automake
 
 **/autom4te.cache/*
+*.o
+
+INSTALL
+compile
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+ltmain.sh
+missing
+Makefile.in

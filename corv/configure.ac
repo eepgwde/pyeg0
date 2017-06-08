@@ -43,4 +43,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
 
-AC_OUTPUT(Makefile corv.lsm corv.spec)
+AC_OUTPUT([Makefile
+src/Makefile
+src/rb/Makefile 
+corv.lsm corv.spec])
