@@ -8,33 +8,20 @@
 #include <algorithm> // for std::copy
 #include <numeric> // for std::copy
   
-using namespace std;  
-
 namespace weaves {
 
-  struct Equilibribum {
-  
-  } equi;
+  struct Equilibribum {};
 
   struct Partials {
-    const int N;
     static int maxN;
 
-    Partials(const int N) : N(N) {}
+    Partials() {}
 
-    void apply() {
-      fill(A, A+N, 1);
-  
-      cout << "A:                 ";
-      copy(A, A+N, ostream_iterator<int>(cout, " "));
-      cout << endl;
-
-      cout << "Partial sums of A: ";
-      partial_sum(A, A+N, ostream_iterator<int>(cout, " "));
-      cout << endl;
-    };
-
-    int A[];
+    const std::vector<int> apply(const std::vector<int> &);
+    const std::vector<int> apply0(const std::vector<int> &);
+    const std::vector<int> apply1(const std::vector<int> &);
+    
+    void show(const std::string & mesg, const std::vector<int> &);
   };
 
 }

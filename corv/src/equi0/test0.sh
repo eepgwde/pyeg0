@@ -7,11 +7,10 @@ ifile=$(tempfile)
 
 for i in $(seq 1 5)
 do
-    let r0=$RANDOM
-    echo $r0
-done > $tfile
+    ./equi0 $i 10
+done 
 
-./equi0 $tfile
+# ./equi0 $tfile
 
 grep "not freed" logfile | tee unfreed.txt
 
