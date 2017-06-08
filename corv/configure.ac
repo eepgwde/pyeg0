@@ -39,6 +39,8 @@ AC_FUNC_CLOSEDIR_VOID
 AC_CHECK_FUNCS(mkfifo)
 AC_CHECK_FUNC(mknod)
 
+AM_WITH_DMALLOC
+
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.

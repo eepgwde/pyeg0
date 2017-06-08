@@ -6,7 +6,7 @@ dnl Define HAVE_STRUCT_UTIMBUF if `struct utimbuf' is declared --
 dnl usually in <utime.h>.
 dnl Some systems have utime.h but don't declare the struct anywhere.
 
-AC_DEFUN(jm_CHECK_TYPE_STRUCT_UTIMBUF,
+AC_DEFUN([jm_CHECK_TYPE_STRUCT_UTIMBUF],
 [
   AC_CHECK_HEADERS(utime.h)
   AC_REQUIRE([AC_HEADER_TIME])
@@ -44,3 +44,5 @@ acinclude([/usr/share/aclocal/ltoptions.m4])
 acinclude([/usr/share/aclocal/ltversion.m4])
 acinclude([/usr/share/aclocal/ltsugar.m4])
 acinclude([/usr/share/aclocal/lt~obsolete.m4])
+
+acinclude([/usr/share/aclocal-1.14/dmalloc.m4])

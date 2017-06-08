@@ -1,6 +1,6 @@
 #!/bin/sh
 eval `dmalloc -l logfile -i 100 high`
-./test_rb<<EOF
+./redblack<<EOF
 1
 1
 1
