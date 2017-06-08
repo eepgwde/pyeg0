@@ -20,7 +20,7 @@ namespace weaves {
     return B;
   };
 
-  const std::vector<int> Partials::apply0(const vector<int> &A0) {
+  const std::vector<int> Partials::apply0(const vector<int> A0) {
     int A[] = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
     const int N = sizeof(A) / sizeof(int);
     int B[N];

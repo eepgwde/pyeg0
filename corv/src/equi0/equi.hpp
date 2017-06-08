@@ -18,7 +18,7 @@ namespace weaves {
     Partials() {}
 
     const std::vector<int> apply(const std::vector<int> &);
-    const std::vector<int> apply0(const std::vector<int> &);
+    const std::vector<int> apply0(const std::vector<int> );
     const std::vector<int> apply1(const std::vector<int> &);
     
     void show(const std::string & mesg, const std::vector<int> &);

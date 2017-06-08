@@ -17,6 +17,7 @@ int main( int argc,      // Number of strings in array argv
   int test0[] = { 0, 0 };
   int t0;
   int idx = 1;
+  int N0 = weaves::Partials::maxN;
 
   {
     int optct = optionProcess( &checkOptions, argc, argv );
@@ -24,55 +25,53 @@ int main( int argc,      // Number of strings in array argv
     argv += optct;
   }
   if (ENABLED_OPT( SHOW_DEFS )) {
-    int    dirct = STACKCT_OPT( CHECK_DIRS );
-    const char** dirs  = STACKLST_OPT( CHECK_DIRS );
+    int dirct = STACKCT_OPT( TEST_ID );
+    std::cout << "T count: " << dirct << std::endl;
+    const char** dirs  = STACKLST_OPT( TEST_ID );
     while (dirct-- > 0) {
       const char* dir = *dirs++;
       std::cout << "opt: " << dir << std::endl;
-      /*
-	...
-      */
     }
   }
 
-  if (argc > idx && (t0 = std::stoi(argv[idx]) ) > 0) 
-    test0[idx-1] = t0;
-  idx++;
+  if (HAVE_OPT(X0_SIZE)) {
+    N0 = OPT_VALUE_X0_SIZE;
+    std::cout << "N0: " << N0 << std::endl;
+  }
 
-  if (argc > idx && (t0 = std::stoi(argv[idx]) ) > 0) 
-    test0[idx-1] = t0;
-  idx++;
+  int dirct = STACKCT_OPT( TEST_ID );
+  std::cout << "T count: " << dirct << std::endl;
+  const char** dirs  = STACKLST_OPT( TEST_ID );
+  while (dirct-- > 0) {
+    const char* dir = *dirs++;
 
-  if (test0[0] == 1) {
-    const int N = weaves::Partials::maxN;
-    std::vector<int> A(N);
+    t0 = std::stoi(dir);
+    std::cout << "t0: " << t0 << std::endl;
+    if (t0 <= 0) break;
 
-    fill(A.begin(), A.end(), 1);
     weaves::Partials p0;
-    p0.apply(A);
-  } else if (test0[0] == 2) {
     const std::vector<int> eg0({3, 1, 2, 4, 3});
-    weaves::Partials p0;
-    const std::vector<int> sums = p0.apply(eg0);
-    std::cout << sums.back() << std::endl;
 
-    p0.show("A:                 ", eg0);
-    p0.show("Partial sums of A: ", sums);
+    std::vector<int> A(N0);
+    std::vector<int> sums;
 
-  } else if (test0[0] == 3) {
-    const std::vector<int> eg0({3, 1, 2, 4, 3});
-    weaves::Partials p0;
-    p0.apply0(eg0);
-  } else if (test0[0] == 4) {
-    const std::vector<int> eg0({3, 1, 2, 4, 3});
-    weaves::Partials p0;
-    p0.apply0(eg0);
-  } else if (test0[0] == 5) {
-    const std::vector<int> eg0({3, 1, 2, 4, 3});
-    weaves::Partials p0;
-    std::vector<int> sums = p0.apply1(eg0);
-    p0.show("A:                 ", eg0);
-    p0.show("Deltas: sums of A: ", sums);
+    switch (t0) {
+    case 1: 
+      fill(A.begin(), A.end(), 1);
+      p0.apply(A);
+      break;
+    case 2: 
+      sums = p0.apply0(eg0);
+      std::cout << sums.back() << std::endl;
+      break;
+    case 3:
+      sums = p0.apply1(eg0);
+      p0.show("A:                 ", eg0);
+      p0.show("Deltas: sums of A: ", sums);
+      break;
+    case 4: 
+      break;
+    }
   }
   
   if (test0[0] > 0) return 0;
