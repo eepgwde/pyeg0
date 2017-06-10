@@ -55,6 +55,7 @@ int main( int argc,      // Number of strings in array argv
     std::vector<int> A(N0);
     std::vector<int> sums;
     std::vector<int> sums1;
+    std::vector<int>::const_iterator it;
 
     switch (t0) {
     case 1: 
@@ -62,18 +63,26 @@ int main( int argc,      // Number of strings in array argv
       p0.apply(A);
       break;
     case 2: 
-      sums = p0.apply0(eg0);
+      // partial sums
+      p0.show("eg0-apply1:  ", eg0);
+      sums = p0.apply(eg0);
+      p0.show("sums of eg0: ", sums);
       std::cout << sums.back() << std::endl;
+      sums1 = p0.apply1(sums);
+      p0.show("sums1 of eg0: ", sums1);
+      it = min_element(sums1.begin(), sums1.end());
+      std::cout << "The smallest element is " << *it << "; at: " 
+		<< (it - sums1.begin())+1 << "th " << std::endl;
       break;
     case 3:
       // partial sums
+      p0.show("eg0-apply2:  ", eg0);
       sums = p0.apply(eg0);
-      p0.show("A:                 ", eg0);
-      p0.show("Deltas: sums of A: ", sums);
-      sums1 = p0.apply2(eg0, sums);
+      p0.show("sums of eg0: ", sums);
+      sums1 = p0.apply2(sums, sums);
 
-      p0.show("A:                 ", eg0);
-      p0.show("Deltas: sums of A: ", sums1);
+      p0.show("sums:         ", sums);
+      p0.show("sums1 of sums:", sums1);
       break;
     case 4: 
       break;

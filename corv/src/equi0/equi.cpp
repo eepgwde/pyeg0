@@ -8,7 +8,7 @@ namespace weaves {
 
   const vector<int> eg0({3, 1, 2, 4, 3});
 
-  void Partials::show(const string &mesg, const vector<int> &A) {
+  void Partials::show(const string &mesg, const vector<int> &A) const {
     std::cout << mesg ;
     std::copy(A.begin(), A.end(), std::ostream_iterator<int>(std::cout, " "));
     std::cout << endl;
@@ -42,49 +42,45 @@ namespace weaves {
 
   template<class T> struct bias : public unary_function<T, T>
   {
-    bias(T& total) : total(total) {}
+    bias(T total) : total(total) {}
 
     T operator() (T x) {
-      T diff = total - x;
+      T diff = abs(x - (total - x));
       return diff;
     }
     const T total;
   };
 
-  const std::vector<int> Partials::apply1(const vector<int> &A0) {
-    const int N = A0.size();
-    double A[N];
-    iota(A, A+N, 1);
+  std::vector<int> Partials::apply1(vector<int> &A0) {
+    bias<int> b0(A0.back());
+    cout << "last: " << A0.back() << endl;
 
-    vector<int> B(A, A+N);
-    show("iota: ", B);
-
-    bias<int> b0(B.back());
-    cout << "last: " << B.back() << endl;
-
-    transform(B.begin(), B.end(), B.begin(), b0);
-    return B;
+    transform(A0.begin(), A0.end(), A0.begin(), b0);
+    return A0;
   };
 
-  template<class T> struct Diff : public binary_function<T, T, T>
+  template<class T> struct diff : public binary_function<T, T, T>
   {
-    Diff(T total) : total(total) {}
+    diff(T total) : total(total) {}
 
-    T operator() (const T& x, T& y) {
+    T operator() (const T& x, const T& y) {
       std::cout << "sum: " << total << "; " << x << "; " << y << std::endl;
-      
-      T diff = abs((total - y) - y) ;
+      // left - right; where right === total - left
+      T diff = x - (total - y);
       return diff;
     }
     const T total;
   };
 
-  std::vector<int> Partials::apply2(const vector<int> &A, vector<int> &B) {
-    Diff<int> b0(B.back());
+  // 
+  const std::vector<int> Partials::apply2(const vector<int> &A, 
+					  const vector<int> &B) {
+    diff<int> b0(B.back());
+    vector<int> C(B.size());
 
-    transform(A.begin(), A.end(), B.begin(), B.end(),
+    transform(A.begin(), A.end(), B.begin(), C.begin(),
 	      b0);
-    return B;
+    return C;
   };
 
 
