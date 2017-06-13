@@ -1,18 +1,12 @@
 #include "equi.hpp"
 
+#include <limits>
+
 using namespace std;  
 
 namespace weaves {
 
   int Partials::maxN = 10;
-
-  const vector<int> eg0({3, 1, 2, 4, 3});
-
-  void Partials::show(const string &mesg, const vector<int> &A) const {
-    std::cout << mesg ;
-    std::copy(A.begin(), A.end(), std::ostream_iterator<int>(std::cout, " "));
-    std::cout << endl;
-  }
 
   std::vector<int> Partials::apply(const vector<int> &A) {
     vector<int> B(A.size());
@@ -80,6 +74,57 @@ namespace weaves {
 
     transform(A.begin(), A.end(), B.begin(), C.begin(),
 	      b0);
+    return C;
+  };
+
+  template<class U, class T> struct diff0 : public binary_function<U, T, T>
+  {
+    diff0(U total) : total(total) {}
+
+    T operator() (const T& x, const T& y) {
+      U diff = total - 2* (U) y + (U) x;
+      return diff;
+    }
+    const U total;
+  };
+
+  // The equilibrium entry.
+  std::vector<long> Partials::apply3(vector<int> A) {
+    std::vector<long> bad(0);
+    if (A.size() == 0 || A.size() > 100000) {
+      return bad;
+    }
+
+    int n0;
+
+    n0 = count_if(A.begin(), A.end(),
+		  bind2nd(greater_equal<int>(), numeric_limits<int>::min()));
+    if (n0 < A.size()) {
+      cout << "bad0: min: counts: " << n0 << "; " << A.size() << endl;
+      return bad;
+    }
+    
+    n0 = count_if(A.begin(), A.end(), 
+		  bind2nd(less_equal<int>(), numeric_limits<int>::max()));
+    if (n0 < A.size()) {
+      cout << "bad0: max: counts: " << n0 << "; " << A.size() << endl;
+      return bad;
+    }
+    
+    vector<int> B(A.size());
+    partial_sum(A.begin(), A.end(), B.begin());
+    cout << "total: " << B.back() << endl;
+
+    vector<long> C(B.size());
+    diff0<long, int> b0(B.back());
+    transform(A.begin(), A.end(), B.begin(), C.begin(), b0);
+
+    vector<long>::iterator result = C.begin();
+    do {
+      result = find(result, C.end(), 0);
+      cout << "index: " << result++ - C.begin() << endl;
+    } while (result != C.end());
+    
     return C;
   };
 

@@ -21,8 +21,14 @@ namespace weaves {
     const std::vector<int> apply0(const std::vector<int> &);
     std::vector<int> apply1(std::vector<int> &);
     const std::vector<int> apply2(const std::vector<int> &, const std::vector<int> &);
+    std::vector<long> apply3(std::vector<int>);
     
-    void show(const std::string & mesg, const std::vector<int> &) const;
+    template <typename T> void show
+    (const std::string &mesg, const std::vector<T> &A) const {
+      std::cout << mesg ;
+      std::copy(A.begin(), A.end(), std::ostream_iterator<T>(std::cout, " "));
+      std::cout << std::endl;
+    };
   };
 
 }
