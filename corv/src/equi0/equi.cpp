@@ -97,6 +97,7 @@ namespace weaves {
 
     int n0;
 
+    // These don't do anything.
     n0 = count_if(A.begin(), A.end(),
 		  bind2nd(greater_equal<int>(), numeric_limits<int>::min()));
     if (n0 < A.size()) {
@@ -120,7 +121,6 @@ namespace weaves {
     transform(A.begin(), A.end(), B.begin(), C.begin(), b0);
 
     vector<long>::iterator result = C.begin();
-    vector<long>::iterator result0 = result;
     while ((result = find(result, C.end(), 0)) != C.end()) {
       cout << "index: " << result - C.begin() << endl;
       result++;

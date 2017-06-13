@@ -45,8 +45,11 @@ int main( int argc,      // Number of strings in array argv
   const std::vector<int> eg2({-1, 3, -4, 5, 1, -6, 2, 1});
   const std::vector<int> eg3({std::numeric_limits<int>::max(), std::numeric_limits<int>::min() });
 
-  weaves::Partials p1;
+  // This produces integer overflow in expression warning from the compiler.
+  const std::vector<int> eg4({2*std::numeric_limits<int>::max(), 2*std::numeric_limits<int>::min() });
+  const std::vector<int> eg5({ std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), std::numeric_limits<int>::max() });
 
+  weaves::Partials p1;
   p1.show("limits: ", eg3);
 
   const std::vector<int>& eg0 = eg2;
@@ -105,7 +108,19 @@ int main( int argc,      // Number of strings in array argv
     case 5:
       p0.show<int>("eg3-apply3:  ", eg3);
       lsums = p0.apply3(eg3);
-      p0.show<long>("sums of eg0: ", lsums);
+      p0.show<long>("sums of eg3: ", lsums);
+      break;
+    case 6:
+      p0.show<int>("eg4-apply3:  ", eg4);
+      lsums = p0.apply3(eg4);
+      p0.show<long>("sums of eg3: ", lsums);
+      break;
+    case 7:
+      p0.show<int>("eg5-apply3:  ", eg5);
+      lsums = p0.apply3(eg5);
+      p0.show<long>("sums of eg5: ", lsums);
+      break;
+    default:
       break;
     }
   }
