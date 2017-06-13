@@ -128,8 +128,8 @@ namespace weaves {
     check0(U total) : total(total) {}
 
     T operator() (const T& x, const T& y) {
-      cout << "signum: sum: " << x << "; " << sgn(x) << "; "
-	   << "signum: part: " << y << "; " << sgn(y) << endl;
+      cout << "apply4: signum: sum: " << x << "; " << sgn(x) << "; "
+	   << "apply4: signum: part: " << y << "; " << sgn(y) << endl;
 
       // If the signs are the same, return
       int s0 = sgn(x);
@@ -153,13 +153,15 @@ namespace weaves {
     vector<int> C(B.size());
     sgner<int> sgner0;
     transform(B.begin(), B.end(), C.begin(), sgner0);
-    show("sums:  apply4: ", B);
-    show("signs: apply4: ", C);
+    show("apply4: sums:   ", B);
+    show("apply4: signs:  ", C);
 
     check0<int, int> c0(0);
-    C.clear();
-    transform(B.begin(), B.end()-1, A.begin()+1, C.begin(), c0 );
-
+    vector<int> D(B.size()-1);
+    D.insert(D.begin(), sgn(*B.begin()));
+    transform(B.begin(), B.end()-1, A.begin()+1, D.begin()+1, c0 );
+    show("apply4: signs1: ", D);
+    
     return bad;
   }
 }
