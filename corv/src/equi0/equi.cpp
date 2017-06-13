@@ -88,27 +88,11 @@ namespace weaves {
     const U total;
   };
 
+  std::vector<long> bad(0);
+
   // The equilibrium entry.
   std::vector<long> Partials::apply3(vector<int> A) {
-    std::vector<long> bad(0);
     if (A.size() == 0 || A.size() > 100000) {
-      return bad;
-    }
-
-    int n0;
-
-    // These don't do anything.
-    n0 = count_if(A.begin(), A.end(),
-		  bind2nd(greater_equal<int>(), numeric_limits<int>::min()));
-    if (n0 < A.size()) {
-      cout << "bad0: min: counts: " << n0 << "; " << A.size() << endl;
-      return bad;
-    }
-    
-    n0 = count_if(A.begin(), A.end(), 
-		  bind2nd(less_equal<int>(), numeric_limits<int>::max()));
-    if (n0 < A.size()) {
-      cout << "bad0: max: counts: " << n0 << "; " << A.size() << endl;
       return bad;
     }
     
@@ -129,7 +113,13 @@ namespace weaves {
     return C;
   };
 
-
+    // The equilibrium entry.
+  std::vector<long> Partials::apply4(vector<int> A) {
+    if (A.size() == 0 || A.size() > 100000) {
+      return bad;
+    }
+    return bad;
+  }
 }
 
 
