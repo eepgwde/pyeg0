@@ -23,6 +23,7 @@ namespace weaves {
     const std::vector<int> apply2(const std::vector<int> &, const std::vector<int> &);
     std::vector<long> apply3(std::vector<int>);
     std::vector<long> apply4(std::vector<int>);
+    std::vector<int> apply5(std::vector<int> A);
     
     template <typename T> void show
     (const std::string &mesg, const std::vector<T> &A) const {

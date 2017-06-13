@@ -70,6 +70,12 @@ template<class T> struct tester : public std::unary_function<T, void>
 	lsums = p0.apply4(eg0);
 	p0.show<long>("sums of eg0: ", lsums);
 	break;
+
+      case 6:
+	p0.show<int>("eg0-apply5:  ", eg0);
+	sums = p0.apply5(eg0);
+	break;
+       
       default:
 	break;
       }

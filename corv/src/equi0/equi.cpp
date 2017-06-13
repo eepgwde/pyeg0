@@ -1,6 +1,7 @@
 #include "equi.hpp"
 
 #include <limits>
+#include <set>
 
 using namespace std;  
 
@@ -114,7 +115,7 @@ namespace weaves {
   };
 
   template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
+    return  val < T(0) ? -1 : 1;
   };
 
   template<class T> struct sgner : public unary_function<T, int> {
@@ -146,7 +147,8 @@ namespace weaves {
   std::vector<long> Partials::apply4(vector<int> A) {
     if (A.size() == 0 || A.size() > 100000) {
       return bad;
-    }
+    }    
+    
     vector<int> B(A.size());
     partial_sum(A.begin(), A.end(), B.begin());
 
@@ -156,14 +158,86 @@ namespace weaves {
     show("apply4: sums:   ", B);
     show("apply4: signs:  ", C);
 
+    // Evaluate signs from prior partial and current.
     check0<int, int> c0(0);
     vector<int> D(B.size()-1);
     D.insert(D.begin(), sgn(*B.begin()));
     transform(B.begin(), B.end()-1, A.begin()+1, D.begin()+1, c0 );
     show("apply4: signs1: ", D);
-    
+
+    pair<std::vector<int>::iterator, std::vector<int>::iterator> 
+      result = mismatch(C.begin(), C.end()-1, D.begin());
+
+    cout << "apply4: mismatch: " << (result.first != C.end()-1) << "; " <<
+      result.first - C.begin() << endl;
     return bad;
   }
+
+  // Binary search (note boundaries in the caller)
+  int CeilIndex(std::vector<int> &v, int l, int r, int key) {
+      while (r-l > 1) {
+      int m = l + (r-l)/2;
+      if (v[m] >= key)
+        r = m;
+      else
+        l = m;
+    }
+ 
+      return r;
+    }
+ 
+  int LongestIncreasingSubsequenceLength(std::vector<int> &v) {
+      if (v.size() == 0)
+        return 0;
+ 
+      std::vector<int> tail(v.size(), 0);
+      int length = 1; // always points empty slot in tail
+ 
+      tail[0] = v[0];
+      for (size_t i = 1; i < v.size(); i++) {
+      if (v[i] < tail[0])
+	// new smallest value
+	tail[0] = v[i];
+      else if (v[i] > tail[length-1])
+	// v[i] extends largest subsequence
+	tail[length++] = v[i];
+      else
+	// v[i] will become end candidate of an existing subsequence or
+	// Throw away larger elements in all LIS, to make room for upcoming grater elements than v[i]
+	// (and also, v[i] would have already appeared in one of LIS, identify the location and replace it)
+	tail[CeilIndex(tail, -1, length-1, v[i])] = v[i];
+    }
+ 
+      return length;
+    }
+
+  
+  std::vector<long> apply5(vector<int> A) {
+  
+    std::vector<int> v{ 2, 5, 3, 7, 11, 8, 10, 13, 6 };
+    // show("v: ", v);
+    std::cout << "Length of Longest Increasing Subsequence is "
+	      << LongestIncreasingSubsequenceLength(v) << '\n';
+    }
+
+  std::vector<int> Partials::apply5(vector<int> A) {
+   int arr[] = {4, 4, 5, 7, 6};
+    int n = 5;
+
+    
+
+    multiset<int> s;
+    multiset<int>::iterator it;
+    for(int i=0;i<n;i++)
+    {
+        s.insert(arr[i]);
+        it = upper_bound(s.begin(), s.end(), arr[i]);
+        if(it!=s.end()) 
+            s.erase(it);
+    }
+    cout<<s.size()<<endl;
+    return A;
+    }
 }
 
 
