@@ -100,8 +100,8 @@ namespace weaves {
     partial_sum(A.begin(), A.end(), B.begin());
     cout << "total: " << B.back() << endl;
 
-    vector<long> C(B.size());
     diff0<long, int> b0(B.back());
+    vector<long> C(B.size());
     transform(A.begin(), A.end(), B.begin(), C.begin(), b0);
 
     vector<long>::iterator result = C.begin();
@@ -113,11 +113,53 @@ namespace weaves {
     return C;
   };
 
-    // The equilibrium entry.
+  template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+  };
+
+  template<class T> struct sgner : public unary_function<T, int> {
+    int operator() (T x) {
+      return sgn(x);
+    }
+  };
+
+
+  template<class U, class T> struct check0 : public binary_function<U, T, T> {
+    check0(U total) : total(total) {}
+
+    T operator() (const T& x, const T& y) {
+      cout << "signum: sum: " << x << "; " << sgn(x) << "; "
+	   << "signum: part: " << y << "; " << sgn(y) << endl;
+
+      // If the signs are the same, return
+      int s0 = sgn(x);
+      if (s0 != sgn(y)) {
+	if (s0 > 0 && std::abs(s0) < std::abs(y)) s0 = sgn(y);
+	else if (s0 < 0 && std::abs(y) > std::abs(s0)) s0 = sgn(y);
+      }
+      return s0;
+    }
+    const U total;
+  };
+
+  // Data validation: seeking integer overflow.
   std::vector<long> Partials::apply4(vector<int> A) {
     if (A.size() == 0 || A.size() > 100000) {
       return bad;
     }
+    vector<int> B(A.size());
+    partial_sum(A.begin(), A.end(), B.begin());
+
+    vector<int> C(B.size());
+    sgner<int> sgner0;
+    transform(B.begin(), B.end(), C.begin(), sgner0);
+    show("sums:  apply4: ", B);
+    show("signs: apply4: ", C);
+
+    check0<int, int> c0(0);
+    C.clear();
+    transform(B.begin(), B.end()-1, A.begin()+1, C.begin(), c0 );
+
     return bad;
   }
 }
