@@ -120,10 +120,11 @@ namespace weaves {
     transform(A.begin(), A.end(), B.begin(), C.begin(), b0);
 
     vector<long>::iterator result = C.begin();
-    do {
-      result = find(result, C.end(), 0);
-      cout << "index: " << result++ - C.begin() << endl;
-    } while (result != C.end());
+    vector<long>::iterator result0 = result;
+    while ((result = find(result, C.end(), 0)) != C.end()) {
+      cout << "index: " << result - C.begin() << endl;
+      result++;
+    }
     
     return C;
   };
