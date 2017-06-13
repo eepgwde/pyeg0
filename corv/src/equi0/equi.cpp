@@ -221,22 +221,19 @@ namespace weaves {
     }
 
   std::vector<int> Partials::apply5(vector<int> A) {
-   int arr[] = {4, 4, 5, 7, 6};
-    int n = 5;
+      int n = A.size();
 
-    
-
-    multiset<int> s;
-    multiset<int>::iterator it;
-    for(int i=0;i<n;i++)
-    {
-        s.insert(arr[i]);
-        it = upper_bound(s.begin(), s.end(), arr[i]);
-        if(it!=s.end()) 
-            s.erase(it);
+      multiset<int> s;
+      multiset<int>::iterator it;
+      
+      for(int i=0;i<n;i++) {
+      s.insert(A[i]);
+      it = upper_bound(s.begin(), s.end(), A[i] );
+      if(it!=s.end()) 
+	s.erase(it);
     }
-    cout<<s.size()<<endl;
-    return A;
+      cout<<s.size()<<endl;
+      return A;
     }
 }
 
