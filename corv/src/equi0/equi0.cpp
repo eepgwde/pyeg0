@@ -123,13 +123,12 @@ int main( int argc,      // Number of strings in array argv
   // This produces integer overflow in expression warning from the compiler.
   const std::vector<int> eg4({4, 4, 5, 7, 6});
   const std::vector<int> eg5({ std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), std::numeric_limits<int>::max() });
+  const std::vector<int> eg6({2,2,2,2,2,3,4,5,2,2,2,-1,2,5,2,2,2,0});
 
   weaves::Partials p1;
   p1.show("limits: ", eg3);
 
-  const std::vector<std::vector<int>> egs({ eg1, eg2, eg3, eg4, eg5 });
-
-  const std::vector<int>& eg0 = eg2;
+  const std::vector<std::vector<int>> egs({ eg1, eg2, eg3, eg4, eg5, eg6 });
 
   tester<std::vector<int> > tester0(N0);
   for_each (egs.begin(), egs.end(), tester0);

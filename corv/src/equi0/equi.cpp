@@ -216,8 +216,7 @@ namespace weaves {
 
   // Longest increasing sub-sequence.
   std::vector<int> Partials::apply5(vector<int> A) {
-    vector<int> A0({2,2,2,2,2,3,4,5,2,2,2,-1,2,5,2,2,2,0});
-    vector<int>& seq = A0;
+    vector<int>& seq = A;
     vector<int> B(seq.size());
     vector<int> C(seq.size());
 
@@ -231,10 +230,20 @@ namespace weaves {
     *B.begin() = 0;
     show("apply5: deltas: ", B);
 
+    // Specialized adder that increments based on signum.
     partial_sum(B.begin(), B.end(), C.begin(), add0);
-    // transform(B.begin(), B.end(), C.begin(), sgn0er0);
-
     show("apply5: sums: ", C);
+
+    vector<int>::const_iterator it = max_element(C.begin(), C.end());
+    if (it == C.end()) return A;
+    vector<int>::const_iterator st0 = it - *it;
+
+    cout << "apply5: max: length: " << it+1 - st0 << "; " 
+	 << " at: " << st0 - C.begin() << "; ";
+    copy(seq.begin() + (st0 - C.begin()), 
+	 seq.begin() + (it+1 - C.begin()), 
+	 std::ostream_iterator<int>(std::cout, " "));
+    cout << endl;
     
     return A;
   }
