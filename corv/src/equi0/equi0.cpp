@@ -117,11 +117,11 @@ int main( int argc,      // Number of strings in array argv
 
   // 4294967294
   const std::vector<int> eg1({3, 1, 2, 4, 3});
-  const std::vector<int> eg2({-1, 3, -4, 5, 1, -6, 2, 1});
+  const std::vector<int> eg2({2, 2, 2, 2, 1, 2, -1, 2, 1, 3});
   const std::vector<int> eg3({std::numeric_limits<int>::max(), std::numeric_limits<int>::min() });
 
   // This produces integer overflow in expression warning from the compiler.
-  const std::vector<int> eg4({2*std::numeric_limits<int>::max(), 2*std::numeric_limits<int>::min() });
+  const std::vector<int> eg4({4, 4, 5, 7, 6});
   const std::vector<int> eg5({ std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), std::numeric_limits<int>::max() });
 
   weaves::Partials p1;

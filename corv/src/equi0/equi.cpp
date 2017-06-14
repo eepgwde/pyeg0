@@ -2,6 +2,12 @@
 
 #include <limits>
 #include <set>
+#include <iostream>
+#include <vector>
+#include <tr1/memory>
+#include <algorithm>
+#include <iterator>
+ 
 
 using namespace std;  
 
@@ -173,68 +179,65 @@ namespace weaves {
     return bad;
   }
 
-  // Binary search (note boundaries in the caller)
-  int CeilIndex(std::vector<int> &v, int l, int r, int key) {
-      while (r-l > 1) {
-      int m = l + (r-l)/2;
-      if (v[m] >= key)
-        r = m;
-      else
-        l = m;
-    }
- 
-      return r;
-    }
- 
-  int LongestIncreasingSubsequenceLength(std::vector<int> &v) {
-      if (v.size() == 0)
-        return 0;
- 
-      std::vector<int> tail(v.size(), 0);
-      int length = 1; // always points empty slot in tail
- 
-      tail[0] = v[0];
-      for (size_t i = 1; i < v.size(); i++) {
-      if (v[i] < tail[0])
-	// new smallest value
-	tail[0] = v[i];
-      else if (v[i] > tail[length-1])
-	// v[i] extends largest subsequence
-	tail[length++] = v[i];
-      else
-	// v[i] will become end candidate of an existing subsequence or
-	// Throw away larger elements in all LIS, to make room for upcoming grater elements than v[i]
-	// (and also, v[i] would have already appeared in one of LIS, identify the location and replace it)
-	tail[CeilIndex(tail, -1, length-1, v[i])] = v[i];
-    }
- 
-      return length;
-    }
+  template <typename T> int sgn0(T val) {
+    return (T(0) < val) - (val < T(0));
+  };
 
-  
-  std::vector<long> apply5(vector<int> A) {
-  
-    std::vector<int> v{ 2, 5, 3, 7, 11, 8, 10, 13, 6 };
-    // show("v: ", v);
-    std::cout << "Length of Longest Increasing Subsequence is "
-	      << LongestIncreasingSubsequenceLength(v) << '\n';
+  template <typename T> int sgn1(T val) {
+    return val <= T(0) ? 0 : 1;
+  };
+
+  template<class T> struct uptick : public binary_function<T, T, T> {
+    bool i0 = true;
+    T operator() (const T n, const T m) {
+      cout << "apply5: n, m, signum: " 
+	   << n << " ; "
+	   << m << " ; " 
+	   << sgn1(n-m) << endl;
+
+      return sgn1(n - m);
     }
+  };
 
-  std::vector<int> Partials::apply5(vector<int> A) {
-      int n = A.size();
-
-      multiset<int> s;
-      multiset<int>::iterator it;
+  template<class T> struct add : public binary_function<T, T, T> {
+    bool i0 = true;
+    T n0 = 0;
+    T operator() (const T sum0, const T n) {
+      cout << "apply5: n, sum0, n0: " 
+	   << n << " ; "
+	   << sum0 << " ; " 
+	   << n0 << endl;
       
-      for(int i=0;i<n;i++) {
-      s.insert(A[i]);
-      it = upper_bound(s.begin(), s.end(), A[i] );
-      if(it!=s.end()) 
-	s.erase(it);
+      int result = n+ (n == 0 ? 0 : sum0);
+      n0 = n;
+      return result;
     }
-      cout<<s.size()<<endl;
-      return A;
-    }
+  };
+
+  // Longest increasing sub-sequence.
+  std::vector<int> Partials::apply5(vector<int> A) {
+    vector<int> A0({2,2,2,2,2,3,4,5,2,2,2,-1,2,5,2,2,2,0});
+    vector<int>& seq = A0;
+    vector<int> B(seq.size());
+    vector<int> C(seq.size());
+
+    show("apply5: seq:   ", seq);
+
+    // sgn0er<int> sgn0er0;
+    uptick<int> uptick0;
+    add<int> add0;
+    
+    adjacent_difference(seq.begin(), seq.end(), B.begin(), uptick0);
+    *B.begin() = 0;
+    show("apply5: deltas: ", B);
+
+    partial_sum(B.begin(), B.end(), C.begin(), add0);
+    // transform(B.begin(), B.end(), C.begin(), sgn0er0);
+
+    show("apply5: sums: ", C);
+    
+    return A;
+  }
 }
 
 
