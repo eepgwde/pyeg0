@@ -2,7 +2,7 @@
 # Test make file for MInfo.py module testing.
 
 PYTHON ?= python3
-UUT ?= MInfoTestCase
+UUT ?= 
 FILE ?= minfo.log
 SDIR ?= tests/media
 PYTHONIOENCODING=utf-8

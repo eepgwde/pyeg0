@@ -3,3 +3,13 @@ module MInfo1 to extract information from media files.
 This is then used to produce a chapters file for MP4Box to produce an Apple
 audiofile (an .m4b) that can be a full audiobook with chapters.
 
+To develop the package, you need to put some media files (mp3 or m4a) into minfo/tests/media
+(a link will do.)
+
+Put a list of those files (absolute paths) into minfo/tests/p1.lst
+
+There is a README.md in minfo/. That gives advice on packages to install.
+
+Stop press: there was a problem with unicode strings, but that has gone away.
+
+weaves
