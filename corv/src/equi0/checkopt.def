@@ -1,0 +1,28 @@
+AutoGen Definitions options;
+prog_name     = check;
+prog_title    = "Checkout Automated Options";
+long_opts;
+
+flag = {
+    name      = TEST_ID;
+    value     = T;        /* flag style option character */
+    arg_type  = string;   /* option argument indication  */
+    max       = NOLIMIT;  /* occurrance limit (none)     */
+    stack_arg;
+    descrip   = "Test numbers";
+};
+
+flag = {
+    name      = X0_SIZE;
+    value     = N;        /* flag style option character */
+    arg_type  = number;   /* option argument indication  */
+    max       = NOLIMIT;  /* occurrance limit (none)     */
+    descrip   = "Maximal size";
+};
+
+flag = {
+    name      = show_defs;
+    descrip   = "Show the definition tree";
+    disable   = dont;     /* mark as enable/disable type */
+                          /* option.  Disable as `dont-' */
+};

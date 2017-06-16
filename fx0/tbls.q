@@ -65,9 +65,12 @@ I'll use a script because it's easier to edit.
 
 .t.tbl0: ()
 
+// This very slow because of the script reload.
+// There are easier ways.
+
 while[ 0 < count .t.ts;
       .Q.view[];
-      value "\\l fx01.q";
+      .sys.qreloader enlist "fx01.q";
       .t.tbl0: $[0 < count .t.tbl0; .t.tbl0,.t.tbl; .t.tbl] ;
       .t.ts: .t.ts except date ]
 
@@ -181,7 +184,7 @@ if[not .sys.is_arg`verbose; .t.status]
 
 /  Local Variables: 
 /  mode:q 
-/  q-prog-args: "-p 9051 -halt -verbose -load /opt/src/db"
+/  q-prog-args: "-p 9051 -halt -verbose -load /home/src/db"
 /  fill-column: 75
 /  comment-column:50
 /  comment-start: "/  "

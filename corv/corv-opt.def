@@ -1,0 +1,76 @@
+AutoGen Definitions options;
+
+prog_name     = corv;
+prog_title    = "Examples";
+/*
+detail        = "This string is added to the usage output when the HELP
+option is selected. The contents of the file `corv.details' is added
+to the usage output when the MORE-HELP option is selected.";
+detail_file   = corv.details; 
+explain       = "additional information given whenever the usage routine is invoked.";
+homerc        = $HOME;
+homerc        = ".";
+*/
+owner         = "Walter Eaves";
+copyright     = 2017;
+/*
+Instead of the following, you can use one of these:
+copyright_lgpl;
+copyright_note="All rights reserved.";
+*/
+copyright_gpl;
+/*
+environrc;
+exerc;
+*/
+/* get the version number from configure.in */
+version       = `
+awk '/^ *AM_INIT_AUTOMAKE/{
+  sub(/.*AM_INIT_AUTOMAKE.*, */,"");sub(/\\).*$/,"");
+  print
+}' configure.in`;
+long_opts;
+
+flag = {
+    name      = output;
+    value     = o;        /* flag style option character */
+    flag_arg  = ":";      /* option argument marker      */
+    max       = NOLIMIT;  /* occurrence limit (none)     */
+    descrip   = "send output to NAME instead of standard output";
+};
+flag = {
+    name      = interactive;
+    value     = i;
+    descrip   = "prompt for confirmation";
+};
+flag = {
+    name      = dry_run;
+    value     = n;
+    descrip   = "take no real actions";
+};
+flag = {
+    name      = no_warn;
+    value     = w;
+    descrip   = "disable warnings";
+};
+flag = {
+    name      = quiet;
+    value     = q;
+    descrip   = "inhibit usual output";
+};
+flag = {
+    name      = brief;
+    value     = b;
+    descrip   = "shorten output";
+};
+flag = {
+    name      = verbose;
+    value     = V;
+    descrip   = "print more information";
+};
+flag = {
+    name      = directory;
+    value     = d;
+    flag_arg  = ":";      /* option argument marker      */
+    descrip   = "use specified directory";
+};

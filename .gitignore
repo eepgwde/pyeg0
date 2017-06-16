@@ -15,3 +15,32 @@ jr/src/csvdb
 
 # Scala
 **/target/*
+
+# automake
+
+**/autom4te.cache/*
+**/.libs/*
+**/.deps/*
+*.o
+*.lo
+*.la
+*.Plo
+*.Po
+*.trs
+*.sh.log
+
+**/rb/logfile
+**/rb/in-file.lst
+**/rb/test-suite.log
+**/rb/unfreed.txt
+
+INSTALL
+compile
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+ltmain.sh
+missing
+Makefile.in
