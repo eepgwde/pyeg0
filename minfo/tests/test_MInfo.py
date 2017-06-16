@@ -77,14 +77,6 @@ class Test(unittest.TestCase):
         self.test0.open(self.file0)
         return
 
-    def test_003(self):
-        logger.info("encoding: " + sys.getfilesystemencoding())
-        with self.assertRaises(UnicodeEncodeError):
-            filename = 'filename\u4500abc'
-            with open(filename, 'w') as f:
-                f.write('blah\n')
-
-        logger.info('No UTF-8')
 
     def test_01(self):
         self.assertIsNotNone(self.test0)

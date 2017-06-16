@@ -1,12 +1,57 @@
 CHANGES
 =======
 
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* anomalous inputs
+* bound checking
+* very simple solution
+* -
+* -
+* -
+* -
+* -
+* autogen
+* -
+* -
+* equi0
+* -
+* dmalloc and testing
+* -
+* -
+* -
+* -
+* peppy
+* -
+* -
+* processing
+* -
+* -
+* -
+* -
+* -
+* trade table
+* trade
+* bound
+* -
+* sub-script
+* cleaner
+* gmus fixed
+* added q/kdb+
+* -
+* -
+* -
+* -
+* -
+* added dtadvance2
 * Initial
 * -
-
-0.2.0
------
-
 * -
 * -
 * modularized
