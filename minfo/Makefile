@@ -2,6 +2,7 @@
 # Test make file for MInfo.py module testing.
 
 PYTHON ?= python3
+PIP ?= pip3
 UUT ?= 
 FILE ?= minfo.log
 SDIR ?= tests/media
@@ -45,7 +46,7 @@ uninstall::
 	-$(shell -c "cd $(HOME)/.local; -pip3 uninstall --yes minfo")
 
 dist-local:
-	python setup.py sdist
+	$(PYTHON) setup.py sdist
 
 install: uninstall dist-local
-	pip3 install $(wildcard dist/*.tar.gz) --user
+	$(PIP3) install $(wildcard dist/*.tar.gz)

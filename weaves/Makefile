@@ -2,6 +2,7 @@
 # Test make file for MInfo.py module testing.
 
 PYTHON ?= python3
+PIP ?= pip3
 UUT ?= 
 FILE ?= test.log
 PYTHONIOENCODING=utf-8
@@ -42,10 +43,10 @@ uninstall::
 	-$(SHELL) -c "cd $(HOME)/.local; pip3 uninstall --yes $(PKG)"
 
 dist-local:
-	python setup.py sdist
+	$(PYTHON) setup.py sdist
 
 install: uninstall dist-local
-	pip3 install -e . --user
+	$(PIP) install --user $(wildcard dist/*.tar.gz)
 
 clean::
 	-$(SHELL) -c "find . -type d -name __pycache__ -exec rm -rf {} \;"
