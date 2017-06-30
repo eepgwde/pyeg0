@@ -11,5 +11,4 @@ met0$Date <- as.Date(sprintf("2017-%02d-%02d", met0$m, met0$dom))
 
 met0 <- met0[, c("Date", "thi", "tlo", "precip-mm", "snow-cm")]
 
-
-
+into0 <- merge(into0, met0, by="Date")

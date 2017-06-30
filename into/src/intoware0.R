@@ -44,6 +44,18 @@ into0 <- read.csv("../bak/intoware.csv")
 into0$Date <- as.Date(as.character(into0$Date), format="%d/%m/%Y")
 into0$wday <- weekdays(into0$Date)
 
+c(max(into0$Date), min(into0$Date))
+
+into0 <- into0[ order(into0$Date), ]
+
+## classing
+source("intoware2.R")
+
+## Meteo
+source("intoware1.R")
+
+
+tallies <- sapply(colnames(into0), function(x) table(into0[[ x ]]))
 
 
 flight <- flight[order(flight$D00),]
