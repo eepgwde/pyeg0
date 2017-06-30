@@ -1,5 +1,8 @@
 
-all: m15-6.csv0
+all: local-bak m15-6.csv0
+
+local-bak: $(HOME)/Documents/m15-6.xlsx
+	cp $< .
 
 
 m15-6.csv: $(HOME)/Documents/m15-6.csv
