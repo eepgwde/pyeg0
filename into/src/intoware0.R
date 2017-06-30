@@ -39,7 +39,13 @@ getInfo <- function(what = "Suggests")
 seed.mine = 107
 set.seed(seed.mine)                     # helpful for testing
 
-flight <- read.csv("../bak/flight.csv")
+into0 <- read.csv("../bak/intoware.csv")
+
+into0$Date <- as.Date(as.character(into0$Date), format="%d/%m/%Y")
+into0$wday <- weekdays(into0$Date)
+
+
+
 flight <- flight[order(flight$D00),]
 
 # Backup
