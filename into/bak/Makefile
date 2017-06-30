@@ -1,9 +1,11 @@
 
-all: local-bak m15-6.csv0
+all: local-bak intoware.csv m15-6.csv0
 
 local-bak: $(HOME)/Documents/m15-6.xlsx
 	cp $< .
 
+intoware.csv: $(HOME)/Documents/intoware.csv
+	cp --backup=numbered $< $@
 
 m15-6.csv: $(HOME)/Documents/m15-6.csv
 	cp --backup=numbered $< $@

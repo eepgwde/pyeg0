@@ -2,7 +2,6 @@
 
 ## Load meteorological data for Manchester for March, April, May and June 2017
 
-
 met0 <- read.csv("../bak/m15-6.csv0", header=FALSE, skip=1)
 
 colnames(met0) <- c("wday", "m", "dom", "thi", "tlo", "precip-mm", "snow-cm", "ignore0", "thi1", "tlo1")
