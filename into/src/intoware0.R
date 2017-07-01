@@ -160,11 +160,17 @@ sink()
 
 invisible(lapply(colnames(c0), write, "into0-corr.txt", append=TRUE))
 
+## Prefer yday over Date
+w[['hi-corr']] <- gsub("yday", "Date", w[['hi-corr']])
+
 m.names <- setdiff(colnames(w[['df']]), w[['hi-corr']])
 
 w[['df']] <- w[['df']][, m.names]
 
-if (exists("m.trace")) save(w, file="w.RData")
+w[['n']] <- caret.filter(w)
+w[['n']] <- caret.numeric(w)
+
+save(w, file="w.RData")
 load("w.RData", .GlobalEnv)
 
 stopifnot(!exists("m.trace"))

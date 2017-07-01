@@ -30,7 +30,75 @@ getInfo <- function(what = "Suggests")
   length(eachPkg)
 }
 
+load("w.RData", .GlobalEnv)
+
 ## Check feature plotting
+
+cols <- colnames(w[['df']])
+c0 <- grepl("(paint|temperature|pressure|thinners)", cols, ignore.case=TRUE)
+c0 <- cols[c0]
+c1 <- !grepl("^na\\.", c0, ignore.case=TRUE)
+
+c0 <- c0[c1]
+
+c1 <- list.split(c0, k=3)
+print(length(c1))
+idx <- 0
+
+feat0 <- function(x) {
+    transparentTheme(trans = .4)
+    featurePlot(x = w[['df']][, x],
+                y = as.character(w[['outcome']]),
+                plot = "pairs",
+                ## Add a key at the top
+                auto.key = list(columns = (length(x) - 1) ))
+}
+
+if (exists("m.img")) jpeg(width=1024, height=1024, filename = "feat-%02d.jpg")
+
+
+idx <- idx + 1
+c0 <- c1[[idx]]
+
+feat0(c0)
+
+transparentTheme(trans = .4)
+featurePlot(x = w[['df']][, c0],
+            y = as.character(w[['outcome']]),
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = (length(c0) - 1) ))
+
+idx <- idx + 1
+c0 <- c1[[idx]]
+transparentTheme(trans = .4)
+featurePlot(x = w[['df']][, c0],
+            y = as.character(w[['outcome']]),
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = (length(c0) - 1) ))
+
+idx <- idx + 1
+c0 <- c1[[idx]]
+transparentTheme(trans = .4)
+featurePlot(x = w[['df']][, c0],
+            y = as.character(w[['outcome']]),
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = (length(c0) - 1) ))
+
+idx <- idx + 1
+c0 <- c1[[idx]]
+transparentTheme(trans = .4)
+featurePlot(x = w[['df']][, c0],
+            y = as.character(w[['outcome']]),
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = (length(c0) - 1) ))
+
+if (exists("m.img")) dev.off()
+
+
 
 transparentTheme(trans = .4)
 featurePlot(x = iris[, 1:4],
@@ -102,6 +170,9 @@ plot.roc(aSAH$outcome, aSAH$s100b,
 ## adabag
 
 library(adabag)
+
+iris.adaboost <- boosting(Species~., data=w[['df']], boos=TRUE,
+                          mfinal=6)
 
 iris.adaboost <- boosting(Species~., data=iris, boos=TRUE,
                           mfinal=6)
