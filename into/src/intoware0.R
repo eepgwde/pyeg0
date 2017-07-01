@@ -51,9 +51,19 @@ into0 <- into0[ order(into0$Date), ]
 ## classing
 source("intoware2.R")
 
-## Meteo
+## dropping non-indicators
+
+m.names <- colnames(into0)[grepl("^i[0-9]\\.", colnames(into0))]
+
+m.names <- unique(gsub("^i[0-9]+\\.", "", m.names))
+
+into0 <- into0[, setdiff(colnames(into0), m.names)]
+
+## meteo
 source("intoware1.R")
 
+
+View(into0)
 
 tallies <- sapply(colnames(into0), function(x) table(into0[[ x ]]))
 
