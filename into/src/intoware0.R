@@ -35,12 +35,20 @@ getInfo <- function(what = "Suggests")
   out
 }
 
-## Setup trace
+## Setup trace and imaging.
 
 m.trace <- "trace.flag"
 if (!file.exists(m.trace)) {
     rm("m.trace")
 }
+
+m.img <- "jpeg.flag"
+if (!file.exists(m.img)) {
+    rm("m.img")
+} else {
+    m.img <- "into-%02d.jpg"
+}
+
 
 print(sprintf("trace: %d", exists("m.trace")))
 
@@ -136,10 +144,31 @@ w[['fail-corr']]
 ## No NA's in the correlation matrix.
 stopifnot(!any(grepl("NA's", names(summary(c0[upper.tri(c0)])))))
               
+if (exists("m.img"))
+    jpeg(width=1024, height=1024, filename = m.img)
+
 corrplot(c0, method="circle", type="upper")
+
+if (exists("m.img"))
+    dev.off()
+
+## Remove highly correlated components.
+
+sink("into0-corr.txt")
+w[['hi-corr']] <- findCorrelation(c0, cutoff = 0.99, verbose=TRUE, names=TRUE)
+sink()
+
+invisible(lapply(colnames(c0), write, "into0-corr.txt", append=TRUE))
+
+m.names <- setdiff(colnames(w[['df']]), w[['hi-corr']])
+
+w[['df']] <- w[['df']][, m.names]
+
+if (exists("m.trace")) save(w, file="w.RData")
+load("w.RData", .GlobalEnv)
 
 stopifnot(!exists("m.trace"))
 
-descrCorr <- findCorrelation(c0, cutoff = .95, verbose=TRUE)
+
 
 
