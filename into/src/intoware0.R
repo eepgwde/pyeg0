@@ -26,10 +26,22 @@ getInfo <- function(what = "Suggests")
   text <- gsub(">=", "$\\\\ge$", text, fixed = TRUE)
   eachPkg <- strsplit(text, ", ", fixed = TRUE)[[1]]
   eachPkg <- gsub(",", "", eachPkg, fixed = TRUE)
-  # out <- paste("\\\\pkg{", eachPkg[order(tolower(eachPkg))], "}", sep = "")
-  # paste(out, collapse = ", ")
+  out <- paste("\\\\pkg{", eachPkg[order(tolower(eachPkg))], "}", sep = "")
+  paste(out, collapse = ", ")
   length(eachPkg)
+  out
 }
+
+## Setup trace
+
+m.trace <- "trace.flag"
+if (!file.exists(m.trace)) {
+    rm("m.trace")
+}
+
+print(sprintf("trace: %d", exists("m.trace")))
+
+if (exists("m.trace")) getInfo()
 
 ### project-specific: begin
 ## Set-seed, load original CSV file, order it
@@ -48,10 +60,10 @@ c(max(into0$Date), min(into0$Date))
 
 into0 <- into0[ order(into0$Date), ]
 
-## classing
+## Classing and some indicators
 source("intoware2.R")
 
-## dropping non-indicators
+## Dropping non-indicators
 
 m.names <- colnames(into0)[grepl("^i[0-9]\\.", colnames(into0))]
 
@@ -59,14 +71,35 @@ m.names <- unique(gsub("^i[0-9]+\\.", "", m.names))
 
 into0 <- into0[, setdiff(colnames(into0), m.names)]
 
-## meteo
+## Meterological
 source("intoware1.R")
 
+## Remove empty
 
-View(into0)
+ncol(into0)
 
-tallies <- sapply(colnames(into0), function(x) table(into0[[ x ]]))
+invisible(sapply(colnames(into0), function(x) { into0 <<- empty.col(into0, x) }))
 
+ncol(into0)
+
+m.names <- colnames(into0)[!class.columns(into0, cls0="POSIX")]
+
+tallies <- sapply(m.names, function(x) table(into0[[ x ]]))
+
+if (exists("m.trace")) View(into0)
+
+## Dropped columns
+
+## Zero variance
+
+t0 <- sapply(tallies, length)
+m.names <- names(which(t0 == 1))
+m.names <- setdiff(colnames(into0), m.names)
+t0 <- NULL
+
+into0 <- into0[, m.names]
+
+## 
 
 flight <- flight[order(flight$D00),]
 

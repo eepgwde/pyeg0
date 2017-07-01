@@ -8,19 +8,20 @@ library(lubridate)
 ## Day of year.
 
 into0$Time0 <- as.character(into0$Time)
+into0$Time <- NULL
 
 into0$dt0 <- strptime(sprintf("%s %s:00", into0$Date, into0$Time), 
                       format="%Y-%m-%d %H:%M:%S", tz="Europe/London")
 
-into0$hour <- into0$dt0[['hour']]
+into0$hour <- round(into0$dt0[['hour']] + into0$dt0[['min']] / 60, 1)
 
 into0$yday <- into0$dt0[['yday']]
 
-into0$Time <- NULL
-
 into0$dt1 <- with_tz(into0$dt0, tzone = "UTC")
 
-into0$hour1 <- into0$dt1[['hour']]
+into0$hour1 <- round(into0$dt1[['hour']] + into0$dt1[['min']] / 60, 1)
+
+into0$Time0 <- NULL
 
 ### Factors and strings
 
