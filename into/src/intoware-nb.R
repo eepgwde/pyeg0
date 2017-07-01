@@ -4,6 +4,46 @@
 ## I mostly keep visual elements in here.
 ## And I protype using a live and loaded R (one that has run flight0.R)
 
+## weaves
+
+## annoying NA should be gone.
+
+m0 <- scale(as.matrix(w[['n']]))
+
+
+cor <- cor(m0)
+c1 <- cor[upper.tri(cor)]
+
+corrplot(cor, method="circle", type="upper")
+
+
+cor <- cor(m0, use = "pairwise.complete.obs")
+
+df <- w[['n']]
+
+clss <- class.columns(df, cls0="(factor|logical|integer)")
+
+clss <- class.columns(df, cls0="factor")
+
+df <- caret.numeric(w)
+
+## Generic caret support
+
+w.clss <- class.columns(w.w, cls0="(factor|numeric|logical|integer)")
+
+w.x <- w.w[, colnames(w.w)[w.clss]]
+
+w.nzv <- nearZeroVar(w.x, saveMetrics = TRUE)
+
+w.zv <- rownames(w.nzv[w.nzv$zeroVar,])
+m.names <- setdiff(colnames(w.w), w.zv)
+
+w.w <- w.w[, m.names]
+
+w.clss <- class.columns(w.w, cls0="(factor|numeric|logical|integer)")
+
+w.x <- w.w[, colnames(w.w)[w.clss]]
+
 ## Things you notice. 
 
 ## AVGSKDAVAIL is related to AVAILBUCKET, but AVAILBUCKET is complete
@@ -19,6 +59,14 @@
 ## they leave, some are very short flights, aargh! three types in all.
 
 flight.raw <- read.csv("../bak/flight.csv")
+
+library(corrplot)
+
+library(Rweaves1)
+
+cinto0 <- cor(into0)
+
+corrplot(cinto0)
 
 dim(flight.raw[which(flight.raw$SARRHR < flight.raw$SDEPHR), 
              c("SARRHR", "SDEPHR")])
