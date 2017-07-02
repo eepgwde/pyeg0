@@ -3,7 +3,7 @@
 S_FILES := intoware0.R intoware3.R
 T_FILES := $(S_FILES:.R=.Rout)
 
-all: m.img corr-01.jpg $(T_FILES)
+all: m.img $(T_FILES)
 
 m.img:
 	touch $@
@@ -16,4 +16,5 @@ intoware3.Rout: intoware3.R w.RData
 
 clean:
 	-$(RM) $(T_FILES)
+	-$(RM) $(wildcard *.jpg)
 	-$(RM) m.img m.trace

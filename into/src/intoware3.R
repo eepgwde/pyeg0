@@ -37,7 +37,7 @@ load("w.RData", .GlobalEnv)
 ## Check feature plotting
 
 cols <- colnames(w[['df']])
-c0 <- grepl("(viscosity|filter|thi|tlo|paint|temperature|pressure|thinners)", cols, ignore.case=TRUE)
+c0 <- grepl("(viscosity|filter|^tlo|paint|temperature|pressure|precip|thinners)", cols, ignore.case=TRUE)
 c0 <- cols[c0]
 c1 <- !grepl("^na\\.", c0, ignore.case=TRUE)
 
@@ -49,6 +49,7 @@ idx <- 0
 
 feat0 <- function(x) {
     transparentTheme(trans = .4)
+    x <- append(x, "thi")
     featurePlot(x = w[['df']][, x],
                 y = as.character(w[['outcome']]),
                 plot = "pairs",
