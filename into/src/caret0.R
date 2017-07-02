@@ -23,11 +23,24 @@ load("w.RData")
 
 print(sprintf("outcome: %s", w[['outcome-name']]))
 
+## Change to something more meaning
+
+x0 <- ! col.str2logical(w[['outcome']])
+x0 <- factor(as.character(x0))
+levels(x0) <- c("Pass", "Fail")
+w[['outcome']] <- x0
+
+## Check the imbalance.
+
+p0 <- prop.table(table(w[['outcome']]))
+odds.against(p0[2])
+
 ## Heuristics from train() says
 
-w[['zv1']] <- c("i0.Reason.2", "i0.Reason.6", "i0.Reason.7", "i1.Reason.5", "i1.Reason.6", "i2.Reason.6", "i3.Reason.6", "na.Supplier", "a1.Viscosity")
-
-w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), w[['zv1']])]
+if (FALSE) {
+    w[['zv1']] <- c("i0.Reason.2", "i0.Reason.7", "i1.Reason.5", "na.Supplier", "a1.Viscosity")
+    w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), w[['zv1']])]
+}
 
 ## end: Heuristics
 
@@ -96,8 +109,8 @@ gbmGrid <- expand.grid(interaction.depth =
 set.seed(seed.mine)
 rfFit1 <- train(trainDescr, trainClass,
                  method = "rf",
-                 trControl = fitControl,
                  preProc = c("center", "scale"),
+                 metric = "Kappa",
                  verbose = TRUE)
 rfFit1
 
@@ -111,92 +124,4 @@ gbmFit1 <- train(trainDescr, trainClass,
                  metric = "Kappa",
                  verbose = TRUE)
 gbmFit1
-
-###################################################
-### code chunk number 6: plsFit
-###################################################
-ctrl <- trainControl(method = "repeatedcv",
-                    repeats = 3,
-                    classProbs = TRUE,
-                    summaryFunction = twoClassSummary)
-                    
-set.seed(123)                    
-plsFit <- train(Class ~ ., 
-                data = trainDescr,
-                method = "pls",
-                tuneLength = 15,
-                trControl = ctrl,
-                metric = "ROC",
-                preProc = c("center", "scale"))
-
-
-###################################################
-### code chunk number 7: plsPrint
-###################################################
-plsFit
-
-
-###################################################
-### code chunk number 8: baPlot
-###################################################
-trellis.par.set(caretTheme())
-print(plot(plsFit))
-
-
-###################################################
-### code chunk number 9: plsPred
-###################################################
-plsClasses <- predict(plsFit, newdata = testingDescr)
-str(plsClasses)
-plsProbs <- predict(plsFit, newdata = testingDescr, type = "prob")
-head(plsProbs)
-
-
-###################################################
-### code chunk number 10: plsCM
-###################################################
-confusionMatrix(data = plsClasses, testingDescr$Class)
-
-
-###################################################
-### code chunk number 11: rdaFit
-###################################################
-## To illustrate, a custom grid is used
-rdaGrid = data.frame(gamma = (0:4)/4, lambda = 3/4)
-set.seed(123)                    
-rdaFit <- train(Class ~ ., 
-                data = trainDescr,
-                method = "rda",
-                tuneGrid = rdaGrid,
-                trControl = ctrl,
-                metric = "ROC")
-rdaFit
-rdaClasses <- predict(rdaFit, newdata = testingDescr)
-confusionMatrix(rdaClasses, testingDescr$Class)
-
-
-###################################################
-### code chunk number 12: rs
-###################################################
-resamps <- resamples(list(pls = plsFit, rda = rdaFit))
-summary(resamps)
-
-
-###################################################
-### code chunk number 13: diffs
-###################################################
-diffs <- diff(resamps)
-summary(diffs)
-
-
-###################################################
-### code chunk number 14: plsPlot
-###################################################
-
-plotTheme <- caretTheme()
-plotTheme$plot.symbol$col <- rgb(.2, .2, .2, .5)
-plotTheme$plot.symbol$pch <- 16
-trellis.par.set(plotTheme)
-print(xyplot(resamps, what = "BlandAltman"))
-
 

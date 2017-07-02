@@ -7,7 +7,10 @@ T_FILES := $(S_FILES:.R=.Rout)
 
 R_CMD := R CMD BATCH
 
-X_OUTCOME ?= Back.in.Spec
+## This signals the name of the outcome variable via the environment
+## Because Rscript doesn't produce our JPEG.
+
+X_OUTCOME ?= Within.Spec
 export X_OUTCOME
 
 all: m.img $(T_FILES)

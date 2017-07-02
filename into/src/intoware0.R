@@ -148,6 +148,21 @@ m0 <- scale(as.matrix(w[['n']]))
 
 c0 <- cor(m0, use = "pairwise.complete.obs")
 
+if (exists('m.trace')) {
+
+    c1 <- c0[, w[['outcome-name']]]
+    df <- data.frame(c0[, w[['outcome-name']]])
+
+    df$n <- rownames(df)
+    colnames(df) <- c("c0", "n")
+    rownames(df) <- 1:nrow(df)
+    df$c1 <- abs(df$c0)
+    df <- df[ order(-df$c1), ]
+
+    View(df)
+    
+}
+
 w[['fail-corr']] <- caret.cor0(c0)
 w[['fail-corr']]
 
