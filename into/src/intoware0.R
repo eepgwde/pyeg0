@@ -4,6 +4,8 @@
 
 ## Following the caret vignette.
 
+rm(list=ls())
+
 ###################################################
 ### code chunk number 1: loadLibs
 ###################################################
@@ -45,10 +47,7 @@ if (!file.exists(m.trace)) {
 m.img <- "jpeg.flag"
 if (!file.exists(m.img)) {
     rm("m.img")
-} else {
-    m.img <- "into-%02d.jpg"
 }
-
 
 print(sprintf("trace: %d", exists("m.trace")))
 
@@ -116,16 +115,18 @@ rm("into0")
 w[['outcome-name']] <- "Within.Spec"
 
 w[['outcome']] <- w[['df']][[ w[['outcome-name']] ]]
-w[['df']][, w[['outcome-name']] ] <- NULL
+# w[['df']][, w[['outcome-name']] ] <- NULL
 
 ## Caret operations.
 
-w[['df']] <- caret.zv(w)
+w <- caret.zv(w)
 
 w[['n']] <- caret.filter(w)
 
-if (exists("m.trace")) save(w, file="w.RData")
-load("w.RData", .GlobalEnv)
+if (exists("m.trace")) {
+    save(w, file="w.RData")
+    load("w.RData", .GlobalEnv)
+}
 
 ## NA operations
 
@@ -145,9 +146,11 @@ w[['fail-corr']]
 stopifnot(!any(grepl("NA's", names(summary(c0[upper.tri(c0)])))))
               
 if (exists("m.img"))
-    jpeg(width=1024, height=1024, filename = m.img)
+    jpeg(width=1024, height=1024, filename = "corr-%02d.jpg")
 
-corrplot(c0, method="circle", type="upper")
+corrplot(c0, method="circle", type="lower", order="alphabet")
+
+corrplot(c0, method="circle", type="lower", order="hclust")
 
 if (exists("m.img"))
     dev.off()
@@ -158,17 +161,24 @@ sink("into0-corr.txt")
 w[['hi-corr']] <- findCorrelation(c0, cutoff = 0.99, verbose=TRUE, names=TRUE)
 sink()
 
-invisible(lapply(colnames(c0), write, "into0-corr.txt", append=TRUE))
+if (exists("m.trace")) {
+    invisible(lapply(colnames(c0), write, "into0-corr.txt", append=TRUE))
+}
 
 ## Prefer yday over Date
 w[['hi-corr']] <- gsub("yday", "Date", w[['hi-corr']])
+w[['hi-corr']]
 
+## Remove highly-correlated components.
 m.names <- setdiff(colnames(w[['df']]), w[['hi-corr']])
 
 w[['df']] <- w[['df']][, m.names]
 
 w[['n']] <- caret.filter(w)
 w[['n']] <- caret.numeric(w)
+
+## And the outcome
+w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), w[['outcome-name']]) ]
 
 save(w, file="w.RData")
 load("w.RData", .GlobalEnv)
