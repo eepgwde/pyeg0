@@ -27,6 +27,14 @@ intoware3.Rout: intoware3.R w.RData
 caret0.Rout: caret0.R intoware3.Rout w.RData
 	$(R_CMD) caret0.R 
 
+install: zip-images cp-images
+
+zip-images: $(wildcard *.jpg)
+	zip $(HOME)/Documents/into0.zip $+
+
+cp-images: $(wildcard *.jpg)
+	cp $+ $(HOME)/Documents/into0
+
 clean:
 	-$(RM) $(T_FILES)
 	-$(RM) $(wildcard *.jpg)
