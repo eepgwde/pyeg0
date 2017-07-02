@@ -6,6 +6,15 @@
 
 rm(list=ls())
 
+m.name <- "Within.Spec"
+
+m.name0 <- Sys.getenv('X_OUTCOME')
+if (nchar(m.name0)>0) {
+    m.name <- m.name0
+    rm('m.name0')
+}
+print(m.name)
+
 ###################################################
 ### code chunk number 1: loadLibs
 ###################################################
@@ -112,7 +121,7 @@ w[['df']] <- w[['raw']]
 
 rm("into0")
 
-w[['outcome-name']] <- "Within.Spec"
+w[['outcome-name']] <- m.name
 
 w[['outcome']] <- w[['df']][[ w[['outcome-name']] ]]
 # w[['df']][, w[['outcome-name']] ] <- NULL
@@ -137,7 +146,7 @@ m0 <- scale(as.matrix(w[['n']]))
 ## annoying NA should be gone.
 ## cor <- cor(m0, use = "pairwise.complete.obs")
 
-c0 <- cor(m0)
+c0 <- cor(m0, use = "pairwise.complete.obs")
 
 w[['fail-corr']] <- caret.cor0(c0)
 w[['fail-corr']]

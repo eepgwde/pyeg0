@@ -34,6 +34,8 @@ getInfo <- function(what = "Suggests")
 
 load("w.RData", .GlobalEnv)
 
+print(sprintf("outcome: %s", w[['outcome-name']]))
+
 ## Check feature plotting
 
 cols <- colnames(w[['df']])

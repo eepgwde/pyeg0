@@ -21,6 +21,8 @@ options(useFancyQuotes = FALSE)
 
 load("w.RData")
 
+print(sprintf("outcome: %s", w[['outcome-name']]))
+
 ## Heuristics from train() says
 
 w[['zv1']] <- c("i0.Reason.2", "i0.Reason.6", "i0.Reason.7", "i1.Reason.5", "i1.Reason.6", "i2.Reason.6", "i3.Reason.6", "na.Supplier", "a1.Viscosity")

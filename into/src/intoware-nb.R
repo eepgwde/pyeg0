@@ -4,6 +4,16 @@
 ## I mostly keep visual elements in here.
 ## And I protype using a live and loaded R (one that has run flight0.R)
 
+c1 <- c0[, w[['outcome-name']]]
+
+df <- data.frame(c0[, w[['outcome-name']]])
+
+df$n <- rownames(df)
+colnames(df) <- c("c0", "n")
+rownames(df) <- 1:nrow(df)
+
+View(df)
+
 ## weaves
 
 cols <- colnames(into0)
