@@ -22,6 +22,18 @@ library(AppliedPredictiveModeling)
 
 options(useFancyQuotes = FALSE) 
 
+## Setup trace and imaging.
+
+m.trace <- "trace.flag"
+if (!file.exists(m.trace)) {
+    rm("m.trace")
+}
+
+m.img <- "jpeg.flag"
+if (!file.exists(m.img)) {
+    rm("m.img")
+}
+
 load("w.RData")
 
 print(sprintf("outcome: %s", w[['outcome-name']]))
@@ -274,17 +286,17 @@ gbmImp
 
 ## Summary
 
-model_list <- list(original = gbmFit1,
+models0 <- list(original = gbmFit1,
                    randomForest = rfFit1,
                    weighted = gbmFit2,
                    down = gbmFit3,
                    up = gbmFit4,
                    smote = gbmFit5)
 
-model_list_roc <- model_list %>%
+models0_roc <- models0 %>%
   map(getRoc, data = testingDescr, outcome=testingClass)
 
-model_list_roc %>%
+models0_roc %>%
     map(auc)
 
 ## Plot
@@ -294,11 +306,11 @@ num_mod <- 1
 
 results_df_roc <- NULL
 
-for(the_roc in model_list_roc){
+for(the_roc in models0_roc){
   
     df <- data.frame(tpr = the_roc$sensitivities,
                      fpr = 1 - the_roc$specificities,
-                     model = names(model_list)[num_mod])
+                     model = names(models0)[num_mod])
 
     if (is.null(results_df_roc)) {
         results_df_roc <<- df
@@ -307,13 +319,33 @@ for(the_roc in model_list_roc){
     }
 }
 
-## Plot ROC curve for all 5 models
+## Plot variable importance curve for all models
+
+if (exists("m.img"))
+    jpeg(width=1024, height=1024, filename = "var-%02d.jpg")
+
+lapply(names(models0), function(x) { f0 <- models0[[x]]; imp <- varImp(f0, scale = TRUE); 
+    plot(imp, top = 10, main=x) })
+
+if (exists("m.img"))
+    dev.off()
+
+if (exists("m.img"))
+    jpeg(width=1024, height=1024, filename = "roc-%02d.jpg")
+
+lapply(names(models0), function(x) { f0 <- models0[[x]]; 
+    r0 <- getRoc(f0, testingDescr, testingClass)
+    plot.roc(r0, main=x) })
+
+if (exists("m.img"))
+    dev.off()
+
+## Plot a consolidated AUC.
 
 if (exists("m.img"))
     jpeg(width=1024, height=1024, filename = "auc-%02d.jpg")
 
-
-custom_col <- c("#000000", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
+custom_col <- c("#000000", "#009E73", "#0072B2", "#D55E00", "#CC79A7", "#320F3C")
 
 ggplot(aes(x = fpr,  y = tpr, group = model), data = results_df_roc) +
   geom_line(aes(color = model), size = 1) +
