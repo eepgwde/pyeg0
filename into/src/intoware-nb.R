@@ -6,7 +6,27 @@
 
 ## weaves
 
+cols <- colnames(into0)
+
+m.clss <- class.columns(into0, cls0="factor")
+cols <- cols[m.clss]
+
+x0 <- sapply(cols, function(x) { l0 <- levels(into0[[x]]); any(0 == sapply(l0, nchar)) })
+m.names <- names(x0)[!is.na(x0)]
+
+
+
 ## annoying NA should be gone.
+
+cols <- colnames(w[['n']])
+i0 <- which(grepl('With', cols))
+
+class(w[['n']][[ cols[i0]]])
+
+cols <- colnames(w[['df']])
+
+cols <- colnames(w[['raw']])
+
 
 m0 <- scale(as.matrix(w[['n']]))
 

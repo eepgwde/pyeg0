@@ -63,12 +63,39 @@ invisible(sapply(m.names, function(x) { into0[, x] <<- as.factor(trimws(into0[, 
 
 into1 <- into0[into0[, "Within.Spec" ] != "", ]
 
+## TODO: scaling issues with Viscosity
+
+tag.f <- "Viscosity"
+
+i0 <- 1
+into0 <- col.rescale(into0, tag.f, to0=sprintf("a%d.%s", i0, tag.f), bounds=c(1000, 100))
+i0 <- i0 + 1
+into0 <- col.rescale(into0, tag.f, to0=sprintf("a%d.%s", i0, tag.f), bounds=c(100, 10))
+
+
 ## View(into0[, c("dt0", "dt1", "hour", "hour1")])
 
 ## TODO: Has N/A
 into0[, "Water.Trap"]
 
 into0[, "Tint.Number"]
+
+## Blanks when NA is possible
+
+m.clss <- class.columns(into0, cls0="factor")
+cols <- colnames(into0)[m.clss]
+
+x0 <- sapply(cols, function(x) { l0 <- levels(into0[[x]]); any(0 == sapply(l0, nchar)) })
+m.names <- names(x0)[!is.na(x0) & x0]
+
+rm("tag.f")
+for (tag.f in m.names) {
+    into0[into0[[ tag.f ]] == "", tag.f] <- NA
+    into0[, tag.f] <- as.factor(as.character(into0[[ tag.f ]]))
+}
+rm("m.clss", "x0", "m.names")
+
+## Cleaning up strings.
 
 tag.f <- "Batch.Number"
 into0[, tag.f] <- gsub(",", "", into0[, tag.f ], fixed=TRUE)
