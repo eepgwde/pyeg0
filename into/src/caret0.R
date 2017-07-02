@@ -23,7 +23,7 @@ load("w.RData")
 
 ## Heuristics from train() says
 
-w[['zv1']] <- c("i0.Reason.6", "i1.Reason.5", "i1.Reason.6", "i3.Reason.6", "na.Supplier")
+w[['zv1']] <- c("i0.Reason.2", "i0.Reason.6", "i0.Reason.7", "i1.Reason.5", "i1.Reason.6", "i2.Reason.6", "i3.Reason.6", "na.Supplier", "a1.Viscosity")
 
 w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), w[['zv1']])]
 
@@ -34,7 +34,7 @@ set.seed(seed.mine)
 
 inTrain <- createDataPartition(y = w[['outcome']], 
                                ## the outcome data are needed
-                               p = .75, 
+                               p = .85, 
                                ## The percentage of data in the 
                                ## training set
                                list = FALSE)
@@ -92,6 +92,13 @@ gbmGrid <- expand.grid(interaction.depth =
                         n.minobsinnode = 10)
 
 set.seed(seed.mine)
+rfFit1 <- train(trainDescr, trainClass,
+                 method = "rf",
+                 trControl = fitControl,
+                 preProc = c("center", "scale"),
+                 verbose = TRUE)
+rfFit1
+
 gbmFit1 <- train(trainDescr, trainClass,
                  method = "gbm",
                  preProc = c("center", "scale"),
