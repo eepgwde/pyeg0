@@ -59,10 +59,6 @@ m.names <- names(m.classs[grepl("factor", m.classs)])
 
 invisible(sapply(m.names, function(x) { into0[, x] <<- as.factor(trimws(into0[, x])) } ))
 
-## Bad records
-
-into1 <- into0[into0[, "Within.Spec" ] != "", ]
-
 ## TODO: scaling issues with Viscosity
 
 tag.f <- "Viscosity"
@@ -233,6 +229,11 @@ for (tag.f in m.names) {
 m.names <- colnames(into0)[class.columns(into0, cls0="factor|ordered|numeric")]
 m.names <- m.names[0 < sapply(m.names, function(x) sum(as.numeric(is.na(into0[,x]))))]
 m.names
+
+## Make sure the Within.Spec has no NA in its levels
+
+tag.f <- "Within.Spec"
+into0[, tag.f] <- as.factor(as.character(into0[[ tag.f ]]))
 
 ncol(into0)
 

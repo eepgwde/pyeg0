@@ -1,48 +1,38 @@
-### R code from vignette source 'caret.Rnw'
+### weaves
 
-###################################################
-### code chunk number 1: loadLibs
-###################################################
+## caret using the weaves:caret structure.
+
+rm(list=ls())
+
+library(doMC)
+registerDoMC(cores = 4)
+
 library(MASS)
 library(caret)
 library(mlbench)
 library(pROC)
 library(pls)
 
+library(Rweaves1)
+
 library(AppliedPredictiveModeling)
-transparentTheme(trans = .4)
 
 options(useFancyQuotes = FALSE) 
 
-getInfo <- function(what = "Suggests")
-{
-  text <- packageDescription("caret")[what][[1]]
-  text <- gsub("\n", ", ", text, fixed = TRUE)
-  text <- gsub(">=", "$\\\\ge$", text, fixed = TRUE)
-  eachPkg <- strsplit(text, ", ", fixed = TRUE)[[1]]
-  eachPkg <- gsub(",", "", eachPkg, fixed = TRUE)
-  #out <- paste("\\\\pkg{", eachPkg[order(tolower(eachPkg))], "}", sep = "")
-  #paste(out, collapse = ", ")
-  length(eachPkg)
-}
+load("w.RData")
 
-data(Sonar)
+## Heuristics from train() says
 
-###################################################
-### code chunk number 2: install (eval = FALSE)
-###################################################
-## install.packages("caret", dependencies = c("Depends", "Suggests"))
+w[['zv1']] <- c("i0.Reason.6", "i1.Reason.5", "i1.Reason.6", "i3.Reason.6", "na.Supplier")
 
+w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), w[['zv1']])]
 
-###################################################
-### code chunk number 3: SonarSplit
-###################################################
-library(caret)
-library(mlbench)
-data(Sonar)
+## end: Heuristics
 
-set.seed(107)
-inTrain <- createDataPartition(y = Sonar$Class, 
+seed.mine <- 107
+set.seed(seed.mine)
+
+inTrain <- createDataPartition(y = w[['outcome']], 
                                ## the outcome data are needed
                                p = .75, 
                                ## The percentage of data in the 
@@ -50,31 +40,68 @@ inTrain <- createDataPartition(y = Sonar$Class,
                                list = FALSE)
                                ## The format of the results
 
-## The output is a set of integers for the rows of Sonar 
-## that belong in the training set.
-str(inTrain)
+trainDescr <- w[['n']][inTrain,]
+
+## Because sampling can re-introduce zero-variance variables.
+w[['df']] <- trainDescr
+w <- caret.zv(w)
 
 
-###################################################
-### code chunk number 4: SonarDatasets
-###################################################
-training <- Sonar[ inTrain,]
-testing  <- Sonar[-inTrain,]
+w[['n']] <- caret.filter(w)
+w[['n']] <- caret.numeric(w)
 
-nrow(training)
-nrow(testing)
+trainDescr <- w[['n']][inTrain,]
+testingDescr  <- w[['n']][-inTrain,]
+
+trainClass <- w[['outcome']][inTrain]
+testingClass <- w[['outcome']][-inTrain]
+
+nrow(trainDescr)
+nrow(testingDescr)
 
 
-###################################################
-### code chunk number 5: plsTune1 (eval = FALSE)
-###################################################
 ## plsFit <- train(Class ~ ., 
-##                 data = training,
-##                 method = "pls",
-##                 ## Center and scale the predictors for the training 
-##                 ## set and all future samples.
-##                 preProc = c("center", "scale"))
+##                  data = trainDescr,
+##                  method = "pls",
+##                  ## Center and scale the predictors for the trainDescr 
+##                  ## set and all future samples.
+##                  preProc = c("center", "scale"))
 
+## trainDescr0 <- trainDescr
+## trainDescr <- preProcess(trainDescr0, method = c("center", "scale"))
+
+tr.cols <- colnames(trainDescr)
+tr.cols
+tr.icols <- grep("((STA|EQP)$)|(^xD)", tr.cols)
+tr.icols <- rev(tr.icols)
+
+fitControl <- trainControl(## 10-fold CV
+    method = "repeatedcv",
+    number = 10,
+    ## repeated ten times
+    repeats = 10,
+    classProbs = TRUE)
+
+## Some trial and error with variables to branch and boost.
+## Try all variables
+
+gbmGrid <- expand.grid(interaction.depth = 
+                           length(colnames(trainDescr)),
+                        n.trees = (1:30)*90,
+                        shrinkage = 0.2,
+                        n.minobsinnode = 10)
+
+set.seed(seed.mine)
+gbmFit1 <- train(trainDescr, trainClass,
+                 method = "gbm",
+                 preProc = c("center", "scale"),
+                 trControl = fitControl,
+                 ## This last option is actually one
+                 ## for gbm() that passes through
+                 tuneGrid = gbmGrid,
+                 metric = "Kappa",
+                 verbose = TRUE)
+gbmFit1
 
 ###################################################
 ### code chunk number 6: plsFit
@@ -86,7 +113,7 @@ ctrl <- trainControl(method = "repeatedcv",
                     
 set.seed(123)                    
 plsFit <- train(Class ~ ., 
-                data = training,
+                data = trainDescr,
                 method = "pls",
                 tuneLength = 15,
                 trControl = ctrl,
@@ -110,16 +137,16 @@ print(plot(plsFit))
 ###################################################
 ### code chunk number 9: plsPred
 ###################################################
-plsClasses <- predict(plsFit, newdata = testing)
+plsClasses <- predict(plsFit, newdata = testingDescr)
 str(plsClasses)
-plsProbs <- predict(plsFit, newdata = testing, type = "prob")
+plsProbs <- predict(plsFit, newdata = testingDescr, type = "prob")
 head(plsProbs)
 
 
 ###################################################
 ### code chunk number 10: plsCM
 ###################################################
-confusionMatrix(data = plsClasses, testing$Class)
+confusionMatrix(data = plsClasses, testingDescr$Class)
 
 
 ###################################################
@@ -129,14 +156,14 @@ confusionMatrix(data = plsClasses, testing$Class)
 rdaGrid = data.frame(gamma = (0:4)/4, lambda = 3/4)
 set.seed(123)                    
 rdaFit <- train(Class ~ ., 
-                data = training,
+                data = trainDescr,
                 method = "rda",
                 tuneGrid = rdaGrid,
                 trControl = ctrl,
                 metric = "ROC")
 rdaFit
-rdaClasses <- predict(rdaFit, newdata = testing)
-confusionMatrix(rdaClasses, testing$Class)
+rdaClasses <- predict(rdaFit, newdata = testingDescr)
+confusionMatrix(rdaClasses, testingDescr$Class)
 
 
 ###################################################

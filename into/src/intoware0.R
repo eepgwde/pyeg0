@@ -185,6 +185,3 @@ load("w.RData", .GlobalEnv)
 
 stopifnot(!exists("m.trace"))
 
-
-
-
