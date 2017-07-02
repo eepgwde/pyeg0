@@ -35,12 +35,18 @@ w[['outcome']] <- x0
 p0 <- prop.table(table(w[['outcome']]))
 odds.against(p0[2])
 
-## Heuristics from train() says
+## Heuristics from train() 
 
+## These were listed as near zero variance, but are good indicators.
 if (FALSE) {
     w[['zv1']] <- c("i0.Reason.2", "i0.Reason.7", "i1.Reason.5", "na.Supplier", "a1.Viscosity")
     w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), w[['zv1']])]
 }
+
+## Back.in.Spec is prescient
+
+tag.f <- 'Back.in.Spec'
+w[['n']] <- w[['n']][, setdiff(colnames(w[['n']]), tag.f)]
 
 ## end: Heuristics
 
@@ -54,16 +60,6 @@ inTrain <- createDataPartition(y = w[['outcome']],
                                ## training set
                                list = FALSE)
                                ## The format of the results
-
-trainDescr <- w[['n']][inTrain,]
-
-## Because sampling can re-introduce zero-variance variables.
-w[['df']] <- trainDescr
-w <- caret.zv(w)
-
-
-w[['n']] <- caret.filter(w)
-w[['n']] <- caret.numeric(w)
 
 trainDescr <- w[['n']][inTrain,]
 testingDescr  <- w[['n']][-inTrain,]
@@ -90,38 +86,70 @@ tr.cols
 tr.icols <- grep("((STA|EQP)$)|(^xD)", tr.cols)
 tr.icols <- rev(tr.icols)
 
-fitControl <- trainControl(## 10-fold CV
+ctrl <- trainControl(## 10-fold CV
     method = "repeatedcv",
     number = 10,
     ## repeated ten times
-    repeats = 10,
+    repeats = 5,
+    summaryFunction = twoClassSummary,
     classProbs = TRUE)
 
-## Some trial and error with variables to branch and boost.
-## Try all variables
+## Random forest
 
-gbmGrid <- expand.grid(interaction.depth = 
-                           length(colnames(trainDescr)),
+set.seed(seed.mine)
+rfFit1 <- train(trainDescr, trainClass,
+                method = "rf",
+                preProc = c("center", "scale"),
+                trControl = ctrl,
+                metric = "ROC",
+                verbose = TRUE)
+rfFit1
+
+## GBM
+## Some trial and error with variables to branch and boost.
+
+gbmGrid <- expand.grid(interaction.depth = 3,
                         n.trees = (1:30)*90,
                         shrinkage = 0.2,
                         n.minobsinnode = 10)
 
-set.seed(seed.mine)
-rfFit1 <- train(trainDescr, trainClass,
-                 method = "rf",
-                 preProc = c("center", "scale"),
-                 metric = "Kappa",
-                 verbose = TRUE)
-rfFit1
-
 gbmFit1 <- train(trainDescr, trainClass,
                  method = "gbm",
                  preProc = c("center", "scale"),
-                 trControl = fitControl,
+                 trControl = ctrl,
                  ## This last option is actually one
                  ## for gbm() that passes through
                  tuneGrid = gbmGrid,
-                 metric = "Kappa",
+                 metric = "ROC",
                  verbose = TRUE)
 gbmFit1
 
+## Results
+
+getRoc <- function(model, data, outcome) {
+  roc(outcome,
+      predict(model, data, type = "prob")[, "Fail"])
+}
+
+rfFit1 %>%
+    getRoc(data=testingDescr, outcome=testingClass) %>% 
+    auc()
+
+
+gbmFit1 %>%
+    getRoc(data=testingDescr, outcome=testingClass) %>% 
+    auc()
+
+testPred <- predict(rfFit1, testingDescr)
+postResample(testPred, testingClass)
+confusionMatrix(testPred, testingClass, positive = "Fail")
+
+rfImp <- varImp(rfFit1, scale = TRUE)
+rfImp
+
+testPred <- predict(gbmFit1, testingDescr)
+postResample(testPred, testingClass)
+confusionMatrix(testPred, testingClass, positive = "Fail")
+
+gbmImp <- varImp(gbmFit1, scale = TRUE)
+gbmImp
