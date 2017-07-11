@@ -2,6 +2,8 @@
 
 ## caret using the weaves:caret structure.
 
+## correlation
+
 rm(list=ls())
 
 library(doMC)
