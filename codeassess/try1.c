@@ -165,16 +165,16 @@ int main ()
     }
   }
 
-  write1(a0);
-
   /* output the array */
   for(i=0; i<=N-1; i++) {
     for(j=0;j<=M-1;j++) {
       pair_t p = { i, j};
-      int count = 1;
+      int count = 0;
       try(p, count);
     }
   }
+
+  if (last0 > 0) last0++;
 
   printf("%d\n", last0);
 
