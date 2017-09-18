@@ -33,7 +33,9 @@ struct LRU {
 
   std::set<key_t> hits_;
 
-  LRU(unsigned int secs) :sec(secs) {
+  bool running;
+
+  LRU(unsigned int secs) : sec(secs), running(false) {
     for(auto it = lru_.begin(); it != lru_.end(); ++it) {
       hits_.insert(it->first);
     } 
@@ -103,7 +105,6 @@ struct LRU {
     
   }
 
-  bool running = false;
   std::thread * th = nullptr;
 
   ~LRU() {
