@@ -1,6 +1,7 @@
 package example
 
 import scala.sys.process._
+import resource._
 
 import java.nio.file.{Files, Paths}
 
@@ -22,6 +23,12 @@ class CSVLoad extends FlatSpec with Matchers {
 
   var count0 = 0:Int
 
+  def parse0[B <: java.io.Reader](x:B) = managed(CSVFormat.RFC4180
+						.withFirstRecordAsHeader()
+						.parse(x)) map {
+						  input => input.asScala
+						}
+
   "OS CSV" should "contain lines" in {
     // Run ls -l on the file. If it exists, then count the lines.
     def countLines(fileName: String) = s"ls -l $fileName" #&& s"wc -l $fileName"
@@ -35,15 +42,12 @@ class CSVLoad extends FlatSpec with Matchers {
   
   "commons CSV" should "contain lines" in {
 
-    val testPath = Paths.get("src", "test", "resources", "wine.csv")
     val testReader = Files.newBufferedReader(testPath, StandardCharsets.UTF_8)
-
-    var count2 = 1
+    var count2 = 0
 
     try {
       val tp = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(testReader).asScala
       count2 = tp.size
-
     } finally {
       testReader.close()
     }
@@ -52,6 +56,20 @@ class CSVLoad extends FlatSpec with Matchers {
 
     count2 should be >= count0
   }
+
+
+  "commons CSV(1)" should "contain lines" in {
+
+    val testReader = Files.newBufferedReader(testPath, StandardCharsets.UTF_8)
+
+    val tp = parse0(testReader)
+    
+    val count2 = tp.opt.size
+    logger.info(s"count: $count2")
+
+    count2 should be >= count0
+  }
+
 
   "Basic CSV" should "contain lines" in {
 
