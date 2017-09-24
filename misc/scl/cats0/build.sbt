@@ -20,7 +20,10 @@ lazy val root = (project in file(".")).
     inThisBuild(List(
       organization := "com.example",
       scalaVersion := "2.11.8",
-      version      := "0.1.0-SNAPSHOT"
+      version      := "0.1.0-SNAPSHOT",
+      scalacOptions in Compile ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint"),
+      javacOptions in Compile ++= Seq("-Xlint:unchecked", "-Xlint:deprecation"),
+      javaOptions in run ++= Seq("-Xms128m", "-Xmx1024m")
     )),
     partialUnificationModule := "com.milessabin" % "si2712fix-plugin" % "1.2.0",
     name := "cats0",
