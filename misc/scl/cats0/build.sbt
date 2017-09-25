@@ -30,12 +30,18 @@ lazy val root = (project in file(".")).
     resolvers += snapshots,
     libraryDependencies ++=
       Seq(
-        scalaTest % Test,
-	"com.opencsv" % "opencsv" % "4.0",
+	"org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
+	"org.scalacheck" %% "scalacheck" % "1.13.4" % "test",	
+
 	"org.apache.commons" % "commons-csv" % "1.5",
+
+	"net.sourceforge.csvjdbc" % "csvjdbc" % "1.0.31",
+
 	"ch.qos.logback"          % "logback-classic" % "1.1.2",
 	"com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
+
 	"com.jsuereth" %% "scala-arm" % "2.0",
+
         cats
       )
   )
