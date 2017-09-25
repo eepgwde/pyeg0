@@ -28,6 +28,7 @@ lazy val root = (project in file(".")).
     partialUnificationModule := "com.milessabin" % "si2712fix-plugin" % "1.2.0",
     name := "cats0",
     resolvers += snapshots,
+    fork in Test := true,
     libraryDependencies ++=
       Seq(
 	"org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",

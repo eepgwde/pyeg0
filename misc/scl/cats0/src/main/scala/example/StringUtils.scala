@@ -12,12 +12,21 @@ package example
  */
 object StringUtils {
 
+    trait Container[M[_]] { def put[A](x: A): M[A]; def get[A](m: M[A]): A }
+
+    val container = new Container[Option] { 
+      def put[A](x: A) = Option(x); 
+      def get[A](m: Option[A]) = m.get
+    }
+
   /** String to number containers.
    *
    * Capture a string to number type conversion in an Option.
    */
   implicit class StringImprovements(val s: String) {
     import scala.util.control.Exception._
+
+    def toByteOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toByte)
 
     def toByteOpt = catching(classOf[NumberFormatException]) opt s.toByte
     def toShortOpt = catching(classOf[NumberFormatException]) opt s.toShort
@@ -41,9 +50,17 @@ object StringUtils {
      *  The order is byte, short, integer, long, double.
      * @note
      * We don't use float because of the int
+     * @return None if no conversion works else returns AnyVal
      */
     def toNumericOpt = toByteOpt orElse toShortOpt orElse toIntOpt orElse toLongOpt orElse toDoubleOpt 
 
+    /** Chain the conversions and return the original string on failure.
+     *
+     *  The order is byte, short, integer, long, double.
+     * @note
+     * We don't use float because of the int
+     * @return None if no conversion works else Any and first conversion that works.
+     */
     def refine = toNumericOpt orElse Option[String](s)
   }
 }

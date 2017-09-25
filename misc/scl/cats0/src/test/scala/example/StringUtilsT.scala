@@ -79,6 +79,12 @@ class StringUtilsT extends FlatSpec with Matchers {
     "123000000.0".refine should not be empty
   }
 
+  "Pimp" should "contain byte" in {
+    val v0 = "123".toByteOpt1
+    v0.get.get should equal (123)
+    v0.get.get shouldBe a [java.lang.Byte]
+  }
+
 }
 
 // ** Notes

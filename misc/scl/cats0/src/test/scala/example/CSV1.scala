@@ -10,13 +10,17 @@ import resource._
 
 import java.nio.file.{Files, Paths}
 
+import java.sql._
+
+import javax.sql.rowset._
+import javax.sql.RowSet
+
 import java.nio.charset.StandardCharsets
 import java.nio.file.StandardOpenOption._
 import scala.collection.JavaConverters._
 
 import com.typesafe.scalalogging.Logger
 
-import java.sql._
 import org.relique.jdbc.csv.CsvDriver
 
 import org.scalatest.{FlatSpec, Matchers}
@@ -29,6 +33,17 @@ class CSV1 extends FlatSpec with Matchers {
   val testPath = Paths.get("src", "test", "resources", "wine.csv")
 
   var count0 = 0:Int
+
+  "CachedRowSet Test" should "Create a new CachedRowSetImpl instance" in {
+    val rsf = RowSetProvider.newFactory
+    val rowSet: CachedRowSet = rsf.createCachedRowSet
+
+    rowSet should not be null
+
+    val rowSet1: CachedRowSet = RowSetProvider.newFactory.createCachedRowSet
+
+    rowSet1 should not be null
+  }
 
   "CSVJDBC" should "contain lines" in {
 
@@ -46,7 +61,7 @@ class CSV1 extends FlatSpec with Matchers {
     val stmt = conn.createStatement()
 
     // No need to add a limit, because we would use .next() to get a row.
-    val results = stmt.executeQuery("SELECT * FROM wine limit 10")
+    val results = stmt.executeQuery("SELECT * FROM wine limit 2")
 
     val meta = results.getMetaData()
     val r0 = 1 to meta.getColumnCount
@@ -56,9 +71,16 @@ class CSV1 extends FlatSpec with Matchers {
     
     if (results.next()) {
       logger.info("first: " + results.getObject(r0(0)).toString)
-      val v0 = results.getObject(r0(0)).toString.toNumericOpt
+      val v0 = results.getObject(r0(0)).toString.refine
       logger.info("first: v0: " + v0 + "; : " + v0.get.getClass.getName)
     }
+
+    val rowSet = RowSetProvider.newFactory.createCachedRowSet
+
+    rowSet.populate(results)
+
+    // No type map given to us.
+    // rowSet.getTypeMap() should be empty
 
     // Dump out the results to a CSV file with the same format
     // using CsvJdbc helper function
