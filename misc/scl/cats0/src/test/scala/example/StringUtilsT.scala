@@ -83,6 +83,21 @@ class StringUtilsT extends FlatSpec with Matchers {
     val v0 = "123".toByteOpt1
     v0.get.get should equal (123)
     v0.get.get shouldBe a [java.lang.Byte]
+
+    val v1 = "1234".toByteOpt1
+    v1.get shouldBe empty
+
+  }
+
+  "Pimp" should "contain short" in {
+    val v1 = "234".refine1
+    v1.get.get should equal (234)
+    v1.get.get shouldBe a [java.lang.Byte]
+
+    val v2 = "2345".refine1
+    v2.get.get should equal (2345)
+    v2.get.get shouldBe a [java.lang.Short]
+
   }
 
 }

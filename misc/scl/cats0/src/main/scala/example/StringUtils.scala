@@ -14,9 +14,9 @@ object StringUtils {
 
     trait Container[M[_]] { def put[A](x: A): M[A]; def get[A](m: M[A]): A }
 
-    val container = new Container[Option] { 
-      def put[A](x: A) = Option(x); 
-      def get[A](m: Option[A]) = m.get
+    val container = new Container[Some] { 
+      def put[A](x: A) = Some(x); 
+      def get[A](m: Some[A]) = m.get
     }
 
   /** String to number containers.
@@ -27,11 +27,14 @@ object StringUtils {
     import scala.util.control.Exception._
 
     def toByteOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toByte)
+    def toShortOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toShort)
 
     def toByteOpt = catching(classOf[NumberFormatException]) opt s.toByte
     def toShortOpt = catching(classOf[NumberFormatException]) opt s.toShort
     def toIntOpt = catching(classOf[NumberFormatException]) opt s.toInt
     def toLongOpt = catching(classOf[NumberFormatException]) opt s.toLong
+
+    def refine1 = container put (toByteOpt orElse toShortOpt)
 
     /** Convert a string to float.
      *
