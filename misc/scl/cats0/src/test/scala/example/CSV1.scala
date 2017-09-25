@@ -22,6 +22,7 @@ import org.relique.jdbc.csv.CsvDriver
 import org.scalatest.{FlatSpec, Matchers}
 
 class CSV1 extends FlatSpec with Matchers {
+  import example.StringUtils._
 
   val logger = Logger(this.getClass.getName)
 
@@ -42,16 +43,22 @@ class CSV1 extends FlatSpec with Matchers {
 
     // Create a Statement object to execute the query with.
     // A Statement is not thread-safe.
-    val stmt = conn.createStatement();
+    val stmt = conn.createStatement()
 
     // No need to add a limit, because we would use .next() to get a row.
-    val results = stmt.executeQuery("SELECT * FROM wine");
+    val results = stmt.executeQuery("SELECT * FROM wine limit 10")
 
-    val meta = results.getMetaData();
-
-    (1 to meta.getColumnCount).map { i => meta.getColumnTypeName(i) }
-    (1 to meta.getColumnCount).map { i => meta.getColumnName(i) }
+    val meta = results.getMetaData()
+    val r0 = 1 to meta.getColumnCount
     
+    r0.map { i => meta.getColumnTypeName(i) }
+    r0.map { i => meta.getColumnName(i) }
+    
+    if (results.next()) {
+      logger.info("first: " + results.getObject(r0(0)).toString)
+      val v0 = results.getObject(r0(0)).toString.toNumericOpt
+      logger.info("first: v0: " + v0 + "; : " + v0.get.getClass.getName)
+    }
 
     // Dump out the results to a CSV file with the same format
     // using CsvJdbc helper function
