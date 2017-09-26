@@ -27,7 +27,19 @@ object StringUtils {
    * Capture a string to number type conversion in an Option.
    */
   implicit class StringImprovements(val s: String) {
+
+    /** String to byte and then container.
+     *
+     * Test code.
+     * @deprecated
+     */ 
     def toByteOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toByte)
+
+    /** String to byte and then container.
+     *
+     * Test code.
+     * @deprecated
+     */ 
     def toShortOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toShort)
 
     def toByteOpt = catching(classOf[NumberFormatException]) opt s.toByte
@@ -35,8 +47,18 @@ object StringUtils {
     def toIntOpt = catching(classOf[NumberFormatException]) opt s.toInt
     def toLongOpt = catching(classOf[NumberFormatException]) opt s.toLong
 
+    /** String to byte or short and then container.
+     *
+     * Test code.
+     * @deprecated
+     */ 
     def refine1 = container put (toByteOpt orElse toShortOpt)
 
+    /** String to number or as string and then container.
+     *
+     * Test code.
+     * @deprecated
+     */ 
     def refine2 = container put (toNumericOpt orElse Option[String](s))
 
     /** Convert a string to float.
@@ -70,6 +92,14 @@ object StringUtils {
     def refine = toNumericOpt orElse Option[String](s)
 
     def refine3 = container put s.refine
+
+    /** Chain the conversions or the string on failure and then container.
+     *
+     *  The order is byte, short, integer, long, double.
+     * @note
+     * We don't use float because of the int
+     * @return None if no conversion works else Any and first conversion that works.
+     */
     def refine4 = container put s.refine.get
   }
 }
