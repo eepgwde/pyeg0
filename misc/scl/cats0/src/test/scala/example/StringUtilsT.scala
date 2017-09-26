@@ -93,30 +93,57 @@ class StringUtilsT extends FlatSpec with Matchers {
 
   }
 
-  "Pimp" should "contain short refine2" in {
+  "Pimp" should "contain short refine3" in {
 
-    val v1 = "123".refine2
+    val v1 = "123".refine3
 
     v1.get.get should equal (123)
     v1.get.get shouldBe a [java.lang.Byte]
 
-    val v2 = "1234".refine2
+    val v2 = "1234".refine3
 
     v2.get.get should equal (1234)
     v2.get.get shouldBe a [java.lang.Short]
 
-    val v3 = "1234.0".refine2
+    val v3 = "1234.0".refine3
 
     v3.get.get should equal (1234.0)
     v3.get.get shouldBe a [java.lang.Double]
 
-    val v4 = "s-1234.0".refine2
+    val v4 = "s-1234.0".refine3
 
     v4.get.get should not equal (1234.0)
     v4.get.get shouldBe a [java.lang.String]
 
     ( v1 :: v2 :: v3 :: v4 :: Nil ) map { x => logger.info("x: " + x.get.get + "; " + 
 							   x.get.get.getClass.getName) }
+
+  }
+
+  "Pimp" should "contain short refine4" in {
+
+    val v1 = "123".refine4
+
+    v1.get should equal (123)
+    v1.get shouldBe a [java.lang.Byte]
+
+    val v2 = "1234".refine4
+
+    v2.get should equal (1234)
+    v2.get shouldBe a [java.lang.Short]
+
+    val v3 = "1234.0".refine4
+
+    v3.get should equal (1234.0)
+    v3.get shouldBe a [java.lang.Double]
+
+    val v4 = "s-1234.0".refine4
+
+    v4.get should not equal (1234.0)
+    v4.get shouldBe a [java.lang.String]
+
+    ( v1 :: v2 :: v3 :: v4 :: Nil ) map { x => logger.info("x: " + x.get + "; " + 
+							   x.get.getClass.getName) }
 
   }
 

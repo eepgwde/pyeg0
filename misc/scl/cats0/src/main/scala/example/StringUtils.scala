@@ -68,6 +68,9 @@ object StringUtils {
      * @return None if no conversion works else Any and first conversion that works.
      */
     def refine = toNumericOpt orElse Option[String](s)
+
+    def refine3 = container put s.refine
+    def refine4 = container put s.refine.get
   }
 }
 
