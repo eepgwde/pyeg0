@@ -137,13 +137,15 @@ class StringUtilsT extends FlatSpec with Matchers {
     v3.get should equal (1234.0)
     v3.get shouldBe a [java.lang.Double]
 
+    val v11 = "122".refine4
+
     val v4 = "s-1234.0".refine4
 
     v4.get should not equal (1234.0)
     v4.get shouldBe a [java.lang.String]
 
-    ( v1 :: v2 :: v3 :: v4 :: Nil ) map { x => logger.info("x: " + x.get + "; " + 
-							   x.get.getClass.getName) }
+    ( v1 :: v2 :: v3 :: v11 :: v4 :: Nil ) map { 
+      x => logger.info("x: " + x.get + "; " + x.get.getClass.getName) }
 
   }
 
