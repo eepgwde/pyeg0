@@ -93,7 +93,7 @@ class StringUtilsT extends FlatSpec with Matchers {
 
   }
 
-  "Pimp" should "contain short" in {
+  "Pimp" should "contain short refine2" in {
 
     val v1 = "123".refine2
 
@@ -104,6 +104,11 @@ class StringUtilsT extends FlatSpec with Matchers {
 
     v2.get.get should equal (1234)
     v2.get.get shouldBe a [java.lang.Short]
+
+    val v3 = "1234.0".refine2
+
+    v3.get.get should equal (1234.0)
+    v3.get.get shouldBe a [java.lang.Double]
 
   }
 

@@ -22,18 +22,6 @@ object StringUtils {
     def get[A](m: Option[A]) = m.get
   }
 
-  object Conversions {
-    def toByte(s: String) = Try(s.toByte) match {
-      case Success(v) => container put v
-      case _ => None
-    }
-    def toShort(s: String) = Try(s.toShort) match {
-      case Success(v) => container put v
-      case _ => None
-    }
-  }
-  
-
   /** String to number containers.
    *
    * Capture a string to number type conversion in an Option.
