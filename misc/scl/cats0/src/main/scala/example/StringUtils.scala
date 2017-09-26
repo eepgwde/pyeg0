@@ -22,6 +22,7 @@ object StringUtils {
     def get[A](m: Option[A]) = m.get
   }
 
+
   /** String to number containers.
    *
    * Capture a string to number type conversion in an Option.
@@ -93,7 +94,7 @@ object StringUtils {
 
     def refine3 = container put s.refine
 
-    /** Chain the conversions or the string on failure and then container.
+    /** Chain the conversions or the string on failure, unapply and then container.
      *
      *  The order is byte, short, integer, long, double.
      * @note
