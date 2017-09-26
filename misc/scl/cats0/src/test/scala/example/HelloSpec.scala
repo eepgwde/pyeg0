@@ -34,11 +34,11 @@ class HelloSpec extends FlatSpec with Matchers {
 
     trait Container[M[_]] { def put[A](x: A): M[A]; def get[A](m: M[A]): A }
 
-    val container = new Container[Some] { 
-      def put[A](x: A) = Some(x); 
-      def get[A](m: Some[A]) = m.get
+    val container = new Container[Option] { 
+      def put[A](x: A) = Option(x); 
+      def get[A](m: Option[A]) = m.get
     }
-    
+
     val hey = container.put("hey")
     val one23 = container.put(123:Short)
 
@@ -51,6 +51,10 @@ class HelloSpec extends FlatSpec with Matchers {
 
     container.get(one23) shouldBe (123)
     container.get(one23) shouldBe a [java.lang.Short]
+
+    val l1: List[Option[Any]] = List()
+
+    l1 map { i => logger.info(container.get(i).getClass.getName) }
 
   }
 

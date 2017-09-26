@@ -12,20 +12,33 @@ package example
  */
 object StringUtils {
 
-    trait Container[M[_]] { def put[A](x: A): M[A]; def get[A](m: M[A]): A }
+  import scala.util.control.Exception._
+  import scala.util.{Try, Success, Failure}
 
-    val container = new Container[Some] { 
-      def put[A](x: A) = Some(x); 
-      def get[A](m: Some[A]) = m.get
+  trait Container[M[_]] { def put[A](x: A): M[A]; def get[A](m: M[A]): A }
+
+  val container = new Container[Option] { 
+    def put[A](x: A) = Option(x); 
+    def get[A](m: Option[A]) = m.get
+  }
+
+  object Conversions {
+    def toByte(s: String) = Try(s.toByte) match {
+      case Success(v) => container put v
+      case _ => None
     }
+    def toShort(s: String) = Try(s.toShort) match {
+      case Success(v) => container put v
+      case _ => None
+    }
+  }
+  
 
   /** String to number containers.
    *
    * Capture a string to number type conversion in an Option.
    */
   implicit class StringImprovements(val s: String) {
-    import scala.util.control.Exception._
-
     def toByteOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toByte)
     def toShortOpt1 = container put (catching(classOf[NumberFormatException]) opt s.toShort)
 
@@ -35,6 +48,8 @@ object StringUtils {
     def toLongOpt = catching(classOf[NumberFormatException]) opt s.toLong
 
     def refine1 = container put (toByteOpt orElse toShortOpt)
+
+    def refine2 = container put (toNumericOpt orElse Option[String](s))
 
     /** Convert a string to float.
      *
