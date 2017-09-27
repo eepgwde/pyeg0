@@ -4,6 +4,10 @@ package com.restore.interview
 
 import scala.annotation.tailrec
 
+import scala.util.{Try, Success, Failure}
+import com.typesafe.scalalogging.Logger
+
+
 case class Item(productIdentifier: String)
 
 trait RealtimePricingService {
@@ -24,16 +28,19 @@ case class FailureResult(errorMessage: String,
 // ** class
 
 class VendingMachine {
+  val logger = Logger(this.getClass.getName)
 
   val version = "0.1.0-weaves"
 
   /** Change held. */
   var ch = List[Coin]()
 
+  /** Products held. */
   var pr = List[Item]()
 
   var ps : Option[RealtimePricingService] = None
 
+  /** Pricing implementation. */
   def setPricer(ps0: RealtimePricingService): Unit = {
     ps = Option(ps0)
   }
@@ -54,6 +61,35 @@ class VendingMachine {
   def purchaseItem(item: Item, inputCoins: List[Coin]): PurchaseResult = {
     if (!pr.find(_ == item).isDefined) 
       return new FailureResult("out of stock", inputCoins)
+
+    if (!ps.isDefined) 
+      return new FailureResult("no prices", inputCoins)
+
+    val ask0 = Try(ps.get.getPrice(item)) match { 
+      case Success(v) => v
+      case Failure(v) => return new FailureResult("no price", inputCoins)
+    }
+
+    val bid0 = inputCoins.map(_.value).sum
+
+    logger.info("ask0: " + ask0 + "; bid0: " + bid0)
+
+    if (! (bid0 >= ask0) )
+      return new FailureResult("not enough coins", inputCoins)
+
+    // They will need change, we don't have it.
+    if ( bid0 > ask0) {
+      val ch1 = ch.map(_.value).sum
+      if ( (bid0 - ask0) > ch1 )
+	return new FailureResult("not enough change", inputCoins)
+    }
+
+    // When exact, we can vend.
+    if (bid0 == ask0) {
+      // TODO: find and drop first product.
+      // TODO: add their payment to our change
+      return new SuccessfulResult(List[Coin]())
+    }
 
     new FailureResult("unimplemented", inputCoins)
   }
