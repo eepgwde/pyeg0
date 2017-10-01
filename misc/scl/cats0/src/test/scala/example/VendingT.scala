@@ -1,10 +1,14 @@
+// * @author weaves
+// * @file VendingT.scala
+// * @brief Change-making.
+
 package example
 
 import org.scalatest._
 
 import com.typesafe.scalalogging.Logger
 
-// * Class
+// ** Class.
 
 class VendingT extends FlatSpec with Matchers {
   val logger = Logger(this.getClass.getName)
