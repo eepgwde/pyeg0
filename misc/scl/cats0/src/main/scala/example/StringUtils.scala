@@ -15,13 +15,23 @@ object StringUtils {
   import scala.util.control.Exception._
   import scala.util.{Try, Success, Failure}
 
+  /** General container. */
   trait Container[M[_]] { def put[A](x: A): M[A]; def get[A](m: M[A]): A }
 
+  /** Container for an Option.
+   *
+   * @note
+   * Only needs one instance.
+   */
   val container = new Container[Option] { 
     def put[A](x: A) = Option(x); 
     def get[A](m: Option[A]) = m.get
   }
 
+
+  /** Get parsing class. */
+
+  
 
   /** String to number containers.
    *
