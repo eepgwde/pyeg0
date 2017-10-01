@@ -58,6 +58,12 @@ class VendingMachine {
     pr = pr ::: List.fill(number)(item)
   }
 
+  // TODO: find and drop first product.
+  // TODO: add their payment to our change
+  protected def vend(item: Item, inputCoins: List[Coin]) : Unit = {
+    0 == inputCoins.size
+  }
+
   def purchaseItem(item: Item, inputCoins: List[Coin]): PurchaseResult = {
     if (!pr.find(_ == item).isDefined) 
       return new FailureResult("out of stock", inputCoins)
@@ -82,12 +88,19 @@ class VendingMachine {
       val ch1 = ch.map(_.value).sum
       if ( (bid0 - ask0) > ch1 )
 	return new FailureResult("not enough change", inputCoins)
+
+      // A simple vend is if the change required is exactly the change we have.
+      if ( (bid0 - ask0) == ch1 ) {
+	val ch2 = ch
+	ch = List[Coin]()
+	vend(item, inputCoins)
+	return new SuccessfulResult(ch2)
+      }
     }
 
     // When exact, we can vend.
     if (bid0 == ask0) {
-      // TODO: find and drop first product.
-      // TODO: add their payment to our change
+      vend(item, inputCoins)
       return new SuccessfulResult(List[Coin]())
     }
 
