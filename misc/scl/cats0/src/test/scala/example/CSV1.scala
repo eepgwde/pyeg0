@@ -71,13 +71,25 @@ class CSV1 extends FlatSpec with Matchers {
     
     if (results.next()) {
       logger.info("first: " + results.getObject(r0(0)).toString)
-      val v0 = results.getObject(r0(0)).toString.refine
+      val v0 = results.getObject(r0(0)).toString.refine4
       logger.info("first: v0: " + v0 + "; : " + v0.get.getClass.getName)
     }
 
     val rowSet = RowSetProvider.newFactory.createCachedRowSet
 
     rowSet.populate(results)
+
+    if (rowSet.next()) {
+      logger.info("first: " + rowSet.getObject(r0(0)).toString)
+      val v0 = rowSet.getObject(r0(0)).toString.refine4
+      logger.info("first: v0: " + v0 + "; : " + v0.get.getClass.getName)
+
+      // val t0: Double = v0.get
+      // rowSet.setDouble(r0(0), t0 )
+
+      logger.info("first: v0: " + rowSet.getDouble(r0(0)) + "; : " 
+		  + rowSet.getDouble(r0(0)).getClass.getName)
+    }
 
     // No type map given to us.
     // rowSet.getTypeMap() should be empty

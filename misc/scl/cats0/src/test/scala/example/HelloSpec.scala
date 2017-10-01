@@ -39,8 +39,8 @@ class HelloSpec extends FlatSpec with Matchers {
       def get[A](m: Option[A]) = m.get
     }
 
-    val hey = container.put("hey")
-    val one23 = container.put(123:Short)
+    val hey = container.put[String]("hey")
+    val one23 = container.put[Short](123:Short)
 
     val l0 = List(hey, one23)
 
