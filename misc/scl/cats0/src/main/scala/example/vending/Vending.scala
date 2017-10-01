@@ -3,11 +3,7 @@
 // * @brief Framework change-making.
 
 
-package example
-
-// ** pre-reqs
-
-import scala.annotation.tailrec
+package example.vending
 
 import scala.util.{Try, Success, Failure}
 import com.typesafe.scalalogging.Logger
@@ -80,10 +76,10 @@ class VendingMachine {
 
   /** An exact vend.
    *
-   * @TODO
+   * @todo
    * find and drop first product.
    *
-   * @TODO
+   * @todo
    * remove their change from ours
    */
   protected def vend(item: Item, inputCoins: List[Coin], 

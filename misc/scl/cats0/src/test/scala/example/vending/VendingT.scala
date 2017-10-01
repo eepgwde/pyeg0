@@ -2,10 +2,9 @@
 // * @file VendingT.scala
 // * @brief Change-making.
 
-package example
+package example.vending
 
 import org.scalatest._
-
 import com.typesafe.scalalogging.Logger
 
 // ** Class.
