@@ -243,7 +243,9 @@ gam0 <- gs[[2]]                         # next best
 ## Predict
 ## Use the hcc3 predictor in wthr.enqs
 
-pdf1 <- data0[, c("value", "dt0", gam0[["ftres"]]) ]
+ftres <- unique(c("mm1", "value", "dt0", gam0[["ftres"]]))
+
+pdf1 <- data0[, ftres ]
 
 ## write out some base values and append to them
 if (1==0) {
@@ -271,6 +273,8 @@ if (gam0$family$link == "log") {
     pdf2$value <- exp(pdf2$value)
 }
 
+pdf2 <- pdf2[, colnames(pdf1)]
+
 jpeg(filename=paste("hcc5", "-%03d.jpeg", sep=""), 
      width=800, height=600)
 
@@ -278,8 +282,7 @@ corrplot::corrplot(hcc0[["corr"]], method="number", order="hclust")
 
 lapply(gs, function(x) hcc.chart(x, tbl=NULL, nocoef=TRUE))
 
-hcc.chart1(pdf1, pdf2[, ! colnames(pdf2) %in% c("mm1")], 
-           name0=gam0$name, name1="claims")
+hcc.chart1(pdf1, pdf2, name0=gam0$name, name1="claims")
 
 dev.off()
 

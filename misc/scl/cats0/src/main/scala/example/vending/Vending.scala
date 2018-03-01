@@ -5,6 +5,10 @@
 
 package example.vending
 
+// ** pre-reqs
+
+import scala.annotation.tailrec
+
 import scala.util.{Try, Success, Failure}
 import com.typesafe.scalalogging.Logger
 
@@ -74,11 +78,14 @@ class VendingMachine {
     pr = pr ::: List.fill(number)(item)
   }
 
-  /** An exact vend.
+  /** The vend operation - change has been calculated.
    *
+   * This method updates the inventories. 
+   * An instance of the product will be removed.
+   * Their coins will be added to ours and the change removed.
+   * 
    * @todo
-   * find and drop first product.
-   *
+   * find and drop first product
    * @todo
    * remove their change from ours
    */
@@ -97,6 +104,10 @@ class VendingMachine {
    * If a threaded implementation were to be used. This method would launch a parent
    * thread, the tasks would return state results, any failure would terminate all
    * sub-threads and the parent.
+   *
+   * The change-giving operation will be an external and we will need to
+   * transform our data-structures to be compatible with theirs. This is the job of
+   * @see alloc
    * 
    * @note
    * Change-giving is a knapsack problem, so we want to concentrate on that
@@ -104,7 +115,8 @@ class VendingMachine {
    * without change-giving failures preventing a sale. Unfortunately, such an
    * optimal algorithm would be need to tune itself to the input loading, that is,
    * what change is required.
-   *
+   * 
+   * @note
    * Because of that, there are various sub-optimal algorithms (A* breadth-first and
    * so on) that are easy to implement but not assuredly optimal.
    * 
@@ -113,7 +125,6 @@ class VendingMachine {
    * you want to minimize exposure to fake coins, to prevent people from using
    * changing small coins to larger ones. Also, mechanical design considerations can
    * be introduced: balancing the coin-hopper loads and so on.
-   * 
    */
   def purchaseItem(item: Item, inputCoins: List[Coin]): PurchaseResult = {
     if (!pr.find(_ == item).isDefined) 
@@ -171,7 +182,7 @@ class VendingMachine {
     }
 
     // Now, we only have cases where chNeed < chSum
-    // And we need an allocation algorithm.
+    // And we use an external method via our allocation method.
 
     val rch = Try(alloc(chNeed, ch ::: inputCoins)) match { 
       case Success(v) => return new SuccessfulResult(v)
@@ -181,6 +192,14 @@ class VendingMachine {
     new FailureResult("unimplemented", inputCoins)
   }
 
+  /** Invokes external implementations.
+   *
+   * This is a "shim" method. It would transform the passed input data-structures
+   * to the correct form of representation for an external method.
+   *
+   * It may be that the parameters can be created and cached before this method is
+   * called.
+   */
   def alloc(N: Int, coins: List[Coin]) : List[Coin] = {
     throw new java.lang.IllegalArgumentException("no change available");
     List[Coin]()

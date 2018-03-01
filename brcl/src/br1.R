@@ -22,7 +22,7 @@ options(useFancyQuotes = FALSE)
 seed.mine = 107
 set.seed(seed.mine)                     # helpful for testing
 
-load("src/ppl0.dat", envir=.GlobalEnv)
+load("ppl0.dat", envir=.GlobalEnv)
 ppl00 <- ppl0
 
 fit <- rpart(customer ~ age + income + education,

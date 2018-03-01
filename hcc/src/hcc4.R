@@ -179,7 +179,7 @@ tag <- paste(ftres, collapse=", ")
 gam0 <- gam(fmla, weights = wts, data = data0, family = family0)
 
 gam0[["name0"]] <- tag
-gam0[["ftres"]] <- ftres
+gam0[["ftres"]] <- unique(ftres)
 gs[[tag]] <- gam0
 
 hcc.gamS(gam0, force0=TRUE)       # just to start with
@@ -200,7 +200,7 @@ tag <- paste("te:", ftres, collapse=", ")
 gam0 <- gam(fmla, weights = wts, data = data0, family = family0)
 
 gam0[["name0"]] <- tag
-gam0[["ftres"]] <- ftres
+gam0[["ftres"]] <- unique(ftres)
 gs[[tag]] <- gam0
 
 hcc.gamS(gam0)
@@ -222,7 +222,7 @@ tag <- paste("te:", ftres, collapse=", ")
 gam0 <- gam(fmla, weights = wts, data = data0, family = family0)
 
 gam0[["name0"]] <- tag
-gam0[["ftres"]] <- ftres
+gam0[["ftres"]] <- unique(ftres)
 gs[[tag]] <- gam0
 
 hcc.gamS(gam0)
@@ -245,7 +245,9 @@ gam0 <- gs[[2]]                         # next best
 ## Predict
 ## Use the hcc3 predictor in wthr.enqs
 
-pdf1 <- data0[, c("value", "dt0", gam0[["ftres"]]) ]
+ftres <- unique(c("mm1", "value", "dt0", gam0[["ftres"]]))
+
+pdf1 <- data0[, ftres ]
 
 ## write out some base values and append to them
 if (1==0) {
@@ -265,11 +267,13 @@ t0 <- t0[, c("mm1", "dt0", "enqs"), drop=FALSE]
 tdts <- pdf2[is.na(pdf2$enqs), "dt0"]
 pdf2[ is.na(pdf2$enqs), "enqs"] <- t0[ t0$dt0 %in% tdts, "enqs" ]
 
-pdf2$value <- predict(gam0, pdf2[, c("mm1", gam0[["ftres"]]) ]) 
+pdf2$value <- predict(gam0, pdf2[, unique(c("mm1", gam0[["ftres"]])) ]) 
 
 if (gam0$family$link == "log") {
     pdf2$value <- exp(pdf2$value)
 }
+
+pdf2 <- pdf2[, colnames(pdf1)]
 
 jpeg(filename=paste("hcc4", "-%03d.jpeg", sep=""), 
      width=800, height=600)
@@ -278,8 +282,7 @@ corrplot::corrplot(hcc0[["corr"]], method="number", order="hclust")
 
 lapply(gs, function(x) hcc.chart(x, tbl=NULL, nocoef=TRUE))
 
-hcc.chart1(pdf1, pdf2[, ! colnames(pdf2) %in% c("mm1")], 
-           name0=gam0$name, name1="repudns")
+hcc.chart1(pdf1, pdf2, name0=gam0$name, name1="repudns")
 
 dev.off()
 
