@@ -31,7 +31,7 @@ links0:: archive/local/links.afio
 all:: dirs1
 
 
-SUBDIRS = trns ldr mkr bldr
+SUBDIRS = trns ldr rp
 RSUBDIRS = $(shell echo $(SUBDIRS) | xargs -n1 | tac | xargs)
 
 ## all and clean
