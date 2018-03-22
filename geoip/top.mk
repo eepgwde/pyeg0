@@ -11,7 +11,7 @@ endef
 
 all:: all-local
 
-all-local:: dirs0 links0
+all-local:: dirs0 all-local-links
 
 dirs0::
 	if ! test -d cache/bak; then mkdir -p cache/bak; fi
@@ -25,13 +25,23 @@ dirs1::
 
 ## Install my links.
 
-links0:: archive/local/links.afio
+all-local-links:: archive/local/links.afio
 	cd cache/bak; afio -i ../../$+
+
+## Make my links.
+
+dist-local-links: archive/local/links.afio
+
+archive/local/links.afio: cache/bak
+	cd cache/bak; find . -maxdepth 1 -type l | afio -o ../../$@
+
+## Build system
 
 all:: dirs1
 
+# others rp
 
-SUBDIRS = trns ldr rp
+SUBDIRS = trns ldr mkr
 RSUBDIRS = $(shell echo $(SUBDIRS) | xargs -n1 | tac | xargs)
 
 ## all and clean
@@ -45,14 +55,14 @@ $(foreach x0,$(RSUBDIRS), $(eval $(call GOAL_template,clean,$(x0),clean)))
 ## install and uninstall
 ## load, then make derivatives, and samples and reports
 
-$(foreach x0,$(filter-out trns, $(SUBDIRS)), $(eval $(call GOAL_template,all,$(x0),install)))
+$(foreach x0,$(filter-out trns, $(SUBDIRS)), $(eval $(call GOAL_template,all,$(x0),all-local)))
 
-$(foreach x0,$(filter-out trns, $(RSUBDIRS)), $(eval $(call GOAL_template,clean,$(x0),uninstall)))
+$(foreach x0,$(filter-out trns, $(RSUBDIRS)), $(eval $(call GOAL_template,clean,$(x0),clean-local)))
 
 
-$(foreach x0,$(lastword $(SUBDIRS)), $(eval $(call GOAL_template,install,$(x0),install)))
+$(foreach x0,$(lastword $(SUBDIRS)), $(eval $(call GOAL_template,install-local,$(x0),install)))
 
-$(foreach x0,$(firstword $(RSUBDIRS)), $(eval $(call GOAL_template,clean,$(x0),uninstall)))
+$(foreach x0,$(firstword $(RSUBDIRS)), $(eval $(call GOAL_template,uninstall-local,$(x0),uninstall)))
 
 view3:
 	echo $(lastword $(SUBDIRS))
@@ -62,6 +72,4 @@ view3:
 ## generate final CSV files
 
 $(foreach x0,bldr, $(eval $(call GOAL_template,install,$(x0),dist)))
-
-
 

@@ -11,13 +11,13 @@
 
 SHELL := /bin/bash
 
-T_DIR ?= /cache/incoming/kaggle
+T_DIR ?= /cache/incoming/geoip
 
 ## Should be set by callers
 TOP ?= ..
 
 ## A helper script uses my m_ arrangement.
-H_ = $(TOP)/pysm_
+H_ = $(TOP)/geoip_
 
 X_BASE ?= $(TOP)/cache
 X_DEST ?= $(X_BASE)/csvdb
@@ -28,7 +28,7 @@ X_HOST0 ?=
 ## Different types of load
 
 ### Simple file load directly to master table and stored or mapped directly
-X_EXTS1 ?= paysim1
+X_EXTS1 ?= br cn de en es fr ipv4 ipv6 ja ru
 
 X_TARGETS ?= $(addprefix $(X_DEST)/,$(X_EXTS1))
 

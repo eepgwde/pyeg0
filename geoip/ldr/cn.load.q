@@ -1,11 +1,11 @@
-/ 2018.03.19T17:17:57.944 peppy weaves
-/ q paysim1.load.q FILE [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-exit] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] 
-/ q paysim1.load.q FILE
-/ q paysim1.load.q
-/ q paysim1.load.q -help
-FILE:LOADFILE:`$":../cache/in/paysim1.csv"
+/ 2018.03.20T12:35:40.504 j1 weaves
+/ q cn.load.q FILE [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-exit] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] 
+/ q cn.load.q FILE
+/ q cn.load.q
+/ q cn.load.q -help
+FILE:LOADFILE:`$":../cache/bak/CN.csv"
 o:.Q.opt .z.x;if[count .Q.x;FILE:hsym`${x[where"\\"=x]:"/";x}first .Q.x]
-if[`help in key o;-1"usage: q paysim1.load.q [FILE(default:../cache/in/paysim1.csv)] [-help] [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] [-af|asfile] [-exit]\n";exit 1]
+if[`help in key o;-1"usage: q cn.load.q [FILE(default:../cache/bak/CN.csv)] [-help] [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] [-af|asfile] [-exit]\n";exit 1]
 SAVEDB:`:csvdb
 SAVEPTN:`
 if[`savedb in key o;if[count first o[`savedb];SAVEDB:hsym`$first o[`savedb]]]
@@ -13,10 +13,10 @@ if[`saveptn in key o;if[count first o[`saveptn];SAVEPTN:`$first o[`saveptn]]]
 NOHEADER:0b
 DELIM:","
 \z 1 / D date format 0 => mm/dd/yyyy or 1 => dd/mm/yyyy (yyyy.mm.dd is always ok)
-LOADNAME:`paysim1
-SAVENAME:`paysim1
-LOADFMTS:"ISFSFFSFFBB"
-LOADHDRS:`step0`type0`amount`sname`sbal0`sbal1`dname`dbal0`dbal1`frd0`frd1
+LOADNAME:`cn
+SAVENAME:`cn
+LOADFMTS:"ISSSSSSSSSSCSB"
+LOADHDRS:`geonameid`localecode`continentcode`continentname`countryisocode`countryname`subdivision1isocode`subdivision1name`subdivision2isocode`subdivision2name`cityname`metrocode`timezone`isineuropeanunion
 if[`savename in key o;if[count first o[`savename];SAVENAME:`$first o[`savename]]]
 SAVEPATH:{` sv((`. `SAVEDB`SAVEPTN`SAVENAME)except`),`}
 LOADDEFN:{(LOADFMTS;$[NOHEADER;DELIM;enlist DELIM])}
@@ -25,8 +25,8 @@ POSTLOADALL:{x}
 POSTSAVEALL:{x}
 LOAD:{[file] POSTLOADALL POSTLOADEACH$[NOHEADER;flip LOADHDRS!LOADDEFN[]0:;LOADHDRS xcol LOADDEFN[]0:]file}
 LOAD10:{[file] LOAD(file;0;1+last(11-NOHEADER)#where 0xa=read1(file;0;20000))} / just load first 10 records
-JUSTSYMFMTS:" S S  S    "
-JUSTSYMHDRS:`type0`sname`dname
+JUSTSYMFMTS:" SSSSSSSSSS S "
+JUSTSYMHDRS:`localecode`continentcode`continentname`countryisocode`countryname`subdivision1isocode`subdivision1name`subdivision2isocode`subdivision2name`cityname`timezone
 JUSTSYMDEFN:{(JUSTSYMFMTS;$[NOHEADER;DELIM;enlist DELIM])}
 CHUNKSIZE:25000000
 DATA:()
