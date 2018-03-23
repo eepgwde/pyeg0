@@ -28,7 +28,7 @@ X_HOST0 ?=
 ## Different types of load
 
 ### Simple file load directly to master table and stored or mapped directly
-X_EXTS1 ?= br cn de en es fr ipv4 ipv6 ja ru
+X_EXTS1 ?= en ipv4 ipv6
 
 X_TARGETS ?= $(addprefix $(X_DEST)/,$(X_EXTS1))
 

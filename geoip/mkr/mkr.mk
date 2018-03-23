@@ -10,7 +10,7 @@ include $(TOP)/ldr/defs.mk
 xPWD := $(shell pwd)
 
 ## Make derivative tables
-X_DERIVS ?= kipv4
+X_DERIVS ?= geoip1
 
 ## TODO dfct1 samples1 
 
@@ -28,7 +28,7 @@ view2:
 	echo $(X_CSVS)
 	echo $(X_CSVS1)
 
-all-local: $(X_DEST)/geoip.q $(X_DEST)/imputes0 $(X_CSVS1)
+all-local: $(X_DEST)/geoip.q $(X_CSVS1)
 
 $(X_DEST)/geoip.q: geoip.q
 	if ! test -L $@; then cd $(X_DEST); ln -s $(xPWD)/geoip.q .; fi
@@ -40,8 +40,8 @@ $(X_BASE)/in/%.csv: %.csv
 
 ## rci1 and cwy0 are the main tables.
 
-$(X_DEST)/kipv4: kipv4.q $(X_DEST)/ipv4
-	Qp -load "$(X_DEST) kipv4.q"
+$(X_DEST)/geoip1: geoip1.q $(X_DEST)/ipv4 $(X_DEST)/en
+	Qp -load "$(X_DEST) geoip1.q"
 
 install:: install-local
 
