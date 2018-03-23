@@ -7,15 +7,13 @@
 
 str2ip2int: { [s1s] .sch.str2ip2int each s1s }
 
-str2lcns0: { [l0;tblnw;tbllcn] hs: ([] host0:l0; ip0:.geoip.str2ip2int @ l0);
-	    idx: tblnw[;`ip0] bin hs[;`ip0];
-	    idx1: tblnw[idx;`nm];
+str2lcns0: { [l0;nw0;lcn0] hs: ([] host0:l0; ip0:.geoip.str2ip2int @ l0);
+	    idx: nw0[;`ip0] bin hs[;`ip0];
+	    idx1: nw0[idx;`nm];
 	    hs[;`geonameid]: idx1;
-	    hs lj tbllcn }
+	    hs lj lcn0 }
 
 \d .
-
-.geoip.str2lcns: .geoip.str2lcns0[;kipv4;ken]
 
 \
 

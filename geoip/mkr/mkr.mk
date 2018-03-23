@@ -10,7 +10,7 @@ include $(TOP)/ldr/defs.mk
 xPWD := $(shell pwd)
 
 ## Make derivative tables
-X_DERIVS ?= geoip1
+X_DERIVS ?= kipv4 ken mipv4
 
 ## TODO dfct1 samples1 
 
@@ -40,7 +40,7 @@ $(X_BASE)/in/%.csv: %.csv
 
 ## rci1 and cwy0 are the main tables.
 
-$(X_DEST)/geoip1: geoip1.q $(X_DEST)/ipv4 $(X_DEST)/en
+$(X_DEST)/kipv4 $(X_DEST)/mipv4 $(X_DEST)/ken : geoip1.q $(X_DEST)/ipv4 $(X_DEST)/en
 	Qp -load "$(X_DEST) geoip1.q"
 
 install:: install-local

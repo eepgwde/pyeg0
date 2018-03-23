@@ -3,6 +3,8 @@
 
 \l geoip.q
 
+.geoip.str2lcns: .geoip.str2lcns0[;kipv4;ken]
+
 // Testing
 
 host0: "193.62.22.98"
