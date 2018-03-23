@@ -28,7 +28,7 @@ options(useFancyQuotes = FALSE)
 x.args = commandArgs(trailingOnly=TRUE)
 
 if (length(x.args) <= 0) {
-    x.args = c("/cache/baks/11/ingrss0/tbl00.dat", "tbl00", "localhost:4444")
+    x.args = c("/cache/baks/11/ingrss0/frd0.dat", "smpls", "localhost:4444")
 }
 
 src0 <- "tbl00.dat"                       # a default
@@ -69,8 +69,11 @@ idx <- grepl("addr", c0)
 
 addrs <- c0[which(idx)]
 
+l0 <- c("193.62.22.98", "193.113.9.162")
 
+ips <- execute(h, ".geoip.str2lcns", ppl$remote_addr)
 
+execute(h, '{ `raddr set x }', ppl$remote_addr)
 
 cls0 <- "cwy3-fworks"
 cls0 <- unlist(strsplit(cls0, "-"), use.names=TRUE)

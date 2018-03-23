@@ -1,39 +1,48 @@
-## csilvestre
+## weaves
 
-## Instead of repeatedly running the query use the file file tbl00.dat
+## Instead of repeatedly running the query use the file tbl00.dat
 
-library(DBI)
+rm(list = ls())
+if (!is.null(dev.list())) {
+    lapply(dev.list(), function(x) dev.off())
+}
+gc()
 
-con <- dbConnect(odbc::odbc(), "leafdb")
+library(Rweaves1)
 
-qstr <- 'select s.*, t.remote_addr, c.*  from 
- stripe_charges as s join transactions as t on s.description = t.trans_id
- inner join trans_flattened_purchases as c on c.trans_id = t.trans_id
-where s.created_time > \'2017-03-01\'
-'
+options(useFancyQuotes = FALSE) 
 
-tbl <- dbGetQuery(con, qstr)
+## Load up the target given on the command line.
 
-tbl00 <- tbl # make a backup to this - to avoid re-running query.
+x.args = commandArgs(trailingOnly=TRUE)
 
-save(tbl00, file="tbl00.dat")
+if (length(x.args) <= 0) {
+    x.args = c("/cache/baks/11/ingrss0/tbl00.dat", "tbl00", "localhost:4444")
+}
 
-load("tbl00.dat", envir=.GlobalEnv)
+src0 <- "tbl00.dat"                       # a default
+if (length(x.args) >= 1) {
+    src0 <- x.args[1]
+}
 
-# to re-run code start from here, no need to re-run query.
+tgt0 <- "tbl00"                       # a default
+if (length(x.args) >= 2) {
+    tgt0 <- x.args[2]
+}
 
-tbl <- tbl00 
+src1 <- "localhost:5000"                       # a default
+if (length(x.args) >= 3) {
+    src1 <- x.args[3]
+}
+
+## Load file and table
+
+load(src0, envir=.GlobalEnv)
+
+tbl <- get(tgt0)                        # get indirectly
+dim(tbl)
 
 colnames(tbl)
-
-
-f.logbin <- function(x, n=2) {
-  x1 <- log10(x)
-  m <- floor(x1)
-  e0 <- x1 - m
-  e0 <- round(e0, n)
-  return(m+e0)
-}
 
 ## Add the outcome feature and clean input features
 tbl$isfraud <- tbl$dispute_reason == 'fraudulent'
@@ -51,7 +60,7 @@ tbl$meta_data <- NULL
 
 tbl$ddays <- as.numeric((as.Date(tbl$perf_localtime) - as.Date(tbl$purchase_localtime)))
 
-tbl$ddaysl <- floor(10^f.logbin(tbl$ddays))
+tbl$ddaysl <- floor(10^bins.log(tbl$ddays))
 
 tbl$avgprice <- tbl$amount/tbl$total_no_of_seats
 
@@ -63,7 +72,7 @@ aggregate(isfraud ~ tbl$month0, data = tbl, FUN=sum)
 # simplify send_desc.
 
 tbl$collect0 <- grepl("(Collect|Ophalen|Hold|Cobo)", tbl$send_desc, ignore.case=TRUE)
-tbl$print0 <- grepl("(E-ticket|print|PDF|email)", tbl$send_desc, ignore.case=TRUE)
+tbl$print0 <- grepl("(eTicket|E-ticket|print|PDF|email)", tbl$send_desc, ignore.case=TRUE)
 tbl$post0 <- grepl("post", tbl$send_desc, ignore.case=TRUE)
 tbl$tcktpln <- grepl("ticketplan", tbl$send_desc, ignore.case=TRUE)
 
@@ -161,4 +170,6 @@ frd0[["seed"]] <- 369
 c0 <- as.character(unlist(frd0$ftres, recursive=TRUE))
 smpls <- tbl[ , c0]
 
-save(smpls, frd0, file="frd0.Rdat")
+x.flnm <- file.path(dirname(src0), "frd0.dat")
+
+save(smpls, frd0, file=x.flnm)
