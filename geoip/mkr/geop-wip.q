@@ -14,6 +14,14 @@ l0: (host0;host1)
 
 .geoip.str2lcns @ l0
 
+host0: "10.0.0.1"
+host1: "192.168.3.1"
+host2: "172.16.2.1"
+
+l0: (host0;host1;host2)
+
+.geoip.str2lcns @ l0
+
 \
 
 "H"$"." vs host0

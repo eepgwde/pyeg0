@@ -3,7 +3,43 @@
 
 \l geoip.q
 
-kipv4: select nm:first geonameid, cnm:first registeredcountrygeonameid by nw:network from ipv4
+// Key the locations table
+ken: `geonameid xkey value select by i from en
+
+// Add a null record with geonameid of 0i
+// These are sym symbols, ie. -20h, so just use the blanks.
+pdomain: first 0!1#ken
+
+pdomain[`geonameid]: 0i
+pdomain[`localecode]:  `C
+pdomain[`continentcode]:  `
+pdomain[`continentname]:  `
+pdomain[`countryisocode]:  `
+pdomain[`countryname]:  `
+pdomain[`subdivision1isocode]: `
+pdomain[`subdivision1name]:  `
+pdomain[`subdivision2isocode]: `
+pdomain[`subdivision2name]:  `
+pdomain[`cityname]:  `
+pdomain[`metrocode]:  " "
+pdomain[`timezone]:  `
+pdomain[`isineuropeanunion]:  0b
+
+`ken upsert value pdomain
+
+// Add the private networks to kipv4
+
+// 10.0.0.0/8
+// 172.16.0.0/12
+// 192.168.0.0/16
+
+// Convert the network from the sym -20h type
+
+kipv4: select nm:first geonameid, cnm:first registeredcountrygeonameid by nw:`$string network from ipv4
+
+`kipv4 upsert (`$"10.0.0.0/8";0i;0i)
+`kipv4 upsert (`$"172.16.0.0/12";0i;0i)
+`kipv4 upsert (`$"192.168.0.0/16";0i;0i)
 
 update nw1: { x0:"/" vs string x } each nw from `kipv4 ;
 
@@ -26,9 +62,6 @@ delete nw1, msk0, nw2 from `kipv4 ;
 
 // Prepare for binary search
 kipv4: `ip0 xasc `nw`nm`cnm`ip0`ip1 xcol kipv4
-
-// Key the locations table
-ken: `geonameid xkey value select by i from en
 
 // Write out
 
