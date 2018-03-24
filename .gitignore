@@ -1,8 +1,28 @@
 *#*
 *~
 *0.csv
-jr/src/csvdb
+*-0*.csv
+*-0*.xl*
+*.dat
+*.log
+*.gnum*
 *.jpeg
+*.jpg
+*.RData
+*.Rdata
+.R*
+*.od*
+*.lst
+*.zip
+
+pru/src/*.csv
+
+**/csvdb*
+**/attic
+**/bak
+**/.eggs
+**/.idea
+**/.ensime
 
 # Compiled python modules.
 *.pyc

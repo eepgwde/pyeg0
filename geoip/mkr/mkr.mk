@@ -54,11 +54,11 @@ Q_SRV_PRT ?= 4444
 export sName=$(Q_SRV)
 export sN=0
 
-u.qserve: geop-wip.q
+u.qserve: geoip-wip.q
 	screen -dmS $(sName)
 	screen -S $(sName) -X eval "screen $(sN)"
 	screen -S $(sName) -X eval "title $(Q_SRV)"
-	screen -S $(sName) -X stuff "$(X_Q) -p $(Q_SRV_PRT) -load $(X_DEST) $(xPWD)/geop-wip.q \n"
+	screen -S $(sName) -X stuff "$(X_Q) -p $(Q_SRV_PRT) -load $(X_DEST) $(xPWD)/geoip-wip.q \n"
 
 uninstall: uninstall-local
 

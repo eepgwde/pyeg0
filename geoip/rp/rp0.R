@@ -53,8 +53,12 @@ load(src0, envir=.GlobalEnv)
 ppl <- get(tgt0)                        # get indirectly
 dim(ppl)
 
-ppl <- ppl[1:100, ]
-    
+## We currently only process IPv4
+
+idxs <- grepl("^[0-9a-fA-F]+:", ppl$remote_addr)
+
+ppl <- ppl[ !idxs, ]
+
 ## Connect to q/kdb+
 
 x.qkdb <- unlist(strsplit(src1, ":", fixed=TRUE))
@@ -71,9 +75,23 @@ addrs <- c0[which(idx)]
 
 l0 <- c("193.62.22.98", "193.113.9.162")
 
+ips <- execute(h, ".geoip.str2lcns", l0)
+
 ips <- execute(h, ".geoip.str2lcns", ppl$remote_addr)
 
-execute(h, '{ `raddr set x }', ppl$remote_addr)
+## How to write a table remotely
+## execute(h, '{ `raddr set x }', ppl$remote_addr)
+
+ips$localecode <- as.factor(ips$localecode)
+
+ppl1 <- cbind(ppl, ips)
+
+table(ppl1$isfraud)
+
+table(ppl1$localecode, ppl1$isfraud)
+
+ppl1[ ppl1$isfraud, c("localecode", "source_address_zip")]
+
 
 cls0 <- "cwy3-fworks"
 cls0 <- unlist(strsplit(cls0, "-"), use.names=TRUE)
