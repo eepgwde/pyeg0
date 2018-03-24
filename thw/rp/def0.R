@@ -45,7 +45,7 @@ cnv1$fb0 <- as.factor(cnv1$fb0)
 cnv1$age <- as.factor(cnv1$age)
 cnv1$gender <- as.factor(cnv1$gender)
 
-cnv1$sccs0 <- as.factor(cnv1$acnv0 > 0)
+cnv1$sccs0 <- factor(cnv1$acnv0 > 0, labels=c("nosale", "sale"))
 
 ## Clustering suggests the top numbers are more important
 ## cnv1$interest <- as.factor(cnv1$interest)
@@ -79,7 +79,9 @@ x[["noclicks"]] <- c("impressions", "tcnv0", "acnv0")
 
 x[["classes"]] <- c("age", "gender", "interest")
 
-x[["discard"]] <- c("impressions")
+x[["discard"]] <- c("acnv0")
+
+x[["outcomen"]] <- c("sccs0")
 
 frd0[["ftres"]] <- x
 
@@ -128,6 +130,6 @@ pdf1 <- pdf1[ order(pdf1$cluster), ]
 
 ## And save
 
-x.flnm <- file.path(dirname(src0), "frd0.dat")
+x.flnm <- file.path(".", "thw0.dat")
 
 save(clicks, noclicks, frd0, file=x.flnm)
