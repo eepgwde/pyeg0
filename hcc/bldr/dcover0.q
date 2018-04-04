@@ -16,7 +16,6 @@ tbls: tables `.
 
 select count i by nbus:null nbus from .poi.tables0[0]
 
-
 // Do the special reports
 
 // * Data coverage reports
@@ -49,8 +48,15 @@ dates0: exec min month0, max month0 from (select tag0: 4 <= count src0, sum n by
 `.cwy set get `:./wscwy ;
 
 rh0t: `rh0 xdesc (select n:count i by rh0 from cwy0) lj `rh0 xkey .cwy.roadhierarchy
-
 .csv.t2csv[`rh0t]
+
+pri0t: `pri xdesc (select n:count i by pri from cwy0) lj `pri xkey .cwy.hierarchy
+.csv.t2csv[`pri0t]
+
+dfctactions: 0!select type0:`action1, n:count i by statusname, statuscode from dfct1 where action1
+dfctactions,: 0!select type0:`inspct0, n:count i by statusname, statuscode from dfct1 where inspct0
+dfctactions: `n xdesc dfctactions
+.csv.t2csv[`dfctactions]
 
 // Some others: permits and claims
 

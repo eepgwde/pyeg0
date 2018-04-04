@@ -4,7 +4,7 @@
 
 ## On my host - cache/out contains the file.
 
-TOP ?= ../../../../..
+include ../ldr/defs.mk 
 
 S_FILE ?= $(TOP)/cache/out/xwrkcwy1.csv
 

@@ -16,6 +16,91 @@ tbls: tables `.
 
 // Do the specials
 
+// * Incidence breakdown
+
+y0: select count i by cwy from dfct2
+y1: distinct raze value flip key y0
+
+x0: select distinct cwy0 by outcome1 from samples1
+
+u0: raze value x0[`noaction;]
+
+r0: raze value x0[`repudiated;]
+s0: raze value x0[`settled;]
+
+count each (y1;u0;r0;s0)
+
+count u0 except y1
+
+count r0 except u0
+count s0 except u0
+
+c0: `cwy0`date0 xdesc ungroup select type0:`claim, date0 by cwy0 from samples1 where (cwy0 in s0), isclm0
+update cdate0:date0 from `c0;
+
+e0: `cwy0`date0 xdesc ungroup select type1:`enq, date0:`date$enquirytime0 by cwy0:cwy from enq1 where not null cwy
+update xdate0:date0 from `e0;
+
+c2e: aj[`cwy0`date0;c0;e0]
+update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2e ;
+update xdate0: `date$0N by i from `c2e where cdate0 <= xdate0
+update type1:` from `c2e where null xdate0 						 
+
+c2e: `cwy0`date0 xasc c2e
+
+count select count i by cwy0 from c2e where null type1
+
+d0: `cwy0`date0 xdesc ungroup select type1:`dfct, date0:dt1 by cwy0:cwy from dfct2 where not null cwy
+update xdate0:date0 from `d0;
+
+c2d: aj[`cwy0`date0;c0;d0]
+update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2d ;
+update xdate0: `date$0N by i from `c2d where cdate0 <= xdate0
+update type1:` from `c2d where null xdate0
+c2d: `cwy0`date0 xasc c2d
+
+w0: `cwy0`date0 xdesc ungroup select type1:`wrk, date0 by cwy0 from wrk1 where (not null cwy0), not worktype in `other`verge
+
+update xdate0:date0 from `w0;
+
+c2w: aj[`cwy0`date0;c0;w0]
+update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2w ;
+update xdate0: `date$0N by i from `c2w where cdate0 <= xdate0
+update type1:` from `c2w where null xdate0 						 
+
+c2w: `cwy0`date0 xasc c2w
+
+c2a: `cwy0`xdate0`cdate0 xasc delete date0 from c2d,c2e,c2w ;
+
+c2b: delete type0 from distinct c2a
+
+c2x: `cwy0`xdate0`cdate0 xasc (select from c2b where null type1) lj select by cwy0, cdate0 from c2b where not null type1
+
+e2c: `cwy0`xdate0`type1`cdate0 xcols c2x
+update ddays:cdate0 - xdate0, pri:cwy0.pri, distance:cwy0.distance, e0:1i from `e2c ;
+
+x0: 0!select type1: first type1, n:sum e0, avg ddays by cwy0 from e2c where type1 = `dfct ;
+x0,: 0!select type1: first type1, n:sum e0, avg ddays by cwy0 from e2c where type1 = `enq ;
+x0,: 0!select type1: first type1, n:sum e0, avg ddays by cwy0 from e2c where type1 = `wrk ;
+x0,: 0!select type1: first type1, n:sum e0, avg ddays by cwy0 from e2c where null type1 ;
+
+x1: select by cwy0, type1 from x0
+update pri:cwy0.pri, distance:cwy0.distance, lanes:cwy0.lanes, nassets:cwy0.nassets, mtraffic:cwy0.mtraffic from `x1 ;
+
+update ddays:{ .sch.logbin[x;1] } each ddays, distance: 0.5 xbar { .sch.logbin[x;1] } each distance, mtraffic: 0.5 xbar { .sch.logbin[x;1] } each mtraffic, nassets: 0.5 xbar { .sch.logbin[x;1] } each nassets  from `x1 ;
+
+update type1:`clm, ddays:0f from `x1 where null ddays;
+
+m0: exec min mtraffic from x1
+
+update mtraffic:m0 from `x1 where null mtraffic ;
+
+e2c: x1
+
+.csv.t2csv[`e2c]
+
+delete c2x, c2b, c2a, c2e, c2d, c2w, w0, d0, e0, c0, x0, x1 from `.;
+
 // * Reference files, codings
 
 // Enquiries

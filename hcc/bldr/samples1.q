@@ -349,6 +349,9 @@ update outcome1:`settled from `ec where (src0 = `clm), claim0.outcome1 = `Settle
 // If a road is globally isolated then it is isolated
 .sample.isolation: select count distinct cwy0 by a0Xisisolated from select cwy0, a0Xisisolated from ec
 
+update mtraffic0: 0.5 xbar { .sch.logbin[x;1] } each mtraffic by i from `ec ;
+update distance0: 0.5 xbar { .sch.logbin[x;1] } each distance by i from `ec ;
+
 samples1: ec
 
 // ** PoI Data
@@ -388,7 +391,7 @@ samples1: $[any { x like "imputes0" } each string tables `.; 1!(0!samples1) lj i
 
 // Set up some history periods: look back- and for- ward, call them C1 and C2.
 
-.samples.cats: (30;-30+2*365)
+.samples.cats: (30;-30+3*30)
 .samples.catsn: ("C1"; "C2")
 
 x0: ([] cat0s: .samples.cats; name0s: .samples.catsn; tag0s:(count .samples.cats)#enlist "b")

@@ -16,9 +16,10 @@ update wt0:`dress2 from `wrkcwy1 where (null wt0), worktype in `dress`treat`reco
 update wt0:`micro2 from `wrkcwy1 where (null wt0), worktype in `micro`overlay ;
 update wt0:`patch2 from `wrkcwy1 where (null wt0), worktype in `patch ;
 
-select n:count i by wt0, worktype from wrkcwy1
-
 wrk2: `cwy0`date0 xasc select wrkid:i, wrks:count i, wrkdt0:first date0 by cwy0, date0, wt0 from wrkcwy1 where not null wt0
+
+worktypes0: `n xdesc select n:count i by wt0, worktype from wrkcwy1 where not null wt0
+.csv.t2csv[`worktypes0]
 
 // For dfctcwy1
 
@@ -293,6 +294,8 @@ delete from `wrkcwy1 where (null wear3)|(null tmin) ;
 a00: `wrkid`dfctdt0 xasc value select by i from wrkcwy1 where cwy0 in top0
 
 .csv.t2csv[`wrkcwy1]
+
+save `:./wrkcwy1
 
 .sys.exit[0]
 

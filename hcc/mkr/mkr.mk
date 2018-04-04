@@ -21,7 +21,7 @@ all:: all-local $(X_DERIVS1)
 ## Install references
 
 X_CSVS = $(wildcard *.csv)
-X_CSVS1 = $(addprefix $(X_BASE)/, $(X_CSVS))
+X_CSVS1 = $(addprefix $(X_BASE)/in/, $(X_CSVS))
 
 view2:
 	echo $(xPWD)
@@ -38,8 +38,8 @@ $(X_DEST)/hcc.q: hcc.q
 $(X_DEST)/imputes0: attic/imputes0
 	if ! test -L $@; then cd $(X_DEST); ln -s $(xPWD)/attic/imputes0 .; fi
 
-$(X_BASE)/%.csv: %.csv
-	if ! test -L $@; then cd $(X_BASE); ln -s $(xPWD)/$< . ; fi
+$(X_BASE)/in/%.csv: %.csv
+	if ! test -L $@; then cd $(X_BASE)/in; ln -s $(xPWD)/$< . ; fi
 
 ## Write to a serialized table files in csvdb
 
