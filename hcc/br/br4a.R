@@ -26,7 +26,7 @@ x.cremove <- c("lanes2", "isshared", "surftype", "isdual")
 
 x.cremove <- append(x.cremove, br0[["nzv.names"]]$cwy1)
 x.cremove <- append(x.cremove, "a0Xisshared")
-x.cremove <- append(x.cremove, c("smplwtf90", "ssmplwtf90", "ssmplriskf90") )
+x.cremove <- append(x.cremove, c("smplwtfC2", "ssmplwtfC2", "ssmplriskfC2") )
 
 ## Logic on dataset
 

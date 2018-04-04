@@ -1,6 +1,6 @@
 ## weaves
 
-## Instead of repeatedly running the query use the file tbl00.dat
+## For thw using rkdb
 
 rm(list = ls())
 if (!is.null(dev.list())) {
@@ -20,13 +20,15 @@ options(useFancyQuotes = FALSE)
 x.args = commandArgs(trailingOnly=TRUE)
 
 if (length(x.args) <= 0) {
-    x.args = c("localhost:5000")
+    x.args = c("localhost:4444")
 }
-
-src0 <- "localhost:5000"
+ 
+src0 <- "localhost:4444"
 if (length(x.args) >= 1) {
     src0 <- x.args[1]
 }
+
+scls0 <- "thw"
 
 ## Connect to q/kdb+
 
@@ -65,7 +67,7 @@ noclicks <- cnv1[ is.na(cnv1$clicks), ]
 
 frd0 <- list()
 
-frd0[["seed"]] <- 369
+frd0[["seed"]] <- 369                   # a seed
 
 x <- list()
 
@@ -79,25 +81,18 @@ x[["noclicks"]] <- c("impressions", "tcnv0", "acnv0")
 
 x[["classes"]] <- c("age", "gender", "interest")
 
+x[["classes0"]] <- c("age", "gender", "cluster")
+
 x[["discard"]] <- c("acnv0")
 
 x[["outcomen"]] <- c("sccs0")
 
 frd0[["ftres"]] <- x
 
-## Correlations - clicks only ie. facebook
-
-df1 <- cnv1[ !is.na(cnv1$clicks), ]
-corr1 <- cor(as.matrix(df1[, colnames(df1) %in% frd0$ftres$clicks]))
-corrplot::corrplot(corr1, method="number", order="hclust")
-
-df1 <- cnv1[ is.na(cnv1$clicks), ]
-corr1 <- cor(as.matrix(df1[, colnames(df1) %in% frd0$ftres$noclicks]))
-corrplot::corrplot(corr1, method="number", order="hclust")
-
-
 ## Try logging down the data and using zero.
-df1 <- cnv1[ !is.na(cnv1$clicks), ]
+## Too many zeroes
+
+df1 <- noclicks
 df1 <- df1[, colnames(df1) %in% frd0$ftres$noclicks]
 x0 <- lapply(colnames(df1), function(x) df1[[x]] <<- bins.log(df1[[x]]))
 x0 <- lapply(colnames(df1), function(x) {
@@ -107,26 +102,65 @@ x0 <- lapply(colnames(df1), function(x) {
 corr1 <- cor(as.matrix(df1))
 corrplot::corrplot(corr1, method="number", order="hclust")
 
-## Cluster plot
+df1 <- clicks
+df1 <- df1[, colnames(df1) %in% frd0$ftres$clicks]
+x0 <- lapply(colnames(df1), function(x) df1[[x]] <<- bins.log(df1[[x]]))
+x0 <- lapply(colnames(df1), function(x) {
+    idx <- is.na(df1[[x]]); df1[[x]][which(idx)] <<- 0
+    })
 
-### Try this subset. Their advertising that has an actual conversion.
+corr1 <- cor(as.matrix(df1))
+corrplot::corrplot(corr1, method="number", order="hclust")
+
+## Plotting
+
+jpeg(filename=paste(scls0, "-%03d.jpeg", sep=""), 
+     width=1280, height=1024)
+
+df1 <- noclicks
+corr1 <- cor(as.matrix(df1[, colnames(df1) %in% frd0$ftres$noclicks]))
+corrplot::corrplot(corr1, method="number", order="hclust", title="noclicks")
+
+df1 <- clicks
+corr1 <- cor(as.matrix(df1[, colnames(df1) %in% frd0$ftres$clicks]))
+corrplot::corrplot(corr1, method="number", order="hclust", title="clicks")
+
+## For noclicks, the acnv0 response is low, so we don't have to differentiate
+## the volume of response
 
 c0 <- unique(union(frd0$ftres$noclicks, frd0$ftres$classes))
 x.cnv1 <- subset(noclicks, noclicks$acnv0 > 0, select=c0 )
 x.cnv1$acnv0 <- NULL
 x.cnv1$tcnv0 <- NULL
 
-## As one
-
-x0 <- cluster.make0(x.cnv1)
+set.seed(frd0[["seed"]])
+x0 <- cluster.make0(x.cnv1, plot0=TRUE, title="noclicks-acnv0")
 pdf <- x0[["source"]]
 
-clusplot(pdf, pdf$cluster, color=TRUE, shade=TRUE, labels=3, lines=0)
+noclicks$cluster <- -1
+noclicks[ noclicks$acnv0 > 0, "cluster" ] <- pdf$cluster
 
-pdf <- pdf[ order(pdf$cluster), ]
+## Similarly for clicks
 
-pdf1 <- x0[["best"]]
-pdf1 <- pdf1[ order(pdf1$cluster), ]
+c0 <- unique(union(frd0$ftres$clicks, frd0$ftres$classes))
+x.cnv1 <- clicks[ clicks$acnv0 > 0, c0 ]
+x.cnv1$acnv0 <- NULL
+x.cnv1$tcnv0 <- NULL
+
+set.seed(frd0[["seed"]])
+x0 <- cluster.make0(x.cnv1, plot0=TRUE, title="clicks-acnv0")
+pdf <- x0[["source"]]
+
+clicks$cluster <- -1
+clicks[ clicks$acnv0 > 0, "cluster" ] <- pdf$cluster
+
+x1 <- table(pdf$gender, pdf$age, pdf$interest, pdf$cluster)
+
+pdf1 <- as.data.frame(x1)
+colnames(pdf1) <- c("cluster", "interest", "gender", "age", "freq")
+
+dev.off()
+
 
 ## And save
 

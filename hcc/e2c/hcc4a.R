@@ -27,9 +27,9 @@ if(length(commandArgs(trailingOnly=TRUE)) <= 0) {
 }
 
 source("../R/brA0.R")
-source("hcc0a.f")
+source("hcc0a.R")
 
-# R: x -> y
+# f: x -> y
 
 hcc0[["x"]] <- hcc.files[1]
 hcc0[["outcomen"]] <- hcc.files[2]

@@ -84,24 +84,45 @@ multiplot(p1, p2, p3)
 
 ## dfcts chart: collect some examples
 
-grp0 <- "cwy0"
+y0 <- aggregate(dfcts ~ wrkid, data=data0, FUN=max)
+y0 <- y0[ order(-y0$dfcts),]
 
-b0 <- hist(data0$dfcts, breaks = "Sturges", plot =  FALSE)
-b0 <- c( b0$breaks[4], b0$breaks[(-2) + length(b0$breaks)] )
+wrkids <- head(y0$wrkid, n=5)
 
-x0 <- subset(x.data0, data0$dfcts >= b0[2], select=c("cwy0", "wrkid", "dfcts", hcc0[["outcomen"]]))
-hcc0[["egs"]] <- head(unique(x0$wrkid))
+y0 <- aggregate(dfcts ~ wrkid, data=data0[ data0$pri <= 3 & data0$days0 >= 3000, ], FUN=max)
+y0 <- y0[ order(-y0$dfcts),]
 
-x1 <- subset(x.data0, data0$wrkid %in% head(unique(x0$wrkid)), select=c("cwy0", grp0, hcc0[["outcomen"]], "dfcts") )
+wrkids <- append(wrkids, head(y0$wrkid, n=2))
+wrkids <- append(wrkids, tail(y0$wrkid, n=3))
+hcc0[["egs"]] <- wrkids
 
-x0 <- subset(x.data0, data0$dfcts <= b0[1], select=c("cwy0", "wrkid", "dfcts", hcc0[["outcomen"]]))
-hcc0[["egs"]] <- append(hcc0[["egs"]], head(unique(x0$wrkid)))
+x0 <- subset(data0, data0$wrkid %in% unique(wrkids), select=c("cwy0", "wrkid", hcc0[["outcomen"]], "dfcts") )
 
-x2 <- subset(x.data0, data0$wrkid %in% head(unique(x0$wrkid)), select=c("cwy0", grp0, hcc0[["outcomen"]], "dfcts") )
+if(1==0) {
 
-x0 <- rbind(x1,x2)
+    grp0 <- "cwy0"
+
+    b0 <- hist(data0$dfcts, breaks = "Sturges", plot =  FALSE)
+    b0 <- c( b0$breaks[4], b0$breaks[(-2) + length(b0$breaks)] )
+
+    x0 <- subset(data0, data0$dfcts >= b0[2], select=c("cwy0", "wrkid", "dfcts", hcc0[["outcomen"]]))
+    x0 <- x0[ order(-x0$dfcts),]
+    hcc0[["egs"]] <- head(unique(x0$wrkid))
+
+    x1 <- subset(data0, data0$wrkid %in% head(unique(x0$wrkid)), select=c("cwy0", "wrkid", hcc0[["outcomen"]], "dfcts") )
+
+    x0 <- subset(data0, data0$dfcts <= b0[1], select=c("cwy0", "wrkid", "dfcts", hcc0[["outcomen"]]))
+    x0 <- x0[ order(-x0$dfcts),]
+    hcc0[["egs"]] <- append(hcc0[["egs"]], tail(unique(x0$wrkid)))
+
+    x2 <- subset(data0, data0$wrkid %in% head(unique(x0$wrkid)), select=c("cwy0", "wrkid", hcc0[["outcomen"]], "dfcts") )
+
+    x0 <- rbind(x1,x2)
+}
 
 x.legend=TRUE
+
+grp0 <- "cwy0"
 
 c0 <- colnames(x0)
 c0[which(c0 == grp0)] <- "grp0"

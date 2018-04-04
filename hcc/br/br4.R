@@ -57,9 +57,6 @@ br0[["outcomes"]] <- factor(br0[["outcomes"]], labels=c("noclaim", "claim"))
 
 colnames(ppl1)
 
-## Clear all away: very important if you re-use names in
-## functions.
-
 set.seed(br0[["seed"]])                     # helpful for testing
 
 ## Same process for correlations now

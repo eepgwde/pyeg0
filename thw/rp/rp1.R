@@ -55,7 +55,7 @@ ppl00 <- ppl                            # backup
 
 set.seed(frd0[["seed"]])                 # helpful for testing
 
-ppl1 <- ppl
+ppl1 <- ppl[ !is.na(ppl$cluster), ]
 
 frd0[["source"]] <- scls0
 
@@ -133,4 +133,10 @@ probs <- predict(fit, ppl1, type="prob")
 ## To get a set of rules use
 
 print(fit)
+
+## Group by interest
+## x1 <- table(pdf$gender, pdf$age, pdf$interest, pdf$cluster)
+
+## pdf1 <- as.data.frame(x1)
+## colnames(pdf1) <- c("cluster", "interest", "gender", "age", "freq")
 

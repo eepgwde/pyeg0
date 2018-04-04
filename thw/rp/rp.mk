@@ -11,7 +11,7 @@ X_R = Rscript
 S_DIR ?= /cache/baks/11/ingrss0
 S_TBL ?= noclicks
 S_CLS ?= classes
-S_FILE ?= localhost:5000
+S_FILE ?= localhost:4444
 
 all: all-local1
 

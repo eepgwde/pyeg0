@@ -57,8 +57,16 @@ br0["cwy2"] <- list( unlist(br0["cwy0"], use.names=FALSE)[-(1:3)] )
 ## From cwy roadclass, see xlocalr
 ## These can be used to exclude lesser records: exclude where iscls = FALSE, pri <= 2
 ## mtraffic (and distance, width, area) may be a proxy for this, so exclude 
+## Refuses to fit.
 
 br0["cwy3"] <- list( setdiff(unlist(br0["cwy2"], use.names=FALSE), c("mtraffic")) )
+
+ppl$islocal <- ppl$pri <= 3
+ppl$local <- factor(ppl$islocal, labels=c("non-local", "local"))
+ppl$islocal <- NULL
+
+## Simpler
+br0[["cwy4"]] <- c("distance0", "nassets", "mtraffic0", "isurban", "local", "isdist")
 
 ## Points of interest
 ## Buses and others
@@ -68,12 +76,15 @@ br0["poi"] <- list(c("nbus", "nhospital", "nhotel", "nrail", "nschool", "nsuperm
 ## works - look-back and look-forward
 
 c0 <- colnames(ppl)
-idx <- grepl("^(status|dfct|prmt).*b[0-9]0$", c0)
+idx <- grepl("^(status|dfct|prmt).*bC[0-9]$", c0)
 
 br0["bworks"] <- list( c0[idx] )
 
+idx <- grepl("^(status|dfct).*bC1$", c0)
+br0[["bworks1"]] <- c0[idx]
+
 c0 <- colnames(ppl)
-idx <- grepl("^(status|dfct|prmt).*f[0-9]0$", c0)
+idx <- grepl("^(status|dfct|prmt).*fC[0-9]$", c0)
 
 br0["fworks"] <- list( c0[idx] )
 
@@ -109,12 +120,12 @@ br0[["enq2"]] <- setdiff(br0[["enq2"]], c("priority"))
 ## samples history - look-back and look-forward
 
 c0 <- colnames(ppl)
-idx <- grepl("^(ss|s)mpl.*b[0-9]0$", c0)
+idx <- grepl("^(ss|s)mpl.*bC[0-9]$", c0)
 
 br0["bsmpls"] <- list( c0[idx] )
 
 c0 <- colnames(ppl)
-idx <- grepl("^(ss|s)mpl.*f[0-9]0$", c0)
+idx <- grepl("^(ss|s)mpl.*fC[0-9]$", c0)
 
 br0["fsmpls"] <- list( c0[idx] )
 
@@ -147,7 +158,7 @@ br0["xcols2"] <- list( c("yyyy", "date0", "month0", "yyyy0", "mm0", "month00") )
 br0["xcols3"] <- list( c("aid0") )
 ## Not removed here, see br4a0.R
 ## priority is their method of classing enquiries. Very effective, see gbm9.zip
-br0["prescient"] <- list( c("outcome1", "cost0", "estatus0", "priority", "response", "smplf30") )
+br0["prescient"] <- list( c("outcome1", "cost0", "estatus0", "smplfC1") )
 
 ## And remove these.
 
@@ -195,6 +206,7 @@ xlsoar <- ppl1
 ## From xlsoar: no road condition 
 
 xroadsc <- xlsoar[ is.na(ppl1[["ln"]]), !(names(ppl1) %in% br0[["xroadsc"]]) ]
+xroadsc <- xroadsc[ xroadsc$surftype == "BITM", ]
 
 setdiff(colnames(ppl1) , colnames(xroadsc))
 

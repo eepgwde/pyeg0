@@ -196,15 +196,17 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-require("zoo")
+if (!exists("ewma")) {
+    require("zoo")
 
-ewma <- function(x,lambda = 1, init = x[1]) {
+    ewma <- function(x,lambda = 1, init = x[1]) {
 
-    rval<-filter(lambda * coredata(x),
-                 filter=(1-lambda),method="recursive",
-                 init=init)
-    rval<-zoo(coredata(rval),index(x))
-    rval
+        rval<-filter(lambda * coredata(x),
+                     filter=(1-lambda),method="recursive",
+                     init=init)
+        rval<-zoo(coredata(rval),index(x))
+        rval
+    }
 }
 
 stack0 <- function(tbl, xvar="dt0", yvar=colnames(tbl)[1]) {

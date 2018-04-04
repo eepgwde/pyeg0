@@ -25,20 +25,22 @@ X_MODEL ?= gbm
 all-local: $(TARGET)-$(CLS0).dat
 
 
-all-local00: ppl00.dat
+all-local00: 
+	$(MAKE) MAKEFLAGS="$(MAKEFLAGS)" -f rp.mk ppl00.dat
 
-all-local0: ppl0.dat
+all-local0: all-local00 
+	$(MAKE) MAKEFLAGS="$(MAKEFLAGS)" -f rp.mk ppl0.dat
 
-all-local3: $(TARGET)-3.dat
+all-local3: all-local0 $(TARGET)-3.dat 
 
-all-local4: $(TARGET)-4.dat
+all-local4: all-local3 $(TARGET)-4.dat
 
-all-local5: $(TARGET)-5.dat
+all-local5: all-local4 $(TARGET)-5.dat
 
 
-all-gbm0: $(TARGET)-7.dat
+all-gbm0: all-local5 $(TARGET)-7.dat 
 
-all-rf: $(TARGET)-8.dat
+all-rf: all-local5 $(TARGET)-8.dat
 
 all-gbm: all-gbm0 $(TARGET)-9.dat
 
@@ -58,21 +60,6 @@ view0:
 all-local10: $(X_TREE1)
 	$(MAKE) MAKEFILES=$(lastword $(MAKEFILE_LIST)) MAKEFLAGS=$(MAKEFLAGS) X_TREE=$(X_TREE1) $(TARGET)-$(CLS0).dat
 
-
-## Rules
-
-ppl00.dat: br00.R $(S_FILE)	# CSV to .Rdat. logicals. br0 added
-	$(X_R) $+
-
-ppl0.dat: br0.R ppl00.dat	# data splitting. br0 populated with feature groups, outcome
-	$(X_R) br0.R
-
-X_TREE ?= ppl0.dat
-
-## Not a model - partition trees
-$(TARGET)-$(CLS0).dat: br1.R $(X_TREE)
-	$(X_R) br1.R $(X_TREE) $(TARGET) $(CLS0)
-	mv ppl1.dat $(TARGET)-$(CLS0).dat
 
 ## Not a model
 

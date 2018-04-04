@@ -5,11 +5,11 @@
 
 ## Get started with a load and save to binary.
 
-args = commandArgs(trailingOnly=TRUE)
+x.args = commandArgs(trailingOnly=TRUE)
 
-tgt0 <- "../cache/out/xsamples1.csv"
-if (length(args) >= 1) {
-    tgt0 <- args[1]
+tgt0 <- "/misc/build/0/hcc/cache/out/xsamples1.csv"
+if (length(x.args) >= 1) {
+    tgt0 <- x.args[1]
 }
 
 br0 <- list()
