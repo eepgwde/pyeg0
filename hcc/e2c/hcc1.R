@@ -5,7 +5,9 @@
 
 ## Get started with a load and save to binary.
 
-require(zoo)
+library(zoo)
+library(dplyr)
+library(lubridate)
 
 x.args = commandArgs(trailingOnly=TRUE)
 
@@ -87,8 +89,40 @@ ccf0 <- function(tbl, pairs) {
     ccf(tbl[, pairs[1]], tbl[, pairs[2]], main=paste(pairs, collapse=" "), na.action=na.pass)
 }
 
+## Use decompose for seasonal plots
+
+data1 <- hcc %>% select(dt0, claims) %>% 
+    mutate(yr0=as.integer(year(dt0)), month0=as.integer(month(dt0))) %>%
+    select(dt0, yr0, month0, claims)
+
+data2 <- ts(data1$claims, 
+            start=c(data1$yr0[1], data1$month0[1]), 
+            end=c(data1$yr0[nrow(data1)], data1$month0[nrow(data1)]), 
+            frequency=12)
+
+claims0 <- decompose(data2)
+
+
+data1 <- hcc %>% select(dt0, enqs) %>% 
+    mutate(yr0=as.integer(year(dt0)), month0=as.integer(month(dt0))) %>%
+    select(dt0, yr0, month0, enqs)
+
+data2 <- ts(data1$enqs, 
+            start=c(data1$yr0[1], data1$month0[1]), 
+            end=c(data1$yr0[nrow(data1)], data1$month0[nrow(data1)]), 
+            frequency=12)
+
+enqs0 <- decompose(data2)
+
+
 jpeg(filename=paste(scls0, "-%03d.jpeg", sep=""), 
      width=1024, height=768)
+
+plot(claims0)
+title("Claims")
+
+plot(enqs0)
+title("Enquiries")
 
 ## hope: repudiations lead claims
 
