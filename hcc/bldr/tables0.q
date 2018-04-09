@@ -41,6 +41,8 @@ update cdate0:date0 from `c0;
 e0: `cwy0`date0 xdesc ungroup select type1:`enq, date0:`date$enquirytime0 by cwy0:cwy from enq1 where not null cwy
 update xdate0:date0 from `e0;
 
+\
+
 c2e: aj[`cwy0`date0;c0;e0]
 update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2e ;
 update xdate0: `date$0N by i from `c2e where cdate0 <= xdate0

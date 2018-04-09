@@ -5,7 +5,7 @@
 
 // Load our files
 
-.permits.ptype: `ptype xkey ("SSH"; enlist ",") 0: `:../in/ptype.csv
+.permits.ptype: `ptype xkey ("SSH"; enlist ",") 0: `:../ptype.csv
 
 \l hcc.q
 

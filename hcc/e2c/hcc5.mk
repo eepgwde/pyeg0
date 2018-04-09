@@ -4,7 +4,7 @@
 
 ## On my host - cache/out contains the file.
 
-include ../ldr/defs.mk 
+include ../ldr/defs.mk
 
 S_FILE ?= $(TOP)/cache/out/xncas1.csv
 

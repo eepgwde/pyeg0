@@ -108,8 +108,7 @@ br0["lsoa"] <- list(c0[idx])
 ## I believe this is how they assign CAT1 and CAT2.
 
 idx <- (which(grepl("^emethod1$", c0))):(which(grepl("estatus0$", c0)))
-br0[["enq"]] <- c0[idx]
-br0[["enq0"]] <- append(c0[idx], c("pri"))
+br0[["enq0"]] <- append(c0[idx], c("pri", "pri2"))
 
 ## But estatus0 and priority are prescient so for rpart we use
 

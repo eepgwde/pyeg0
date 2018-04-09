@@ -19,7 +19,11 @@ library(ggplot2)
 library(grid)
 library(caret)
 
+library(dplyr)
+library(tidyr)
+
 library(cluster)
+library(lubridate)
 library(Rweaves1)                       # my personal library
 
 source("../R/brA0.R")
@@ -31,6 +35,7 @@ if(length(commandArgs(trailingOnly=TRUE)) <= 0) {
 source("hcc0a.R")
 
 hcc3.data <- data0
+
 
 ## Use this to carry out configurations.
 hcc0 <- list()

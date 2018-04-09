@@ -91,13 +91,12 @@ update action0:1b from `dfct1 where status = `$"Action Required";
 
 select count i by action0 from dfct1
 
-.tmp.dfct: dfct1
-
 // defecttype and defectypename - type0 and type0name
-
+.tmp.dfct: dfct1
 .sys.qreloader enlist "dfct1c.q"
-
 dfct1: .tmp.dfct
+
+select count i by ntype3 from dfct1
 
 dfct1: `dfct0 xasc dfct1
 
@@ -119,7 +118,7 @@ t0:0!select count i by priorityname,prioritycode from dfct1
 
 \
 
-.dfct.priority1: ("SSH F"; enlist ",") 0: `:../in/dfctpriority.csv
+.dfct.priority1: ("SSH F"; enlist ",") 0: `:../dfctpriority.csv
 .dfct.priority1: delete priorityname from select by prioritycode from .dfct.priority1
 
 dfct1: dfct1 lj .dfct.priority1
@@ -141,7 +140,7 @@ t1: 0!select count i by statuscode, statusname from dfct1
 // Load in the version with status0, status1 and phase0
 // Use both keys because of the NCA type
 
-.dfct.status: ("HSSSH"; enlist ",") 0: `:../in/dfctstatus.csv
+.dfct.status: ("HSSSH"; enlist ",") 0: `:../dfctstatus.csv
 .dfct.status: select by statuscode, statusname from .dfct.status
 
 // Add a quantification of status1

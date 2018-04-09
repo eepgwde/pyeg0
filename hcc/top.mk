@@ -25,8 +25,13 @@ dirs1::
 
 ## Install my links.
 
-links0:: archive/local/links.afio
-	cd cache/bak; afio -i ../../$+
+links0:: 
+	cd cache/bak; afio -i ../../archive/local/links.afio
+
+links1:: archive/local/links.afio
+
+archive/local/links.afio: cache/bak
+	cd cache/bak; find . -maxdepth 1 -type l -print | afio -o ../../$@
 
 all:: dirs1
 
@@ -62,6 +67,3 @@ view3:
 ## generate final CSV files
 
 $(foreach x0,bldr, $(eval $(call GOAL_template,install,$(x0),dist)))
-
-
-
