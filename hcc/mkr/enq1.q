@@ -96,7 +96,7 @@ t0:0!select count i by enqstatusname from enq1
 
 \
 
-.enq.priority: `enqstatusname xkey ("S S"; enlist ",") 0: `:../estatus0.csv
+.enq.priority: `enqstatusname xkey ("S S"; enlist ",") 0: `:../in/estatus0.csv
 enq1: enq1 lj .enq.priority
 
 
@@ -140,7 +140,7 @@ ftre00: select type1:`aid00, type0, aseg0 by aid00 from ftre
 
 // Add a numeric classification
 
-.enq.priority: `subjectcode xkey ("SSHF  "; enlist ",") 0: `:../cph_weaves.csv
+.enq.priority: `subjectcode xkey ("SSHF  "; enlist ",") 0: `:../in/cph_weaves.csv
 
 enq1: enq1 lj .enq.priority
 
@@ -153,7 +153,7 @@ t0: `n xdesc select n:count i, avg priority by method from enq1
 
 \
 
-.enq.method: `method xkey ("S  SH"; enlist ",") 0: `:../emethod0.csv
+.enq.method: `method xkey ("S  SH"; enlist ",") 0: `:../in/emethod0.csv
 
 enq1: enq1 lj .enq.method
 

@@ -29,7 +29,7 @@ t1[first kt1;`siteid]
 // To refine the samples1 table
 refiner0: { [x;cwys0;mstr0] cwys: cwys0[x;`siteid]; x0:select from mstr0 where siteid in cwys }
 
-r0: { [dt0;mstr0;n0;tag0;cwys0;ddt] tbl: refiner0[dt0 - ddt;cwys0;mstr0]; .hcc.smpl3risk1[tbl; dt0; n0; tag0; ddt] }[;samples1;n0;tag1;t1;ddt] each kt1
+r0: { [dt0;mstr0;n0;tag0;cwys0;ddt] tbl: refiner0[dt0 - ddt;cwys0;mstr0]; .hcc.ssmpl2risk1[tbl; dt0; n0; tag0; ddt] }[;samples1;n0;tag1;t1;ddt] each kt1
 
 // r0 is a list of keyed tables, they have be unkeyed, joined, and aggregated
 // to cwy0 and date0

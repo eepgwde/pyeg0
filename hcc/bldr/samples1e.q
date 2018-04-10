@@ -1,7 +1,8 @@
 // @file samples1e.q
 // @author weaves
 
-// Monthly weighed history for assets within enquiries
+// Uses samples to produce sample histories. smplbC1 etc.
+// Weighted history for assets within samples (enquiries + claims) for a time window
 
 // For each asset generated an exponentially time-weighted average of the number
 // of times it has appeared in the Enquiries

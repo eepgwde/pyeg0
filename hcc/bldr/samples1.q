@@ -412,6 +412,7 @@ x0: update tag1s: { (enlist x[1]), x[0] } each flip (name0s;tag0s) by i from x0,
 
 catx0: .samples.catx0
 
+
 /
 
 // Testing
@@ -419,6 +420,7 @@ catx0: .samples.catx0
 .tmp.n0: .samples.cat1b
 .sys.qreloader enlist "samples1e.q"
 count .samples.dfct
+
 .samples.dfcts[first .tmp.n0]: .samples.dfct
 
 .sys.qreloader enlist "samples1f.q"
@@ -427,8 +429,12 @@ count .samples.prmt
 
 \
 
+// smpls and ssmpls: Iterate over the history windows
+// re-use the .samples.dfcts and .samples.prmts dictionaries
+// smpls is for each asset; ssmpls for each site-id for each asset.
 
 { .tmp.n0: x; .sys.qreloader enlist "samples1e.q"; .samples.dfcts[first .tmp.n0]: .samples.dfct } each catx0
+
 { .tmp.n0: x; .sys.qreloader enlist "samples1f.q"; .samples.prmts[first .tmp.n0]: .samples.prmt } each catx0
 
 
@@ -443,6 +449,7 @@ count .samples.prmt
 
 \
 
+// Join the smpls and ssmpls into the sample set.
 // Use a global, note the double colon.
 
 .tmp.samples1:: samples1
@@ -478,6 +485,7 @@ samples1: .hcc.impute0[samples1;cols value 2!.samples.dfcts[.tmp.n0]; .samples.s
 { n0: first x; .tmp.samples1: .hcc.impute0[.tmp.samples1;cols value 2!.samples.dfcts[n0]; .samples.smplimpute ] } each catx0;
 samples1: .tmp.samples1
 
+// End: smpls and ssmpls
 
 // Install the defects histories
 
@@ -522,6 +530,7 @@ count .samples.prmt
 // Test
 
 .tmp.n0: first .samples.cat1b
+
 .sys.qreloader enlist "samples1c.q"
 
 \

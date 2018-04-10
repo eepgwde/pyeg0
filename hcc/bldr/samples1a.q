@@ -1,7 +1,7 @@
 // @file samples1a.q
 // @author weaves
 
-// Monthly history for dfcts.
+// Histories for dfcts.
 
 // We can simplify to just date and siteid
 

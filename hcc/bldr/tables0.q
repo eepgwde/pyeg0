@@ -41,8 +41,6 @@ update cdate0:date0 from `c0;
 e0: `cwy0`date0 xdesc ungroup select type1:`enq, date0:`date$enquirytime0 by cwy0:cwy from enq1 where not null cwy
 update xdate0:date0 from `e0;
 
-\
-
 c2e: aj[`cwy0`date0;c0;e0]
 update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2e ;
 update xdate0: `date$0N by i from `c2e where cdate0 <= xdate0
@@ -222,8 +220,8 @@ b0: `width`mtraffic xkey `width`mtraffic xdesc `j`width`mtraffic`n xcols 0!b0
 // Performance at fixing defects
 // Note: no actions for 2013 or 2014 TODO.
 
-x0: 0!select type0:`fC2, count0:count i, mean0:avg dfctfC2 by yr0:`year$date0 from samples1 where (0 < dfctbC2)
-x0,: 0!select type0:`fC1, count0: count i, mean0:avg dfctfC1 by yr0:`year$date0 from samples1 where (0 < dfctbC1)
+x0: 0!select type0:`fC2, count0:count i, mean0:avg dfctfC2 by yr0:`year$date0 from samples1 where (0 < dfctfC2)
+x0,: 0!select type0:`fC1, count0: count i, mean0:avg dfctfC1 by yr0:`year$date0 from samples1 where (0 < dfctfC1)
 
 x0,: 0! select type0:`afC1, count0:count i, mean0:avg dfctactionfC1 by yr0:`year$date0 from samples1 where (0 < dfctactionfC1)
 

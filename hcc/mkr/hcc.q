@@ -182,7 +182,7 @@ smpl2risk: .hcc.smpl2risk1[;;;;0]
 // @note
 // You can look forward with a negative n0
 
-smpl3risk1: { [tsym;dt0;n0;tag0;ddt] dt00:dt0; dts: (asc dt0, dt0 - n0) - ddt;
+ssmpl2risk1: { [tsym;dt0;n0;tag0;ddt] dt00:dt0; dts: (asc dt0, dt0 - n0) - ddt;
 	     // Get the keys of the defects in the period.
 	     s0: ungroup select distinct smpl0 by siteid from tsym where date0 within dts; /  in period
 	     s0: distinct (0!s0)[;`smpl0];
@@ -199,7 +199,7 @@ smpl3risk1: { [tsym;dt0;n0;tag0;ddt] dt00:dt0; dts: (asc dt0, dt0 - n0) - ddt;
 	    g2: `siteid`date0 xkey c1 xcol g2;
 	     g2 }
 
-smpl3risk: .hcc.smpl2risk1[;;;;0]
+ssmpl2risk: .hcc.ssmpl2risk1[;;;;0]
 
 
 // Find columns below integer value

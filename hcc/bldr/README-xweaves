@@ -453,6 +453,8 @@ There is an average works category and an average risk.
 
 ***** Permits
 
+These are by site-id
+
 prmtTb30 is the clustered sum of what kind of permit.
 
     status1 status2
@@ -466,6 +468,21 @@ prmtwcatb30 prmtddtb30 prmtriskb30 - these are averages of works
 category, the sum of the number of days, the average of prmtrisk.
 
 The sum of days is scaled.
+
+***** Samples
+
+smpl
+
+Introduce another set of histories. This is the number of times an asset is
+mentioned within the sample set.
+
+***** Site Samples
+
+ssmpl by site-id
+
+Introduce another set of histories. This is the number of times a site-id 
+mentioned within the sample set.
+
 
 *** Imputation
 
