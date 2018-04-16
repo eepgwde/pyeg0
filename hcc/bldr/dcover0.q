@@ -35,11 +35,14 @@ update repudns:0j from `t0 where null repudns ;
 update claims:0j from `t0 where null claims ;
 
 fwy3ec: t0
+
+.csv.t2csv[`fwy3ec]
 						     
 
-`n xdesc select n:count i, first distinct subjectname by subjectcode from fwyenq1
+estatus0fwy: `n xdesc select n:count i by estatus0, enqstatusname from fwyenq1
 
-\
+.csv.t2csv[`estatus0fwy]
+
 
 // Check data sets
 
