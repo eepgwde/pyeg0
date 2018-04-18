@@ -42,6 +42,13 @@ def bvec(N):
 
 neg0 = lambda a: 0 if (a > 0) else 1
 
+a0 = [ 1, 0, 0, 1, 0, 0]
+
+h0 = a0
+t0 = list(map(neg0, h0))
+
+
+
 def bgap(N):
     '''
     Returns the binary gap
