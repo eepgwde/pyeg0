@@ -28,10 +28,7 @@ view2:
 	echo $(X_CSVS)
 	echo $(X_CSVS1)
 
-all-local: $(X_DEST)/geoip.q $(X_CSVS1)
-
-$(X_DEST)/geoip.q: geoip.q
-	if ! test -L $@; then cd $(X_DEST); ln -s $(xPWD)/geoip.q .; fi
+all-local: $(X_CSVS1)
 
 $(X_BASE)/in/%.csv: %.csv
 	if ! test -L $@; then cd $(X_BASE)/in; ln -s $(xPWD)/$< . ; fi
@@ -41,24 +38,24 @@ $(X_BASE)/in/%.csv: %.csv
 ## rci1 and cwy0 are the main tables.
 
 $(X_DEST)/cnv1 : cnv1.q $(X_DEST)/cnv0
-	Qp -load "$(X_DEST) cnv1.q"
+	Qp -exit -load "$(X_DEST) cnv1.q"
 
 install:: install-local
 
 install-local:: u.qserve
 
 X_Q ?= Qp
-Q_SRV ?= geoip
+Q_SRV ?= cnv1
 Q_SRV_PRT ?= 4444
 
 export sName=$(Q_SRV)
 export sN=0
 
-u.qserve: geoip-wip.q
+u.qserve: wip.q
 	screen -dmS $(sName)
 	screen -S $(sName) -X eval "screen $(sN)"
 	screen -S $(sName) -X eval "title $(Q_SRV)"
-	screen -S $(sName) -X stuff "$(X_Q) -p $(Q_SRV_PRT) -load $(X_DEST) $(xPWD)/geoip-wip.q \n"
+	screen -S $(sName) -X stuff "$(X_Q) -p $(Q_SRV_PRT) -load $(X_DEST) $(xPWD)/wip.q \n"
 
 uninstall: uninstall-local
 

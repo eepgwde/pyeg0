@@ -1,4 +1,4 @@
-import Dependencies._
+ximport Dependencies._
 
 lazy val root = (project in file(".")).
   settings(
