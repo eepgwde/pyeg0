@@ -1,0 +1,79 @@
+* Preamble
+
+weaves
+
+* Source
+
+Kaggle hotel sales competition.
+
+New hotels in submission.csv
+
+Hotel specifications in hotels.csv
+
+Historical sales for all hotels except the new hotels in sales.csv in
+September, October, November
+
+
+Estimate sales for the new hotels for the first 10 days of December.
+
+* Methods
+
+** Overview
+
+Design a predictor for the existing hotels.
+
+Find cohorts in the existing hotels for the new hotels
+
+Make predictions for the cohorts.
+
+Scale their sales figures for the new hotels.
+
+** More subtle
+
+There are multiple sales per hotel per month.
+
+Probably by destination country or city.
+
+** Considerations
+
+Hotel bookings are decided by:
+
+Seasonality. We only have September to November. December is a
+Christmas location.
+
+Exchange rate.
+
+Location.
+
+And the other metrics: rates, category, ratings, reviews.
+
+
+
+*** Data coverage
+
+From sales. About half of the records are for hotels that have no
+hotel records, so we can't even guess at the currency.
+
+From hotels. There are 848 hotels that have no sales records (and are not
+in the test set.)
+
+From hotels there are 126 currencies (one null).
+
+From sales there are 123 currencies.
+
+From submissions there are only 76 currencies.
+
+
+** This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: iso-8859-1-unix ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
+
