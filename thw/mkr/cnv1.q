@@ -1,6 +1,8 @@
 // weaves
 // @file cnv1.q
 
+\l geoip.q
+
 cnv1: value select by i from cnv0
 cnv1: `adid xkey cnv1
 
