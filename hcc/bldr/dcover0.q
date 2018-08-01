@@ -10,6 +10,40 @@
 
 tbls: tables `.
 
+fwy2c: update n1:sums n by outcome1 from 0!select n:count i by m0:`month$lossdate,outcome1 from clm1 where (not null fwy),(lossdate within 2013.01.01 2017.11.30),(not outcome1 in `Referred`Misc)
+
+
+fwyenq1: value select by i from fwyenq0
+update date0:`date$enquirytime0 from `fwyenq1 ;
+
+.enq.priority: `enqstatusname xkey ("S S"; enlist ",") 0: `:../in/estatus0.csv
+
+fwyenq1: fwyenq1 lj .enq.priority
+
+fwy2e: (cols fwy2c) xcols update outcome1:`Enquiry, n1:sums n from 0!select n:count i by m0:`month$date0 from fwyenq1 where (date0 within 2013.01.01 2017.11.30),(estatus0 = `repair)
+
+fwy2ec: update dt0:`date$m0, yr0:`year$m0 from `m0`outcome1 xasc fwy2c,fwy2e
+
+t0: ([] dt0:asc distinct fwy2ec[;`dt0])
+
+t0: t0 lj select enqs:first n by dt0 from fwy2ec where outcome1 = `Enquiry
+t0: t0 lj select repudns:first n by dt0 from fwy2ec where outcome1 = `Repudiated
+t0: t0 lj select claims:first n by dt0 from fwy2ec where outcome1 = `Settled
+
+update enqs:0j from `t0 where null enqs ;
+update repudns:0j from `t0 where null repudns ;
+update claims:0j from `t0 where null claims ;
+
+fwy3ec: t0
+
+.csv.t2csv[`fwy3ec]
+						     
+
+estatus0fwy: `n xdesc select n:count i by estatus0, enqstatusname from fwyenq1
+
+.csv.t2csv[`estatus0fwy]
+
+
 // Check data sets
 
 `.poi set get `:./wspoi;

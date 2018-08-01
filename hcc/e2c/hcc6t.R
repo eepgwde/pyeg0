@@ -7,8 +7,9 @@ rm(list=ls())
 gc()
 
 library(Rweaves)
-library(reshape)
+library(reshape2)
 library(Deducer)                        # for log-likelihood test, chi
+library(pwr)                            # for power checking
 
 source("../R/brA0.R")
 
@@ -26,7 +27,7 @@ pdf1 <- melt(pdf, id=c("dt0"))
 
 ggplot(data = pdf1, aes(dt0, log(value), group=variable, colour=variable) ) + geom_line(size = 0.8) + theme_bw()
 
-## Log-likelihood test comparing 2016-07 to previous
+## Simple chi-squared test comparing 2016-07 to previous
 
 hcc.chisq0 <- function(tbl, dt, var0="repudns") {
     tbl$regime0 <- factor(tbl$dt0 >= dt, labels=c("before", "after"))
@@ -44,6 +45,8 @@ hcc.chisq0 <- function(tbl, dt, var0="repudns") {
 
     r0$tbl <- t0
     r0$test <- xsq
+    w0 <- as.matrix(r0$tbl) / sum(as.matrix(r0$tbl))
+    r0$pwr <- pwr.chisq.test(w=ES.w2(w0), df=1, N=sum(as.matrix(r0$tbl)))
     return(r0)
 }
 
@@ -65,17 +68,18 @@ s1 <- hcc.chisq0(pdf2, dt2, var0="enqs")
 
 
 ## x0 <- reshape(pdf1, timevar="variable", idvar="regime0", direction="wide")
-    x0 <- melt(aggregate(claims ~ regime0, data=tbl, FUN=sum), id="regime0")
-    x1 <- melt(aggregate(enqs ~ regime0, data=tbl, FUN=sum), id="regime0")
 
-    pdf3 <- rbind(x0,x1)
-    t0 <- xtabs(value ~ ., data=pdf3)
+x0 <- melt(aggregate(claims ~ regime0, data=tbl, FUN=sum), id="regime0")
+x1 <- melt(aggregate(enqs ~ regime0, data=tbl, FUN=sum), id="regime0")
 
-    (xsq <- chisq.test(t0))
+pdf3 <- rbind(x0,x1)
+t0 <- xtabs(value ~ ., data=pdf3)
 
-    t0
-    xsq$expected
-    xsq$stdres
+(xsq <- chisq.test(t0))
+
+t0
+xsq$expected
+xsq$stdres
 
 
 ## Use year on year
@@ -132,3 +136,83 @@ x <- c(A = 20, B = 15, C = 25)
 chisq.test(x)
 
 chisq.test(as.table(x)) 
+
+## For footways
+
+library(rkdb)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(pwr)
+
+h <- open_connection('j1', 5000)
+
+df1 <- execute(h, "fwy2ec")
+
+
+p0 <- ggplot(data = df1, aes(dt0, log(n), group=outcome1, colour=outcome1) ) + 
+    geom_line(size = 0.8) + theme_bw()
+
+df2 <- df1[ df1$outcome1 == "Enquiry", ]
+
+data1 <- df2 %>% select(dt0, n) %>% 
+    mutate(yr0=as.integer(year(dt0)), month0=as.integer(month(dt0))) %>%
+    select(dt0, yr0, month0, n)
+
+data2 <- ts(data1$n, 
+            start=c(data1$yr0[1], data1$month0[1]), 
+            end=c(data1$yr0[nrow(data1)], data1$month0[nrow(data1)]), 
+            frequency=12)
+
+enqs0 <- decompose(data2)
+
+
+df2 <- df1[ df1$outcome1 == "Settled", ]
+
+data1 <- df2 %>% select(dt0, n) %>% 
+    mutate(yr0=as.integer(year(dt0)), month0=as.integer(month(dt0))) %>%
+    select(dt0, yr0, month0, n)
+
+data2 <- ts(data1$n, 
+            start=c(data1$yr0[1], data1$month0[1]), 
+            end=c(data1$yr0[nrow(data1)], data1$month0[nrow(data1)]), 
+            frequency=12)
+
+settled0 <- decompose(data2)
+
+## Chi-squared
+
+df2 <- execute(h, "fwy3ec")
+
+dt1 <- as.Date("2015-02-01")
+
+pdf2 <- df2
+
+r0 <- hcc.chisq0(pdf2, dt1, var0="repudns") # slight
+
+r1 <- hcc.chisq0(pdf2, dt1, var0="enqs") # major
+
+## Safe section
+
+dt2 <- as.Date("2014-06-30")
+
+pdf2 <- df2[ df2$dt0 <= dt1, ]
+
+s0 <- hcc.chisq0(pdf2, dt2, var0="repudns") # 
+
+s1 <- hcc.chisq0(pdf2, dt2, var0="enqs") # 
+
+
+jpeg(filename=paste("hcc6t", "-%03d.jpeg", sep=""), 
+     width=1024, height=768)
+
+print(p0)
+
+plot(enqs0)
+title("Enquiries")
+
+plot(settled0)
+title("Claims")
+
+x0 <- lapply(dev.list(), function(x) dev.off(x))
+
