@@ -1,6 +1,100 @@
 CHANGES
 =======
 
+* -
+* -
+* -
+* hotels estimation
+* basic q server
+* -
+* -
+* -
+* chisq and power on cwy and fwy
+* -
+* using /in/
+* 0/hcc v3.0.4-pyeg0 archive/dids v1.0.4-pyeg0
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* added private networks as patches
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* -
+* hcc
+* poi weighting
+* -
+* -
+* -
+* Vending
+* better
+* better
+* -
+* -
+* -
+* get
+* get get
+* refine2
+* refine2
+* StringUtils needs work
+* -
+* refine method
+* A CSV ResultSet
+* -
+* halfway
+* added CSV loading
+* -
+* -
+* cpp test
+* -
+* -
+* -
+* images
+* working on all models
+* working with metric="ROC"
+* -
+* imbalance
+* imbalance
+* -
+* -
+* GBM won't fit
+* -
+* scaling
+* -
+* -
+* -
+* -
+* -
+* tagging
+* basic cleaning and tagging
+* dates, hour, yday
+* meteo
+* weather
+* -
+* -
+* trying to fix it
 * j1
 * -
 * -
