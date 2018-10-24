@@ -83,20 +83,20 @@ class Test(unittest.TestCase):
     ## Check empty responses
     ## Call prior
     def test_001(self):
-        self.test_000();
+        self.test_000()
         self.assertIsNotNone(self.stack0)
         self.logger.info('stack0: ' + str(self.stack0))
         self.assertTrue(self.stack0.is_empty())
 
     def test_002(self):
-        self.test_001();
+        self.test_001()
         x0 = "empty1"
         with self.assertRaises(IndexError):
             x0 = self.stack0.pop()
         self.logger.info('stack0: ' + x0)
 
     def test_003(self):
-        self.test_001();
+        self.test_001()
         x1 = "empty1"
         with self.assertRaises(IndexError):
             x1 = self.stack0.peek()
@@ -104,14 +104,14 @@ class Test(unittest.TestCase):
 
     ### push one
     def test_004(self):
-        self.test_001();
+        self.test_001()
         x1 = self.stack0.push(self.x0)
         self.assertIsNone(x1)
         self.assertFalse(self.stack0.is_empty())
 
     ## check identity on pop
     def test_005(self):
-        self.test_004();
+        self.test_004()
         x1 = self.stack0.pop()
         self.assertIsNotNone(x1)
         self.logger.info('stack0: ' + x1)
@@ -120,7 +120,7 @@ class Test(unittest.TestCase):
 
     ## check identity on peek
     def test_006(self):
-        self.test_004();
+        self.test_004()
         x1 = self.stack0.peek()
         self.assertIsNotNone(x1)
         self.logger.info('stack0: ' + x1)

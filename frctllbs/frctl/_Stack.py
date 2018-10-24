@@ -1,4 +1,6 @@
-
+## @author weaves
+##
+## 
 
 class Stack:
     """

@@ -1,9 +1,11 @@
+"""
+Test file 
+
+"""
 ## @file Test1.py
 # @author weaves
-# @brief Unittest of MInfo
+# @brief Unittest
 #
-# This module tests the ancillary operations and the 
-# 
 # @note
 #
 # Relatively complete test.
@@ -15,60 +17,135 @@ from datetime import datetime, timezone, timedelta, date
 
 from collections import Counter
 
-from frctl import Stack
-
 import unittest
-from tests.test_Test import Test
 
-## A test driver for GMus0
-#
-# @see GMus0
-class Test1(Test):
-    """
-    Test MInfo1
-    """
+from frctl import Queue
 
-    ## Null setup. Create a new one.
-    def setUp(self):
-        super(Test1, self).setUp()
-        return
+logfile = os.environ['X_LOGFILE'] if os.environ.get('X_LOGFILE') is not None else "test.log"
+logging.basicConfig(filename=logfile, level=logging.DEBUG)
+logger = logging.getLogger('Test')
+sh = logging.StreamHandler()
+logger.addHandler(sh)
+
+trs0 = os.path.join(os.path.dirname(__file__), "test.txt")
+
+class Test1(unittest.TestCase):
+    """
+    A source directory dir0 is taken from the environment as SDIR or 
+    is tests/media and should contain .m4a files.
+    A file tests/p1.lst is also needed. It can list the files in the
+    directory.
+    """
+    queue0 = None
+
+    dir0 = os.getcwd()
+    files0 = []
+    files = []
+    logger = None
+    x0 = "empty"
+
+    ## Sets pandas options and logging.
+    @classmethod
+    def setUpClass(cls):
+        global logger
+        cls.logger = logger
+
+        for root, dirs, files in os.walk(cls.dir0, topdown=True):
+            for name in files:
+                cls.files.append(os.path.join(root, name))
+
+        cls.files.sort()
+        cls.files0 = cls.files.copy()
+        cls.logger.info('files: ' + unidecode('; '.join(cls.files)))
+    
+    ## Logs out.
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
     ## Null setup.
-    def tearDown(self):
-        self.logger.info('tearDown')
-        return
-
-    ## Loaded?
-    ## Is utf-8 available as a unittest.TestCasefilesystemencoding()
-    def test_000(self):
-        self.assertIsNotNone(self.test0)
-        return
-
-    def test_05(self):
-        self.assertIsNotNone(self.test0)
-        minfo = MInfo1(l0 = self.file0, delegate0 = "duration2")
-        d = minfo.duration()
-        self.logger.info("duration: " + d.isoformat())
-        return
-    
-    def test_10(self):
-        self.files = []
-        for root, dirs, files in os.walk(self.dir0, topdown=True):
-            for name in files:
-                self.files.append(os.path.join(root, name))
-
-        self.files.sort()
+    def setUp(self):
+        self.logger.info('setup')
         if not type(self).files:
             type(self).files = type(self).files0
-        self.file0, *self.files = self.files
-        minfo = MInfo1(l0 = self.file0, delegate0 = "duration2")
-        minfo.set_delegate("duration2")
+            
+        self.file0, *type(self).files = type(self).files
 
-        for f in self.files:
-            self.logger.info("load: " + f)
-            x0 = minfo.next(f)
-            logging.info("duration: cum: " + type(x0).__name__ +
-                         "; " + "; ".join(x0))
+    ## Null tear down
+    def tearDown(self):
+        self.logger.info('tearDown')
+
+    ## Constructs
+    def test_000(self):
+        self.queue0 = Queue()
+        self.assertIsNotNone(self.queue0)
+
+    ## Check empty responses
+    ## Call prior
+    def test_001(self):
+        self.test_000()
+        self.assertIsNotNone(self.queue0)
+        self.logger.info('queue0: ' + str(self.queue0))
+        self.assertTrue(self.queue0.is_empty())
+
+    ## Raise an error
+    def test_002(self):
+        self.test_001()
+        x0 = "empty1"
+        with self.assertRaises(IndexError):
+            x0 = self.queue0.pop()
+        self.logger.info('queue0: ' + x0)
+
+    def test_003(self):
+        self.test_001()
+        x1 = "empty1"
+        with self.assertRaises(IndexError):
+            x1 = self.queue0.peek()
+        self.logger.info('queue0: ' + x1)
+
+    ### push one
+    def test_004(self):
+        self.test_001()
+        x1 = self.queue0.push(self.x0)
+        self.assertIsNone(x1)
+        self.assertFalse(self.queue0.is_empty())
+
+    ## check identity on pop
+    def test_005(self):
+        self.test_004()
+        x1 = self.queue0.pop()
+        self.assertIsNotNone(x1)
+        self.logger.info('queue0: ' + x1)
+        self.assertEqual(x1, self.x0)
+        self.assertIs(x1, self.x0)
+
+    ## check identity on peek
+    def test_006(self):
+        self.test_004()
+        x1 = self.queue0.peek()
+        self.assertIsNotNone(x1)
+        self.logger.info('queue0: ' + x1)
+        self.assertEqual(x1, self.x0)
+        self.assertIs(x1, self.x0)
+
+    ## Check with a load
+    def test_007(self):
+        self.test_001()
+        sz0 = len(self.files)
+        self.assertTrue(sz0 > 0)
+        self.logger.info('queue0: pushing: sz0: ' + str(sz0))
+
+        for name in self.files:
+            self.queue0.push(name)
+
+        self.assertTrue(self.queue0.size() > 0)
+        self.assertEqual(sz0, self.queue0.size())
+
+        while sz0 > 0:
+            self.queue0.pop()
+            sz0 -= 1
+
+        self.assertTrue(self.queue0.is_empty())
 
 #
 # The sys.argv line will complain to you if you run it with ipython
@@ -81,4 +158,6 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='Test1', verbosity=3, failfast=True, exit=False)
+        unittest.main(module='Test', verbosity=3, failfast=True, exit=False)
+
+

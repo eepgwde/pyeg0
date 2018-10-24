@@ -21,20 +21,28 @@ all::
 
 ifneq ($(UUT),)
 
-check::
+check:: $(X_LOGFILE)
 	:> $(X_LOGFILE)
 	$(PYTHON) -m unittest -v tests.$(UUT)
+	test -d contrib || mkdir contrib
+	cp $(X_LOGFILE) contrib
 
 else
 
-check::
+check:: $(X_LOGFILE)
 	:> $(X_LOGFILE)
 	$(PYTHON) -m unittest discover -v -s tests
 
 endif 
 
+check:: contrib/$(X_LOGFILE)
+
+contrib/$(X_LOGFILE): $(X_LOGFILE)
+	cp $< $@
+	
+
 clean::
-	$(RM) $(wildcard *.pyc *.log *~ nohup.out)
+	$(RM) $(wildcard *.pyc *.log *~ nohup.out contrib/*.log)
 
 distclean::
 	$(RM) -rf html
@@ -49,6 +57,7 @@ uninstall::
 	-$(SHELL) -c "cd $(HOME)/.local; $(PIP) uninstall --yes $(PKG)"
 
 dist-local:
+	cp $(wildcard tests/test_*.py) contrib
 	$(PYTHON) setup.py sdist
 
 distinstall: uninstall dist-local
