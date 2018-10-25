@@ -6,6 +6,7 @@ import junit.framework.TestSuite;
 
 import java.io.*;
 import java.util.Vector;
+import java.util.stream.*;
 
 /**
  * Unit test for simple App.
@@ -34,6 +35,9 @@ public class AppTest
     Vector<java.io.Serializable> rs = parser.get((Vector<java.io.Serializable>) null);
     System.out.println("rs: size: " + rs.size());
 
+    System.out.println(rs.stream()
+                       .map(e -> e.getClass().getName())
+                       .collect(Collectors.toList()) );
   }
 
   /**
