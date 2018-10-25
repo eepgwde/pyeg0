@@ -24,7 +24,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class Fetcher extends TimerTask {
+import java.util.concurrent.*;
+
+import static java.util.concurrent.TimeUnit.*;
+
+public class Fetcher implements Runnable {
   LocalDateTime start0 = LocalDateTime.now();  
 
   public static class TSValue implements Cloneable, Comparable<TSValue> {
@@ -95,6 +99,8 @@ public class Fetcher extends TimerTask {
     return set.tailSet(ts1).first();
   }
 
+  private int invocations = 0;
+
   @Override
   public void run() {
     // Begin aggregating mentions. Every hour, "store" the relative change
@@ -103,11 +109,12 @@ public class Fetcher extends TimerTask {
     try (InputStream is = this.url.openStream();
          InputStreamReader isr = new InputStreamReader(is);
          BufferedReader in = new BufferedReader(isr)) {
+      invocations++;
       parser.parse(in);
       Vector<java.io.Serializable> rs = parser.get((Vector<java.io.Serializable>) null);
       TSValue ts = new TSValue((Date)rs.get(0), (Double)rs.get(1));
 
-      System.out.println("new: ts: " + ts);
+      System.out.println(String.format("invocation: %d; new: ts: %s ", invocations, ts));
       set.add(ts);
 
       TSValue prior = getPrior();
@@ -141,9 +148,14 @@ public class Fetcher extends TimerTask {
     }
     URL url ;
     url = new URL("https://api.coindesk.com/v1/bpi/currentprice.json");
+
+    ScheduledExecutorService scheduler =
+      Executors.newScheduledThreadPool(5);
+
     Fetcher scanner = new Fetcher(url);
-    timer.schedule(scanner, 1000, 1000*secs);
-    scanner.run();
-    if (false) scanner.cancel();
+
+    final ScheduledFuture<?> handle =
+      scheduler.scheduleAtFixedRate(scanner, 1, secs, TimeUnit.SECONDS);
+
   }
 }
