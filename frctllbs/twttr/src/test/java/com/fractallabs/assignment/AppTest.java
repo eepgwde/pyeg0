@@ -30,6 +30,8 @@ public class AppTest
     BufferedReader in = new BufferedReader(new InputStreamReader(src));
     assertNotNull(in);
 
+    Parser parser = new Parser();
+    parser.parse(in);
   }
 
   /**
