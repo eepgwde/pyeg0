@@ -88,8 +88,8 @@ public class AppTest
     // from an hour beforehand.
     Instant i0 = set.last().getTimestamp().minusSeconds(60 * 60);
     ts1 = new Fetcher.TSValue(i0, set.last().getVal());
-    /// last just over an hour ago
-    ts = set.headSet(ts1).last();
+    /// first within an hour
+    ts = set.tailSet(ts1).first();
     System.out.println("prior-hour: " + ts);
   }
 
