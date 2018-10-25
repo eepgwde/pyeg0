@@ -28,7 +28,15 @@ public class Parser  {
   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
   LocalDateTime start0 = LocalDateTime.now();
 
+  enum Variants { COINDESK, TWHTSTATUS };
+
+  //** Provides a parser.
   public Parser() {}
+
+  //** Provides a parser with named set of patterns.
+  public Parser(Variants parserType) {
+    // Some private implementation of parse
+  }
 
   JSONParser parser = new JSONParser();
   Vector<java.io.Serializable> results = new Vector<java.io.Serializable>(2);
@@ -40,7 +48,6 @@ public class Parser  {
   }
 
   public Vector<java.io.Serializable> get(Vector<java.io.Serializable> bag) {
-    if (bag != null) bag.add(results);
     return results;
   }
 
@@ -61,8 +68,7 @@ public class Parser  {
 
       json0 = (JSONObject) json.get("time");
       name = (String) json0.get("updateduk");
-      System.out.println(name);
-      System.out.println(as(dates, name));
+      as(dates, name);
       results.add(dates.lastElement());
 
       json0 = (JSONObject) json.get("bpi");
@@ -70,16 +76,9 @@ public class Parser  {
       name = (String) json0.get("rate");
       // System.out.println(name);
       rate = (Double) json0.get("rate_float");
-      System.out.println(rate);
       results.add(rate);
-
-      System.out.println(dtf.format(LocalDateTime.now()));
-    } catch (IOException ioe) {
-      System.err.println(ioe.getMessage());
-    } catch (ParseException pe) {
-      System.err.println(pe.getMessage());
     } catch (Exception ex) {
-      System.err.println(ex.getMessage());
+      ex.printStackTrace();
     }
     return this;
   }

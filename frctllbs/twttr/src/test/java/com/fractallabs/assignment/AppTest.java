@@ -26,13 +26,14 @@ public class AppTest
 
   public void test002() throws Exception {
     test000();
+
     assertNotNull(this.tfile);
     FileReader fr = new FileReader(this.tfile);
     Parser parser = new Parser();
     parser.parse((Reader) fr);
     Vector<java.io.Serializable> rs = parser.get((Vector<java.io.Serializable>) null);
+    System.out.println("rs: size: " + rs.size());
 
-    (new Parser()).parse((Reader) fr).get((Vector<java.io.Serializable>) null);
   }
 
   /**
@@ -53,11 +54,4 @@ public class AppTest
         return new TestSuite( AppTest.class );
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
 }
