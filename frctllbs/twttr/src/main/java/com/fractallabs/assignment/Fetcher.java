@@ -100,8 +100,9 @@ public class Fetcher extends TimerTask {
     // Begin aggregating mentions. Every hour, "store" the relative change
     // (e.g. write it to System.out).
     
-    try {
-      BufferedReader in = new BufferedReader(new InputStreamReader(this.url.openStream()));
+    try (InputStream is = this.url.openStream();
+         InputStreamReader isr = new InputStreamReader(is);
+         BufferedReader in = new BufferedReader(isr)) {
       parser.parse(in);
       Vector<java.io.Serializable> rs = parser.get((Vector<java.io.Serializable>) null);
       TSValue ts = new TSValue((Date)rs.get(0), (Double)rs.get(1));
@@ -141,7 +142,7 @@ public class Fetcher extends TimerTask {
     URL url ;
     url = new URL("https://api.coindesk.com/v1/bpi/currentprice.json");
     Fetcher scanner = new Fetcher(url);
-    timer.scheduleAtFixedRate(scanner, 1000, 1000*secs);
+    timer.schedule(scanner, 1000, 1000*secs);
     scanner.run();
     if (false) scanner.cancel();
   }
