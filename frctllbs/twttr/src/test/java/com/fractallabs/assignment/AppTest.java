@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.io.*;
+import java.util.Vector;
 
 /**
  * Unit test for simple App.
@@ -26,12 +27,12 @@ public class AppTest
   public void test002() throws Exception {
     test000();
     assertNotNull(this.tfile);
-    InputStream src = new FileInputStream(this.tfile);
-    BufferedReader in = new BufferedReader(new InputStreamReader(src));
-    assertNotNull(in);
-
+    FileReader fr = new FileReader(this.tfile);
     Parser parser = new Parser();
-    parser.parse(in);
+    parser.parse((Reader) fr);
+    Vector<java.io.Serializable> rs = parser.get((Vector<java.io.Serializable>) null);
+
+    (new Parser()).parse((Reader) fr).get((Vector<java.io.Serializable>) null);
   }
 
   /**

@@ -6,6 +6,8 @@ package com.fractallabs.assignment;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Date;
+import java.util.Vector;
 
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;
@@ -16,8 +18,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import com.mooo.walti.Bag;
 
 public class Parser  {
   /** Remote system format for dates.
@@ -31,13 +31,22 @@ public class Parser  {
   public Parser() {}
 
   JSONParser parser = new JSONParser();
+  Vector<java.io.Serializable> results = new Vector<java.io.Serializable>(2);
 
-  protected Date as(Bag<Date> bag, String input) throws Exception {
-    bag.payload = xfmt1.parse(input);
-    return bag.payload;
+  protected Date as(Vector<Date> bag, String input) throws Exception {
+    Date dt = xfmt1.parse(input);
+    if (bag!=null) bag.add(dt);
+    return dt;
   }
 
-  public void parse(BufferedReader in) throws Exception {
+  public Vector<java.io.Serializable> get(Vector<java.io.Serializable> bag) {
+    if (bag != null) bag.add(results);
+    return results;
+  }
+
+  Vector<Date> dates = new Vector<Date>(1);
+
+  public Parser parse(Reader in) throws Exception {
     // Begin aggregating mentions. Every hour, "store" the relative change
     // (e.g. write it to System.out).
     
@@ -46,12 +55,15 @@ public class Parser  {
       JSONObject json0;
       String name;
       Double rate;
-      Bag<Date> date = new Bag<Date>();
+
+      dates.clear();
+      results.clear();
 
       json0 = (JSONObject) json.get("time");
       name = (String) json0.get("updateduk");
       System.out.println(name);
-      System.out.println(as(date, name));
+      System.out.println(as(dates, name));
+      results.add(dates.lastElement());
 
       json0 = (JSONObject) json.get("bpi");
       json0 = (JSONObject) json0.get("USD");
@@ -59,6 +71,7 @@ public class Parser  {
       // System.out.println(name);
       rate = (Double) json0.get("rate_float");
       System.out.println(rate);
+      results.add(rate);
 
       System.out.println(dtf.format(LocalDateTime.now()));
     } catch (IOException ioe) {
@@ -68,6 +81,7 @@ public class Parser  {
     } catch (Exception ex) {
       System.err.println(ex.getMessage());
     }
+    return this;
   }
 
 }
