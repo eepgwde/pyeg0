@@ -1,6 +1,13 @@
+// @author weaves
+// @brief Demonstration application URL fetch.
+// 
+// 
+
 package com.fractallabs.assignment;
 
 import java.time.Instant;
+import java.util.Date;
+import java.util.Vector;
 
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;
@@ -10,27 +17,25 @@ import java.util.TimerTask;
 import java.net.URL;
 import java.io.*;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
 public class Fetcher extends TimerTask {
-  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
   LocalDateTime start0 = LocalDateTime.now();  
 
-  public static class TSValue {
-    private final Instant timestamp;
-    private final double val;
+  public static class TSValue implements Cloneable, Comparable<TSValue> {
+    protected final Instant timestamp;
+    protected final double val;
 
     public TSValue(Instant timestamp, double val) {
       this.timestamp = timestamp;
       this.val = val;
+    }
+
+    public TSValue(Date date, Double val) {
+      this(date.toInstant(), val.doubleValue());
     }
 
     public Instant getTimestamp() {
@@ -40,6 +45,26 @@ public class Fetcher extends TimerTask {
     public double getVal() {
       return val;
     }
+
+    public String toString() {
+      return String.format("%8.2f @ %s", val, timestamp.toString());
+    }
+
+    public int compareTo(TSValue o) {
+      return this.timestamp.compareTo(o.getTimestamp());
+    }
+
+    /// Use the basic clone.
+    ///
+    /// @TODO
+    /// No longer needed.
+    public Object clone() {
+      try {
+          return super.clone();
+        } catch (CloneNotSupportedException e) { return null; }
+      // this won't happen, since we are Cloneable
+    }
+    
   }
 
   String companyName;
@@ -49,11 +74,12 @@ public class Fetcher extends TimerTask {
     this.companyName = companyName;
   }
 
+  Parser parser;
+
   public Fetcher(URL urlOfJSON) {
     this.url = urlOfJSON;
+    parser = new Parser();
   }
-
-  JSONParser parser = new JSONParser();
 
   @Override
   public void run() {
@@ -62,29 +88,11 @@ public class Fetcher extends TimerTask {
     
     try {
       BufferedReader in = new BufferedReader(new InputStreamReader(this.url.openStream()));
-      JSONObject json = (JSONObject) parser.parse(in);
-      JSONObject json0;
-      String name;
-      Double rate;
-
-      json0 = (JSONObject) json.get("time");
-      name = (String) json0.get("updateduk");
-      System.out.println(name);
-
-      json0 = (JSONObject) json.get("bpi");
-      json0 = (JSONObject) json0.get("USD");
-      name = (String) json0.get("rate");
-      // System.out.println(name);
-      rate = (Double) json0.get("rate_float");
-      System.out.println(rate);
-
-      System.out.println(dtf.format(LocalDateTime.now()));
-    } catch (IOException ioe) {
-      System.err.println(ioe.getMessage());
-    } catch (ParseException pe) {
-      System.err.println(pe.getMessage());
+      parser.parse(in);
+      Vector<java.io.Serializable> rs = parser.get((Vector<java.io.Serializable>) null);
+      TSValue ts = new TSValue((Date)rs.get(0), (Double)rs.get(1));
     } catch (Exception ex) {
-      System.err.println(ex.getMessage());
+      ex.printStackTrace();
     }
   }
 
