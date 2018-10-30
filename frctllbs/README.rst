@@ -10,10 +10,10 @@ a Towers of Hanoi rebuild when there is a dequeue()
 It has these extra features:
 
 I've implemented push and pop to enqueue and dequeue
-peek() is the first of the stack1
+peek() is the first of the stack_1
 
 I've forced an error on dequeue to make the test code for the Queue (see
-test_Test1) identical to the test code for test_Test.
+test_Test1) identical to the test code for Stack, see test_Test.
 
 In pseudo-code
 
