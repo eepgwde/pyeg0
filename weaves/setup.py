@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # $Id$
+# $Id$
 
 from setuptools import setup
 
