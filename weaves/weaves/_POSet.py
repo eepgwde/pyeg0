@@ -9,6 +9,7 @@
 # 
 
 import logging
+from itertools import permutations, combinations
 
 class _Impl(object):
     """
@@ -16,8 +17,20 @@ class _Impl(object):
     """
     _logger = logging.getLogger('weaves')
 
+    _tions = None
+
     def __init__(self, **kwargs):
+        self._tions = lambda xs, n: permutations(xs, n)
         pass
+
+    def strong(self, xs0):
+        """
+        For a list of symbols, generates all the strong orderings
+        """
+        s00 = set()
+        for i in iter(range(len(xs0))):
+            s00 = s00.union(self._tions(xs0, i+1))
+        return s00
 
     def dispose(self):
         """
