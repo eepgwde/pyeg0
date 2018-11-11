@@ -4,4 +4,5 @@
 *.gnumeric binary
 *.pdf binary
 *.zip binary
-
+*.ipynb diff=ipynb
+*.py ident
