@@ -9,6 +9,8 @@
 # Relatively complete test.
 
 from weaves import Singleton
+from weaves import __Id__ as weavesId
+
 import sys, logging, os
 from unidecode import unidecode
 
@@ -44,6 +46,8 @@ class Test1(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_01(self):
+        self.assertIsNotNone(weavesId)
+        logger.info("module: Id: " + weavesId)
         return
 
     def test_05(self):

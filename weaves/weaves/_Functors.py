@@ -1,17 +1,14 @@
-## @file MInfo.py
-# @brief Media Info fetching.
+## @file _Functors.py
+# @brief Extensions to Python class and object dispatch.
 # @author weaves
 #
 # @details
-# This class uses the MediaInfo library for Python.
+# This class provides some decorators for classes.
+# And a Singleton.
 #
 # @note
 #
-# The library has a limitation that it cannot handle UTF-8 names very
-# well. To side-step that, I make a temporary symlink using the 'os'
-# module and then use MediaInfo on that.
-#
-# 
+# The Singleton includes a implementation that does some date arithmetic.
 
 import logging
 from datetime import datetime, date, timedelta
@@ -48,9 +45,6 @@ class _Impl(object):
         pass
 
     def dispose(self):
-        """
-        The media info has to be re-created for every file.
-        """
         pass
 
     def tm2dt(self, tm):
