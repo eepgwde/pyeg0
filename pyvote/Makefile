@@ -1,8 +1,8 @@
 ## weaves
 # Test make file for MInfo.py module testing.
 
-PYTHON ?= python3
-PIP ?= pip3
+PYTHON ?= python
+PIP ?= pip
 UUT ?= 
 FILE ?= test.log
 PYTHONIOENCODING=utf-8
