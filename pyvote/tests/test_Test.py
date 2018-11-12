@@ -1,14 +1,7 @@
 ## @file Test.py
 # @author weaves
-# @brief Unittest of MInfo
+# @brief Unittest of pyvote
 #
-# This module tests the ancillary operations and the 
-# 
-# @note
-#
-# Relatively complete test.
-
-from weaves import singledispatch1
 
 import sys, logging, os
 from unidecode import unidecode
@@ -20,26 +13,8 @@ logger = logging.getLogger('Test')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
-class Test0:
-
-    @singledispatch1
-    def add(self, a, b):
-        raise NotImplementedError('Unsupported type')
- 
-    @add.register(int)
-    def _(self, a, b):
-        logger.debug("First argument is of type " + type(a).__name__)
-        return a * b
-        
-    @add.register(str)
-    def _(self, a, b):
-        logger.debug("First argument is of type " + type(a).__name__)
-        return "(\"{0:s}\", \"{1:s}\"".format(a, b)
-
-
-## A test driver for GMus0
+## A test driver for py3vote
 #
-# @see GMus0
 class Test(unittest.TestCase):
     """
     Test MInfo
@@ -69,9 +44,6 @@ class Test(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_000(self):
-        test0 = Test0()
-        test0.add(1,2)
-        test0.add("1", "2")
         return
 
 #

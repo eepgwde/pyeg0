@@ -1,14 +1,9 @@
 ## @file Test1.py
 # @author weaves
-# @brief Unittest of MInfo
+# @brief Unittest of voting.
 #
-# This module tests the ancillary operations and the 
-# 
-# @note
-#
-# Relatively complete test.
 
-from weaves import Singleton
+from weaves import POSetOps
 from weaves import __Id__ as weavesId
 
 import sys, logging, os
@@ -25,9 +20,8 @@ logger = logging.getLogger('Test')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
-## A test driver for GMus0
+## A test driver for voting
 #
-# @see GMus0
 class Test1(unittest.TestCase):
     """
     Test
@@ -51,17 +45,11 @@ class Test1(unittest.TestCase):
         return
 
     def test_05(self):
-        s0 = Singleton.instance().dofy(datetime.today())
-        logger.info("dofy: " + str(s0))
-        return
-
-    def test_05(self):
         """
         How to get a datetime that is an advance 
         """
-        adv = 1.525
-        s0 = Singleton.instance().dtadvance2(seconds=adv)
-        logger.info("epoch: " + str(adv) + "; " + str(s0))
+        s0 = POSetOps.instance().strong("ABCD")
+        logger.info(str(s0))
         return
 
 #
