@@ -9,6 +9,7 @@
 # Relatively complete test.
 
 from weaves import POSetOps
+from weaves.preferences import Pair0, Prefer0, NoPrefer0
 
 import sys, logging, os
 
@@ -49,8 +50,31 @@ class Test2(unittest.TestCase):
 
     def test_05(self):
         """
-        Generate all from characters.
+        Prefences
         """
+        with self.assertRaises(ValueError) as context:
+            Pair0('A', 'A')
+        self.assertIs(type(context.exception),ValueError) 
+
+        with self.assertRaises(ValueError) as context:
+            Pair0('A', '')
+        self.assertIs(type(context.exception),ValueError) 
+
+        with self.assertRaises(ValueError) as context:
+            Pair0('', 'B')
+        self.assertIs(type(context.exception),ValueError) 
+
+        r0 = Pair0('A', 'B')
+        with self.assertRaises(ValueError) as context:
+            Pair0(r0, r0)
+        self.assertIs(type(context.exception),ValueError) 
+
+        r0 = Pair0('A', 'B')
+        r1 = Pair0('A', 'B')
+        with self.assertRaises(ValueError) as context:
+            Pair0(r0, r1)
+        self.assertIs(type(context.exception),ValueError) 
+
         return
 
 #
