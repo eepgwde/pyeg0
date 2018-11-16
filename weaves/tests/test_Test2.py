@@ -50,7 +50,7 @@ class Test2(unittest.TestCase):
 
     def test_05(self):
         """
-        Prefences
+        Preferences
         """
         with self.assertRaises(ValueError) as context:
             Pair0('A', 'A')
@@ -76,6 +76,19 @@ class Test2(unittest.TestCase):
         self.assertIs(type(context.exception),ValueError) 
 
         return
+
+    def test_07(self):
+        """
+        Preferences
+        """
+        r0 = Pair0('A', 'B')
+        p1 = Prefer0('A', 'B')
+        np1 = NoPrefer0('A', 'B')
+        self.assertTrue(p1 == np1)
+        self.assertFalse(p1 != np1)
+
+        self.assertFalse(p1.isKindOf(np1))
+        self.assertTrue(p1.isKindOf(p1))
 
 #
 # The sys.argv line will complain to you if you run it with ipython

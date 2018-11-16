@@ -2,6 +2,7 @@
 ##
 ## 
 
+
 class Pair0(object):
     v = None
 
@@ -18,10 +19,11 @@ class Pair0(object):
         self.v = [ a, b ]
 
     def __eq__(self, other):
-        """Overrides the default implementation"""
-        if isinstance(other, Pair0):
-            return self.v == other.v
-        return False
+        """Only a value comparisonn"""
+        return self.v == other.v
+
+    def isKindOf(self, other):
+        return type(self) == type(other)
 
     def __repr__(self):
         return type(self).__name__ + ": " + str(self.v)
