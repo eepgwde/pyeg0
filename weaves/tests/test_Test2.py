@@ -105,6 +105,39 @@ class Test2(unittest.TestCase):
         l1 = [ len(l) for l in list(l0) ]
         logger.info("ordered: {} {} {}".format(len(l0), l1, l0))
 
+    def test_13(self):
+        """
+        Nodes and partitions
+        """
+        d0 = POSetOps.instance().sym2basis('ABC')
+        logger.info("dict: {}".format(d0))
+
+    def test_15(self):
+        """
+        Nodes and partitions
+        """
+        d0 = POSetOps.instance().sym2basis('ABC')
+        x0 = POSetOps.instance().adjacency(d0)
+        logger.info("dict: {}".format(x0['m']))
+        nodes = tuple(x0['n'])
+        logger.info("nodes: {} {}".format(len(nodes), nodes))
+        edges = tuple(x0['e'])
+        logger.info("edges: {} {}".format(len(edges), edges))
+
+
+    def test_17(self):
+        """
+        Nodes and partitions
+        """
+        d0 = POSetOps.instance().sym2basis('ABCD')
+        x0 = POSetOps.instance().adjacency(d0)
+        logger.info("dict: {}".format(x0['m']))
+        nodes = tuple(x0['n'])
+        logger.info("nodes: {} {}".format(len(nodes), nodes))
+        edges = tuple(x0['e'])
+        logger.info("edges: {} {}".format(len(edges), edges))
+
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

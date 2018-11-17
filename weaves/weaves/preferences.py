@@ -2,6 +2,12 @@
 ##
 
 class Pair0(object):
+    """
+    Representational class for preferences
+
+    @note
+    Not used.
+    """
     v = None
 
     def __init__(self, a, b):

@@ -10,6 +10,7 @@
 
 import logging
 from itertools import permutations, combinations
+import numpy as np
 
 class _Impl(object):
     """
@@ -100,14 +101,14 @@ class _Impl(object):
         nodes = tuple(l1)
         l1 = map(np.array, nodes)
 
-        l2=list(combinations(l1, len(l0)-1))
+        l2=list(combinations(l1, 2))
         m0 = int(ndiff * nX)
         l3 = map(lambda a: m0 == sum(abs(a[0] - a[1])), l2)
         l4 = [i for i, x in enumerate(tuple(l3)) if x]
         edges = [l2[i] for i in l4]
 
         f0 = lambda x: ( np.ndarray.tolist(x[0]), np.ndarray.tolist(x[1]) )
-        edges1 = map(f0, edges)
+        edges1 = list(map(f0, edges))
 
         return { 'm': d0, 'n': nodes, 'e': edges1 }
 
