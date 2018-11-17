@@ -1,2 +1,19 @@
-This package implements some voting methods.
+This package checks some voting methods.
+
+Single Transferable Vote is the most widely used. There are a number of
+variants.
+
+The Droop quota is generalization of the 50% + 1 vote majority, so
+ 1 + floor (votes cast)/(seats to fill + 1)
+
+The Wikipedia example is for candidate policies:
+    Oranges, Pears, Chocolate, Strawberries, and Sweets
+
+oranges, 4
+pear > oranges, 2
+chocolate > strawberries, 10
+chocolate > sweets, 4
+strawberries, 1
+sweets, 1
+
 

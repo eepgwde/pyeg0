@@ -1,7 +1,5 @@
 ## @author weaves
 ##
-## 
-
 
 class Pair0(object):
     v = None
@@ -32,7 +30,14 @@ class Prefer0(Pair0):
     def __init__(self, a, b):
         super(Prefer0, self).__init__(a, b)
 
+    def __repr__(self):
+        return ">" + str(self.v)
+
 class NoPrefer0(Pair0):
     def __init__(self, a, b):
         super(NoPrefer0, self).__init__(a, b)
+
+    def __repr__(self):
+
+        return "=" + str(self.v)
 

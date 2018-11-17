@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+* preference has an isKindOf
+* added a preferences class
+* -
+* -
+* -
+* voting methods
 * strong ordering
 * Added POSet
 * -

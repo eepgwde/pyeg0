@@ -41,12 +41,10 @@ class Test2(unittest.TestCase):
     def test_01(self):
         s0 = POSetOps.instance().strong("")
         logger.info("strong: " + str(s0))
-        return
 
     def test_03(self):
         s0 = POSetOps.instance().strong("ABCD")
         logger.info("strong: " + str(s0))
-        return
 
     def test_05(self):
         """
@@ -89,6 +87,23 @@ class Test2(unittest.TestCase):
 
         self.assertFalse(p1.isKindOf(np1))
         self.assertTrue(p1.isKindOf(p1))
+
+    def test_09(self):
+        """
+        Partitions
+        """
+        l0 = POSetOps.instance().partitions(set('ABC'))
+        l0 = list(l0)
+        logger.info("unordered: " + str(l0))
+
+    def test_11(self):
+        """
+        Partitions
+        """
+        l0 = POSetOps.instance().partitions(list('ABC'))
+        l0 = [ list(l) for l in list(l0) ]
+        l1 = [ len(l) for l in list(l0) ]
+        logger.info("ordered: {} {} {}".format(len(l0), l1, l0))
 
 #
 # The sys.argv line will complain to you if you run it with ipython
