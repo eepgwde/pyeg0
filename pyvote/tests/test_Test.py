@@ -9,6 +9,8 @@ from unidecode import unidecode
 from weaves import POSetOps
 from pyvote import VoteOps
 
+from pygraph.classes.digraph import digraph
+
 import unittest
 
 logging.basicConfig(filename='test.log', level=logging.DEBUG)
@@ -77,9 +79,15 @@ class Test(unittest.TestCase):
 
     def test_006(self):
         # self.test_002()
+        g0 = digraph()
+        # g0.size()
+        logger.info("digraph: {}".format(type(g0)))
+
         x1 = VoteOps.instance().make(None, graph0=True)
+
         logger.info("graphT0: {}".format(type(x1)))
-        
+        logger.info("graphT0: {}".format(x1.size()))
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

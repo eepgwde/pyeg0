@@ -30,10 +30,17 @@ class graphT0(digraph):
         """
         super(graphT0, self).__init__()
 
+    def faces(self, k=2):
+        return []
+
+    def size(self, fmt0=None):
+        """graph"""
+        return [ len(self.nodes()), len(self.edges()), len(self.faces(k=2)) ]
+
 
 class _Impl(object):
     """
-    Date methods
+    Graph and votes methods.
     """
     _logger = logging.getLogger('weaves')
 
@@ -53,10 +60,6 @@ class _Impl(object):
         For a list of symbols, generates all the strong orderings
         """
         return
-
-    def size(h0):
-        """graph"""
-        return [ len(h0.nodes()), len(h0.edges()), len(h0.faces(k=2)) ]
 
     def dispose(self):
         """
