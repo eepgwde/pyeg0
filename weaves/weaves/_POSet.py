@@ -83,7 +83,7 @@ class _Impl(object):
 
         if not l0:
             return []
-        return dict(zip(l0, range(len(l0))))
+        return dict(zip(range(len(l0)), l0))
 
     def adjacency(self, d0, ndiff=2, nX=1):
         """
@@ -95,20 +95,20 @@ class _Impl(object):
         if not isinstance(d0, dict):
             d0 = self.sym2basis(d0)
 
-        l0 = d0.values()
+        l0 = d0.keys()
         # Node addresses n!
         l1 = permutations(l0, len(l0))
         nodes = tuple(l1)
         l1 = map(np.array, nodes)
 
-        l2=list(combinations(l1, 2))
+        l2=tuple(combinations(l1, 2))
         m0 = int(ndiff * nX)
         l3 = map(lambda a: m0 == sum(abs(a[0] - a[1])), l2)
         l4 = [i for i, x in enumerate(tuple(l3)) if x]
         edges = [l2[i] for i in l4]
 
-        f0 = lambda x: ( np.ndarray.tolist(x[0]), np.ndarray.tolist(x[1]) )
-        edges1 = list(map(f0, edges))
+        f0 = lambda x: ( tuple(np.ndarray.tolist(x[0])), tuple(np.ndarray.tolist(x[1])) )
+        edges1 = tuple(map(f0, edges))
 
         return { 'm': d0, 'n': nodes, 'e': edges1 }
 
