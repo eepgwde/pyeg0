@@ -4,14 +4,11 @@
 #
 
 from weaves import POSetOps
-from weaves import __Id__ as weavesId
+from pyvote import VoteOps
+
 
 import sys, logging, os
 from unidecode import unidecode
-
-from datetime import datetime, timezone, timedelta, date
-
-from collections import Counter
 
 import unittest
 
@@ -40,14 +37,22 @@ class Test1(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_01(self):
-        self.assertIsNotNone(weavesId)
-        logger.info("module: Id: " + weavesId)
+        """
+        Basic object
+        """
+        x1 = VoteOps.instance().make(None, graph0=True)
+        self.assertIsNotNone(x1)
+        logger.info(type(x1))
         return
 
     def test_05(self):
         """
-        How to get a datetime that is an advance 
+        Build
         """
+        x1 = VoteOps.instance().build(syms="AB")
+        self.assertIsNotNone(x1)
+        logger.info(type(x1))
+        logger.info("{} {} {}".format(x1.size(), x1.nodes(), x1.edges()))
         return
 
 #
