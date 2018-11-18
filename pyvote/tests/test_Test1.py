@@ -48,8 +48,6 @@ class Test1(unittest.TestCase):
         """
         How to get a datetime that is an advance 
         """
-        s0 = POSetOps.instance().strong("ABCD")
-        logger.info(str(s0))
         return
 
 #

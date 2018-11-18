@@ -1,15 +1,35 @@
-## @file POSet.py
-# @brief Partially-ordered sets.
+## @file Vote.py
+# @brief Voting systems
 # @author weaves
 #
 # @details
-# This class provides some generators for partially-ordered sets.
+# This creates voting systems.
 #
 # @note
 # 
 
 import logging
-from itertools import permutations, combinations
+
+import scipy.special as scis
+from functools import partial
+from itertools import permutations, combinations, chain
+import string
+from pygraph.algorithms.accessibility import accessibility, mutual_accessibility
+from pygraph.classes.digraph import digraph
+
+# from py3votecore.plurality import PluralityAtLarge
+# from py3votecore.stv import STV, Quota
+# from py3votecore.schulze_by_graph import SchulzeMethodByGraph, SchulzeNPRByGraph
+
+import weaves
+
+class graphT0(digraph):
+    def __init__(self):
+        """
+        Initialize a digraph.
+        """
+        super(graphT0, self).__init__()
+
 
 class _Impl(object):
     """
@@ -23,14 +43,20 @@ class _Impl(object):
         self._tions = lambda xs, n: permutations(xs, n)
         pass
 
-    def strong(self, xs0):
+    def make(self, type0, graph0=None):
+        if not graph0 is None:
+            return graphT0()
+        return None
+
+    def weak(self, adjacency0=None):
         """
         For a list of symbols, generates all the strong orderings
         """
-        s00 = set()
-        for i in iter(range(len(xs0))):
-            s00 = s00.union(self._tions(xs0, i+1))
-        return s00
+        return
+
+    def size(h0):
+        """graph"""
+        return [ len(h0.nodes()), len(h0.edges()), len(h0.faces(k=2)) ]
 
     def dispose(self):
         """

@@ -10,7 +10,20 @@
 
 import logging
 from itertools import permutations, combinations
+from functools import partial
 import numpy as np
+
+def remap(xs, d1=None):
+    return ( d1[x] for x in xs )
+
+def join0(x, s=None):
+    if s is None:
+        return x
+    return s.join(x)
+
+def remapN(xs, remap0=remap):
+    for x in xs:
+        yield remap0(x)
 
 class _Impl(object):
     """
@@ -111,6 +124,29 @@ class _Impl(object):
         edges1 = tuple(map(f0, edges))
 
         return { 'm': d0, 'n': nodes, 'e': edges1 }
+
+    def remap(self, adjacency0=None, map0=None, nodes0=None,
+              edges0=None, sep0=">"):
+        if not adjacency0 is None:
+            map0=adjacency0['m']
+            nodes0=adjacency0['n']
+            edges0=adjacency0['e']
+
+        if map0 is None:
+            raise ValueError('map0 is required')
+
+        remap1 = partial(remap, d1=map0)
+        join1 = partial(join0, s=sep0)
+
+        nodes1 = nodes0
+        edges1 = edges0
+        if not nodes1 is None:
+            nodes1 = dict(iter([ (x, join1(remap1(x))) for x in nodes0 ]))
+            if not edges1 is None:
+                remap2 = partial(remap, d1=nodes1)
+                edges1 = ( tuple(x) for x in remapN(edges0, remap0=remap2) )
+
+        return { 'map': map0, 'nodes': nodes1, 'edges':edges1 }
 
     def dispose(self):
         """

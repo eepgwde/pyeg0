@@ -1,5 +1,7 @@
 ## weaves
-# Test make file for MInfo.py module testing.
+# Test make file for weaves module testing.
+
+# Now to be used with conda
 
 PYTHON ?= python
 PIP ?= pip
@@ -46,7 +48,7 @@ dist-local:
 	$(PYTHON) setup.py sdist
 
 install: 
-	$(PIP) install --user $(wildcard dist/*.tar.gz)
+	$(PIP) install $(wildcard dist/*.tar.gz)
 
 clean::
 	-$(SHELL) -c "find . -type d -name __pycache__ -exec rm -rf {} \;"

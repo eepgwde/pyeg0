@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* -
 * added adjacency generator
 * Added some graph work
 * preference has an isKindOf

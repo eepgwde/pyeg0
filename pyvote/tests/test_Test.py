@@ -6,6 +6,9 @@
 import sys, logging, os
 from unidecode import unidecode
 
+from weaves import POSetOps
+from pyvote import VoteOps
+
 import unittest
 
 logging.basicConfig(filename='test.log', level=logging.DEBUG)
@@ -44,8 +47,39 @@ class Test(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_000(self):
+        s0 = POSetOps.instance().strong("ABC")
+        logger.info(str(s0))
         return
 
+    ## Loaded?
+    ## Is utf-8 available as a filesystemencoding()
+    def test_000(self):
+        s0 = POSetOps.instance().strong("ABC")
+        logger.info(str(s0))
+        return
+
+    def test_002(self):
+        x0 = POSetOps.instance().adjacency('ABC')
+        logger.info("dict: {}".format(x0['m']))
+        nodes = tuple(x0['n'])
+        logger.info("nodes: {} {}".format(len(nodes), nodes))
+        edges = tuple(x0['e'])
+        logger.info("edges: {} {}".format(len(edges), edges))
+        self.x0 = x0
+
+    def test_004(self):
+        self.test_002()
+        x1 = POSetOps.instance().remap(adjacency0=self.x0)
+        nodes = tuple(x1['nodes'].values())
+        logger.info("nodes: {} {}".format(len(nodes), nodes))
+        edges = tuple(x1['edges'])
+        logger.info("edges: {} {}".format(len(edges), edges))
+
+    def test_006(self):
+        # self.test_002()
+        x1 = VoteOps.instance().make(None, graph0=True)
+        logger.info("graphT0: {}".format(type(x1)))
+        
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.

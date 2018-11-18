@@ -137,6 +137,23 @@ class Test2(unittest.TestCase):
         edges = tuple(x0['e'])
         logger.info("edges: {} {}".format(len(edges), edges))
 
+    def test_19(self):
+        """
+        Nodes and partitions
+        """
+        x0 = POSetOps.instance().adjacency('ABC')
+        logger.info("dict: {}".format(x0['m']))
+        nodes = tuple(x0['n'])
+        logger.info("nodes: {} {}".format(len(nodes), nodes))
+        edges = tuple(x0['e'])
+        logger.info("edges: {} {}".format(len(edges), edges))
+
+        x1 = POSetOps.instance().remap(adjacency0=x0)
+        nodes = tuple(x1['nodes'].values())
+        logger.info("nodes: {} {}".format(len(nodes), nodes))
+        edges = tuple(x1['edges'])
+        logger.info("edges: {} {}".format(len(edges), edges))
+
 
 #
 # The sys.argv line will complain to you if you run it with ipython

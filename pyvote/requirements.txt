@@ -5,3 +5,4 @@
 # This is problematic to compile, see if a binary distribution is available
 # functools>=0.5
 unidecode>=0.4
+python-graph-core>=1.8.2
