@@ -44,28 +44,33 @@ class attribute0(null):
         self.gr = gr
         self.target = node
         self.mask = mask
+        logger.info("attribute0: ctr: mask: {}".format(self.mask))
 
     def __call__(self, node, parent):
         """
         Decide if the given node should be included in the search process.
-        
+
         @type  node: node
         @param node: Given node.
-        
+
         @type  parent: node
         @param parent: Given node's parent in the spanning tree.
-        
+
         @rtype: boolean
-        @return: Whether the given node should be included in the search process. 
+
         """
-        if node == self.target:
-            return True
+        # if node == self.target:
+        #    return True
 
         a0 = VoteOps.instance().attribute0(self.gr, node)
         a1 = np.array(a0)
-        m0 = a0 * np.array(self.mask)
-        logger.info("attribute0: call: {}".format(a0))
-        return (m0 == a1).all()
+        m1 = np.array(self.mask)
+        m2 = m1 * a1
+        r0 = all(m2 == m1)
+        logger.info("attribute0: call: node, parent: {} {}".format(node, parent))
+        logger.info("attribute0: call: attributes: {} {} {}".format(a1, m1, m2))
+        logger.info("attribute0: call: r0: {}".format(r0))
+        return r0
 
 ##
 
@@ -205,8 +210,22 @@ class Test1(unittest.TestCase):
         mask = VoteOps.instance().mask(gr, root0)
         logger.info("mask: {}".format(mask))
         mask[0][0] = mask[1][0]
+        logger.info("mask: {}".format(mask)[0])
+        a0 = attribute0(gr, root0, mask[0])
+        st, lo = breadth_first_search(gr, root=root0, filter=a0)
+        logger.info("st: {}".format(st))
+        logger.info("lo: {}".format(lo))
+
+    def test_17(self):
+        gr = VoteOps.instance().build(syms="ABC", remap0=True)
+        self.assertIsNotNone(gr)
+        root0 = next(iter(gr))
+        logger.info("root0: {}".format(root0))
+        mask = VoteOps.instance().mask(gr, root0)
         logger.info("mask: {}".format(mask))
-        a0 = attribute0(gr, root0, mask)
+        mask[0][0] = mask[1][0]
+        logger.info("mask: {}".format(mask[0]))
+        a0 = attribute0(gr, root0, mask[0])
         st, lo = breadth_first_search(gr, root=root0, filter=a0)
         logger.info("st: {}".format(st))
         logger.info("lo: {}".format(lo))
