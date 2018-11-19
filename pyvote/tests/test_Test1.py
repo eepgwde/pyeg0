@@ -217,7 +217,7 @@ class Test1(unittest.TestCase):
         logger.info("lo: {}".format(lo))
 
     def test_17(self):
-        gr = VoteOps.instance().build(syms="ABC", remap0=True)
+        gr = VoteOps.instance().build(syms="ABCD", remap0=True)
         self.assertIsNotNone(gr)
         root0 = next(iter(gr))
         logger.info("root0: {}".format(root0))
