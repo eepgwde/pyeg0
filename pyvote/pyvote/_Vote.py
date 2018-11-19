@@ -17,6 +17,8 @@ import string
 from pygraph.algorithms.accessibility import accessibility, mutual_accessibility
 from pygraph.classes.digraph import digraph
 
+from math import sqrt
+
 # from py3votecore.plurality import PluralityAtLarge
 # from py3votecore.stv import STV, Quota
 # from py3votecore.schulze_by_graph import SchulzeMethodByGraph, SchulzeNPRByGraph
@@ -59,7 +61,7 @@ class _Impl(object):
             return graphT0()
         return None
 
-    def build(self, syms='ABC', remap0=False):
+    def build(self, syms='ABC', remap0=False, len0=sqrt(2)):
         x00 = POSetOps.instance().adjacency('ABC')
         graph0 = self.make(graphT0, graph0=True)
 
@@ -68,8 +70,8 @@ class _Impl(object):
             edges=x00['e']
             graph0.add_nodes(candidates)
             for pair in edges:
-                graph0.add_edge(pair, 1)
-                graph0.add_edge(reversed(pair), 1)
+                graph0.add_edge(pair, len0)
+                graph0.add_edge(reversed(pair), len0)
             return graph0
 
         x0 = POSetOps.instance().remap(x00)
@@ -88,14 +90,14 @@ class _Impl(object):
         # Add forward and backward path
         # graph0.add_edge_attribute(pair, ('struct', attr))
         for edge, q0 in edges:
-            graph0.add_edge(edge, 1)
+            graph0.add_edge(edge, len0)
             graph0.add_edge_attribute(edge, ('struct', q0))
 
             logger.info("edge: {}; attr: {}".format(edge, q0))
             edge = tuple(reversed(edge))
             q0 = tuple(reversed(q0))
             logger.info("edge: {}; attr: {}".format(edge, q0))
-            graph0.add_edge(edge, 1)
+            graph0.add_edge(edge, len0)
             graph0.add_edge_attribute(edge, ('struct', q0))
 
         return graph0

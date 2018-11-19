@@ -7,8 +7,13 @@
 from weaves import POSetOps
 from pyvote import VoteOps
 
+from pygraph.algorithms.searching import depth_first_search, breadth_first_search
+from pygraph.classes.graph import graph
 
-import sys, logging, os
+from pygraph.algorithms.filters.radius import radius
+from pygraph.algorithms.filters.find import find
+
+import sys, logging, os, math
 from unidecode import unidecode
 
 import unittest
@@ -95,6 +100,28 @@ class Test1(unittest.TestCase):
             l0 = g1.edge_attributes(n)
             logger.info("edge: {} ; attributes: {}".format(n, l0))
 
+    def test_11(self):
+        """
+        Check edge attributes
+        """
+        g1 = VoteOps.instance().build(syms="AB", remap0=True)
+        self.assertIsNotNone(g1)
+
+    def test_bfs_in_empty_graph(self):
+        gr = graph()
+        st, lo = breadth_first_search(gr, filter=find(5))
+        assert st == {}
+        assert lo == []
+
+    def test_bfs_in_digraph(self):
+        gr = VoteOps.instance().build(syms="AB", remap0=True)
+        self.assertIsNotNone(gr)
+        root0 = next(iter(gr))
+        logger.info("root0: {}".format(root0))
+
+        st, lo = breadth_first_search(gr, root=root0, filter=radius(math.sqrt(2)))
+        logger.info("types: st {}; lo: {}".format(type(st), type(lo)))
+        logger.info("types: st {}; lo: {}".format(st, lo))
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
