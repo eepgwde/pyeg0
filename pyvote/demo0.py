@@ -88,6 +88,7 @@ def graph_winner(self):
 # In[18]:
 
 from pygraph.algorithms.accessibility import accessibility, mutual_accessibility
+from pygraph.algorithms.traversal import traversal
 from pygraph.classes.digraph import digraph
 
 def build(candidates, edges=None):
@@ -118,16 +119,19 @@ d2 = POSetOps.instance().remap(d1)
 
 g1 = build(d2['nodes'].values(), edges=d2['edges'])
 
-g1 = VoteOps.instance().build(syms='ABC', remap0=True)
+d2
 
 # get neighbours
 
-for n in g1.nodes():
-    print("node: {} ; neighbours: {}".format(n, [x for x in g1[n]])
+g1 = VoteOps.instance().build(syms='ABC', remap0=True)
 
 n0 = g1.nodes()[0]
 print([ x for x in g1[n0] ])
 
+for n in g1.nodes():
+    print("node: {} ; neighbours: {}".format(n, [x for x in g1[n]]))
+
+print(list(traversal(g1, g1.nodes()[0], 'pre')))
 
 # In[18]:
 

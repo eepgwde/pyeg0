@@ -23,6 +23,11 @@ from pygraph.classes.digraph import digraph
 
 from weaves import POSetOps
 
+# logging.basicConfig(filename='Vote.log', level=logging.DEBUG)
+logger = logging.getLogger('Vote')
+# sh = logging.StreamHandler()
+# logger.addHandler(sh)
+
 class graphT0(digraph):
     def __init__(self):
         """
@@ -55,27 +60,43 @@ class _Impl(object):
         return None
 
     def build(self, syms='ABC', remap0=False):
-        graph0 = None
         x00 = POSetOps.instance().adjacency('ABC')
+        graph0 = self.make(graphT0, graph0=True)
 
-        if remap0:
-            x0 = POSetOps.instance().remap(x00)
-            candidates = x0['nodes'].values()
-            edges=x0['edges']
-        else:
+        if not remap0:
             candidates = x00['n']
             edges=x00['e']
+            graph0.add_nodes(candidates)
+            for pair in edges:
+                graph0.add_edge(pair, 1)
+                graph0.add_edge(reversed(pair), 1)
+            return graph0
+
+        x0 = POSetOps.instance().remap(x00)
+        candidates = x0['nodes'].values()
+        edges=zip(x0['edges'], x00['e'])
 
         graph0 = self.make(graphT0, graph0=True)
         graph0.add_nodes(candidates)
+        d0 = dict(zip(x0['nodes'].values(), zip(x0['nodes'].keys())))
+        for node in d0.keys():
+            graph0.add_node_attribute(node, ('struct', d0[node]))
 
         if edges is None:
             return graph0
 
         # Add forward and backward path
-        for pair in edges:
-            graph0.add_edge(pair, 1)
-            graph0.add_edge(reversed(pair), -1)
+        # graph0.add_edge_attribute(pair, ('struct', attr))
+        for edge, q0 in edges:
+            graph0.add_edge(edge, 1)
+            graph0.add_edge_attribute(edge, ('struct', q0))
+
+            logger.info("edge: {}; attr: {}".format(edge, q0))
+            edge = tuple(reversed(edge))
+            q0 = tuple(reversed(q0))
+            logger.info("edge: {}; attr: {}".format(edge, q0))
+            graph0.add_edge(edge, 1)
+            graph0.add_edge_attribute(edge, ('struct', q0))
 
         return graph0
 

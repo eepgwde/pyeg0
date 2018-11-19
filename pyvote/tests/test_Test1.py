@@ -58,7 +58,7 @@ class Test1(unittest.TestCase):
 
     def test_07(self):
         """
-        Build
+        Build graph
         """
         g1 = VoteOps.instance().build(syms="AB", remap0=True)
         self.assertIsNotNone(g1)
@@ -68,6 +68,32 @@ class Test1(unittest.TestCase):
         for n in g1.nodes():
             l0 = [x for x in g1[n]]
             logger.info("node: {} ; neighbours: {}".format(n, l0))
+
+    def test_09(self):
+        """
+        Check node attributes
+        """
+        g1 = VoteOps.instance().build(syms="AB", remap0=True)
+        self.assertIsNotNone(g1)
+        logger.info(type(g1))
+        logger.info("{};  {}; {}".format(g1.size(), g1.nodes(), g1.edges()))
+
+        for n in g1.nodes():
+            l0 = g1.node_attributes(n)
+            logger.info("node: {} ; attributes: {}".format(n, l0))
+
+    def test_11(self):
+        """
+        Check edge attributes
+        """
+        g1 = VoteOps.instance().build(syms="AB", remap0=True)
+        self.assertIsNotNone(g1)
+        logger.info(type(g1))
+        logger.info("{};  {}; {}".format(g1.size(), g1.nodes(), g1.edges()))
+
+        for n in g1.edges():
+            l0 = g1.edge_attributes(n)
+            logger.info("edge: {} ; attributes: {}".format(n, l0))
 
 #
 # The sys.argv line will complain to you if you run it with ipython
