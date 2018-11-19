@@ -62,7 +62,7 @@ class _Impl(object):
         return None
 
     def build(self, syms='ABC', remap0=False, len0=sqrt(2)):
-        x00 = POSetOps.instance().adjacency('ABC')
+        x00 = POSetOps.instance().adjacency(syms)
         graph0 = self.make(graphT0, graph0=True)
 
         if not remap0:

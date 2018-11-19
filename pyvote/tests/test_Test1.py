@@ -13,6 +13,8 @@ from pygraph.classes.graph import graph
 from pygraph.algorithms.filters.radius import radius
 from pygraph.algorithms.filters.find import find
 
+from pygraph.readwrite import dot
+
 import sys, logging, os, math
 from unidecode import unidecode
 
@@ -30,9 +32,17 @@ class Test1(unittest.TestCase):
     Test
     """
 
+    ctr0 = 0
+    ctr1 = 0
+
+    def fname(self, stem0="g", ext0="dot"):
+        return "{}{:02d}.{}".format(stem0, self.ctr1, ext0)
+
     ## Null setup. Create a new one.
     def setUp(self):
         logger.info('setup')
+        Test1.ctr0+=1
+        self.ctr1 = Test1.ctr0
         return
 
     ## Null setup.
@@ -102,10 +112,22 @@ class Test1(unittest.TestCase):
 
     def test_11(self):
         """
-        Check edge attributes
+        Check dot
         """
-        g1 = VoteOps.instance().build(syms="AB", remap0=True)
-        self.assertIsNotNone(g1)
+        gr = VoteOps.instance().build(syms="AB", remap0=True)
+        descr = dot.write(gr, weighted=False)
+        logger.info("filename: {}".format(self.fname()))
+        with open(self.fname(), "w") as file0:
+            print(f"{descr}", file=file0)
+
+    def test_13(self):
+        """
+        Check dot
+        """
+        gr = VoteOps.instance().build(syms="ABC", remap0=True)
+        descr = dot.write(gr, weighted=False)
+        with open(self.fname(), "w") as file0:
+            print(f"{descr}", file=file0)
 
     def test_bfs_in_empty_graph(self):
         gr = graph()
@@ -119,10 +141,12 @@ class Test1(unittest.TestCase):
         root0 = next(iter(gr))
         logger.info("root0: {}".format(root0))
 
+        # from a given root
         st, lo = breadth_first_search(gr, root=root0, filter=radius(math.sqrt(2)))
         logger.info("types: st {}; lo: {}".format(type(st), type(lo)))
         logger.info("types: st {}; lo: {}".format(st, lo))
 
+        # no root, until whole tree is spanned?
         st, lo = breadth_first_search(gr, filter=radius(math.sqrt(2)))
         logger.info("types: st {}; lo: {}".format(type(st), type(lo)))
         logger.info("types: st {}; lo: {}".format(st, lo))
