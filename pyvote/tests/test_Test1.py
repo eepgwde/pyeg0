@@ -122,6 +122,11 @@ class Test1(unittest.TestCase):
         st, lo = breadth_first_search(gr, root=root0, filter=radius(math.sqrt(2)))
         logger.info("types: st {}; lo: {}".format(type(st), type(lo)))
         logger.info("types: st {}; lo: {}".format(st, lo))
+
+        st, lo = breadth_first_search(gr, filter=radius(math.sqrt(2)))
+        logger.info("types: st {}; lo: {}".format(type(st), type(lo)))
+        logger.info("types: st {}; lo: {}".format(st, lo))
+
 #
 # The sys.argv line will complain to you if you run it with ipython
 # emacs. The ipython arguments are passed to unittest.main.
