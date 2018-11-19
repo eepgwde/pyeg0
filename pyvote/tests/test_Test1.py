@@ -21,6 +21,8 @@ from unidecode import unidecode
 
 import unittest
 
+import numpy as np
+
 logging.basicConfig(filename='test.log', level=logging.DEBUG)
 logger = logging.getLogger('Test')
 sh = logging.StreamHandler()
@@ -33,22 +35,15 @@ class attribute0(null):
     Search for an attribute in a position.
     """
 
-    basis = None
+    mask = None
     target = None
-
-    @classmethod
-    def mask(cls, gr, node):
-        a0 = gr.node_attributes(node)
-        s0 = next(filter(lambda x: x[0] == 'struct', a0))
-        basis = s0[1]
-        return [ 0 for x in basis]
+    gr = None
 
     def __init__(self, gr, node, mask):
         super(attribute0, self).__init__()
+        self.gr = gr
         self.target = node
-        a0 = gr.node_attributes(node)
-        s0 = next(filter(lambda x: x[0] == 'struct', a0))
-        self.basis = s0[1]
+        self.mask = mask
 
     def __call__(self, node, parent):
         """
@@ -63,7 +58,14 @@ class attribute0(null):
         @rtype: boolean
         @return: Whether the given node should be included in the search process. 
         """
-        return True
+        if node == self.target:
+            return True
+
+        a0 = VoteOps.instance().attribute0(self.gr, node)
+        a1 = np.array(a0)
+        m0 = a0 * np.array(self.mask)
+        logger.info("attribute0: call: {}".format(a0))
+        return (m0 == a1).all()
 
 ##
 
@@ -171,7 +173,7 @@ class Test1(unittest.TestCase):
 
         node = next(iter(gr))
         mask = VoteOps.instance().mask(gr, node)
-        logger.info("node: {} {}".format(node, mask))
+        logger.info("node: {}".format(mask))
 
     def test_bfs_in_empty_graph(self):
         gr = graph()
@@ -194,6 +196,21 @@ class Test1(unittest.TestCase):
         st, lo = breadth_first_search(gr, filter=radius(math.sqrt(2)))
         logger.info("types: st {}; lo: {}".format(type(st), type(lo)))
         logger.info("types: st {}; lo: {}".format(st, lo))
+
+    def test_15(self):
+        gr = VoteOps.instance().build(syms="AB", remap0=True)
+        self.assertIsNotNone(gr)
+        root0 = next(iter(gr))
+        logger.info("root0: {}".format(root0))
+        mask = VoteOps.instance().mask(gr, root0)
+        logger.info("mask: {}".format(mask))
+        mask[0][0] = mask[1][0]
+        logger.info("mask: {}".format(mask))
+        a0 = attribute0(gr, root0, mask)
+        st, lo = breadth_first_search(gr, root=root0, filter=a0)
+        logger.info("st: {}".format(st))
+        logger.info("lo: {}".format(lo))
+
 
 #
 # The sys.argv line will complain to you if you run it with ipython

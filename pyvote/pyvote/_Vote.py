@@ -61,11 +61,14 @@ class _Impl(object):
             return graphT0()
         return None
 
-    def mask(self, gr, node):
+    def attribute0(self, gr, node, tag0='struct'):
         a0 = gr.node_attributes(node)
-        s0 = next(filter(lambda x: x[0] == 'struct', a0))
-        basis = s0[1][0]
-        return [ 0 for x in basis]
+        s0 = next(filter(lambda x: x[0] == tag0, a0))
+        return (s0[1])[0]
+
+    def mask(self, gr, node):
+        a0 = self.attribute0(gr, node)
+        return [ [ 0 for x in a0 ], a0 ]
 
     def build(self, syms='ABC', remap0=False, len0=sqrt(2)):
         x00 = POSetOps.instance().adjacency(syms)
