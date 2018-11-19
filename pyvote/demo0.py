@@ -128,6 +128,8 @@ g1 = VoteOps.instance().build(syms='ABC', remap0=True)
 n0 = g1.nodes()[0]
 print([ x for x in g1[n0] ])
 
+
+
 for n in g1.nodes():
     print("node: {} ; neighbours: {}".format(n, [x for x in g1[n]]))
 
@@ -154,4 +156,23 @@ judge0.graph.nodes()
 judge0.graph.edges()
 
 # In[ ]:
+
+from math import sin, cos, pi
+
+# How to use a generic function object.
+# Like Scala, you have o send it to the interpreter in two phases.
+
+class Calc0(object):
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, x):
+        return self.f(x)
+
+f0 = lambda x: rand()
+
+calc = Calc0(f0)
+
+calc(1)
+
 

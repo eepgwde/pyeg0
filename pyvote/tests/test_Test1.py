@@ -12,6 +12,7 @@ from pygraph.classes.graph import graph
 
 from pygraph.algorithms.filters.radius import radius
 from pygraph.algorithms.filters.find import find
+from pygraph.algorithms.filters.null import null
 
 from pygraph.readwrite import dot
 
@@ -25,8 +26,47 @@ logger = logging.getLogger('Test')
 sh = logging.StreamHandler()
 logger.addHandler(sh)
 
-## A test driver for voting
-#
+##
+
+class attribute0(null):
+    """
+    Search for an attribute in a position.
+    """
+
+    basis = None
+    target = None
+
+    @classmethod
+    def mask(cls, gr, node):
+        a0 = gr.node_attributes(node)
+        s0 = next(filter(lambda x: x[0] == 'struct', a0))
+        basis = s0[1]
+        return [ 0 for x in basis]
+
+    def __init__(self, gr, node, mask):
+        super(attribute0, self).__init__()
+        self.target = node
+        a0 = gr.node_attributes(node)
+        s0 = next(filter(lambda x: x[0] == 'struct', a0))
+        self.basis = s0[1]
+
+    def __call__(self, node, parent):
+        """
+        Decide if the given node should be included in the search process.
+        
+        @type  node: node
+        @param node: Given node.
+        
+        @type  parent: node
+        @param parent: Given node's parent in the spanning tree.
+        
+        @rtype: boolean
+        @return: Whether the given node should be included in the search process. 
+        """
+        return True
+
+##
+
 class Test1(unittest.TestCase):
     """
     Test
@@ -128,6 +168,10 @@ class Test1(unittest.TestCase):
         descr = dot.write(gr, weighted=False)
         with open(self.fname(), "w") as file0:
             print(f"{descr}", file=file0)
+
+        node = next(iter(gr))
+        mask = VoteOps.instance().mask(gr, node)
+        logger.info("node: {} {}".format(node, mask))
 
     def test_bfs_in_empty_graph(self):
         gr = graph()

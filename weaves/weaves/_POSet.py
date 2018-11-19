@@ -88,6 +88,12 @@ class _Impl(object):
         return
 
     def sym2basis(self, l0):
+        """
+        Convert a string of letters to a set of integers.
+
+        @note
+        0 is used for a special function so we don't map to that.
+        """
         if isinstance(l0, str):
             l0 = tuple(l0)
 
@@ -96,7 +102,7 @@ class _Impl(object):
 
         if not l0:
             return []
-        return dict(zip(range(len(l0)), l0))
+        return dict(zip(range(1, len(l0)+1), l0))
 
     def adjacency(self, d0, ndiff=2, nX=1):
         """
