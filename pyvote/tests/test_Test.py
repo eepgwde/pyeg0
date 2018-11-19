@@ -2,6 +2,8 @@
 # @author weaves
 # @brief Unittest of pyvote
 #
+# This checks the linkage with POSetOps
+# Use of the graphT0 
 
 import sys, logging, os
 from unidecode import unidecode

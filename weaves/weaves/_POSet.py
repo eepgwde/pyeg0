@@ -146,7 +146,11 @@ class _Impl(object):
                 remap2 = partial(remap, d1=nodes1)
                 edges1 = ( tuple(x) for x in remapN(edges0, remap0=remap2) )
 
-        return { 'map': map0, 'nodes': nodes1, 'edges':edges1 }
+        if adjacency0 is None:
+            adjacency0 = { 'm': map0, 'n': nodes0, 'e': edges0 }
+        d0 = { 'map': map0, 'nodes': nodes1, 'edges':edges1 }
+        adjacency0.update(d0)
+        return adjacency0
 
     def dispose(self):
         """

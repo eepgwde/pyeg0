@@ -2,6 +2,7 @@
 # @author weaves
 # @brief Unittest of voting.
 #
+# This checks
 
 from weaves import POSetOps
 from pyvote import VoteOps
@@ -52,8 +53,21 @@ class Test1(unittest.TestCase):
         x1 = VoteOps.instance().build(syms="AB")
         self.assertIsNotNone(x1)
         logger.info(type(x1))
-        logger.info("{} {} {}".format(x1.size(), x1.nodes(), x1.edges()))
+        logger.info("{};  {}; {}".format(x1.size(), x1.nodes(), x1.edges()))
         return
+
+    def test_07(self):
+        """
+        Build
+        """
+        g1 = VoteOps.instance().build(syms="AB", remap0=True)
+        self.assertIsNotNone(g1)
+        logger.info(type(g1))
+        logger.info("{};  {}; {}".format(g1.size(), g1.nodes(), g1.edges()))
+
+        for n in g1.nodes():
+            l0 = [x for x in g1[n]]
+            logger.info("node: {} ; neighbours: {}".format(n, l0))
 
 #
 # The sys.argv line will complain to you if you run it with ipython

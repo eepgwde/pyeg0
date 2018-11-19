@@ -142,6 +142,7 @@ class Test2(unittest.TestCase):
         Nodes and partitions
         """
         x0 = POSetOps.instance().adjacency('ABC')
+        self.assertIsNotNone(x0)
         logger.info("dict: {}".format(x0['m']))
         nodes = tuple(x0['n'])
         logger.info("nodes: {} {}".format(len(nodes), nodes))
@@ -149,11 +150,13 @@ class Test2(unittest.TestCase):
         logger.info("edges: {} {}".format(len(edges), edges))
 
         x1 = POSetOps.instance().remap(adjacency0=x0)
+        self.assertIsNotNone(x1)
+        logger.info("keys: {}".format(x1.keys()))
+
         nodes = tuple(x1['nodes'].values())
         logger.info("nodes: {} {}".format(len(nodes), nodes))
         edges = tuple(x1['edges'])
         logger.info("edges: {} {}".format(len(edges), edges))
-
 
 #
 # The sys.argv line will complain to you if you run it with ipython

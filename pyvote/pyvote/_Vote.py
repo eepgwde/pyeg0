@@ -37,7 +37,6 @@ class graphT0(digraph):
         """graph"""
         return [ len(self.nodes()), len(self.edges()), len(self.faces(k=2)) ]
 
-
 class _Impl(object):
     """
     Graph and votes methods.
@@ -58,10 +57,14 @@ class _Impl(object):
     def build(self, syms='ABC', remap0=False):
         graph0 = None
         x00 = POSetOps.instance().adjacency('ABC')
-        x0 = POSetOps.instance().remap(x00)
 
-        candidates = x0['nodes'].values()
-        edges=x0['edges']
+        if remap0:
+            x0 = POSetOps.instance().remap(x00)
+            candidates = x0['nodes'].values()
+            edges=x0['edges']
+        else:
+            candidates = x00['n']
+            edges=x00['e']
 
         graph0 = self.make(graphT0, graph0=True)
         graph0.add_nodes(candidates)
@@ -69,8 +72,10 @@ class _Impl(object):
         if edges is None:
             return graph0
 
+        # Add forward and backward path
         for pair in edges:
             graph0.add_edge(pair, 1)
+            graph0.add_edge(reversed(pair), -1)
 
         return graph0
 
