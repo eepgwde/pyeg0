@@ -70,6 +70,17 @@ class _Impl(object):
         a0 = self.attribute0(gr, node)
         return [ [ 0 for x in a0 ], a0 ]
 
+    def masks(self, mask):
+        N = len(mask)
+
+        def do():
+            for i in range(N):
+                m1 = mask.copy()
+                m1[i] = 1
+                yield m1
+
+        return do()
+
     def build(self, syms='ABC', remap0=False, len0=sqrt(2)):
         x00 = POSetOps.instance().adjacency(syms)
         graph0 = self.make(graphT0, graph0=True)

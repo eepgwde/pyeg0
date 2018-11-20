@@ -104,6 +104,28 @@ class _Impl(object):
             return []
         return dict(zip(range(1, len(l0)+1), l0))
 
+    def counts(self, adjacency0):
+        return dict(iter(( (k, len(v)) for k, v in adjacency0.items() )))
+
+    def nodes(self, d0):
+        l0 = d0.keys()
+        # Node addresses n!
+        l1 = permutations(l0, len(l0))
+        return tuple(l1)
+
+    def faces(self, nodes, ndiff=2, nX=1):
+        l1 = map(np.array, nodes)
+
+        l2 = tuple(combinations(l1, 2))
+
+        m0 = int(ndiff * nX)
+        l3 = map(lambda a: m0 == sum(abs(a[0] - a[1])), l2)
+        l4 = [i for i, x in enumerate(tuple(l3)) if x]
+        edges = [l2[i] for i in l4]
+
+        f0 = lambda x: ( tuple(np.ndarray.tolist(x[0])), tuple(np.ndarray.tolist(x[1])) )
+        return tuple(map(f0, edges))
+
     def adjacency(self, d0, ndiff=2, nX=1):
         """
         Graph vertices

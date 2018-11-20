@@ -203,6 +203,11 @@ class Test1(unittest.TestCase):
         logger.info("types: st {}; lo: {}".format(st, lo))
 
     def test_15(self):
+        """
+        This finds a face.
+
+        All the vertices that have a 1 in the first position.
+        """
         gr = VoteOps.instance().build(syms="AB", remap0=True)
         self.assertIsNotNone(gr)
         root0 = next(iter(gr))
@@ -217,19 +222,20 @@ class Test1(unittest.TestCase):
         logger.info("lo: {}".format(lo))
 
     def test_17(self):
-        gr = VoteOps.instance().build(syms="ABCD", remap0=True)
+        v0 = VoteOps.instance()
+        gr = v0.build(syms="ABCD", remap0=True)
         self.assertIsNotNone(gr)
         root0 = next(iter(gr))
         logger.info("root0: {}".format(root0))
         mask = VoteOps.instance().mask(gr, root0)
         logger.info("mask: {}".format(mask))
-        mask[0][0] = mask[1][0]
-        logger.info("mask: {}".format(mask[0]))
-        a0 = attribute0(gr, root0, mask[0])
-        st, lo = breadth_first_search(gr, root=root0, filter=a0)
-        logger.info("st: {}".format(st))
-        logger.info("lo: {}".format(lo))
-
+        mask0 = mask.copy()
+        for mask in v0.masks(mask0):
+            logger.info("mask: {}".format(mask[0]))
+            a0 = attribute0(gr, root0, mask)
+            st, lo = breadth_first_search(gr, root=root0, filter=a0)
+            logger.info("st: {} {}".format(len(st), st))
+            logger.info("lo: {} {}".format(len(lo), lo))
 
 #
 # The sys.argv line will complain to you if you run it with ipython

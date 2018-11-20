@@ -11,7 +11,10 @@
 from weaves import POSetOps
 from weaves.preferences import Pair0, Prefer0, NoPrefer0
 
-import sys, logging, os
+import sys
+import logging
+import os
+import string
 
 import unittest
 
@@ -157,6 +160,34 @@ class Test2(unittest.TestCase):
         logger.info("nodes: {} {}".format(len(nodes), nodes))
         edges = tuple(x1['edges'])
         logger.info("edges: {} {}".format(len(edges), edges))
+
+    def test_21(self):
+        """
+        Nodes and partitions
+        """
+        p0 = POSetOps.instance()
+        x0 = p0.adjacency('ABC')
+        self.assertIsNotNone(x0)
+        logger.info("counts: {}".format(p0.counts(x0)))
+        s0 = [ string.ascii_letters[0:n] for n in range(1,6) ]
+        for s in s0:
+            logger.info(p0.counts(p0.adjacency(s)))
+
+    def test_23(self):
+        """
+        Nodes and partitions
+        """
+        p0 = POSetOps.instance()
+        n = 4
+        s0 = string.ascii_letters[0:n]
+        a0 = p0.sym2basis(s0)
+        logger.info(a0)
+        nodes = p0.nodes(a0)
+        logger.info(nodes)
+        faces = p0.faces(nodes, ndiff=2, nX=1)
+        logger.info(faces)
+        logger.info("n: {}; nodes: {}; faces: {}".format(n, len(nodes), len(faces)))
+        logger.info("n: {}; #faces: {}".format(n, 2 - (len(nodes) - len(faces))))
 
 #
 # The sys.argv line will complain to you if you run it with ipython
