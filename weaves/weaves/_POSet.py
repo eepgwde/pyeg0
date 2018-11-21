@@ -11,6 +11,9 @@
 import logging
 from itertools import permutations, combinations
 from functools import partial
+from math import factorial
+import scipy.special as scis
+
 import numpy as np
 
 def remap(xs, d1=None):
@@ -25,9 +28,26 @@ def remapN(xs, remap0=remap):
     for x in xs:
         yield remap0(x)
 
+def sterm(n, k, j):
+    return int((-1)**(k-j)*scis.binom(k,j)*j**n)
+
+def stirlings2__(n, k):
+    for j in range(k+1):
+        yield sterm(n, k, j)
+
+def stirling2_(n):
+    """
+    The sequence of Stirling Number of Second Kind.
+
+    Number terms up to n.
+    """
+    for k in range(n+1):
+        for j in range(k+1):
+            yield sterm(n, k, j)
+
 class _Impl(object):
     """
-    Date methods
+    Miscellaneous set and preference order theoretic.
     """
     _logger = logging.getLogger('weaves')
 
@@ -36,6 +56,41 @@ class _Impl(object):
     def __init__(self, **kwargs):
         self._tions = lambda xs, n: permutations(xs, n)
         pass
+
+    def unordered_Bell(self, n):
+        """
+        Number of sub-sets of size k from all the subsets of n elements. 
+        """
+
+        def ob(n0):
+            if n0<=1:
+                return 1
+
+            return sum([ ob(k) * scis.comb(n0-1, k) for k in range(n0)])
+
+        return ob(n)
+
+    def ordered_Bell(self, n):
+        """
+        The ordered Bell number for a set of size n.
+
+        @note
+        List-based evaluation.
+        """
+        return sum(stirling2_(n))
+
+    def _ordered_Bell(self, n):
+        """
+        The ordered Bell number for a set of size n.
+
+        @note
+        List-based evaluation.
+        """
+        if n<=1:
+            return 1
+        l0 =[ scis.binom(n, k-1)* self._ordered_Bell(k-1) for k in range(n+1) ]
+
+        return int(sum(l0))
 
     def strong(self, xs0):
         """
