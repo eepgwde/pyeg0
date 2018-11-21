@@ -77,18 +77,12 @@ class Test1(unittest.TestCase):
         Check the Stirling second kind for partitions.
         """
         p0 = POSetOps.instance()
-        logger.info("bell: {}".format(p0.unordered_Bell(3)))
-
-        f0 = lambda n: (n, len(n),
-                        p0.unordered_Bell(len(n)),
-                        p0.partitions(set(n)) )
-        x = f0(next(self.ss))
-        logger.info("x: {}".format(x))
+        logger.info("unordered Bell: {}".format(p0.unordered_Bell(3)))
 
         for s in self.ss:
             n0 = p0.unordered_Bell(len(s))
             n1 = len(tuple(p0.partitions(set(s))))
-            # self.assertEqual(n0, n1)
+            self.assertEqual(n0, n1)
             logger.info("partitions: {}: {} == {}".format(len(s), n0, n1))
 
     def test_13(self):
@@ -98,13 +92,7 @@ class Test1(unittest.TestCase):
         Check the ordered bell count for weak orderings.
         """
         p0 = POSetOps.instance()
-        logger.info("bell: {}".format(p0.ordered_Bell(3)))
-
-        f0 = lambda n: (n, len(n),
-                        p0.ordered_Bell(len(n)),
-                        len(tuple(p0.weak_orderings(syms=n))) )
-        x = f0(next(self.ss))
-        logger.info("x: {}".format(x))
+        logger.info("ordered Bell: {}".format(p0.ordered_Bell(3)))
 
         for s in self.ss:
             n0 = p0.ordered_Bell(len(s))

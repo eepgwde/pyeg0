@@ -31,10 +31,6 @@ def remapN(xs, remap0=remap):
 def sterm(n, k, j):
     return int((-1)**(k-j)*scis.binom(k,j)*j**n)
 
-def stirlings2__(n, k):
-    for j in range(k+1):
-        yield sterm(n, k, j)
-
 def stirling2_(n):
     """
     The sequence of Stirling Number of Second Kind.
@@ -68,7 +64,7 @@ class _Impl(object):
 
             return sum([ ob(k) * scis.comb(n0-1, k) for k in range(n0)])
 
-        return ob(n)
+        return int(ob(n))
 
     def ordered_Bell(self, n):
         """
