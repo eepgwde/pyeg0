@@ -82,7 +82,39 @@ class _Impl(object):
             return partitions_(set_)
 
         sss = permutations(set_, len(set_))
-        return [ s for s in [ partitions_(ss) for ss in sss ] ]
+        return [ s for s in [ list(partitions_(ss)) for ss in sss ] ]
+
+    def as_set(self, syms='ABC'):
+        s0 = syms
+        if isinstance(syms, str):
+            s0 = list(syms)
+        s0 = s0.copy()
+        if not isinstance(s0, set):
+            s0 = set(syms)
+
+        return s0
+
+    def weak_orderings1(self, syms='ABC'):
+        """
+        Return weak orderings of set structured by set partition.
+
+        Each tuple is a pair with its original set and ordered tuples.
+        """
+        s0 = self.as_set(syms=syms)
+        for x in self.partitions(s0):
+            yield [x, tuple(permutations(x))]
+
+    def weak_orderings(self, syms='ABC'):
+        """
+        Return weak orderings.
+
+        Each tuple is a preference.
+        """
+        s0 = self.as_set(syms=syms)
+
+        for x in self.partitions(s0):
+            for y in permutations(x):
+                yield y
 
     def reduce_(self, s):
         return
