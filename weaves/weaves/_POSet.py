@@ -55,7 +55,7 @@ class _Impl(object):
 
     def unordered_Bell(self, n):
         """
-        Number of sub-sets of size k from all the subsets of n elements. 
+        Number of partitions of a set of size n.
         """
 
         def ob(n0):
@@ -96,6 +96,31 @@ class _Impl(object):
         for i in iter(range(len(xs0))):
             s00 = s00.union(self._tions(xs0, i+1))
         return s00
+
+    def total_order(self, s0):
+        """
+        For a list of symbols, generates all the strong orderings
+        """
+        return permutations(s0)
+
+    def partial_order(self, s0):
+        s0 = []
+
+        def f0(s):
+            h = s[0]
+            if len(h) <= 1:
+                s0.append(s)
+                return 
+
+            l0 = tuple(combinations(h, len(h)-1))
+            parent = s
+            ss = [ [ set(x), s] for x in 
+            for x in ss:
+                f0(x)
+
+        f0([set('abc')])
+
+        return s0
 
     def partitions(self, set_):
         """

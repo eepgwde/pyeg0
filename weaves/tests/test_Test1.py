@@ -15,6 +15,7 @@ import string
 
 import sys, logging, os
 from unidecode import unidecode
+import scipy.special as scis
 
 from datetime import datetime, timezone, timedelta, date
 
@@ -70,11 +71,26 @@ class Test1(unittest.TestCase):
         logger.info("epoch: " + str(adv) + "; " + str(s0))
         return
 
+    def test_10(self):
+        """
+        Unordered Bell 
+
+        Total ordering: A000142
+        """
+        p0 = POSetOps.instance()
+
+        for s in self.ss:
+            n0 = int(scis.perm(len(s), len(s)))
+            n1 = len(tuple(p0.total_order(s)))
+            self.assertEqual(n0, n1)
+            logger.info("total ordering: {}: {} == {}".format(len(s), n0, n1))
+
+
     def test_11(self):
         """
-        POSet Counts
+        Unordered Bell 
 
-        Check the Stirling second kind for partitions.
+        Equivalence relation: A000110
         """
         p0 = POSetOps.instance()
         logger.info("unordered Bell: {}".format(p0.unordered_Bell(3)))
@@ -83,13 +99,13 @@ class Test1(unittest.TestCase):
             n0 = p0.unordered_Bell(len(s))
             n1 = len(tuple(p0.partitions(set(s))))
             self.assertEqual(n0, n1)
-            logger.info("partitions: {}: {} == {}".format(len(s), n0, n1))
+            logger.info("eqivalence: {}: {} == {}".format(len(s), n0, n1))
 
     def test_13(self):
         """
-        POSet Counts
+        Ordered Bell 
 
-        Check the ordered bell count for weak orderings.
+        Total preorder: A000670
         """
         p0 = POSetOps.instance()
         logger.info("ordered Bell: {}".format(p0.ordered_Bell(3)))
