@@ -103,22 +103,25 @@ class _Impl(object):
         """
         return permutations(s0)
 
-    def partial_order(self, s0):
+    def partial_order(self, s00):
+        """
+        Lists of set
+        """
         s0 = []
 
         def f0(s):
             h = s[0]
             if len(h) <= 1:
+                s.insert(0, [])
                 s0.append(s)
                 return 
 
             l0 = tuple(combinations(h, len(h)-1))
-            parent = s
-            ss = [ [ set(x), s] for x in 
+            ss = [ [ set(x), s] for x in l0 ]
             for x in ss:
                 f0(x)
 
-        f0([set('abc')])
+        f0([set(s00)])
 
         return s0
 
