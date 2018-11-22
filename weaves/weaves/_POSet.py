@@ -109,6 +109,11 @@ class _Impl(object):
         """
         s0 = []
 
+        def f1(s, parent):
+            parent = parent.copy()
+            parent.insert(0, s)
+            return parent
+
         def f0(s):
             h = s[0]
             if len(h) <= 1:
@@ -116,10 +121,8 @@ class _Impl(object):
                 s0.append(s)
                 return 
 
-            l0 = tuple(combinations(h, len(h)-1))
-            ss = [ [ set(x), s] for x in l0 ]
-            for x in ss:
-                f0(x)
+            for y in [ f1(set(x), s) for x in combinations(h, len(h)-1) ]:
+                f0(y)
 
         f0([set(s00)])
 
