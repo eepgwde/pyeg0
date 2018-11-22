@@ -107,26 +107,26 @@ class _Impl(object):
         """
         Lists of set
         """
-        s0 = []
 
-        def f1(s, parent):
+        def prepend(s, parent):
             parent = parent.copy()
             parent.insert(0, s)
             return parent
 
+        def branches(h, s):
+            for y in combinations(h, len(h)-1):
+                yield prepend(set(y), s)
+
+        def fork(h, s):
+            return [ f0(y) for y in branches(h, s) ]
+
         def f0(s):
             h = s[0]
             if len(h) <= 1:
-                s.insert(0, [])
-                s0.append(s)
-                return 
+                return prepend([], s)
+            return fork(h, s)
 
-            for y in [ f1(set(x), s) for x in combinations(h, len(h)-1) ]:
-                f0(y)
-
-        f0([set(s00)])
-
-        return s0
+        return f0([set(s00)])
 
     def partitions(self, set_):
         """
