@@ -16,6 +16,9 @@ import scipy.special as scis
 
 import numpy as np
 
+## Helper methods
+# These methods are the ones being ported to Cython.
+
 def prepend(s, parent):
     parent = parent.copy()
     parent.insert(0, s)
@@ -34,15 +37,9 @@ def fork00(s):
         return prepend(frozenset(), s)
     return fork(h, s)
 
-
-def combine1(x, y):
-    s0.add( (x,y) )
+def combine1(x, y, set0=set()):
+    set0.add( (x,y) )
     return y
-
-def pairs_(self, l0):
-    s0 = set()
-    f0 = reduce(combine1, l0)
-    return s0
 
 
 def remap(xs, d1=None):
@@ -62,13 +59,17 @@ def sterm(n, k, j):
 
 def stirling2_(n):
     """
-    The sequence of Stirling Number of Second Kind.
+    A sequence of counts that are the components of the Stirling Number of Second
+    Kind.
 
     Number terms up to n.
+
     """
     for k in range(n+1):
         for j in range(k+1):
             yield sterm(n, k, j)
+
+## End Helper Methods
 
 class _Impl(object):
     """
@@ -78,9 +79,10 @@ class _Impl(object):
 
     _tions = None
 
+    set0 = set()                # Highly used local mutable set.
+
     def __init__(self, **kwargs):
         self._tions = lambda xs, n: permutations(xs, n)
-        pass
 
     def unordered_Bell(self, n):
         """
@@ -90,7 +92,6 @@ class _Impl(object):
         def ob(n0):
             if n0<=1:
                 return 1
-
             return sum([ ob(k) * scis.comb(n0-1, k) for k in range(n0)])
 
         return int(ob(n))
@@ -144,6 +145,15 @@ class _Impl(object):
         """
         return permutations(s0)
 
+    def pairs_(self, l0):
+        """
+        Given a list of symbols, form overlapping pairs.
+        """
+        s0 = set()
+        combine2 = partial(combine1, set0=s0)
+        f0 = reduce(combine2, l0)
+        return s0
+
     def partial_order(self, s00):
         """Partial order
 
@@ -163,8 +173,11 @@ class _Impl(object):
         """
 
         s0 = fork00([frozenset(s00)])
+        s1 = self.as_(s0)
+        s2 = [ self.pairs_(x) for x in s1 ]  # calls a helper
 
-        return s0
+        s3 = s1.union(*s2)
+        return s3
 
     def tupler0_(self, l):
         """
@@ -172,9 +185,8 @@ class _Impl(object):
 
         Recursive with an exit of last element in list is frozenset.
         """
-
         if len(l) >= 1 and isinstance(l[-1], frozenset):
-            self.s0.add(tuple(l))
+            self.set0.add(tuple(l))
             return
 
         for x in l:
@@ -190,9 +202,9 @@ class _Impl(object):
         currently only type is supported.
         """
         if type0 == set:
-            self.s0 = set()
-            self.tupler0_(l0)
-            return self.s0
+            self.set0.clear()
+            self.tupler0_(list(l0))
+            return self.set0
 
         return None
 
