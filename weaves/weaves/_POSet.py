@@ -242,9 +242,6 @@ class _Impl(object):
             for y in permutations(x):
                 yield y
 
-    def reduce_(self, s):
-        return
-
     def sym2basis(self, l0):
         """
         Convert a string of letters to a set of integers.
