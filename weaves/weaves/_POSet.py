@@ -162,7 +162,9 @@ class _Impl(object):
 
         """
 
-        return fork00([frozenset(s00)])
+        s0 = fork00([frozenset(s00)])
+
+        return s0
 
     def tupler0_(self, l):
         """
