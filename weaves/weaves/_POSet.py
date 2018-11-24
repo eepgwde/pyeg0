@@ -160,7 +160,7 @@ class _Impl(object):
         A render method, converts the entity l0 to something of type type0.
 
         @note
-        currently only one implementation.
+        currently only type is supported.
         """
         if type0 == set:
             self.s0 = set()
@@ -172,7 +172,8 @@ class _Impl(object):
     def partitions(self, set_):
         """Set partitions
 
-        A000110 Bell or exponential numbers: number of ways to partition a set of n labeled elements.
+        A000110 Bell or exponential numbers: number of ways to partition a set
+        of n labeled elements.
 
         @note From the web. A Gray code variant. This can produce another set
         of sequences if set_ is a list.
@@ -209,13 +210,23 @@ class _Impl(object):
         sss = permutations(set_, len(set_))
         return [ s for s in [ list(partitions_(ss)) for ss in sss ] ]
 
+    def syms2set(self, syms='ABC'):
+        s0 = syms
+        if isinstance(syms, str):
+            s0 = list(syms)
+        s0 = s0.copy()
+        if not isinstance(s0, set):
+            s0 = set(syms)
+
+        return s0
+
     def weak_orderings1(self, syms='ABC'):
         """
         Return weak orderings of set structured by set partition.
 
         Each tuple is a pair with its original set and ordered tuples.
         """
-        s0 = self.as_set(syms=syms)
+        s0 = self.syms2set(syms=syms)
         for x in self.partitions(s0):
             yield [x, tuple(permutations(x))]
 
@@ -225,7 +236,7 @@ class _Impl(object):
 
         Each tuple is a preference.
         """
-        s0 = self.as_set(syms=syms)
+        s0 = self.syms2set(syms=syms)
 
         for x in self.partitions(s0):
             for y in permutations(x):
