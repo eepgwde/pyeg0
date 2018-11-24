@@ -170,22 +170,23 @@ class _Impl(object):
         return None
 
     def partitions(self, set_):
-        """
-        Set partitions
+        """Set partitions
 
-        This can produce unordered set partitions. Bell Number.
+        A000110 Bell or exponential numbers: number of ways to partition a set of n labeled elements.
 
-        Or ordered preferences. Order Bell Number.
+        @note From the web. A Gray code variant. This can produce another set
+        of sequences if set_ is a list.
 
         @author Thomas Dybdahl Ahle
+
         """
 
         ctr0 = lambda: list()
-        ext0 = lambda pi, item: pi.append(item)
+        ext0 = lambda px, item: px.append(item)
 
         if type(set_) is set:
             ctr0 = lambda: set()
-            ext0 = lambda pi, item: pi.add(item)
+            ext0 = lambda px, item: px.add(item)
 
         def partitions_(set_):
             if not set_:
@@ -204,18 +205,9 @@ class _Impl(object):
         if type(set_) is set:
             return partitions_(set_)
 
+        ## for lists.
         sss = permutations(set_, len(set_))
         return [ s for s in [ list(partitions_(ss)) for ss in sss ] ]
-
-    def as_set(self, syms='ABC'):
-        s0 = syms
-        if isinstance(syms, str):
-            s0 = list(syms)
-        s0 = s0.copy()
-        if not isinstance(s0, set):
-            s0 = set(syms)
-
-        return s0
 
     def weak_orderings1(self, syms='ABC'):
         """
