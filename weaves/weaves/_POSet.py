@@ -16,6 +16,24 @@ import scipy.special as scis
 
 import numpy as np
 
+def prepend(s, parent):
+    parent = parent.copy()
+    parent.insert(0, s)
+    return parent
+
+def branches(h, s):
+    for y in combinations(h, len(h)-1):
+        yield prepend(frozenset(y), s)
+
+def fork(h, s):
+    return [ fork00(y) for y in branches(h, s) ]
+
+def fork00(s):
+    h = s[0]
+    if len(h) <= 1:
+        return prepend(frozenset(), s)
+    return fork(h, s)
+
 
 def combine1(x, y):
     s0.add( (x,y) )
@@ -101,7 +119,15 @@ class _Impl(object):
 
     def strong(self, xs0):
         """
-        For a list of symbols, generates all the strong orderings
+        A union of the strong orderings of all permutations.
+
+        For a list of symbols, generates all the strong orderings from
+        each permutation of the alphabets.
+
+        @note
+        This is the author's own construction. It turns up surprisingly
+        often.
+
         """
         s00 = set()
         for i in iter(range(len(xs0))):
@@ -110,34 +136,33 @@ class _Impl(object):
 
     def total_order(self, s0):
         """
-        For a list of symbols, generates all the strong orderings
+        Total order, for a list of symbols, generates a total strong ordering.
+
+        A000142 Factorial numbers: n! = 1*2*3*4*...*n (order of symmetric group
+        S_n, number of permutations of n letters).
+
         """
         return permutations(s0)
 
     def partial_order(self, s00):
+        """Partial order
+
+        A partial ordering of the symbols in the set.
+        This isn't a a total ordering. It is all the sub-strings of a string,
+        ordered by sub-string, so a, b, c gives (0,a), (a,b), (a,c),
+        ((a,b), (a,b,c)), ((b,c), (a,b,c)), ((a,c), (a,b,c))
+        for each of a, b, c.
+        And then () is an ordering, as is (a,b,c).
+
+        This is an unusual sequence. It haven't found have a single recursive
+        generator for this sequence.
+
+        A001035 Number of partially ordered sets ("posets") with n labeled
+        elements (or labeled acyclic transitive digraphs).
+
         """
-        Lists of set
-        """
 
-        def prepend(s, parent):
-            parent = parent.copy()
-            parent.insert(0, s)
-            return parent
-
-        def branches(h, s):
-            for y in combinations(h, len(h)-1):
-                yield prepend(frozenset(y), s)
-
-        def fork(h, s):
-            return [ f0(y) for y in branches(h, s) ]
-
-        def f0(s):
-            h = s[0]
-            if len(h) <= 1:
-                return prepend(frozenset(), s)
-            return fork(h, s)
-
-        return f0([frozenset(s00)])
+        return fork00([frozenset(s00)])
 
     def tupler0_(self, l):
         """
