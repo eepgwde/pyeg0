@@ -10,11 +10,22 @@
 
 import logging
 from itertools import permutations, combinations
-from functools import partial
+from functools import partial, reduce
 from math import factorial
 import scipy.special as scis
 
 import numpy as np
+
+
+def combine1(x, y):
+    s0.add( (x,y) )
+    return y
+
+def pairs_(self, l0):
+    s0 = set()
+    f0 = reduce(combine1, l0)
+    return s0
+
 
 def remap(xs, d1=None):
     return ( d1[x] for x in xs )
@@ -115,7 +126,7 @@ class _Impl(object):
 
         def branches(h, s):
             for y in combinations(h, len(h)-1):
-                yield prepend(set(y), s)
+                yield prepend(frozenset(y), s)
 
         def fork(h, s):
             return [ f0(y) for y in branches(h, s) ]
@@ -123,10 +134,40 @@ class _Impl(object):
         def f0(s):
             h = s[0]
             if len(h) <= 1:
-                return prepend([], s)
+                return prepend(frozenset(), s)
             return fork(h, s)
 
-        return f0([set(s00)])
+        return f0([frozenset(s00)])
+
+    def tupler0_(self, l):
+        """
+        Adds a list of tuples, as an element, to the object's working set, s0.
+
+        Recursive with an exit of last element in list is frozenset.
+        """
+
+        if len(l) >= 1 and isinstance(l[-1], frozenset):
+            self.s0.add(tuple(l))
+            return
+
+        for x in l:
+            self.tupler0_(x)
+        return
+
+
+    def as_(self, l0, type0=set, type1=None):
+        """
+        A render method, converts the entity l0 to something of type type0.
+
+        @note
+        currently only one implementation.
+        """
+        if type0 == set:
+            self.s0 = set()
+            self.tupler0_(l0)
+            return self.s0
+
+        return None
 
     def partitions(self, set_):
         """
