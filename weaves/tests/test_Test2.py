@@ -110,12 +110,21 @@ class Test2(unittest.TestCase):
 
     def test_13(self):
         """
+        weak orderings
+        """
+        l0 = POSetOps.instance().partitions(list('ABC'))
+        l0 = [ list(l) for l in list(l0) ]
+        l1 = [ len(l) for l in list(l0) ]
+        logger.info("ordered: {} {} {}".format(len(l0), l1, l0))
+
+    def test_23(self):
+        """
         Nodes and partitions
         """
         d0 = POSetOps.instance().sym2basis('ABC')
         logger.info("dict: {}".format(d0))
 
-    def test_15(self):
+    def test_25(self):
         """
         Nodes and partitions
         """
@@ -128,7 +137,7 @@ class Test2(unittest.TestCase):
         logger.info("edges: {} {}".format(len(edges), edges))
 
 
-    def test_17(self):
+    def test_27(self):
         """
         Nodes and partitions
         """
@@ -140,7 +149,7 @@ class Test2(unittest.TestCase):
         edges = tuple(x0['e'])
         logger.info("edges: {} {}".format(len(edges), edges))
 
-    def test_19(self):
+    def test_29(self):
         """
         Nodes and partitions
         """

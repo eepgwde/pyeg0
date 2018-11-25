@@ -29,9 +29,9 @@ def branches(h, s):
         yield prepend(frozenset(y), s)
 
 def fork(h, s):
-    return [ fork00(y) for y in branches(h, s) ]
+    return [ paths(y) for y in branches(h, s) ]
 
-def fork00(s):
+def paths(s):
     h = s[0]
     if len(h) <= 1:
         return prepend(frozenset(), s)
@@ -157,27 +157,73 @@ class _Impl(object):
     def partial_order(self, s00):
         """Partial order
 
-        A partial ordering of the symbols in the set.
-        This isn't a a total ordering. It is all the sub-strings of a string,
-        ordered by sub-string, so a, b, c gives (0,a), (a,b), (a,c),
-        ((a,b), (a,b,c)), ((b,c), (a,b,c)), ((a,c), (a,b,c))
-        for each of a, b, c.
-        And then () is an ordering, as is (a,b,c).
+        A partial ordering of the symbols in the set. This isn't a a total
+        ordering. It can be thought of as all the sub-strings of a string,
+        ordered by sub-string. Partial orderings are unusual they are written
+        because elements an be comparable or incomparable. And if comparable,
+        they can be equal or less-than.
 
-        This is an unusual sequence. It haven't found have a single recursive
-        generator for this sequence.
+        So for a string ab: we have three partial orders. 
+
+        One is the two isolated cases, a, b are not comparable, ( null < a),
+        (null < b).
+
+        Then the next case is (a < ab). And there is a variant (b < ab).
+
+        This is an unusual sequence. I haven't found have a single recursive
+        generator for this sequence. It is possible to use Hasse diagrams and
+        generate the permutations and use those with the Hasse diagram.
+
+        Moving on to abc. We have one partial ordering where none are
+        comparable: null < a and null < b and null < c. This is one case.
+
+        Then there is null < a < ab, and null < c on its own and there are 3
+        sets of these, one for each of a, b and c. So 3 in all.
+
+        (Ignoring the repeated null from here n.)
+
+        Then a and b equally preferred, ab < abc and bc < abc and this has just
+        3 variants.
+
+        Then a < ab < abc is another ordering, and it has a variant a < ac <
+        abc. And there are 3 sets of these, so another 6 orderings.
+
+        And a final case is a == b == c
+
+        null < a, b == c and 3 of these in total.
+
+        1 + 6 + 3 + 6 + 3 = 19
 
         A001035 Number of partially ordered sets ("posets") with n labeled
         elements (or labeled acyclic transitive digraphs).
 
         """
 
-        s0 = fork00([frozenset(s00)])
+        s0 = paths([frozenset(s00)])
         s1 = self.as_(s0)
         s2 = [ self.pairs_(x) for x in s1 ]  # calls a helper
 
-        s3 = s1.union(*s2)
+        s3 = set().union(*s2)
         return s3
+
+    def singletons_(self, s00):
+        """
+        The anti-chains form a partial ordering.
+        """
+        s0 = s00
+        if not isinstance(s00, frozenset):
+            s0 = frozenset(tuple(s00))
+        return frozenset( ( ((), x) for x in s0 ) )
+
+    def partial_order0_(self, s00):
+        s0 = self.singletons_(s00)
+        s1 = self.paths0_(s00)
+        s1 = set( frozenset(tuple(x)) for x in self.as_(s1) )
+        s1.add(s0)
+        return s1
+
+    def paths0_(self, s00):
+        return paths([frozenset(s00)])
 
     def tupler0_(self, l):
         """
