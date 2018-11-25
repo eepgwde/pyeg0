@@ -11,10 +11,15 @@
 import logging
 from itertools import permutations, combinations
 from functools import partial, reduce
-from math import factorial
 import scipy.special as scis
 
 import numpy as np
+
+# logging.basicConfig(filename='POSet.log', level=logging.DEBUG)
+logger = logging.getLogger('POSet')
+# sh = logging.StreamHandler()
+# logger.addHandler(sh)
+
 
 ## Helper methods
 # These methods are the ones being ported to Cython.
@@ -151,7 +156,7 @@ class _Impl(object):
         """
         s0 = set()
         combine2 = partial(combine1, set0=s0)
-        f0 = reduce(combine2, l0)
+        reduce(combine2, l0);
         return s0
 
     def partial_order(self, s00):
@@ -198,6 +203,16 @@ class _Impl(object):
         elements (or labeled acyclic transitive digraphs).
 
         """
+        s0 = set(self.singletons_(s00))
+        if len(s00) <= 1:
+            return s0
+
+        if len(s00) <= 2:
+            s1 = paths([frozenset(s00)])
+            logger.info("po: {}".format(s1))
+            s1 = set( tuple(x) for x in self.as_(s1) )
+            s1.add(tuple(s0))
+            return s1
 
         s0 = paths([frozenset(s00)])
         s1 = self.as_(s0)
@@ -215,14 +230,10 @@ class _Impl(object):
             s0 = frozenset(tuple(s00))
         return frozenset( ( ((), x) for x in s0 ) )
 
-    def partial_order0_(self, s00):
-        s0 = self.singletons_(s00)
-        s1 = self.paths0_(s00)
-        s1 = set( frozenset(tuple(x)) for x in self.as_(s1) )
-        s1.add(s0)
-        return s1
-
     def paths0_(self, s00):
+        """
+        Return sets of complete paths.
+        """
         return paths([frozenset(s00)])
 
     def tupler0_(self, l):
