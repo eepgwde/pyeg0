@@ -1,11 +1,11 @@
-## @file POSet.py
+# @file POSet.py
 # @brief Partially-ordered sets.
 # @author weaves
 #
 # @details
 # This class provides some generators for partially-ordered sets.
 #
-# @note
+# @note:
 # 
 
 import logging
@@ -25,47 +25,94 @@ logger = logging.getLogger('POSet')
 # These methods are the ones being ported to Cython.
 
 def prepend(s, parent):
+    """
+    Returns a new list that is a copy of parent with s as the first element.
+
+    A copy and an insert make this the costly operation.
+    """
     parent = parent.copy()
     parent.insert(0, s)
     return parent
 
 def branches(h, s):
+    """The branches are the combinations of the list h, prepended to s.
+
+    This is a generator. Each yield returns a list that one of the combinations
+    of the symbols in h, this is then prepended to s.
+    """
     for y in combinations(h, len(h)-1):
         yield prepend(frozenset(y), s)
 
 def fork(h, s):
+    """Collects all the branches of the head h and the tail s and produces a path
+    for each.
+
+    This is a recursive algorithm.
+    """
     return [ paths(y) for y in branches(h, s) ]
 
 def paths(s):
+    """
+    Provides the paths within a sequence.
+
+    If any element has more than element within it, then the combinations
+    are enumerated.
+    """
     h = s[0]
     if len(h) <= 1:
         return prepend(frozenset(), s)
     return fork(h, s)
 
 def combine1(x, y, set0=set()):
+    """
+    Append a tuple of x and y to the set set0.
+
+    @note:
+    This is used as a partial
+    """
     set0.add( (x,y) )
     return y
 
 
 def remap(xs, d1=None):
+    """
+    Provide a tuple of dictionary look-ups.
+
+    @type xs: iterable
+    @param xs: sequence of keys in d1
+    @type d1: dictionary
+    @param d1: a dictionary
+    @return:tuple of values
+    """
     return ( d1[x] for x in xs )
 
 def join0(x, s=None):
+    """
+    A join function that can be bound to a separator string s.
+
+    @note:
+    Is an identity function if used with s as None.
+    """
     if s is None:
         return x
     return s.join(x)
 
 def remapN(xs, remap0=remap):
+    """
+    Apply the remap0 function to each of xs.
+    """
     for x in xs:
         yield remap0(x)
 
 def sterm(n, k, j):
+    """
+    This is a numerical calculation of the base term of a Stirling number term.
+    """
     return int((-1)**(k-j)*scis.binom(k,j)*j**n)
 
 def stirling2_(n):
     """
-    A sequence of counts that are the components of the Stirling Number of Second
-    Kind.
+    A sequence of counts that are the components of the Stirling Number of Second Kind.
 
     Number terms up to n.
 
@@ -76,15 +123,19 @@ def stirling2_(n):
 
 ## End Helper Methods
 
-class _Impl(object):
+class Impl(object):
     """
-    Miscellaneous set and preference order theoretic.
+    Miscellaneous set and preference order theoretic methods.
     """
+
     _logger = logging.getLogger('weaves')
+    """Interface with logging"""
 
     _tions = None
+    """Calculate permutations function"""
 
-    set0 = set()                # Highly used local mutable set.
+    set0 = set()
+    """Highly used local mutable set."""
 
     def __init__(self, **kwargs):
         self._tions = lambda xs, n: permutations(xs, n)
@@ -92,6 +143,11 @@ class _Impl(object):
     def unordered_Bell(self, n):
         """
         Number of partitions of a set of size n.
+
+        This counts L(partitions)
+
+        @note:
+        Recursive formulation with the method defined in this function.
         """
 
         def ob(n0):
@@ -105,21 +161,23 @@ class _Impl(object):
         """
         The ordered Bell number for a set of size n.
 
-        @note
+        This counts L(weak_ordering)
+
+        @note:
         List-based evaluation.
         """
         return sum(stirling2_(n))
 
-    def _ordered_Bell(self, n):
+    def ordered_Bell1(self, n):
         """
         The ordered Bell number for a set of size n.
 
-        @note
-        List-based evaluation.
+        @note:
+        Recursive calculation.
         """
         if n<=1:
             return 1
-        l0 =[ scis.binom(n, k-1)* self._ordered_Bell(k-1) for k in range(n+1) ]
+        l0 =[ scis.binom(n, k-1)* self.ordered_Bell1(k-1) for k in range(n+1) ]
 
         return int(sum(l0))
 
@@ -130,7 +188,7 @@ class _Impl(object):
         For a list of symbols, generates all the strong orderings from
         each permutation of the alphabets.
 
-        @note
+        @note:
         This is the author's own construction. It turns up surprisingly
         often.
 
@@ -207,19 +265,17 @@ class _Impl(object):
         if len(s00) <= 1:
             return s0
 
+        s1 = paths([frozenset(s00)])
         if len(s00) <= 2:
-            s1 = paths([frozenset(s00)])
             logger.info("po: {}".format(s1))
-            s1 = set( tuple(x) for x in self.as_(s1) )
-            s1.add(tuple(s0))
-            return s1
+            s2 = set( tuple(x) for x in self.as_(s1) )
+            s2.add(tuple(s0))
+            return s2
 
-        s0 = paths([frozenset(s00)])
-        s1 = self.as_(s0)
-        s2 = [ self.pairs_(x) for x in s1 ]  # calls a helper
+        s2 = [ self.pairs_(x) for x in self.as_(s1) ]  # calls a helper
 
         s3 = set().union(*s2)
-        return s3
+        return s1
 
     def singletons_(self, s00):
         """
@@ -255,7 +311,7 @@ class _Impl(object):
         """
         A render method, converts the entity l0 to something of type type0.
 
-        @note
+        @note:
         currently only type is supported.
         """
         if type0 == set:
@@ -271,10 +327,10 @@ class _Impl(object):
         A000110 Bell or exponential numbers: number of ways to partition a set
         of n labeled elements.
 
-        @note From the web. A Gray code variant. This can produce another set
+        @note: From the web. A Gray code variant. This can produce another set
         of sequences if set_ is a list.
 
-        @author Thomas Dybdahl Ahle
+        @author: Thomas Dybdahl Ahle
 
         """
 
@@ -307,6 +363,9 @@ class _Impl(object):
         return [ s for s in [ list(partitions_(ss)) for ss in sss ] ]
 
     def syms2set(self, syms='ABC'):
+        """
+        Returns a string as a set.
+        """
         s0 = syms
         if isinstance(syms, str):
             s0 = list(syms)
@@ -342,7 +401,7 @@ class _Impl(object):
         """
         Convert a string of letters to a set of integers.
 
-        @note
+        @note:
         0 is used for a special function so we don't map to that.
         """
         if isinstance(l0, str):
@@ -355,16 +414,28 @@ class _Impl(object):
             return []
         return dict(zip(range(1, len(l0)+1), l0))
 
-    def counts(self, adjacency0):
+    def _counts(self, adjacency0=dict()):
+        """
+        Given a dictionary of lists, returns the key and the length.
+        """
         return dict(iter(( (k, len(v)) for k, v in adjacency0.items() )))
 
-    def nodes(self, d0):
+    def _nodes(self, d0):
+        """
+        Returns all the permutations of the keys of a dictionary.
+
+        @type d0: dictionary
+        @param d0: usually the preference names.
+        """
         l0 = d0.keys()
         # Node addresses n!
         l1 = permutations(l0, len(l0))
         return tuple(l1)
 
-    def faces(self, nodes, ndiff=2, nX=1):
+    def _faces(self, nodes, ndiff=2, nX=1):
+        """
+
+        """
         l1 = map(np.array, nodes)
 
         l2 = tuple(combinations(l1, 2))
@@ -379,9 +450,12 @@ class _Impl(object):
 
     def adjacency(self, d0, ndiff=2, nX=1):
         """
-        Graph vertices
+        Graph vertices for a permutohedron.
 
-        Find those that near adjacent to one another.
+        @type d0: string or dictionary.
+        @param d0: list of symbols.
+
+        Find those that adjacent to one another.
         """
         # Map list to ordinal
         if not isinstance(d0, dict):
@@ -439,10 +513,13 @@ class _Impl(object):
         return
 
 class Singleton(object):
+    """
+    Single instance of L(Impl)
+    """
     _impl = None
     
     @classmethod
     def instance(cls):
         if cls._impl is None:
-            cls._impl = _Impl()
+            cls._impl =  Impl()
         return cls._impl

@@ -127,8 +127,6 @@ class Test1(unittest.TestCase):
         for s in self.ss:
             x0 = p0.partial_order(s)
             logger.info("partial: {} {:.80}".format(len(x0), str(x0)))
-            s0 = p0.as_(x0)
-            logger.info("partial: {} {:.80}".format(len(s0), str(s0)))
 
 #
 # The sys.argv line will complain to you if you run it with ipython

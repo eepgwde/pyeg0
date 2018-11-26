@@ -8,6 +8,7 @@ PIP ?= pip
 UUT ?= 
 FILE ?= test.log
 PYTHONIOENCODING=utf-8
+DOCSDIR ?= docs/
 PKG := $(notdir $(PWD))
 
 export SDIR
@@ -38,7 +39,18 @@ distclean::
 
 ## Install
 
-.PHONY: uninstall dist-local
+.PHONY: uninstall dist-local docs
+
+# --no-private 
+
+docs: 
+	rm -rf ${DOCSDIR}
+	epydoc -v \
+					--no-frames --no-sourcecode --name="weaves-poset" \
+					--url="https://github.com/eepgwde/weaves-poset" \
+					--inheritance listed --html \
+					--graph classtree --show-private --show-imports \
+					--css etc/epydoc.css -o ${DOCSDIR} weaves/*.py
 
 uninstall::
 	rm -f $(wildcard dist/*.tar.gz)
