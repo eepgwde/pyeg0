@@ -13,10 +13,10 @@ if[`saveptn in key o;if[count first o[`saveptn];SAVEPTN:`$first o[`saveptn]]]
 NOHEADER:0b
 DELIM:","
 \z 0 / D date format 0 => mm/dd/yyyy or 1 => dd/mm/yyyy (yyyy.mm.dd is always ok)
-LOADNAME:`estrades_09
-SAVENAME:`estrades_09
-LOADFMTS:"SDTEHCBSE"
-LOADHDRS:`symbol`date`time`price`volume`marketflag`salescondition`excluderecordflag`unfilteredprice
+LOADNAME:`estrades
+SAVENAME:`estrades
+LOADFMTS:"S TEHCBSE"
+LOADHDRS:`sym0`tm0`px0`vol0`mkt0`sale0`flag0`px1
 if[`savename in key o;if[count first o[`savename];SAVENAME:`$first o[`savename]]]
 SAVEPATH:{` sv((`. `SAVEDB`SAVEPTN`SAVENAME)except`),`}
 LOADDEFN:{(LOADFMTS;$[NOHEADER;DELIM;enlist DELIM])}
@@ -26,7 +26,7 @@ POSTSAVEALL:{x}
 LOAD:{[file] POSTLOADALL POSTLOADEACH$[NOHEADER;flip LOADHDRS!LOADDEFN[]0:;LOADHDRS xcol LOADDEFN[]0:]file}
 LOAD10:{[file] LOAD(file;0;1+last(11-NOHEADER)#where 0xa=read1(file;0;20000))} / just load first 10 records
 JUSTSYMFMTS:"S      S "
-JUSTSYMHDRS:`symbol`excluderecordflag
+JUSTSYMHDRS:`sym0`flag0
 JUSTSYMDEFN:{(JUSTSYMFMTS;$[NOHEADER;DELIM;enlist DELIM])}
 CHUNKSIZE:25000000
 DATA:()

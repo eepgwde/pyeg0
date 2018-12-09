@@ -8,7 +8,7 @@ d_xfld1 () {
   local terr0=${3:=1}
   awk -F, -v idx=$1 -v fdx=$2 -v errlvl=$terr0 'NR ==idx { tag=$(fdx);
   split(tag, x, "/")
-  printf("%04d%02d%02d\n", x[3], x[1], x[2])
+  printf("%04d.%02d.%02d\n", x[3], x[1], x[2])
   exit(0) }' 
   # END { exit(errlvl) }'
 }
