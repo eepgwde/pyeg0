@@ -4,6 +4,14 @@ X_EMACS=emacs
 
 T_DIR=/cache/incoming/tickdata
 
+d_xfld1 () {
+  local terr0=${3:=1}
+  awk -F, -v idx=$1 -v fdx=$2 -v errlvl=$terr0 'NR ==idx { tag=$(fdx);
+  split(tag, x, "/")
+  printf("%04d%02d%02d\n", x[3], x[1], x[2])
+  exit(0) }' 
+  # END { exit(errlvl) }'
+}
 
 d_2csv () {
   test $# -ge 1 || return 1
@@ -27,10 +35,28 @@ d_2csv () {
       local tfile=$(basename $1)
       tfile=${tfile%.*}
       local args0="$(cat $2)"
+      echo $2 > $verbose
+      echo $args0 > $verbose
 
 	    $nodo csplit -b "_%02d.csv" -f $d_dir/$tfile $1 $args0
+
 	    ;;
-	  
+
+    bundle)
+      # local tfile=$(mktemp)
+      # f_tpush $tfile
+      local x0
+      : ${d_service:=".csv1"}
+
+      for i in $*
+      do
+        x0=${i%.*}${d_service}
+        cat $d_file $i > $x0
+        echo $x0 $(cat $i | d_xfld1 2 2 0)
+      done
+
+      ;;
+
 	  defects)
 	    ## This has .0 on the end of a couple of fields.
 	    awk -F, 'BEGIN { OFS="," } NR > 1 { gsub(/\.0$/, "", $2); gsub(/""/, "", $6); gsub(/.0/, "", $6) }
