@@ -30,9 +30,10 @@ class Part(object):
         return self
 
     def __next__(self):
-        lines = self.fo.readlines(self.nbytes)
+        lines = self.fo.read(self.nbytes)
         if len(lines) == 0:
             raise StopIteration
+        lines += self.fo.readline()
         return lines
 
     def __del__(self):

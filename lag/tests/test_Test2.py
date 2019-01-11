@@ -26,6 +26,7 @@ logger.addHandler(sh)
 
 trs0 = os.path.join(os.path.dirname(__file__), "test.txt")
 trs1 = os.path.join(os.path.dirname(__file__), "banned_words.txt")
+trs2 = os.path.join(os.path.dirname(__file__), "prose.txt")
 
 class Test2(unittest.TestCase):
     """
@@ -110,6 +111,16 @@ class Test2(unittest.TestCase):
         re0 = re.compile("(\s*)(fudge|balls)(\s*)")
         lines1 = self.r0.apply(lines)
         self.logger.info("lines1: " + str(list(lines1)))
+
+    def test_015(self):
+        self.p0 = Part(filename=trs2)
+        self.r0 = Redact(filename=trs1)
+        it0 = self.p0
+        cnt = 0
+        for lines in it0:
+            cnt += len(lines)
+            lines1 = self.r0.apply(lines)
+            self.logger.info('lines1: ' + str(lines1))
 
 ##
 # The sys.argv line will complain to you if you run it with ipython

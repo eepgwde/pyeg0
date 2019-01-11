@@ -49,7 +49,8 @@ class Redact(object):
             else:
                 l0.append(v0)
 
-    def toRE(self, pre0='(?P<sep>[\s,.!?;:])', post0='(?P<sep1>\s,.!?;:])', flags=re.IGNORECASE):
+##    def toRE(self, pre0='(?P<sep>[\s,.!?;:]*)', post0='(?P<sep1>[\s,.!?;:]*)', flags=re.IGNORECASE):
+    def toRE(self, pre0='(?P<sep>\s*)', post0='(?P<sep1>\s*)', flags=re.IGNORECASE):
         """
         For the dictionary of strings, for regular expressions with pre- and post- strings.
 
@@ -79,15 +80,12 @@ class Redact(object):
         keys0.reverse()
 
         lines1 = lines[:]
-        logger.info("lines1: " + str(lines1))
+
         ## The key is the token to replace
         for k0 in keys0:
             pat0 = dict0[k0]
             repl = partial(repl_, v0=k0)
-            logger.info("repl: " + k0)
-            logger.info("pat: " + str(pat0))
-            lines2 = map(lambda l: re.sub(pat0, repl, l), lines1)
-            lines1 = lines2
+            lines1 = [ re.sub(pat0, repl, x) for x in lines1 ]
 
         return lines1
 
