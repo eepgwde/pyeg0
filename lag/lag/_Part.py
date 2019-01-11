@@ -9,8 +9,7 @@ class Part(object):
     File-reading class
     """
 
-    fo = None
-    nbytes = 10000000
+    nbytes = 10000000           # class constant
 
     def __init__(self, filename = None, nbytes=None):
         """
