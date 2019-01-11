@@ -79,6 +79,7 @@ class Redact(object):
         keys0.reverse()
 
         lines1 = lines[:]
+        logger.info("lines1: " + str(lines1))
         ## The key is the token to replace
         for k0 in keys0:
             pat0 = dict0[k0]
