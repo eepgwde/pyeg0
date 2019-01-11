@@ -1,62 +1,64 @@
-#!/usr/bin/env python3
-# coding=utf-8
-#
-## @file Frctl0
-# @author weaves
-# @brief Frctl0
-#
-# CLI to Frctl itself an interface to MediaInterface
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 
 """
-An command-line stack and queue
+Redact words from document
 
 Usage:
   lag (-h | --help)
-  lag [-e PATTERN]... [-f FILTER]... [-F FILTER]... [options] [<input>]...
+  lag [options] <filename1> <filename2>
 
 Arguments:
-  input                                 Files, directories, or glob patterns to upload.
-                                        Defaults to current directory.
+  filename1                             A text file of words and phrases, one per line.
+  filename2                             A text file with text to be redacted.
 
 Options:
   -h, --help                            Display help message.
-  -l, --log                             Enable gmusicapi logging.
-  -d, --dry-run                         Output list of songs that would be uploaded.
+  -l, --log                             Enable logging.
+  -d, --dry-run                         Output options and files
   -q, --quiet                           Don't output status messages.
+  --tmp DIR                             Pass this directory to use for 
+                                        temporary files (otherwise use TMPDIR and then TMP)
+  -v, --verbose                         Output status messages.
                                         With -l,--log will display warnings.
-                                        With -d,--dry-run will parameters.
-  -f FILE, --files FILE                 File containing files.
-  -c COMMAND, --command COMMAND         What to do: chapters
+                                        With -d,--dry-run will show parameters.
 
-Patterns can be any valid Python regex patterns.
+Commands:
+
+ Redacts words
+
+Note:
+
+ The document file can process large files. The file is processed in 10 MByte blocks.
+
 """
 
-import logging, os, sys, re
+from lag import Part, Redact
 
-from unidecode import unidecode
 from docopt import docopt
 
-from lag import Stack, Queue
+import os
+import sys
+import glob
+
+import logging
 
 QUIET = 25
 logging.addLevelName(25, "QUIET")
-
-
-logging.basicConfig(filename='lag.log', level=QUIET)
-logger = logging.getLogger('Frctl')
-sh = logging.StreamHandler()
-logger.addHandler(sh)
-
-lag = None
-cli = None
+logging.basicConfig(filename='redacter.log', level=QUIET)
+global logger
+logger = logging.getLogger('Test')
 
 def main():
     global cli
-    cli = dict((key.lstrip("-<").rstrip(">"), value)
-               for key, value in docopt(__doc__).items())
+    global logger
+
+    argv = sys.argv
+    
+    cli = dict((key.lstrip("-<").rstrip(">"), value) for key, value in docopt(__doc__).items())
 
     enable_logging = cli['log']
-
     if cli['quiet']:
         logger.setLevel(QUIET)
     else:
@@ -64,46 +66,14 @@ def main():
 
     if enable_logging:
         logger.setLevel(logging.DEBUG)
+        if cli['verbose']:
+            sh = logging.StreamHandler()
+            logger.addHandler(sh)
+        logger.debug('cli: ' + type(cli).__name__)
 
-    for k in cli.items():
-        logger.info(k)
-        
-    files = []
-    if cli['files']:
-        x0 = cli['files']
-        logger.info('files: ' + type(x0).__name__)
-        with open(x0[0], encoding="utf-8") as f:
-            files = f.read().splitlines()
+    redr0 = Redact(filename=cli['filename2'])
+    part0 = Part(filename=cli['filename1'])
 
-    if len(files) <= 0:
-        raise RuntimeError('a file of files is a required argument')
-
-    if cli['command']:
-        chapter(files)
-
-    return
-
-def chapter(files):
-    global cli
-
-    ## The new split operator
-    h0, *t0 = files
-
-    logger.info("files: " + unidecode('; '.join(t0)))
-
-    stack0 = Stack()
-
-    print(stack0.is_empty())
-
-    for f in t0:
-        if cli['dry-run']:
-            logger.info("file: f: " + unidecode(f))
-            continue
-        stack0.push(f)
-
-    print(stack0.size())
-    print(stack0.is_empty())
-
-if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
-    sys.exit(main())
+    for lines in part0:
+        lines1 = redr0.apply(lines)
+        print(lines1)

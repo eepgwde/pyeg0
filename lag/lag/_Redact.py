@@ -64,7 +64,7 @@ class Redact(object):
         return d1
 
     def apply(self, lines, dict0=None):
-        if not ( isinstance(lines, list) or isinstance(lines, tuple)):
+        if not isinstance(lines, str):
             logger.info("fail: 1")
             return lines
         if len(lines) == 0:
@@ -79,13 +79,11 @@ class Redact(object):
         keys0.sort(key = len)
         keys0.reverse()
 
-        lines1 = lines[:]
-
         ## The key is the token to replace
         for k0 in keys0:
             pat0 = dict0[k0]
             repl = partial(repl_, v0=k0)
-            lines1 = [ re.sub(pat0, repl, x) for x in lines1 ]
+            lines = re.sub(pat0, repl, lines)
 
-        return lines1
+        return lines
 

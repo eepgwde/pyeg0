@@ -81,7 +81,7 @@ class Test2(unittest.TestCase):
         cnt = 0
         for l0 in it0:
             cnt += len(l0)
-            self.logger.info('nlines: ' + str(cnt) + "; " + l0[0])
+            self.logger.info('nlines: ' + str(cnt) + "; " + l0)
 
     def test_002(self):
         """
@@ -92,7 +92,7 @@ class Test2(unittest.TestCase):
         cnt = 0
         for l0 in it0:
             cnt += len(l0)
-            self.logger.info('nlines: ' + str(cnt) + "; " + l0[0])
+            self.logger.info('nlines: ' + str(cnt) + "; " + l0)
 
     def test_011(self):
         self.r0 = Redact(filename=trs1)
@@ -104,14 +104,6 @@ class Test2(unittest.TestCase):
         d1 = self.r0.toRE()
         self.logger.info("dict: " + str(d1))
 
-    def test_013(self):
-        self.test_011()
-        line = "fudge nothing balls nothing fudge"
-        lines = ( line, line )
-        re0 = re.compile("(\s*)(fudge|balls)(\s*)")
-        lines1 = self.r0.apply(lines)
-        self.logger.info("lines1: " + str(list(lines1)))
-
     def test_015(self):
         self.p0 = Part(filename=trs2)
         self.r0 = Redact(filename=trs1)
@@ -120,7 +112,8 @@ class Test2(unittest.TestCase):
         for lines in it0:
             cnt += len(lines)
             lines1 = self.r0.apply(lines)
-            self.logger.info('lines1: ' + str(lines1))
+            self.logger.info('lines1: ' + lines1)
+        self.logger.info("count: " + str(cnt))
 
 ##
 # The sys.argv line will complain to you if you run it with ipython

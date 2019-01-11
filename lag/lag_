@@ -1,0 +1,10 @@
+#!/misc/share/0/anaconda3/envs/cntk0/bin/python
+# PBR Generated from 'console_scripts'
+
+import sys
+
+from lag.__main__ import main
+
+
+if __name__ == "__main__":
+    sys.exit(main())
