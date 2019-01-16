@@ -71,8 +71,8 @@ def main():
             logger.addHandler(sh)
         logger.debug('cli: ' + type(cli).__name__)
 
-    redr0 = Redact(filename=cli['filename2'])
-    part0 = Part(filename=cli['filename1'])
+    redr0 = Redact(filename=cli['filename1'])
+    part0 = Part(filename=cli['filename2'])
 
     for lines in part0:
         lines1 = redr0.apply(lines)

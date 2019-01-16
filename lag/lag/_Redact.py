@@ -42,15 +42,15 @@ class Redact(object):
 
         for line in lines:
             v0 = line.strip()
-            k0 = '*' * len(v0)
+            k0 = '*' * len(v0)  # This makes the anonymous string.
             l0 = self.d0.get(k0)
             if l0 is None:
                 self.d0[k0] = [ v0 ]
             else:
                 l0.append(v0)
 
-##    def toRE(self, pre0='(?P<sep>[\s,.!?;:]*)', post0='(?P<sep1>[\s,.!?;:]*)', flags=re.IGNORECASE):
-    def toRE(self, pre0='(?P<sep>\s*)', post0='(?P<sep1>\s*)', flags=re.IGNORECASE):
+##    def toRE(self, pre0='(?P<sep>\s*)', post0='(?P<sep1>\s*)', flags=re.IGNORECASE):
+    def toRE(self, pre0='(?P<sep>[\s,.!?;:]*)', post0='(?P<sep1>[\s,.!?;:]*)', flags=re.IGNORECASE):
         """
         For the dictionary of strings, for regular expressions with pre- and post- strings.
 
@@ -58,7 +58,6 @@ class Redact(object):
         """
         d1 = dict()
         for k0 in iter(self.d0):
-            print(self.d0[k0])
             d1[k0] = re.compile(pre0 + '(?P<text>' + "|".join(self.d0[k0]) + ')' + post0, flags)
 
         return d1
@@ -79,7 +78,7 @@ class Redact(object):
         keys0.sort(key = len)
         keys0.reverse()
 
-        ## The key is the token to replace
+        ## The key is the token that will replace the strings in the pat0
         for k0 in keys0:
             pat0 = dict0[k0]
             repl = partial(repl_, v0=k0)
