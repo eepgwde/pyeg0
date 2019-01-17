@@ -1,12 +1,14 @@
 ## @author weaves
-## @brief Connect to a remote server.
+## @brief Connect to a remote server, run as a ticker-plant client.
+
+## A. Imports only work in ipyq
 
 from pyq import q
 from datetime import date
 
 import random, time
 
-## Use hsym then hopen
+## B. Use hsym then hopen
 
 srv = q.hopen(q.hsym('::5016'))
 
@@ -62,3 +64,14 @@ time.sleep(5)
 
 q.f0.each(q.tbls)
 
+##  Local Variables:
+##  mode:python
+##  mode:outline-minor
+##  mode:auto-fill
+##  python-shell-interpreter: "ipyq"
+##  outline-regexp: "## *\\([A-Za-z]\\|[IVXivx0-9]+\\)\\."
+##  fill-column: 75
+##  comment-column:50
+##  comment-start: "##  "
+##  comment-end:""
+##  End:
