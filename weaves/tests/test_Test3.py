@@ -8,12 +8,14 @@
 #
 # Relatively complete test.
 
-from weaves import MCast
+from weaves import MCast, Enqueue
 
 import sys
 import logging
 import os
 import string
+import asyncio
+import queue
 
 import unittest
 
@@ -45,7 +47,21 @@ class Test3(unittest.TestCase):
         logger.info("type: " + type(s0).__name__)
 
     def test_03(self):
-        pass
+        s0 = MCast.instance().make(socket="mcast")
+        logger.info("type: " + type(s0).__name__)
+
+        loop = asyncio.get_event_loop()
+        loop.set_debug(True)
+
+        queue0 = queue.Queue();
+        listen = loop.create_datagram_endpoint(
+            lambda: Enqueue(loop, queue0),
+            sock=s0,
+        )
+        transport, protocol = loop.run_until_complete(listen)
+
+        loop.run_forever()
+        loop.close()
 
     def test_05(self):
         """
@@ -64,4 +80,4 @@ if __name__ == '__main__':
     else:
         # If not remove the command-line arguments.
         sys.argv = [sys.argv[0]]
-        unittest.main(module='Test2', verbosity=3, failfast=True, exit=False)
+        unittest.main(module='Test3', verbosity=3, failfast=True, exit=False)

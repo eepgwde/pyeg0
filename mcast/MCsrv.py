@@ -2,22 +2,26 @@ import asyncio
 import logging
 import socket
 import struct
+import queue
 
 BROADCAST_PORT = 1910
 BROADCAST_ADDR = "239.255.255.250"
 #BROADCAST_ADDR = "ff0e::10"
 
-class MulticastServerProtocol:
+q0 = queue.Queue()
+
+class MulticastServerProtocol(asyncio.DatagramProtocol):
+
+    cnt0 = 0
 
     def connection_made(self, transport):
         self.transport = transport
 
-
     def datagram_received(self, data, addr):
-        print('Received {!r} from {!r}'.format(data, addr))
-        data = "I received {!r}".format(data).encode("ascii")
-        print('Send {!r} to {!r}'.format(data, addr))
+        self.cnt0+=1
+        print('Received {} {!r} from {!r}'.format(self.cnt0, data, addr))
         self.transport.sendto(data, addr)
+        q0.put_nowait(data)
 
 loop = asyncio.get_event_loop()
 loop.set_debug(True)

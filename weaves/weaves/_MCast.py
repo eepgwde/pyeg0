@@ -11,9 +11,11 @@
 import logging
 import socket
 import struct
+import asyncio
+import queue
 
 # logging.basicConfig(filename='POSet.log', level=logging.DEBUG)
-logger = logging.getLogger('POSet')
+logger = logging.getLogger('MCast')
 # sh = logging.StreamHandler()
 # logger.addHandler(sh)
 
@@ -22,6 +24,24 @@ logger = logging.getLogger('POSet')
 # These methods are the ones being ported to Cython.
 
 ## End Helper Methods
+
+class Enqueue(asyncio.DatagramProtocol):
+
+  q0 = None
+
+  def __init__(self, loop, q0):
+    self.loop = loop
+    self.transport = None
+    self.q0 = q0
+
+  def connection_made(self, transport):
+    self.transport = transport
+
+  def datagram_received(self, data, addr):
+    print('Received {!r} from {!r}'.format(data, addr))
+    data = "I received {!r}".format(data).encode("ascii")
+    q0.put_nowait(data)
+
 
 class Impl(object):
   """
@@ -36,11 +56,21 @@ class Impl(object):
   def __init__(self, **kwargs):
     pass
 
+  socks = []
+  queues = []
+
   def make(self, **kwargs):
+    """
+    Generic factory for this class.
+
+    socket="mcast" broadcast="239.255.255.250" port=1910
+    Returns a multicast IPv4 socket for port 1910.
+
+    """
     if "socket" in kwargs and kwargs["socket"].startswith("mcast"):
-      broadcast="239.255.255.250"
-      port=1910
-      self._logger.info("socket")
+      broadcast=kwargs.get("broadcast", "239.255.255.250")
+      port=kwargs.get("port", 1910)
+      self._logger.info("socket: {broadcast} {port}".format(broadcast=broadcast, port=port))
 
       addrinfo = socket.getaddrinfo(broadcast, None)[0]
       sock = socket.socket(addrinfo[0], socket.SOCK_DGRAM)
@@ -58,7 +88,22 @@ class Impl(object):
         mreq = group_bin + struct.pack('@I', 0)
         sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_JOIN_GROUP, mreq)
 
+      self.socks.append(sock)
       return sock
+
+    def __del__(self):
+      """
+      Close any remaining resources.
+      """
+
+      if socks is not None:
+        if isinstance(socks, list):
+          for sock in socks:
+            try:
+              sock.shutdown()
+              sock.close()
+            except:
+              continue
 
 
 class Singleton(object):

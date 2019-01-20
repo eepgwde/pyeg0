@@ -2,12 +2,13 @@ import asyncio
 import socket
 import struct
 import sys
+import time
 
 BROADCAST_PORT = 1910
 BROADCAST_ADDR = "239.255.255.250"
 #BROADCAST_ADDR = "ff0e::10"
 
-class DiscoveryClientProtocol:
+class DiscoveryClientProtocol(asyncio.DatagramProtocol):
     def __init__(self, loop, addr):
         self.loop = loop
         self.transport = None
@@ -32,6 +33,8 @@ class DiscoveryClientProtocol:
     def datagram_received(self, data, addr):
         print("Reply from {}: {!r}".format(addr, data))
         # Don't close the socket as we might get multiple responses.
+        time.sleep(1)
+        self.transport.sendto(data, (self.addr,BROADCAST_PORT))
 
     def error_received(self, exc):
         print('Error received:', exc)
