@@ -3,12 +3,14 @@ import logging
 import socket
 import struct
 import queue
+import time
+
+from threading import Thread
+
 
 BROADCAST_PORT = 1910
 BROADCAST_ADDR = "239.255.255.250"
 #BROADCAST_ADDR = "ff0e::10"
-
-q0 = queue.Queue()
 
 class MulticastServerProtocol(asyncio.DatagramProtocol):
 
@@ -18,13 +20,13 @@ class MulticastServerProtocol(asyncio.DatagramProtocol):
         self.transport = transport
 
     def datagram_received(self, data, addr):
+        global q0
+
         self.cnt0+=1
         print('Received {} {!r} from {!r}'.format(self.cnt0, data, addr))
         self.transport.sendto(data, addr)
         q0.put_nowait(data)
 
-loop = asyncio.get_event_loop()
-loop.set_debug(True)
 logging.basicConfig(level=logging.DEBUG)
 
 addrinfo = socket.getaddrinfo(BROADCAST_ADDR, None)[0]
@@ -44,6 +46,11 @@ else:
     sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_JOIN_GROUP, mreq)
 
 
+# loop = asyncio.get_event_loop()
+loop = asyncio.new_event_loop()
+loop.set_debug(True)
+
+q0 = queue.Queue()
 
 listen = loop.create_datagram_endpoint(
     MulticastServerProtocol,
@@ -51,6 +58,21 @@ listen = loop.create_datagram_endpoint(
 )
 transport, protocol = loop.run_until_complete(listen)
 
-loop.run_forever()
+## loop.run_forever()
+
+def start_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+t = Thread(target=start_loop, args=(loop,))
+t.start()
+
+print("About to sleep")
+time.sleep(30)
+print("Slept")
+
+print(q0.qsize())
+
+loop.stop()
 loop.close()
 
