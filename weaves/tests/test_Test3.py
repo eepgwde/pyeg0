@@ -8,7 +8,7 @@
 #
 # Relatively complete test.
 
-from weaves import MCast, Enqueue
+from weaves import MCast, Enqueue, StoppableThread
 
 import sys
 import logging
@@ -16,6 +16,7 @@ import os
 import string
 import asyncio
 import queue
+import time
 
 import unittest
 
@@ -50,23 +51,50 @@ class Test3(unittest.TestCase):
         s0 = MCast.instance().make(socket="mcast")
         logger.info("type: " + type(s0).__name__)
 
-        loop = asyncio.get_event_loop()
+        queue0 = queue.Queue();
+
+        # loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
         loop.set_debug(True)
 
-        queue0 = queue.Queue();
+        q0 = queue.Queue()
+
         listen = loop.create_datagram_endpoint(
             lambda: Enqueue(loop, queue0),
             sock=s0,
         )
         transport, protocol = loop.run_until_complete(listen)
 
-        loop.run_forever()
-        loop.close()
+        ## loop.run_forever()
+
+        def start_loop(loop):
+            asyncio.set_event_loop(loop)
+            loop.run_forever()
+
+        t = StoppableThread(target=start_loop, args=(loop,))
+        t.setDaemon(True)
+        t.start()
+
+        time.sleep(5)
+
+        logger.info("queue: {}".format(q0.qsize()))
+        t.stop()
+        logger.info("stopped: {}".format(t.stopped()))
+        t.join(timeout=1)
+        t.abort()
 
     def test_05(self):
         """
-        Preferences
+        Simplified thread call for a socket.
         """
+        t0, q0 = MCast.instance().make(thread="mcast", debug=True, daemon=True)
+        logger.info("type: " + type(t0).__name__)
+        t0.start()
+        time.sleep(30)
+        t0.stop()
+        t0.join(timeout=1)
+        t0.abort()
+        logger.info("queue: {}".format(q0.qsize()))
 
 
 #
