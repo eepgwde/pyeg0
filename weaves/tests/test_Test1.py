@@ -1,6 +1,6 @@
 ## @file Test1.py
 # @author weaves
-# @brief Unittest of MInfo
+# @brief unittest of my utilities
 #
 # This module tests the ancillary operations and the 
 # 
@@ -10,7 +10,9 @@
 
 from weaves import TimeOps
 from weaves import POSetOps
+from weaves import Utility
 from weaves import __Id__ as weavesId
+
 import string
 
 import sys, logging, os
@@ -52,17 +54,17 @@ class Test1(unittest.TestCase):
 
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
-    def test_01(self):
+    def test_001(self):
         self.assertIsNotNone(weavesId)
         logger.info("module: Id: " + weavesId)
         return
 
-    def test_05(self):
+    def test_005(self):
         s0 = TimeOps.instance().dofy(datetime.today())
         logger.info("dofy: " + str(s0))
         return
 
-    def test_05(self):
+    def test_007(self):
         """
         How to get a datetime that is an advance 
         """
@@ -71,7 +73,7 @@ class Test1(unittest.TestCase):
         logger.info("epoch: " + str(adv) + "; " + str(s0))
         return
 
-    def test_10(self):
+    def test_010(self):
         """
         Unordered Bell 
 
@@ -86,7 +88,7 @@ class Test1(unittest.TestCase):
             logger.info("total ordering: {}: {} == {}".format(len(s), n0, n1))
 
 
-    def test_11(self):
+    def test_011(self):
         """
         Unordered Bell 
 
@@ -101,7 +103,7 @@ class Test1(unittest.TestCase):
             self.assertEqual(n0, n1)
             logger.info("eqivalence: {}: {} == {}".format(len(s), n0, n1))
 
-    def test_13(self):
+    def test_013(self):
         """
         Ordered Bell 
 
@@ -116,7 +118,7 @@ class Test1(unittest.TestCase):
             self.assertEqual(n0, n1)
             logger.info("ordered Bell: {}: {} == {}".format(len(s), n0, n1))
 
-    def test_15(self):
+    def test_015(self):
         """
         Partial order
 
@@ -127,6 +129,23 @@ class Test1(unittest.TestCase):
         for s in self.ss:
             x0 = p0.partial_order(s)
             logger.info("partial: {} {:.80}".format(len(x0), str(x0)))
+
+    def test_020(self):
+        """
+        Initialize the singleton with the proxy and logger.
+        """
+        url0 = "http://www.bt.com"
+        v0 = Utility.instance().fetch(url=url0, file='weaves.cfg', logger=logger)
+        self.assertIsNotNone(v0)
+        Utility.logger().info(Utility.instance().take(20, v0))
+        self.assertTrue(Utility.instance().isvalid0(url0, base=True))
+
+    def test_022(self):
+        url0 = "http://www.bt.com"
+        v0 = Utility.instance().fetch(url=url0)
+        self.assertIsNotNone(v0)
+        logger.info(Utility.instance().take(20, v0))
+        self.assertTrue(Utility.instance().isvalid0(url0, base=True))
 
 #
 # The sys.argv line will complain to you if you run it with ipython

@@ -36,7 +36,7 @@ lazy val root = (project in file(".")).
 
 	"org.apache.commons" % "commons-csv" % "1.5",
 
-	"net.sourceforge.csvjdbc" % "csvjdbc" % "1.0.31",
+	"net.sourceforge.csvjdbc" % "csvjdbc" % "1.0.31",x
 
 	"ch.qos.logback"          % "logback-classic" % "1.1.2",
 	"com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
