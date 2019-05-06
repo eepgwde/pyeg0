@@ -58,7 +58,7 @@ endef
 ## Can use a file loader for some
 
 X_LDS0 = $(X_EXTS2) $(X_EXTS3)
-X_LDS1 = workscwy0 workscwy2 weather luton
+X_LDS1 = workscwy0 workscwy2 weather luton fwyenq0
 X_LDS2 = $(filter-out $(X_LDS1), $(X_LDS0))
 
 $(foreach file0,$(X_LDS2), $(eval $(call LOAD_template,$(file0))))

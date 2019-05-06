@@ -14,6 +14,7 @@ fwy2c: update n1:sums n by outcome1 from 0!select n:count i by m0:`month$lossdat
 
 
 fwyenq1: value select by i from fwyenq0
+
 update date0:`date$enquirytime0 from `fwyenq1 ;
 
 .enq.priority: `enqstatusname xkey ("S S"; enlist ",") 0: `:../in/estatus0.csv
