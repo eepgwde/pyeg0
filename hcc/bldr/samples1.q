@@ -412,7 +412,6 @@ x0: update tag1s: { (enlist x[1]), x[0] } each flip (name0s;tag0s) by i from x0,
 
 catx0: .samples.catx0
 
-
 /
 
 // Testing
@@ -512,8 +511,8 @@ count .samples.prmt
 
 \
 
-
 { .tmp.n0: x; .sys.qreloader enlist "samples1a.q"; .samples.dfcts[first .tmp.n0]: .samples.dfct } each catx0
+
 { .tmp.n0: x; .sys.qreloader enlist "samples1b.q"; .samples.prmts[first .tmp.n0]: .samples.prmt } each catx0
 
 
@@ -531,6 +530,8 @@ count .samples.prmt
 
 .tmp.n0: first .samples.cat1b
 
+.tmp.samples1:: samples1
+
 .sys.qreloader enlist "samples1c.q"
 
 \
@@ -538,6 +539,7 @@ count .samples.prmt
 .tmp.samples1:: samples1
 { .tmp.n0: x; .sys.qreloader enlist "samples1c.q"; } each catx0
 samples1: .tmp.samples1
+
 delete samples1 from `.tmp;
 
 
