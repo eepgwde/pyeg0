@@ -71,7 +71,18 @@ The three pieces of analysis are then run from these directory:
 
  - e2c is the time-series analysis
  - br is the fault prediction classifier
- - a2d is 
+ - a2d is
+
+* Notes
+
+This is a log of the modifications I've had to make.
+
+** dfct fields
+
+This failed to produce xncas1.csv and xncas1w.csv. Tracing back to
+samples1.q and then samples1c.q. .dfct.status1 didn't exist. Re-ran dfct1.q
+
+
 
 ** This file's Emacs file variables
 
