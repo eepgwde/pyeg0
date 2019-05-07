@@ -201,8 +201,8 @@ if (!exists("ewma")) {
 
     ewma <- function(x,lambda = 1, init = x[1]) {
 
-        rval<-filter(lambda * coredata(x),
-                     filter=(1-lambda),method="recursive",
+        rval<-stats::filter(lambda * coredata(x),
+                     filter=(1-lambda), method="recursive",
                      init=init)
         rval<-zoo(coredata(rval),index(x))
         rval

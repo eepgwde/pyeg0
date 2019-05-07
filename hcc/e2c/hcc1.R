@@ -79,7 +79,7 @@ z0 <- zoo(hcc[, x.pairs])
           
 ## Try the deltas
 
-z1 <- z0/lag(z0, -1) - 1
+z1 <- z0/stats::lag(z0, -1) - 1
 z2 <- cbind(z0, z1)
 
 ## Deltas are good
@@ -101,7 +101,7 @@ z0 <- zoo(hcc[, x.pairs])
           
 ccf0(z0, x.pairs)
 
-z1 <- z0/lag(z0, -1) - 1
+z1 <- z0/stats::lag(z0, -1) - 1
 z2 <- cbind(z0, z1)
 
 x.pairs <- c("enqs.z1", "repudns.z1")

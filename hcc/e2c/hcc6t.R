@@ -86,7 +86,7 @@ xsq$stdres
 ## Some work with zoo.
 
 nw1 <- zoo(pdf)
-thn1 <- lag(nw1, k=-12)
+thn1 <- stats::lag(nw1, k=-12)
 
 data1 <- merge(nw1, thn1)
 
