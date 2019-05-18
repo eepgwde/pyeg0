@@ -6,7 +6,7 @@
 
 class Part(object):
     """
-    File-reading class
+    File-reading class 
     """
 
     nbytes = 10000000           # class constant
@@ -14,6 +14,8 @@ class Part(object):
     def __init__(self, filename = None, nbytes=None):
         """
         Given a filename, opens it and makes it available for iteration.
+
+        The file must be closed.
 
         @param nbytes is used with readlines(nbytes)
         """
@@ -30,6 +32,9 @@ class Part(object):
         return self
 
     def __next__(self):
+        """
+        Read the file in n-byte blocks and then append the following line.
+        """
         buf1 = self.fo.read(self.nbytes)
         if len(buf1) == 0:
             raise StopIteration

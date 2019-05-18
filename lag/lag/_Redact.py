@@ -79,6 +79,14 @@ class Redact(object):
         return d1
 
     def apply(self, lines, dict0=None):
+        """
+        Given a single string, of many lines, redact the strings given in the dictionary.
+
+        @param lines a single string of many delimited text lines
+        @param dict0 a dictionary of regular expressions
+        @return the redacted lines
+        """
+
         if not isinstance(lines, str):
             logger.info("fail: 1")
             return lines
@@ -88,6 +96,10 @@ class Redact(object):
 
         if dict0 is None:
             dict0 = self.toRE()
+        
+        if len(dict0) <= 0:
+            logger.info("fail: 3")
+            return lines
 
         ## Longest strings first
         keys0 = list(dict0.keys())
