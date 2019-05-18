@@ -4,8 +4,6 @@
 
 ## On my site cache/out up the tree
 
-TOP = ../../../../..
-
 include ../ldr/defs.mk
 
 X_R = Rscript

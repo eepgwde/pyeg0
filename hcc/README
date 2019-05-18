@@ -69,9 +69,20 @@ The dstr.mk file is included by bldr.mk and produces a distribution Zip file.
 
 The three pieces of analysis are then run from these directory:
 
- - e2c is the time-series analysis
+ - e2c is the time-series analysis 
  - br is the fault prediction classifier
- - a2d is
+ - a2d is the regression analysis 
+
+** Time-series
+
+This uses GAM to evaluate differently constructed models.
+
+ make -C e2c -f e2c.mk all
+
+** Fault Prediction
+
+This performs some recursive partition tree analysis.
+
 
 * Notes
 

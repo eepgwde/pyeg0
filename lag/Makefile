@@ -51,7 +51,7 @@ distclean::
 
 ## Install
 
-.PHONY: uninstall dist-local distinstall check-tool
+.PHONY: uninstall dist-local distinstall check-tool run
 
 uninstall::
 	rm -f $(wildcard dist/*.tar.gz)
@@ -64,8 +64,12 @@ dist-local:
 distinstall: uninstall dist-local
 	$(PIP) install --user $(wildcard dist/*.tar.gz)
 
-install: uninstall 
+install: uninstall
 	$(PIP) install --user -e .
+
+run: 
+	which lag
+	lag tests/banned_words.txt tests/prose.txt
 
 clean::
 	-$(SHELL) -c "find . -type d -name __pycache__ -exec rm -rf {} \;"

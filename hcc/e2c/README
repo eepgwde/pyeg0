@@ -10,7 +10,7 @@ The source file out/xncas1.csv is available on SFTP
 
   make -f hcc5.mk S_FILE=/var/tmp/xncas1.csv all
 
-It build a binary file for loading by the others. hcc1.R
+It build a binary file for loading by the others, see hcc1.R
 
 Then hcc3.R fits enquiries to weather
 
@@ -67,4 +67,19 @@ claims	enq1s	62.1	573.8795	620.9879	6
 	enqr2s	71.4	550.2357	601.1724	4
 	enqrs	65.9	569.4172	625.5933	5
 	enqs	73	553.328		620.7201	3
+
+* Postamble
+
+ This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: iso-8859-1-unix ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
 

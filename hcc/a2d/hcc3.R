@@ -24,7 +24,9 @@ library(tidyr)
 
 library(cluster)
 library(lubridate)
-library(Rweaves1)                       # my personal library
+
+## My personal library has an ewma in it and loads zoo.
+library(Rweaves1)
 
 source("../R/brA0.R")
 
