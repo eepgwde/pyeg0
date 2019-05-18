@@ -28,12 +28,24 @@ class Redact(object):
     Creates a dictionary of strings to redact.
     """
 
-    def __init__(self, filename = None):
+    pre0='(?P<sep>[\s,.!?;:]*)'
+    post0='(?P<sep1>[\s,.!?;:]*)'
+
+    def __init__(self, **kwargs):
         """
         Given a filename, opens it and reads single lines. Each line is a string to be redacted.
 
+        These are stored in the object's dictionary d0. The keys are strings * ** *** and so on.
+        The value for each key is a list of string, each is a word to redact.
+
+        That dictionary is then converted to a regular expression.
+
         @param nbytes is used with readlines(nbytes)
         """
+        filename = kwargs.get('filename', None)
+        self.pre0 = kwargs.get('pre0', self.pre0)
+        self.post0 = kwargs.get('post0', self.post0)
+
         assert filename is not None
         with open(filename, "r") as inp:
             lines = inp.readlines()
@@ -49,16 +61,20 @@ class Redact(object):
             else:
                 l0.append(v0)
 
-##    def toRE(self, pre0='(?P<sep>\s*)', post0='(?P<sep1>\s*)', flags=re.IGNORECASE):
-    def toRE(self, pre0='(?P<sep>[\s,.!?;:]*)', post0='(?P<sep1>[\s,.!?;:]*)', flags=re.IGNORECASE):
+    ##    def toRE(self, pre0='(?P<sep>\s*)', post0='(?P<sep1>\s*)', flags=re.IGNORECASE):
+    def toRE(self, flags=re.IGNORECASE):
         """
-        For the dictionary of strings, for regular expressions with pre- and post- strings.
+        For the dictionary of strings, make regular expressions with pre- and post- strings.
+
+        An expression might be (?P<sep>cunt|fuck|shit)(?P<sep1>[\s,.!?;:]*)
 
         The pre- and post- strings are typically white-space and punctuation.
+        @return dictionary of regular expressions: keys are * ** and so on
         """
         d1 = dict()
         for k0 in iter(self.d0):
-            d1[k0] = re.compile(pre0 + '(?P<text>' + "|".join(self.d0[k0]) + ')' + post0, flags)
+            d1[k0] = re.compile(self.pre0 + '(?P<text>' + "|".join(self.d0[k0]) + ')'
+                                + self.post0, flags)
 
         return d1
 
