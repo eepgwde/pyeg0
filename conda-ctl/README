@@ -1,0 +1,11 @@
+weaves
+
+Packages
+
+quilt is a data source. Provides a command-line tool.
+
+quandl is the package to download data an active account at Quandl
+
+missingno is a visualisation of NaN
+
+
