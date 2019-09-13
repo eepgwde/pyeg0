@@ -4,7 +4,7 @@
 
 // More things you never knew you could do with q/kdb+
 
-\l /opt/src/db/
+\l /opt/src/share/db/
 
 t:([] name:(); iq:())
 `t insert (`Dent;98)
@@ -16,6 +16,11 @@ t:([] name:(); iq:())
 { (*) over 1 + til x } each til 8
 
 { prd 1 + til x } each til 8
+
+// New to 3.6 is .z.s "self" and allows for recursive calls.
+// fact:{$[x<=0;1;x*.z.s x-1]}
+// fact[5]
+
 
 // First 10 fibonacci numbers.
 // This uses "repeat": x f/y apply f to y x times.
