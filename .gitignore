@@ -24,6 +24,8 @@ pru/src/*.csv
 **/.idea
 **/.ensime
 
+**/.ipynb_checkpoints/*
+
 # Compiled python modules.
 *.pyc
 
