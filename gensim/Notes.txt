@@ -1,0 +1,25 @@
+* Preamble
+
+weaves
+
+* Using Gensim and Word2Vec
+
+https://en.wikipedia.org/wiki/Tf-idf
+
+Term Frequency–Inverse Document Frequency
+
+The value increases proportionally the number of times a word appears in the document.
+
+** This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: utf-8 ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
+
