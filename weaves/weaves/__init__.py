@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from weaves._version import __version__, __Id__
-from weaves._Functors import singledispatch1
+from ._version import __version__, __Id__
+from ._Functors import singledispatch1
 
-from weaves._Functors import Singleton as TimeOps
-from weaves._Functors import Singleton as Utility
+from ._Functors import Singleton as TimeOps
+from ._Functors import Singleton as Utility
 
-from weaves._POSet import Singleton as POSetOps
-from weaves._MCast import Singleton as MCast
-from weaves._MCast import Enqueue
-from weaves._MCast import StoppableThread
+from ._POSet import Singleton as POSetOps
+from ._MCast import Singleton as MCast
+from ._MCast import Enqueue
+from ._MCast import StoppableThread
 
 __copyright__ = 'Copyright 2016 Walter Eaves'
 __license__ = 'GPLv3'

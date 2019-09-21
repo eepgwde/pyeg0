@@ -3,8 +3,8 @@
 
 # Now to be used with conda
 
-PYTHON ?= python
-PIP ?= pip
+PYTHON ?= python3
+PIP ?= pip3
 UUT ?= 
 FILE ?= test.log
 PYTHONIOENCODING=utf-8
