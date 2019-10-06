@@ -21,8 +21,6 @@ SH = logging.StreamHandler()
 LOGGER.addHandler(SH)
 
 ## A test driver 
-#
-# @see GMus0
 class Test(unittest.TestCase):
     """
     Test
@@ -52,8 +50,33 @@ class Test(unittest.TestCase):
     ## Loaded?
     ## Is utf-8 available as a filesystemencoding()
     def test_000(self):
+        i0 = CorpOps.instance(fname='no-corpora.txt')
+        with self.assertRaises(Exception) as context:
+            t0 = i0.build()
+
+        t0 = None
+        i0.args = { 'fname': 'mycorpus.txt' }
+        t0 = i0.build()
+        self.assertIsNotNone(t0)
+        LOGGER.info(type(t0))
+
+        t0 = None
+        i0.args = {}
+        t0 = i0.build(fname='mycorpus.txt')
+        self.assertIsNotNone(t0)
+        LOGGER.info(type(t0))
 
         return
+
+    def test_003(self):
+        i0 = CorpOps.instance(fname='mycorpus.txt')
+        t0 = i0.build()
+        self.assertIsNotNone(t0)
+
+        for x in t0:
+            LOGGER.info(x)
+
+        LOGGER.info(t0.dct.token2id)
 
 #
 # The sys.argv line will complain to you if you run it with ipython
