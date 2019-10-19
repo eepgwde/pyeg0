@@ -16,7 +16,7 @@ DELIM:","
 LOADNAME:`notifications
 SAVENAME:`notifications
 LOADFMTS:"SSSIZ"
-LOADHDRS:`reason`channel`status`userid`createddate
+LOADHDRS:`reason`channel`status`userid`dt0
 if[`savename in key o;if[count first o[`savename];SAVENAME:`$first o[`savename]]]
 SAVEPATH:{` sv((`. `SAVEDB`SAVEPTN`SAVENAME)except`),`}
 LOADDEFN:{(LOADFMTS;$[NOHEADER;DELIM;enlist DELIM])}

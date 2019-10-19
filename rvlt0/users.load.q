@@ -16,7 +16,7 @@ DELIM:","
 LOADNAME:`users
 SAVENAME:`users
 LOADFMTS:"HHSCZBSEEIII"
-LOADHDRS:`userid`yob`country`city`createddate`uscrypt0`plan`ntfctnmktpush`ntfctnmktemail`ncontacts`nrefls`nsrefls
+LOADHDRS:`userid`yob`ctry`city`dt0`uscrypt0`plan`push1`email1`ncontacts`nrefls`nsrefls
 if[`savename in key o;if[count first o[`savename];SAVENAME:`$first o[`savename]]]
 SAVEPATH:{` sv((`. `SAVEDB`SAVEPTN`SAVENAME)except`),`}
 LOADDEFN:{(LOADFMTS;$[NOHEADER;DELIM;enlist DELIM])}
@@ -26,7 +26,7 @@ POSTSAVEALL:{x}
 LOAD:{[file] POSTLOADALL POSTLOADEACH$[NOHEADER;flip LOADHDRS!LOADDEFN[]0:;LOADHDRS xcol LOADDEFN[]0:]file}
 LOAD10:{[file] LOAD(file;0;1+last(11-NOHEADER)#where 0xa=read1(file;0;20000))} / just load first 10 records
 JUSTSYMFMTS:"  S   S     "
-JUSTSYMHDRS:`country`plan
+JUSTSYMHDRS:`ctry`plan
 JUSTSYMDEFN:{(JUSTSYMFMTS;$[NOHEADER;DELIM;enlist DELIM])}
 CHUNKSIZE:25000000
 DATA:()
