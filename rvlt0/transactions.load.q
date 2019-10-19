@@ -1,11 +1,11 @@
-/ 2019.10.19T00:34:22.327 j1 weaves
-/ q trns.load.q FILE [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-exit] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] 
-/ q trns.load.q FILE
-/ q trns.load.q
-/ q trns.load.q -help
-FILE:LOADFILE:`$":trns.csv"
+/ 2019.10.19T03:23:10.088 j1 weaves
+/ q transactions.load.q FILE [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-exit] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] 
+/ q transactions.load.q FILE
+/ q transactions.load.q
+/ q transactions.load.q -help
+FILE:LOADFILE:`$":cache/in/transactions.csv2"
 o:.Q.opt .z.x;if[count .Q.x;FILE:hsym`${x[where"\\"=x]:"/";x}first .Q.x]
-if[`help in key o;-1"usage: q trns.load.q [FILE(default:trns.csv)] [-help] [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] [-af|asfile] [-exit]\n";exit 1]
+if[`help in key o;-1"usage: q transactions.load.q [FILE(default:cache/in/transactions.csv2)] [-help] [-bl|bulkload] [-bs|bulksave] [-js|justsym] [-savedb SAVEDB] [-saveptn SAVEPTN] [-savename SAVENAME] [-af|asfile] [-exit]\n";exit 1]
 SAVEDB:`:csvdb
 SAVEPTN:`
 if[`savedb in key o;if[count first o[`savedb];SAVEDB:hsym`$first o[`savedb]]]
@@ -13,10 +13,10 @@ if[`saveptn in key o;if[count first o[`saveptn];SAVEPTN:`$first o[`saveptn]]]
 NOHEADER:0b
 DELIM:","
 \z 1 / D date format 0 => mm/dd/yyyy or 1 => dd/mm/yyyy (yyyy.mm.dd is always ok)
-LOADNAME:`trns
-SAVENAME:`trns
-LOADFMTS:"SSSESSESSSSZ"
-LOADHDRS:`transactionid`transactionstype`transactionscurrency`amountusd`transactionsstate`eacardholderpresence`eamerchantmcc`eamerchantcity`eamerchantcountry`direction`userid`createddate
+LOADNAME:`transactions
+SAVENAME:`transactions
+LOADFMTS:"HSSESSECSSIZ"
+LOADHDRS:`tid`tstype`tscurrency`amountusd`tsstate`eaprsnc`eammcc`eamcity`eamcountry`direction`userid`createddate
 if[`savename in key o;if[count first o[`savename];SAVENAME:`$first o[`savename]]]
 SAVEPATH:{` sv((`. `SAVEDB`SAVEPTN`SAVENAME)except`),`}
 LOADDEFN:{(LOADFMTS;$[NOHEADER;DELIM;enlist DELIM])}
@@ -25,8 +25,8 @@ POSTLOADALL:{x}
 POSTSAVEALL:{x}
 LOAD:{[file] POSTLOADALL POSTLOADEACH$[NOHEADER;flip LOADHDRS!LOADDEFN[]0:;LOADHDRS xcol LOADDEFN[]0:]file}
 LOAD10:{[file] LOAD(file;0;1+last(11-NOHEADER)#where 0xa=read1(file;0;20000))} / just load first 10 records
-JUSTSYMFMTS:"SSS SS SSSS "
-JUSTSYMHDRS:`transactionid`transactionstype`transactionscurrency`transactionsstate`eacardholderpresence`eamerchantcity`eamerchantcountry`direction`userid
+JUSTSYMFMTS:" SS SS  SS  "
+JUSTSYMHDRS:`tstype`tscurrency`tsstate`eaprsnc`eamcountry`direction
 JUSTSYMDEFN:{(JUSTSYMFMTS;$[NOHEADER;DELIM;enlist DELIM])}
 CHUNKSIZE:25000000
 DATA:()
