@@ -22,6 +22,8 @@ $(X_DEST)/users.csv1 $(X_DEST)/users.csv2: $(X_DEST)/users.csv0
 	:> $(X_DEST)/users.csv1
 	gawk -v x0=4 -v d_file=$(X_DEST)/users.csv1 -f csv1.awk $< > $(X_DEST)/users.csv2
 
+clean::
+	$(SHELL) -c "rm -rf $(X_DEST)/*"
 
 ## Load to csvdb
 
@@ -42,5 +44,5 @@ install: $(X_DB)/notifications $(X_DB)/devices $(X_DB)/transactions $(X_DB)/user
 
 ## Cleaning
 
-distclean::
+distclean:: clean
 	-$(SHELL) -c "rm -rf $(X_DB)/*"
