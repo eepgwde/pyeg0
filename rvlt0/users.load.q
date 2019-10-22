@@ -15,7 +15,7 @@ DELIM:","
 \z 1 / D date format 0 => mm/dd/yyyy or 1 => dd/mm/yyyy (yyyy.mm.dd is always ok)
 LOADNAME:`users
 SAVENAME:`users
-LOADFMTS:"HHSCZBSEEIII"
+LOADFMTS:"IHSCZBSEEIII"
 LOADHDRS:`userid`yob`ctry`city`dt0`uscrypt0`plan`push1`email1`ncontacts`nrefls`nsrefls
 if[`savename in key o;if[count first o[`savename];SAVENAME:`$first o[`savename]]]
 SAVEPATH:{` sv((`. `SAVEDB`SAVEPTN`SAVENAME)except`),`}
