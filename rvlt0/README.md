@@ -108,5 +108,17 @@ q/kdb+ like every other finite numeric system can introduce rounding errors.
 them.) I've dealt with that problem here by rounding to 2 decimal places. (I've
 also illustrated how to round and return an integer.)
 
+** Efficacy of q/kdb+
 
+It's worthwhile to look at the coding effort needed to answer the 3 questions
+using q/kdb+
+
+(Use 
+
+ $ make all-local
+ 
+For a simple code line count.)
+
+The analysis of the 3 questions takes 50 lines of q code.
+The re-keying of the data tables takes 14 lines of q code.
 

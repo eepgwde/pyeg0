@@ -41,6 +41,9 @@ $(X_DB)/notifications: $(X_DEST)/notifications.csv0
 
 install: $(X_DB)/notifications $(X_DB)/devices $(X_DB)/transactions $(X_DB)/users
 
+install-local:
+	@for i in anal0.q ldr0.q; do echo $$i $$(egrep -v '^(//|/ |$$)' $$i | wc -l); done
+
 
 ## Cleaning
 
