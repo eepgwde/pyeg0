@@ -167,11 +167,11 @@ count select from .t.x0 where not v
 // users, what would the volume of their transactions be?
 update nns1: s2ns * nns, v1ns: s2ns * v0ns from `tnuns;
 // And store to a table.
-tnunsX0: select by dt0 from tnuns where v1ns < v0s
+tnunsX0: select ns, nns1, v0s, v1ns from tnuns where v1ns < v0s
 0N!("all-days: ", string count tnunsX0);
 
 // If we ignore days where there were no non-standard transactions
-tnunsX1: select by dt0 from tnuns where (nns > 0),v1ns < v0s
+tnunsX1: select from tnuns where (nns > 0),v1ns < v0s
 0N!("all-ns-active-days: ", string count tnunsX1);
 
 // Most of them fall in 2018.01
@@ -184,7 +184,7 @@ tnunsX1: select by dt0 from tnuns where (nns > 0),v1ns < v0s
 
 tbls: `tnunsX0`tnunsX1`q1`q2a`q2b`q2c
 
-{ .csv.t2csv @ x  } each tbls
+{ 0N!x; .csv.t2csv @ x  } each tbls
 
 
 \
