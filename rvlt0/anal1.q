@@ -14,6 +14,9 @@
 // Load the time0 and date0 libraries
 .sys.qloader enlist "time0.q"
 
+.csv.d0: (raze value "\\pwd"),"/../cache/out"
+.csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
+
 // Raise the HTTP server port to view tables
 \p 4444
 
@@ -22,64 +25,72 @@
 // Drop a couple of annoying fields and use a derivative name
 delete uscrypt0, city, nrefls, nsrefls from `users0;
 
-// A transaction rate: transactions per day.
+// A transaction rate: transactions per day isn't quite right for banking.
+// People usually have more than one transaction on any one day.
+// So days with transactions is better. Then days between transactions is a good measure of activity.
 // User account age is today's date and the date account created.
 // and age user age in years.
 
 .tmp.yr: `year$.z.D
 update acnd0:.z.D - (`date$dt0), age0: .tmp.yr - yob from `users0;
 
-// From transactions add the current number of transactions and the transaction rate 
+// From transactions add the current number of transactions and the transaction rate
+
+t0: select actv:1b by userid,`date$dt0 from trns
+t0: select sum actv by userid from t0
+users0: users0 lj t0
+
 t0: select trate: first n % userid.acnd0, nt: first n by userid from select n:count i by userid from trns
 users0: users0 lj t0
 
 // Some coalescing
+users0[;`actv]:0^users0[;`actv]
 users0[;`nt]:0^users0[;`nt]
 users0[;`trate]:0.0f^users0[;`trate]
 
-t0: `trate xasc users0
+// drate is a ratio of days active to days as customer.
+// reciprocal is days between transactions.
+update drate: actv % acnd0 from `users0 where 1 <= actv;
+update tdays0: reciprocal drate from `users0;
 
-// Collect some things: inactive users: trate more or less zero, or nt == 0
+// sort by drate and the never-active accounts are followed by the least active.
+t0: `drate xasc users0
+
+// Collect some things: inactive users: tdays0 > 365
 // inactivity one transaction a year
-.users0.trate0: 1.0 % 365.0
+.users0.tdays0: 365.0f
 // store their type too.
-.users0.inactive: `users0$exec userid from users0 where (nt = 0) or (trate < .users0.trate0)
+.users0.neveractive: `users0$exec userid from users0 where (nt = 0)
+.users0.inactive: `users0$exec userid from users0 where (nt > 0),(tdays0 > .users0.tdays0)
+
+uneveractive: select from users0 where userid in .users0.neveractive
+uinactive: select from users0 where userid in .users0.inactive
+
+// write these to CSV and delete from heap.
+tbls: `uneveractive`uinactive
+{ 0N!x; .csv.t2csv @ x  } each tbls
+
+uneveractive:uinactive:()
+delete uneveractive, uinactive from `.;
 
 // remove them from users0 and from trns
-trns1: delete from trns where userid in .users0.inactive
-users1: delete from users0 where userid in .users0.inactive
+trns1: delete from trns where userid in .users0.neveractive
+users1: delete from users0 where userid in .users0.neveractive
 
 // and re-key trns1 to use users1
 update userid:`users1$`int$userid from `trns1;
 
-// The trate is small try a days-to-trans
-
-update tdays:reciprocal trate from `users1;
-
-// some bins
+// Deduce a probability distribution.
 
 // 2 d.p and round up
 rh:{0.01*floor 0.5+x*100} 
 ri:{floor 0.5+x}
+// Get the range of tdays0
+r0: { { "f"$x } each ri @ (min x; max x) } @ exec tdays0 from users1
 
-r0: { { "f"$x } each ri @ (min x; max x) } @ exec tdays from users1
-
-// one transaction every 7 days
-b0: first deltas desc r0
-b0: b0 % 52
-b0
-
-// Try to make it more pareto by saying if there are more than one transaction on each day
-// then we wait one day for the next set of transactions.
-t0: update tdays: 0.5 from users1 where tdays < 0.5
-update tdays: ri @ tdays from `t0;
-tdays0: select count i by 1 xbar tdays from t0
-tdays0
-count tdays0
-
-tdays0: select count i by 1 xbar tdays from t0
-tdays0
-count tdays0
+ttdays0: select count i by 1 xbar tdays0 from users1
+ttdays0
+count ttdays0
 
 // See if we can determine a distribution and find a mean and variance.
 
@@ -96,13 +107,16 @@ ntfs: `dt0 xasc ntfs
 
 ntfs1: select n: count i by mm:`month$dt0,userid.ctry,reason from ntfs
 
+// Save our workspace parameters
+
+`:./wsusers0 set get `.users0
 
 // collate some tables to output
 
 .csv.d0: (raze value "\\pwd"),"/../cache/out"
 .csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
 
-tbls: `tdays0`users2`ntfs0`ntfs1
+tbls: `ttdays0`users2`ntfs0`ntfs1
 
 { 0N!x; .csv.t2csv @ x  } each tbls
 
