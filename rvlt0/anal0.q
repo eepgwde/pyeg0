@@ -37,7 +37,7 @@ select count i by userid.ctry from trns
 
 update woy:.date0.xparts[`date$dt0;4] from `users0;
 
-// Useful, count of signups by country, year and week descended sort.
+// Useful count of signups by country, year and week descended sort.
 `n xdesc select n:count i by ctry,yy:`year$dt0,woy from users0
 
 // Question 1: signups over all weeks (over all years) average, standard deviation, median

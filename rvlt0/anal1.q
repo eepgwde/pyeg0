@@ -24,8 +24,10 @@ delete uscrypt0, city, nrefls, nsrefls from `users0;
 
 // A transaction rate: transactions per day.
 // User account age is today's date and the date account created.
+// and age user age in years.
 
-update acnd0:.z.D - (`date$dt0) from `users0;
+.tmp.yr: `year$.z.D
+update acnd0:.z.D - (`date$dt0), age0: .tmp.yr - yob from `users0;
 
 // From transactions add the current number of transactions and the transaction rate 
 t0: select trate: first n % userid.acnd0, nt: first n by userid from select n:count i by userid from trns
@@ -62,16 +64,45 @@ ri:{floor 0.5+x}
 
 r0: { { "f"$x } each ri @ (min x; max x) } @ exec tdays from users1
 
+// one transaction every 7 days
 b0: first deltas desc r0
 b0: b0 % 52
+b0
 
-select count i by b0 xbar tdays from users1
+// Try to make it more pareto by saying if there are more than one transaction on each day
+// then we wait one day for the next set of transactions.
+t0: update tdays: 0.5 from users1 where tdays < 0.5
+update tdays: ri @ tdays from `t0;
+tdays0: select count i by 1 xbar tdays from t0
+tdays0
+count tdays0
 
-\
+tdays0: select count i by 1 xbar tdays from t0
+tdays0
+count tdays0
+
+// See if we can determine a distribution and find a mean and variance.
+
+users2: select by userid from users1
+update dt0:`date$dt0 from `users2;
+delete trate from `users2;
+
+// notifications
+ntfs0: `n xdesc select n:count i by reason from ntfs
+
+// Seems to be a business process
+// sort by date and see what patterns there is over each month
+ntfs: `dt0 xasc ntfs
+
+ntfs1: select n: count i by mm:`month$dt0,userid.ctry,reason from ntfs
+
 
 // collate some tables to output
 
-tbls: `tnunsX0`tnunsX1`q1`q2a`q2b`q2c
+.csv.d0: (raze value "\\pwd"),"/../cache/out"
+.csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
+
+tbls: `tdays0`users2`ntfs0`ntfs1
 
 { 0N!x; .csv.t2csv @ x  } each tbls
 
