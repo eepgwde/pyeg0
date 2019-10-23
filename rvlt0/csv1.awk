@@ -1,5 +1,11 @@
 #!/usr/bin/gawk -f
 
+## weaves
+# Specifically for the revolut challenge, extract the quoted text field named
+# by the number x0 from the CSV input and write it to the file named by text string
+# d_file.
+# The header at record 1 is preserved.
+
 # BEGIN { FPAT = "([^,]+)|(\"[^\"]+\")" }
 BEGIN { FPAT = "([^,]*)|(\"[^\"]*\")"; OFS="," }
 

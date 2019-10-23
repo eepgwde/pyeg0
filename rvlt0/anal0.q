@@ -43,7 +43,7 @@ update woy:.date0.xparts[`date$dt0;4] from `users0;
 // Question 1: signups over all weeks (over all years) average, standard deviation, median
 // I've added the max and min and used the auto-labelling features.
 
-`n2 xdesc select avg n, sdev n, med n, max n, min n by ctry from select n:count i by ctry,woy from users0
+q1:`n2 xdesc select avg n, sdev n, med n, max n, min n by ctry from select n:count i by ctry,woy from users0
 
 // Question 2:
 
@@ -72,13 +72,13 @@ trns1: select by tid from trns where (tstype = `CARD_PAYMENT),(tsstate = `COMPLE
 // note: the use of the foreign key to refer to a field in the users0 table.
 update age:.tmp.yr - userid.yob from `trns1;
 // This is by year and month.
-`mm xasc select ntrns:count i, sum usd by mm:`month$dt0,10 xbar age from trns1
+q2a:`mm xasc select ntrns:count i, sum usd by mm:`month$dt0,10 xbar age from trns1
 
 // A calendar year from the date of the first transaction - ie. yrs0
-`mm xasc select ntrns:count i, sum usd by mm:`mm$dt0,10 xbar age from trns1 where (`date$dt0) within yrs0
+q2b:`mm xasc select ntrns:count i, sum usd by mm:`month$dt0,10 xbar age from trns1 where (`date$dt0) within yrs0
 
 // A calendar year from the date of the last transaction - ie. yrs1
-`mm xasc select ntrns:count i, sum usd by mm:`mm$dt0,10 xbar age from trns1 where (`date$dt0) within yrs1
+q2c:`mm xasc select ntrns:count i, sum usd by mm:`month$dt0,10 xbar age from trns1 where (`date$dt0) within yrs1
 
 // Question 3: 
 // "Write a query to show the number of days where the average card payments
@@ -175,6 +175,17 @@ tnunsX1: select by dt0 from tnuns where (nns > 0),v1ns < v0s
 0N!("all-ns-active-days: ", string count tnunsX1);
 
 // Most of them fall in 2018.01
+
+// Put some results on CSV for some charting.
+.csv.d0: (raze value "\\pwd"),"/../cache/out"
+.csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
+
+// collate some tables to output
+
+tbls: `tnunsX0`tnunsX1`q1`q2a`q2b`q2c
+
+{ .csv.t2csv @ x  } each tbls
+
 
 \
 
