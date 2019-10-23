@@ -7,6 +7,23 @@
 
 .sys.qloader enlist "time0.q"
 
+show t:([] ti:10:01:01 10:01:03 10:01:04;sym:`msft`ibm`ge;qty:100 200 150)
+show q:([] ti:10:01:00 10:01:01 10:01:01 10:01:02;sym:`ibm`msft`msft`ibm;px:100 99 101 98)
+
+aj[`sym`ti;t;q]
+
+show t:([]sym:3#`aapl;time:09:30:01 09:30:04 09:30:08;price:100 103 101)
+
+show q:([] sym:8#`aapl; time:09:30:01+(til 5),7 8 9; ask:101 103 103 104 104 103 102 100; bid:98 99 102 103 103 100 100 99)
+
+w:-2 1+\:t `time
+c:`sym`time
+
+// wj[w;c;t;(q;(f0;c0);(f1;c1))]
+
+wj[w;c;t;(q;(::;`ask);(::;`bid))]
+
+
 // -- Keyed against users
 select count i by userid.ctry from trns
 
