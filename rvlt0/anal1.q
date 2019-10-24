@@ -1,5 +1,5 @@
 // weaves
-// @file ldr0.q
+// @file anal1.q
 
 // Using q/kdb+ for the db.
 
@@ -88,11 +88,15 @@ ri:{floor 0.5+x}
 // Get the range of tdays0
 r0: { { "f"$x } each ri @ (min x; max x) } @ exec tdays0 from users1
 
+// See if we can determine a distribution and find a mean and variance.
 ttdays0: select count i by 1 xbar tdays0 from users1
 ttdays0
 count ttdays0
+// And anal1.ipynb suggests a good distribution is the Wald. Not because it is the best fit, but
+// because it has finite mean and variance. And it gives a sensible result 33 days. Call it 30.
 
-// See if we can determine a distribution and find a mean and variance.
+.users0.tdays01: 30.0f
+.users0.inactive1: `users0$exec userid from users1 where tdays0 within (.users0.tdays01; .users0.tdays0)
 
 users2: select by userid from users1
 update dt0:`date$dt0 from `users2;

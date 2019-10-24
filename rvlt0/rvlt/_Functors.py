@@ -189,7 +189,7 @@ class _Impl(object):
         return qs
 
 
-    def make_pdf(self, dist, params, size=10000):
+    def make_pdf(self, dist, params, size=10000, ppfs=(0.01, 0.99)):
         """Generate distributions's Probability Distribution Function """
 
         # Separate parts of parameters
@@ -198,12 +198,12 @@ class _Impl(object):
         scale = params[-1]
 
         # Get sane start and end points of distribution
-        start = dist.ppf(0.01, *arg, loc=loc, scale=scale) if arg else dist.ppf(0.01, loc=loc, scale=scale)
-        end = dist.ppf(0.99, *arg, loc=loc, scale=scale) if arg else dist.ppf(0.99, loc=loc, scale=scale)
+        start = dist.ppf(ppfs[0], *arg, loc=loc, scale=scale) if arg else dist.ppf(ppfs[0], loc=loc, scale=scale)
+        end = dist.ppf(ppfs[1], *arg, loc=loc, scale=scale) if arg else dist.ppf(ppfs[1], loc=loc, scale=scale)
 
         # Build PDF and turn into pandas Series
         x = np.linspace(start, end, size)
-        y = dist.pdf(x, loc=loc, scale=scale, *arg)
+        y = dist.pdf(x, *arg, loc=loc, scale=scale)
         pdf = pd.Series(y, x)
 
         return pdf

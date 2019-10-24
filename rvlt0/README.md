@@ -207,6 +207,8 @@ There is an order of magnitude between COMPLETED and the others, so we only
 consider the COMPLETED payments. (The non-COMPLETED transactions could be
 tallied for their transaction costs, but not in this analysis.)
 
+Some of the DECLINED transactions are ridiculously large.
+
 Some qualifications are refinements might be:
 
   state the value of transactions that are non-COMPLETED
@@ -254,6 +256,129 @@ q/kdb+ like every other finite numeric system can introduce rounding errors.
 (Conventional relational databases have number format types designed to avoid
 them.) I've dealt with that problem here by rounding to 2 decimal places. (I've
 also illustrated how to round and return an integer.)
+
+* Part II - Engagement and Churn
+
+** Define a target metric to measure user engagement. 
+
+"How would you define an engaged vs. unengaged user?"
+
+The transactions cover the period 2018.01.01 to 2019.05.16. There are 19430
+users. If we define activity as having at least one transaction registered then
+there are 664 users who were *never active* in that period.
+
+If an activity is defined as a day when a user has at least one transaction.
+Then one can define the days between activities as the transaction days (tdays0
+in the code in anal1.q and the table is ttdays0.)
+
+An *inactive* user is arbitrarily defined as one who has more than 365 days
+between activities. There are 803 of those.
+
+These classes of users are very unengaged.
+
+If we take the distribution of users' activities and fit them to a frequency
+distribution more classes can be derived using the mean and standard deviation.
+
+Referring to the notebook anal1.ipynb, the most sensible distribution proves to
+be the Wald distribution - also known as the Inverse Gaussian. Unlike other more
+extreme distributions, it has a finite mean and variance. And, usefully, for
+this data it provides a meaningful result.
+
+It has a median of 11 days between activities, a mean of 19 days and a standard
+deviation of 22. Because of the very long tail in the data, it would be best to
+use the median. If one adds 22 to the median, this gives 33 which is about a
+month.
+
+It can then be argued that a reasonably active user will be using his account at
+least once a month. (An appeal to business principles is that many billing
+systems use monthly payments - so an active user will have at least one billing
+service being paid with his account.)
+
+So we can classify all users who are using their accounts less often than that
+as unengaged.
+
+That gives another 5869 users who can be classified as unengaged. They have more
+than 30 and less than 365 days between activities.
+
+** Classify engaged and unengaged users
+
+"Using your logic from above, build a model (heuristic/statistical/ML) to classify
+engaged and unengaged users. Note that features which are directly correlated with
+your target metric could lead to overfitting."
+
+The numbers are 19430 users and by the classes above only 7349 are unengaged
+(never-active, inactive (> 365 between activity) and unengaged (> 30 and <
+365)). So under 40% are inactive or unengaged: 2 customers in 5 make little or
+no use of their account.
+
+I'll develop a classifier from the user data that will use features like device
+type, country, age and some transaction metrics to classify if a user is likely
+to be unengaged. This is not a typical classification exercise, because I have
+am deciding class membership. For example, more typical would be disease
+incidence. A person's features such age, weight, height, body-mass-index,
+gender, lifestyle features would be correlated against whether they developed
+diabetes. In this way, it would be become clear which features are more likely
+to indicate possible diabetes sufferers. This is known as root-cause analysis
+and the techniques used for it include logistic regression and shallow
+machine-learning classifiers, such as random forest. These methods provide a
+means to rank feature importance. Neural network methods don't easily deliver a
+feature importance. 
+
+This is a shame. A multi-layer classifying perceptron - feed-forward neural
+network - is very easy to implement because it does its own feature scaling.
+
+The caveat noted above - "features that are directly correlated to the target
+metric" mean that we should not use features similar to account activity. So
+total number of transactions or transaction value would be examples of what are
+known as *prescient* features - the outcome is encoded in them in some way.
+
+Features to consider: 
+
+    - average transaction value should be usable
+    - age of user
+    - possibly age of account (but perhaps a prescient feature)
+    - number of notifications received (prescient?)
+    - user features: plan, number of contacts, push and email
+    - the city feature could be useful but needs a lot cleaning
+    - and the others in the user record
+    
+From the transaction records, indicator variables might be usable.
+
+    - indicator for transaction failure or reversion 
+    - indicator for transaction direction
+    - used account feature: indicator of whether a transaction type has been used
+
+And from the notification file, this might be indicative
+
+    - indicator for notification failure
+    - and others might be indicators for ONBOARDING, LOST_CARD_ORDER and NO_INITIAL events
+
+Generally, anything that indicates age of the account might be prescient, so
+total counts should not be used.
+
+The city text field has a lot of variety in spelling - upper-case, lower-case,
+mixed-case, language accents. Names are often abbreviated (Cagnes vs.
+Cagnes-sur-mer). And occasionally mispelt or plainly incorrect. A soundex method
+would have to be used to trap some mis-spellings. A nearest neighbours methods
+could also be used if I had access to the postcode - and knew how that was
+encoded in each country. This is too large a job for this challenge I think.
+
+
+
+** How would you test to check whether we are actually reducing churn?
+
+Let’s assume an unengaged user is a churned user. Now suppose we use your model
+to identify unengaged users and implement some business actions try to convert
+them to engaged users (commonly known as reducing churn). How would you set up a
+test/experiment to check whether we are actually reducing churn?
+
+** Re-engagement Campaign Effectiveness
+
+In the past, one business action we took to reduce churn was to re-engage
+inactive users. Our engagement team designed a marketing campaign,
+REENGAGEMENT_ACTIVE_FUNDS to remind inactive users about funds on their Revolut
+account. Define a metric to measure the effectiveness of the campaign. Under
+this metric, was the campaign effective?
 
 * More notes
 
