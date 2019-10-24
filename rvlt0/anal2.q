@@ -20,7 +20,7 @@
 .csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
 
 // Raise the HTTP server port to view tables
-\p 4444
+\p 4445
 
 // User activity generally.
 
@@ -97,6 +97,10 @@ t0: select inb:1b by userid from trns where direction = `INBOUND
 users0: users0 lj t0
 update inb:0b from `users0 where null inb;
 
+// and the phone type
+// forget to key devs on userid, so shuffle the columns with a select 
+users0: users0 lj 1!0!select by userid from devs
+
 // average transaction value
 // watch out some of the declined transactions are huge.
 
@@ -117,11 +121,27 @@ update inactive1:1b from `users0 where userid in .users0.inactive1 ;
 
 users1: delete yob, dt0 from users0
 
+// Some sanity checks
+// DECLINED should be excluded.
 t0: `v xdesc users1
 
+// how many zero averages there are.
 select max v, count i by nactive from users1
 
-\
+// Last bit of data preparation convert booleans to strings.
+// We use this b2sym function - vector conditional.
+.sch.b2sym: { ?[x;(count x)#`True;(count x)#`False] }
+// remove the key for now.
+t0: 0!users1
+// find the boolean columns
+.tmp.bs: "b" = value (meta users1)[;`t] 
+// get their names - this is a bit complicated, one can use (cols users1) where .tmp.bs
+.tmp.cs: raze value flip (key (meta users1)) where .tmp.bs
+// then use a functional update method with global amend on all those columns.
+{ a:(enlist x)!enlist (.sch.b2sym;x); t0:: ![t0;();0b;a] } each .tmp.cs ;
+// and back to users1
+
+users1: 1!t0
 
 // Save our workspace parameters
 

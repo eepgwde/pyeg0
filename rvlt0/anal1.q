@@ -60,8 +60,8 @@ t0: `drate xasc users0
 // inactivity one transaction a year
 .users0.tdays0: 365.0f
 // store their type too.
-.users0.neveractive: `users0$exec userid from users0 where (nt = 0)
-.users0.inactive: `users0$exec userid from users0 where (nt > 0),(tdays0 > .users0.tdays0)
+.users0.neveractive: exec userid from users0 where (nt = 0)
+.users0.inactive: exec userid from users0 where (nt > 0),(tdays0 > .users0.tdays0)
 
 uneveractive: select from users0 where userid in .users0.neveractive
 uinactive: select from users0 where userid in .users0.inactive
@@ -96,7 +96,7 @@ count ttdays0
 // because it has finite mean and variance. And it gives a sensible result 33 days. Call it 30.
 
 .users0.tdays01: 30.0f
-.users0.inactive1: `users0$exec userid from users1 where tdays0 within (.users0.tdays01; .users0.tdays0)
+.users0.inactive1: exec userid from users1 where tdays0 within (.users0.tdays01; .users0.tdays0)
 
 users2: select by userid from users1
 update dt0:`date$dt0 from `users2;
