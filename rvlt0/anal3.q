@@ -90,19 +90,37 @@ update tid:i from `trns1;
 trns1: .sch.rename1[cols trns1;`dt0;`dt0t] xcol trns1
 
 // The analogy is that notification is the trade and trns1 is the quote.
-// we want before and after.
-// Transaction prior to the Notification
-tpn: aj[`userid`dt1;ntfs2;trns1]
 // Notification prior to the Transaction
 npt: aj[`userid`dt1;trns1;ntfs2]
-
-tpn1: delete from tpn where or[(null tid);(null nid)]
+// delete all the unmatched and analyze the changes
 npt1: delete from npt where or[(null tid);(null nid)]
+// summary table of changes
+tdrate1: `nid xasc select n:count i, first drate1, last drate1, first dt1n, first dt1t, last dt1t by userid,nid from npt1
+// add a percentage delete, negative is good, the days between transactions has reduced.
+update rdrate1: (drate11 - drate1) % drate1 from `tdrate1 ;
+// add a response days 
+update ddt11: dt1t - dt1n from `tdrate1 ;
 
-select drate1 by userid,dt1 from tpn1
+.users0.ntfy0: 7
 
-`nid xasc select n:count i, first drate1, last drate1, first dt1n, first dt1t, last dt1t by userid,nid from npt1
+// Then we can simplify for a statistical test.
+show select count i by 0 < rdrate1 from tdrate1
+// apply a response days
+show select count i by 0 < rdrate1 from tdrate1 where ddt11 <= .users0.ntfy0
 
+// Notifications to which no response
+// All the notification ids
+n1s: ntfs2[;`nid]
+n1s1: exec nid from tdrate1 
+// no-response at all
+.users0.noresponse0: n1s except n1s1
+// no-response within a window
+n1s1: exec nid from tdrate1 where ddt11 <= .users0.ntfy0
+// no-response
+.users0.noresponse1: n1s except n1s1
+
+// A problem here is that some of the transactions are very much after the notification.
+// I can filter these out 
 
 \
 
