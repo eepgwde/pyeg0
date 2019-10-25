@@ -412,6 +412,9 @@ newly captured birds that are tagged can be used to estimate the population. If
 the estimate is larger than the actual population then one could argue the
 policy to re-activate users has been effective.
 
+And of course, we have a control group those who have not received the
+REENGAGEMENT_ACTIVE_FUNDS notification.
+
 ** Re-engagement Campaign Effectiveness
 
 "In the past, one business action we took to reduce churn was to re-engage

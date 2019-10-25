@@ -20,7 +20,7 @@
 .csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
 
 // Raise the HTTP server port to view tables
-\p 4445
+\p 4444
 
 // User activity generally.
 
