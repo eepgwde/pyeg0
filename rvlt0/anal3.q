@@ -65,15 +65,14 @@ ntfs2: `dt0 xasc select first dt0 by userid,dt1 from ntfs1
 // For the transactions we introduce a rolling count of transaction days.
 // First filter down the transactions remove DECLINED and others
 trns1: delete from trns where tsstate <> `COMPLETED
-// Make this a daily table
-
-trns2: select tcnt:1i, first dt0, nt:count i by userid, dt1:`date$dt0 from trns1
-
-update sums tcnt by userid from `trns2 ;
-
-select sum tcnt by userid,dt0 from trns2 where userid = 0i
-
-update tcnt:1i by dt0
+// Make this a daily table, keep the first timestamp, store the number of
+// transactions, just in case
+trns1: select tcnt:1i, first dt0, nt:count i by userid, dt1:`date$dt0 from trns1
+update sums tcnt, ddt1:(1i,1_deltas dt1) by userid from `trns1 ;
+// On each day, calculate some drate metrics: the number of days between transactions.
+update drate:(sums ddt1) % tcnt by userid from `trns1;
+update drate1: 10 mavg ddt1 tcnt by userid from `trns1;
+update drate2: .sch.ewma1[ddt1; 0.7f] by userid from `trns1;
 
 
 \
