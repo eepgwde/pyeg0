@@ -1,21 +1,21 @@
 // weaves
-// @file anal2.q
+// @file anal3.q
 
 // Using q/kdb+ for the db.
 
 // Engaged and unengaged users
 //
-// Preparation of user records for use with scikit-learn
+// Use of as-of joins around a notification. How many transactions were subsequent to the notification?
 
 // -- Using tables that have been keyed against users
 
 // Load the tables
 .sys.qloader enlist "csvdb"
+// Load the time0 and date0 libraries
+.sys.qloader enlist "time0.q"
 
-// This loads the parameters determined by anal1.q
 `.users0 set get `:./wsusers0;
 
-// Some CSV output methods.
 .csv.d0: (raze value "\\pwd"),"/../cache/out"
 .csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
 
@@ -24,13 +24,12 @@
 
 // User activity generally.
 
-// Drop a couple of zero-variance fields 
+// Drop a couple of annoying fields and use a derivative name
 delete city, nrefls, nsrefls from `users0;
 
 // A transaction rate: transactions per day isn't quite right for banking.
 // People usually have more than one transaction on any one day.
-// So days with transactions is better. Then days between transactions is a good
-// measure of activity and should have an exponential distribution.
+// So days with transactions is better. Then days between transactions is a good measure of activity.
 // User account age is today's date and the date account created.
 // and age user age in years.
 

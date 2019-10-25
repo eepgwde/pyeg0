@@ -5,15 +5,20 @@
 
 // Engaged and unengaged users
 //
-// Use of as-of joins around a notification. How many transactions were subsequent to the notification?
+// Prepare user transaction activity to fit to a distribution and get some statistics: mean/median
+// and standard deviation to justify a threshold for engaged/unengaged.
+//
+// I develop other metrics as well as the one I will fit to. The metric I will use is tdays0.
+// I use q/kdb+ live to adjust the data-set from within Python anal1.ipynb.
+// I then use the mean/media and std deviation to classify the users. I store their ids to a
+// workspace for later use. I classify to 3 sets. never-active, inactive and inactive1.
 
 // -- Using tables that have been keyed against users
 
 // Load the tables
 .sys.qloader enlist "csvdb"
-// Load the time0 and date0 libraries
-.sys.qloader enlist "time0.q"
 
+// CSV output
 .csv.d0: (raze value "\\pwd"),"/../cache/out"
 .csv.t2csv: .sch.t2csv2[;"csv";.csv.d0]
 
@@ -22,13 +27,16 @@
 
 // User activity generally.
 
-// Drop a couple of annoying fields and use a derivative name
+// Drop a couple of zero-variance and/or irrelevant fields 
 delete uscrypt0, city, nrefls, nsrefls from `users0;
 
 // A transaction rate: transactions per day isn't quite right for banking.
 // People usually have more than one transaction on any one day.
-// So days with transactions is better. Then days between transactions is a good measure of activity.
-// User account age is today's date and the date account created.
+// So days with transactions is better - a transactions-day. Then days between transactions
+// is a good measure of activity. It should be exponentially distributed for each account.
+// And a sum of exponentials is a gamma.
+//
+// Add some other metrics: user account age is today's date and the date account created.
 // and age user age in years.
 
 .tmp.yr: `year$.z.D
@@ -48,6 +56,7 @@ users0[;`actv]:0^users0[;`actv]
 users0[;`nt]:0^users0[;`nt]
 users0[;`trate]:0.0f^users0[;`trate]
 
+// * Metric tdays0 is days between any two days that have any number of transactions.
 // drate is a ratio of days active to days as customer.
 // reciprocal is days between transactions.
 update drate: actv % acnd0 from `users0 where 1 <= actv;
@@ -66,14 +75,14 @@ t0: `drate xasc users0
 uneveractive: select from users0 where userid in .users0.neveractive
 uinactive: select from users0 where userid in .users0.inactive
 
-// write these to CSV and delete from heap.
+// write these to CSV and delete from workspace and heap just in case RAM is running short.
 tbls: `uneveractive`uinactive
 { 0N!x; .csv.t2csv @ x  } each tbls
-
+// the first is for the garbage collector, the second deletes from the workspace.
 uneveractive:uinactive:()
 delete uneveractive, uinactive from `.;
 
-// remove them from users0 and from trns
+// remove two classes from users0 and from trns
 trns1: delete from trns where userid in .users0.neveractive
 users1: delete from users0 where userid in .users0.neveractive
 
@@ -82,20 +91,21 @@ update userid:`users1$`int$userid from `trns1;
 
 // Deduce a probability distribution.
 
-// 2 d.p and round up
+// rounding functions: 2 d.p and round up
 rh:{0.01*floor 0.5+x*100} 
 ri:{floor 0.5+x}
-// Get the range of tdays0
+// Get the range of tdays0  - just for a sanity check
 r0: { { "f"$x } each ri @ (min x; max x) } @ exec tdays0 from users1
 
 // See if we can determine a distribution and find a mean and variance.
+// This is the input file to the fils.
 ttdays0: select count i by 1 xbar tdays0 from users1
 ttdays0
 count ttdays0
 // And anal1.ipynb suggests a good distribution is the Wald. Not because it is the best fit, but
 // because it has finite mean and variance. And it gives a sensible result 33 days. Call it 30.
 
-.users0.tdays01: 30.0f
+.users0.tdays01: 30.0f // so 30 days to a year
 .users0.inactive1: exec userid from users1 where tdays0 within (.users0.tdays01; .users0.tdays0)
 
 users2: select by userid from users1
@@ -105,7 +115,7 @@ delete trate from `users2;
 // notifications
 ntfs0: `n xdesc select n:count i by reason from ntfs
 
-// Seems to be a business process
+// Seems to be a business process: every 30 days is some kind of threshold.
 // sort by date and see what patterns there is over each month
 ntfs: `dt0 xasc ntfs
 
@@ -123,7 +133,6 @@ ntfs1: select n: count i by mm:`month$dt0,userid.ctry,reason from ntfs
 tbls: `ttdays0`users2`ntfs0`ntfs1
 
 { 0N!x; .csv.t2csv @ x  } each tbls
-
 
 \
 
