@@ -61,6 +61,7 @@ select distinct userid by `month$dt0 from ntfs
 // Notifications change points - date notification sent to user.
 // Take the first timestamp on each day
 ntfs2: `dt0 xasc select first dt0 by userid,dt1 from ntfs1
+ntfs2: .sch.promote[`dt1`userid;0!ntfs2]
 
 // For the transactions we introduce a rolling count of transaction days.
 // First filter down the transactions remove DECLINED and others
@@ -70,9 +71,37 @@ trns1: delete from trns where tsstate <> `COMPLETED
 trns1: select tcnt:1i, first dt0, nt:count i by userid, dt1:`date$dt0 from trns1
 update sums tcnt, ddt1:(1i,1_deltas dt1) by userid from `trns1 ;
 // On each day, calculate some drate metrics: the number of days between transactions.
+// drate over all days. drate2 exponential weighted average.
 update drate:(sums ddt1) % tcnt by userid from `trns1;
-update drate1: 10 mavg ddt1 tcnt by userid from `trns1;
-update drate2: .sch.ewma1[ddt1; 0.7f] by userid from `trns1;
+update drate1:`float$.sch.ewma1[ddt1; 0.7f] by userid from `trns1;
+
+// Organise the columns for as-of
+trns1: `dt1`userid xasc 0!trns1
+trns1: .sch.promote[`dt1`userid;trns1]
+
+// Some column renaming
+// I'll add a row number for checking.
+update dt1n:dt1 from `ntfs2;
+update nid:i from `ntfs2;
+ntfs2: .sch.rename1[cols ntfs2;`dt0;`dt0n] xcol ntfs2
+// 
+update dt1t:dt1 from `trns1;
+update tid:i from `trns1;
+trns1: .sch.rename1[cols trns1;`dt0;`dt0t] xcol trns1
+
+// The analogy is that notification is the trade and trns1 is the quote.
+// we want before and after.
+// Transaction prior to the Notification
+tpn: aj[`userid`dt1;ntfs2;trns1]
+// Notification prior to the Transaction
+npt: aj[`userid`dt1;trns1;ntfs2]
+
+tpn1: delete from tpn where or[(null tid);(null nid)]
+npt1: delete from npt where or[(null tid);(null nid)]
+
+select drate1 by userid,dt1 from tpn1
+
+`nid xasc select n:count i, first drate1, last drate1, first dt1n, first dt1t, last dt1t by userid,nid from npt1
 
 
 \
