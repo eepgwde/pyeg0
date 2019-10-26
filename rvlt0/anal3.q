@@ -125,15 +125,16 @@ res0,:0!select case0:`post.near, n:count i by signum rdrate1 from tdrate1 where 
 // Notifications to which no response
 // All the notification ids
 n1s: ntfs2[;`nid]
+insert[`res0;(0;`post.ntfy.all;count n1s)];
 n1s1: exec nid from tdrate1
 // no-response at all
-.users0.noresponse0: n1s except n1s1
-insert[`res0;(0;`post.noresp.all;count .users0.noresponse0)];
+.users0.ntfyXnoresponse0: n1s except n1s1
+insert[`res0;(0;`post.ntfy.noresp.all;count .users0.ntfyXnoresponse0)];
 // no-response within a window
 n1s1: exec nid from tdrate1 where ddt11 <= .users0.ntfy0
 // no-response
-.users0.noresponse1: n1s except n1s1
-insert[`res0;(0;`post.noresp.near;count .users0.noresponse1)];
+.users0.ntfyXnoresponse1: n1s except n1s1
+insert[`res0;(0;`post.ntfy.noresp.near;count .users0.ntfyXnoresponse1)];
 
 // Try for a control group.
 //
@@ -175,6 +176,10 @@ update ddt11: dt1 - dt1n from `tdrate2 ;
 res0,:0!select case0:`pre.all.1, n:count i by rdrate1:signum rdrate2 from tdrate2
 // apply a response days
 res0,:0!select case0:`pre.near.1, n:count i by rdrate1:signum rdrate2 from tdrate2 where ddt11 <= .users0.ntfy0
+
+// Some summary information
+res0,:0!select case0:`users0.reengaged.notified, n:count i by rdrate1:`int$rafu from users0
+insert[`res0;(0;`users0;count users0)];
 
 // Save our workspace parameters
 `:./wsusers0 set get `.users0
