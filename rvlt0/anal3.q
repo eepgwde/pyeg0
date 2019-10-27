@@ -57,7 +57,7 @@ select count i by mm from ntfs1
 // notifications sent throughout the month.
 select distinct userid by `month$dt0 from ntfs 
 
-// as-of join between transacations and notifications for just the flagged users.
+// as-of join between transactions and notifications for just the flagged users.
 
 // Notifications change points - date notification sent to user.
 // Take the first timestamp on each day
@@ -135,6 +135,8 @@ n1s1: exec nid from tdrate1 where ddt11 <= .users0.ntfy0
 // no-response
 .users0.ntfyXnoresponse1: n1s except n1s1
 insert[`res0;(0;`post.ntfy.noresp.near;count .users0.ntfyXnoresponse1)];
+
+insert[`res0;(0;`.ntfy.near.days;.users0.ntfy0)];
 
 // Try for a control group.
 //

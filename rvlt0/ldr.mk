@@ -41,11 +41,45 @@ $(X_DB)/notifications: $(X_DEST)/notifications.csv0
 
 install: $(X_DB)/notifications $(X_DB)/devices $(X_DB)/transactions $(X_DB)/users
 
-install-local:
-	@for i in anal0.q ldr0.q; do echo $$i $$(egrep -v '^(//|/ |$$)' $$i | wc -l); done
+install-local:: ncode-work code-work.txt
 
+ncode-work:
+	$(RM) code-work.txt
+
+code-work.txt:: 
+	@for i in $(wildcard anal?.q ldr0.q); do echo $$i $$(egrep -v '^(//|/ |$$)' $$i | wc -l); done >> $@
+
+code-work.txt:: 
+	for i in $(wildcard anal?.ipynb); do echo $${i}:; jupyter nbconvert --stdout --to script $$i 2> /dev/null | egrep -v '^(#|$$)' | wc -l; done | xargs -n2  >> code-work.txt
+
+X_IPYNB ?= $(wildcard anal?.ipynb pgsql.ipynb)
+X_IPYNB1 := $(X_IPYNB:.ipynb=.html)
+X_TGT ?= walter_eaves_ht.zip
+
+dist-local:: nzip csv-info $(X_TGT)
+
+nzip:
+	rm -f $(X_TGT)
+
+$(X_TGT):: files.txt
+	@cat $+ | zip -u -@ $(X_TGT)
+
+%.html: %.ipynb
+	jupyter nbconvert --to html $<
+
+csv-info:: csv-headers.txt csvdb-headers.txt
+
+csv-headers.txt:
+	export d_sep="," ; for i in $(wildcard cache/bak/data/*.csv); do echo $$(basename $$i) ; m_ -c 2 info headerlist $$i; done | unix2dos > $@
+
+csvdb-headers.txt:
+	cat $$(wildcard *.load.q) | egrep '^LOADHDRS' | unix2dos > $@
+
+$(X_TGT):: $(X_IPYNB1) csv-headers.txt csvdb-headers.txt code-work.txt rvlt/*.py
+	zip -u $@ $+
 
 ## Cleaning
 
 distclean:: clean
-	-$(SHELL) -c "rm -rf $(X_DB)/*"
+	$(SHELL) -c "rm -rf $(X_DB)/*"
+	-$(RM) $(X_IPYNB1) csv-headers.txt csvdb-headers.txt $(wildcard *.log)

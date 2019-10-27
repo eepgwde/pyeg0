@@ -3,7 +3,7 @@
 
 // Using q/kdb+ for the db.
 
-// Engaged and unengaged users
+// Engaged and unengaged users: frequency of use regression and classification
 //
 // Prepare user transaction activity to fit to a distribution and get some statistics: mean/median
 // and standard deviation to justify a threshold for engaged/unengaged.
