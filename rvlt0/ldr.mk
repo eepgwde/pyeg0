@@ -41,7 +41,9 @@ $(X_DB)/notifications: $(X_DEST)/notifications.csv0
 
 install: $(X_DB)/notifications $(X_DB)/devices $(X_DB)/transactions $(X_DB)/users
 
-install-local:: ncode-work code-work.txt
+.PHONY: dist-local ncode-work nzip csv-info distclean
+
+dist-local:: ncode-work code-work.txt
 
 ncode-work:
 	$(RM) code-work.txt

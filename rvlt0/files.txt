@@ -12,6 +12,8 @@ ldr.mk
 ldr0.q
 pgsql.ipynb
 rvlt0.xlsx
+rvlt0.odt
+rvlt0.docx
 cache/out/xq2c.csv
 cache/out/xq2b.csv
 cache/out/xq2a.csv
