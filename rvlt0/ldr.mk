@@ -3,11 +3,18 @@
 X_SRC = cache/bak/data
 X_DEST = cache/in
 
+X_SRCS0 ?= $(subst rev-,,$(wildcard cache/bak/data/rev-*.csv))
+X_SRCS = $(addprefix $(X_DEST)/,$(notdir $(X_SRCS0:.csv=.csv2)))
+
 X_DB = csvdb
 
 T_FILE ?= $(X_SRC)/rev-transactions.csv
 
-all: $(X_DEST)/transactions.csv2 $(X_DEST)/users.csv0 $(X_DEST)/devices.csv0 $(X_DEST)/notifications.csv0 $(X_DEST)/users.csv1 $(X_DEST)/users.csv2
+view:
+	@echo X_SRCS0 : $(X_SRCS0)
+	@echo X_SRCS : $(X_SRCS)
+
+all: $(X_SRCS)
 
 # Simplify the record ids to be just integers. This doesn't change the header row.
 $(X_DEST)/%.csv0: $(X_SRC)/rev-%.csv
@@ -21,6 +28,18 @@ $(X_DEST)/transactions.csv1 $(X_DEST)/transactions.csv2: $(X_DEST)/transactions.
 $(X_DEST)/users.csv1 $(X_DEST)/users.csv2: $(X_DEST)/users.csv0
 	:> $(X_DEST)/users.csv1
 	gawk -v x0=4 -v d_file=$(X_DEST)/users.csv1 -f csv1.awk $< > $(X_DEST)/users.csv2
+
+$(X_DEST)/devices.csv2: $(X_DEST)/devices.csv0
+	cd $(X_DEST); ln -s $(notdir $<) $(notdir $@)
+
+$(X_DEST)/notifications.csv2: $(X_DEST)/notifications.csv0
+	cd $(X_DEST); ln -s $(notdir $<) $(notdir $@)
+
+
+all-local: devices.load.q  notifications.load.q  transactions.load.q  users.load.q
+
+%.load.q: $(X_DEST)/%.csv2
+	Qp ~/share/qsys/csvguess.q 
 
 clean::
 	$(SHELL) -c "rm -rf $(X_DEST)/*"

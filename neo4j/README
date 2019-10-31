@@ -1,0 +1,102 @@
+* Preamble
+
+weaves
+
+* Installation
+
+neo4j provide a Debian sources.list file and an key for APT.
+
+** j1 neo4j server
+
+Now runs out of a thin volume /dev/TMP0/neo4j
+This is the whole /var/lib/neo4j directory
+
+Using the standard systemd script. Added plugins and logging in the /etc/neo4j/neo4j.conf.
+
+* Usage
+
+** Basic access to neo4j - initial web console
+
+The default username is neo4j 
+
+The default URL for web-access is http://localhost:7474/browser/ on
+initialization it asks for a password for the neo4j user. It opens on a TCP port
+which can be 0.0.0.0. Other ports are named in the /etc/neo4j.conf file. The
+port number for bolt is 7687
+
+** Access via command-line shell
+
+The new shell is cypher-shell (j1 only)
+
+ $ cypher-shell -u neo4j -p abc123
+
+or whatever the password is, if not on command-line, it will prompt.
+
+The old shell (Debian provided) is on n1 installed as neo4j-client and is invoked as
+
+ $ neo4j-client -u weaves j1.host
+
+This connects.
+
+** Web-console
+
+To display graph diagrams, just paste a generic command into the console
+
+ $ MATCH p=(:Person)-[:ACTED_IN]->(:Movie) RETURN p
+
+And the web-console will plot up to a limit.
+
+** NeoViz
+
+The index.html file shows how to use https://github.com/neo4j-contrib/neovis.js
+
+Paste the same query into the config block as the value for 'initial_cypher'.
+Adjust the labels: to be the Node classes. Similarly for relationships.
+
+
+
+
+** j1 Python notebooks
+
+These use the py2neo package - installed in gensim.
+
+See /misc/build/0/training-v2/Courses/DataScience/notebooks/
+
+All these work, but when running, don't use the Sandbox cell.
+
+** Plugins (and logging)
+
+Drop plugins in the /var/lib/neo4j/plugins
+Change /etc/neo4j/neo4j.conf security.procedures to include
+algo.* in the whitelist and the unrestricted
+
+  dbms.security.procedures.unrestricted=algo.*
+  dbms.security.procedures.whitelist=randomUUID,algo.*,apoc.coll.*,apoc.load.*
+
+I've added the open source graph algorithms algo.* and the apoc.* loaders
+
+To check the web-interface has
+
+ call algo.list()
+
+To see APOC is loaded use the auto-complete on this
+
+ call apoc
+
+Just to check, the logging was switched on.
+
+* Postamble
+
+This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: utf-8 ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
+

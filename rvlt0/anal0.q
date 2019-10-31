@@ -1,5 +1,5 @@
 // weaves
-// @file ldr0.q
+// @file anal0.q
 
 // Using q/kdb+ for the db.
 
@@ -186,14 +186,13 @@ tbls: `tnunsX0`tnunsX1`q1`q2a`q2b`q2c
 
 { 0N!x; .csv.t2csv @ x  } each tbls
 
-
 \
 
-/  Local Variables: 
-/  mode: q
-/  q-prog-args: "-p 4445 -c 200 120 -C 2000 2000 -load csvdb help.q  -verbose -halt -quiet"
-/  fill-column: 75
-/  comment-column: 50
-/  comment-start: "/  "
-/  comment-end: ""
-/  End:
+/ Local Variables:
+/ mode:kdbp
+/ comment-start: "/ "
+/ comment-end: " "
+/ q-prog-args:"-p 4445 -c 200 120 -C 2000 2000 -load csvdb help.q  -verbose -halt -quiet"
+/ fill-column:75
+/ comment-column:50
+/ End:

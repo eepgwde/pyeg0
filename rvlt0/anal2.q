@@ -147,7 +147,7 @@ tbls: `users1
 \
 
 /  Local Variables: 
-/  mode: q
+/  mode:q-minor
 /  q-prog-args: "-p 4445 -c 200 120 -C 2000 2000 -load csvdb help.q  -verbose -halt -quiet"
 /  fill-column: 75
 /  comment-column: 50
