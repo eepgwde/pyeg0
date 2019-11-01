@@ -1,0 +1,14 @@
+host,protocol,server,port
+j1,bolt,empty,37687
+j1,http,empty,37474
+j1,https,empty,37473
+j1,bolt,movies,27687
+j1,http,movies,27474
+j1,https,movies,27473
+j1,bolt,default,7687
+j1,http,default,7474
+j1,https,default,7473
+j1,bolt,demo,17687
+j1,http,demo,17474
+j1,https,demo,17473
+weaves,auth,3lbpb84,-1

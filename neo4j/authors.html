@@ -13,30 +13,26 @@
      function draw() {
          var config = {
              container_id: "viz",
-             server_url: "bolt://j1.host:7687",
+             server_url: "bolt://j1:17687",
              server_user: "weaves",
              server_password: "3lbpb84",
              labels: {
-                 "Person": {
+                 "Author": {
                      caption: "name",
                      size: "1"
                  },
-                 "Movie": {
+                 "Article": {
                      caption: "title",
                      size: "1"
                  }
              },
              relationships: {
-                 "ACTED_IN": {
+                 "CITED": {
                      caption: false,
-                     thickness: "count"
-                 },
-                 "DIRECTED": {
-                     caption: true,
                      thickness: "count"
                  }
              },
-             initial_cypher: "MATCH p=(:Person)-[:ACTED_IN]->(:Movie) RETURN p"
+             initial_cypher: "MATCH p=()-[r:CITED]->() RETURN p LIMIT 100"
          }
          var viz = new NeoVis.default(config);
          viz.render();

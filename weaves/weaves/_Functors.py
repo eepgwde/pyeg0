@@ -16,6 +16,11 @@ from tempfile import NamedTemporaryFile
 
 import os
 import sys
+import platform
+import getpass
+
+## Assume that pandas has been loaded.
+import pandas as pd
 
 from functools import singledispatch, update_wrapper
 from itertools import islice, chain, starmap, tee, zip_longest, cycle
@@ -178,6 +183,53 @@ class _Impl(object):
             qs = dict([ (x[0], fconv(x[1])) for x in qs.items() ])
 
         return qs
+
+    neo4j_ports = None
+
+    def neo4j(self, **kwargs):
+        r0 = None
+
+        if 'file' in kwargs:
+            fname = kwargs.get('file')
+            if fname is None:
+                fname = os.path.expanduser('~/.neo4j/ports.csv')
+            fname = os.path.expanduser(fname)
+            if not(os.path.exists(fname)):
+                return None
+            self.neo4j_ports = pd.read_csv(fname)
+            r0 = self.neo4j_ports
+
+        if 'url' in kwargs:
+            d0 = self._neo4j(kwargs.get('url'))
+            if d0 is None:
+                return None
+            r0 = "{protocol}://{host}:{port}".format(**d0)
+
+        if 'auth' in kwargs:
+            d0 = kwargs.get('auth')
+            d0['host'] = d0.get('host', getpass.getuser())
+            d0['port'] = -1
+            d0['protocol'] = 'auth'
+            d1 = self._neo4j(d0)
+            if d1 is None:
+                return None
+            r0 = ( d1['host'], d1['server'] )
+
+        return r0
+
+    def _neo4j(self, d0):
+        r0 = None
+        ddef = { 'host': platform.node(), 'protocol': 'bolt', 'port': 7687 }
+        d0 = { **ddef, **d0 }
+        df = self.neo4j_ports
+        # we only usually want the port number
+        if d0['port'] < 0:
+            df1 = df[(df['host']==d0['host']) & (df['protocol']==d0['protocol']) & (df['port'] == d0['port']) ]
+        else:
+            df1 = df[(df['host']==d0['host']) & (df['protocol']==d0['protocol']) & (df['server']==d0['server'])]
+        if df1.empty:
+            return None
+        return df1.iloc[0].to_dict()
 
     ## From https://docs.python.org/3/library/itertools.html
 

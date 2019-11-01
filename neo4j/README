@@ -2,16 +2,59 @@
 
 weaves
 
-* Installation
+* Installation and Maintenance
 
 neo4j provide a Debian sources.list file and an key for APT.
 
-** j1 neo4j server
+** j1 neo4j servers
 
 Now runs out of a thin volume /dev/TMP0/neo4j
 This is the whole /var/lib/neo4j directory
 
 Using the standard systemd script. Added plugins and logging in the /etc/neo4j/neo4j.conf.
+
+** Other servers
+
+I've added a systemd generator neo4j@
+It uses the /etc/neo4j/{movies,demo} as needed sub-directory to find its configuration.
+
+The graph database has to be placed elsewhere
+
+the default (the standard neo4j systemd script) uses
+
+ /var/lib/neo4j/data/databases/graph.db
+
+But the config entry is 
+
+dbms.directories.data=/var/lib/neo4j/data
+
+*** demo
+
+/var/lib/neo4j/data/demo/databases/demo.db
+
+and dbms.directories.data=/var/lib/neo4j/data/demo
+
+so you have to make a databases directory under demo.
+
+Also the ports have to changed.
+
+dbms.connector.bolt.listen_address=:17687
+dbms.connector.http.listen_address=:17474
+dbms.connector.https.listen_address=:17473
+
+*** movies
+
+Same arrangement with ports at 27???
+
+** Maintenance
+
+The databases are file-based, so stop the server and move files around.
+For demo.db the original has been moved to demo2.db. When the server is restarted,
+it creates an empty database.
+
+This can then be reloaded with only the Author data from the Python books.
+
+The port number has to be changed in all the Python scripts.
 
 * Usage
 
@@ -52,9 +95,6 @@ The index.html file shows how to use https://github.com/neo4j-contrib/neovis.js
 
 Paste the same query into the config block as the value for 'initial_cypher'.
 Adjust the labels: to be the Node classes. Similarly for relationships.
-
-
-
 
 ** j1 Python notebooks
 
