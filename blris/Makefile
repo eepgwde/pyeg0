@@ -15,7 +15,7 @@ all-local:
 	gawk -f ris0.awk $< > $@
 
 %.ris1: %.ris0
-	gawk -f ris1.awk $< | gawk -f ris2.awk > $@
+	gawk -f ris1.awk $< | gawk -f ris2.awk | gawk -f ris3.awk > $@
 
 clean-local::
 	$(SHELL) -c "rm -f *.ris*"
