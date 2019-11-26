@@ -1,6 +1,6 @@
 BEGIN { FS = "\n"; RS = "\n\n" }
 
-NF > 0 { print "";
+NF > 0 { 
     idx=-1;
     for (i=1; i<=NF; i++) {
         split($i, x, " - ", seps);
@@ -13,6 +13,5 @@ NF > 0 { print "";
     print $idx;
     for (i=1; i<=NF; i++)
         if (i!=idx) print $i;
+    print "";
 }
-
-
