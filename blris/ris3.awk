@@ -11,6 +11,8 @@ NF > 0 {
         if (x[1] ~ /AU/ && nAU == 0) { state=state+2; nAU=1 }
     }
 
+    # print "state: ", state;
+
     if (state == 1) {
         for (i=1; i<=NF; i++) {
             split($i, x, " - ", seps);
@@ -20,7 +22,7 @@ NF > 0 {
         }
     }
 
-    if (state == 3) {
+    if (state == 3 || state == 2) {
         for (i=1; i<=NF; i++) {
             split($i, x, " - ", seps);
             if (x[1] ~ /ER/) { print $i; print ""; continue }
