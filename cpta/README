@@ -1,0 +1,61 @@
+* Preamble
+
+Walter.D.Eaves@gmail.com
+
+* Contents
+
+The project is contained in a single Zip file.
+
+Most of the project files are in the cache/out sub-directory.
+
+    15275  2019-12-01 21:31   weaves-cpta-0.0.1.dev652/cache/out/cpta2.ipynb
+   808444  2019-12-01 21:33   weaves-cpta-0.0.1.dev652/cache/out/Capita Data Challenge.pdf
+   286233  2019-12-01 21:15   weaves-cpta-0.0.1.dev652/cache/out/cpta2.xlsx
+   891579  2019-12-01 21:33   weaves-cpta-0.0.1.dev652/cache/out/Capita Data Challenge.pptx
+    30887  2019-12-01 21:31   weaves-cpta-0.0.1.dev652/cache/out/cpta1.ipynb
+    37332  2019-12-01 21:15   weaves-cpta-0.0.1.dev652/cache/out/cpta1.pdf
+    11249  2019-12-01 21:31   weaves-cpta-0.0.1.dev652/cache/out/cpta2a.ipynb
+   271531  2019-12-01 21:15   weaves-cpta-0.0.1.dev652/cache/out/cpta-uk.xlsx
+    33982  2019-12-01 21:15   weaves-cpta-0.0.1.dev652/cache/out/cpta2a.pdf
+   346488  2019-12-01 21:15   weaves-cpta-0.0.1.dev652/cache/out/cpta-b.xlsx
+    44207  2019-12-01 21:15   weaves-cpta-0.0.1.dev652/cache/out/cpta2.pdf
+
+A code module is in the cpta/ sub-directory.
+
+    16593  2019-12-01 12:04   weaves-cpta-0.0.1.dev652/cpta/_Functors.py
+      271  2019-10-28 12:07   weaves-cpta-0.0.1.dev652/cpta/__init__.py
+      108  2019-10-28 12:07   weaves-cpta-0.0.1.dev652/cpta/_version.py
+
+The work is done in the notebooks
+
+Question 1 - Home nation totals for most recent year
+
+ cpta1.ipynb and this has a PDF cpta1.pdf
+
+Question 2 - Exploratory analysis
+
+ cpta2.ipynb and PDF cpta2.pdf
+
+This uses the module in cpta/ in the Zip file.
+
+And produces some CSV files that are loaded into the Excel workbooks
+
+ cpta-uk.xlsx cpta-b.xlsx
+
+The presentation is Capita Data Challenge.pptx and there is a PDF.
+
+* Postamble
+
+This file's Emacs file variables
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: utf-8 ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
+
