@@ -30,6 +30,7 @@ from tempfile import NamedTemporaryFile
 from itertools import islice, chain, starmap, tee, zip_longest, cycle
 
 from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import VarianceThreshold
 
 import numpy as np
 import pandas as pd
@@ -114,7 +115,33 @@ class _Impl:
             s0 = s0[['name', 'q', 'v']]
             return s0
 
-        return pd.concat([f1(n) for n in df.columns]).reset_index()
+        return pd.concat([f1(n) for n in df.columns]).reset_index(drop=True)
+
+
+    def nzv(self, df, thresh=0.0):
+        """
+        Near-zero variance, this applies the VarianceThreshold
+
+        thresh = .8 * (1 - .8) is a common calculation (binomial variance is p q).
+        """
+
+        cols = list(df.columns)
+        # instantiate VarianceThreshold object
+        vt = VarianceThreshold(threshold=thresh)
+        # fit vt to data
+        vt.fit(df.values)
+        # get the indices of the features that are being kept
+        feature_idxs = vt.get_support(indices=True)
+        # remove low-variance columns from index
+        feature_names = [cols[idx]
+                         for idx, _
+                         in enumerate(cols)
+                         if idx
+                         in feature_idxs]
+
+        # get the columns
+        nzv_ = list(np.setdiff1d(cols, feature_names))
+        return nzv_
 
     def map0(self, df, col0=None, d0={'yes': 1, 'no': 0}):
         """
