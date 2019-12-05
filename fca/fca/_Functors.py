@@ -35,6 +35,8 @@ from sklearn.feature_selection import VarianceThreshold
 import numpy as np
 import pandas as pd
 
+from pandas.api.types import CategoricalDtype
+
 import socks
 
 class _Impl:
@@ -82,18 +84,20 @@ class _Impl:
             df.select_dtypes(['object']).apply(lambda x: x.astype('category'))
         return df
 
-    def cat2code(self, df):
+    def cat2code(self, df0):
         """
         For a Pandas dataframe, this converts categorical objects to int8.
         """
+        df = df0.copy(deep=True)
         df[df.select_dtypes(['category']).columns] = \
             df.select_dtypes(['category']).apply(lambda x: x.cat.codes)
         return df
 
-    def code2scale(self, df, scaler0=StandardScaler(), cols=None):
+    def code2scale(self, df0, scaler0=StandardScaler(), cols=None):
         """
         For a Pandas dataframe, this applies a scaler usually the StandardScaler.
         """
+        df = df0.copy(deep=True)
         if cols is None:
             cols = df.columns
         df[cols] = scaler0.fit_transform(df[cols])
@@ -117,6 +121,18 @@ class _Impl:
 
         return pd.concat([f1(n) for n in df.columns]).reset_index(drop=True)
 
+    def conditonals0(self, df, outcome=None, priors=None):
+        """
+        Look for conditional logic - that if a prior is always true when the outcome is true
+
+        A prior may also be always false when the outcome is false.
+
+        A prior may also be always true when the outcome is false.
+
+        A prior may also be always false when the outcome is true.
+        """
+        states = None
+        return states
 
     def nzv(self, df, thresh=0.0):
         """
@@ -142,6 +158,30 @@ class _Impl:
         # get the columns
         nzv_ = list(np.setdiff1d(cols, feature_names))
         return nzv_
+
+    def categorize0(self, df, tag=None, ctype0=None, class0=None):
+        """
+        This recategorizes a column and adds a boolean column for a specific
+        class.
+        """
+
+        if tag is None:
+            return df
+
+        if len(set(list(df.columns)).intersection([tag])) == 0:
+            return df
+
+        if ctype0 is None:
+            attrs0 = set(df[tag])
+            ctype0 = CategoricalDtype(categories=cols, ordered=True)
+
+        df[tag] = df[tag].astype(ctype0);
+
+        if class0 is not None:
+            tag0 = tag+"0"
+            df[tag0] = df[tag].values == class0
+
+        return df
 
     def map0(self, df, col0=None, d0={'yes': 1, 'no': 0}):
         """
