@@ -16,11 +16,26 @@ The work is done in the notebooks
 
  fca0.ipynb and this has a PDF fca1.pdf
 
+I've remodelled some of the features, to try and improve the response.
+I went through one iteration of design and testing before I did this.
+
+I made the features marital and education ordered categories.
+
+The features that have an unknown or nonexistent value, I've added a boolean,
+suffixed with a 0, to indicate it is effectively an NA.
+
+The 999 value is probably too large as an NA value for pdays, so I've
+classified added a boolean indicator for it and replaced the 999 with tat
+is 1.5 times the maximum.
+
 ** Visualisation
 
  fca1.ipynb and PDF fca1.pdf
 
-This uses the module in fca/ in the Zip file.
+The correlations and a feature plot are in this notebook.
+
+I've looked at some of the interesting features. There are potentially some useful
+splits of the dataset. nr.employed and pdays0 are candidates.
 
 ** Models
 
@@ -30,11 +45,150 @@ It can be set to cross-validation or a single train/test selection.
 
 It can use a number of filterings of the data-set.
 
-It can fit different models.
+It can fit different models. I use different models to help with understanding
+the dataset.
 
 *** Prescient Model
 
-I use this with cross-validation to show my tools are good
+The first model is a "prescient" model - so-called because the outcome is
+in the inputs. It should hugely overfit. I use this with cross-validation
+to show my tools are good and see if the dataset can be usually split.
+
+The neural network MLPC is used as the model. Because neural networks
+overfit, this shows that there is a deep split in the dataset.
+
+The cross-validation result is this:
+
+[1.        , 1.        , 1.        , 0.89450042, 0.88794464]
+
+So the model works well for 3 out of 5 samples, but 11% of the data is not
+well-classified by it.
+
+The other models fit well (give 1.0 in all cases.)
+
+Index(['duration', 'emp.var.rate', 'euribor3m', 'nr.employed', 'y'], dtype='object')
+
+*** Naive Model
+
+Remove the outcome y from the input data X.
+
+In order of tree-ness - how much they use trees versus optimization, we have
+
+ Decision Tree < MLPC < Gradient boosted < Random Forest < Logistic Regression
+
+Again, the MLPC returns a split performance because of over-fitting.
+
+[0.90216072, 0.8873513 , 0.82459335, 0.4752944 , 0.58382906]
+
+The decision tree classifier now performs worst, it has over-fitted.
+
+[0.8884438 , 0.3616169 , 0.61956786, 0.18259075, 0.14240622]
+
+Gradient boosted
+
+[0.88832241, 0.63814033, 0.70114105, 0.15369673, 0.14240622]
+
+Random forest does well all over because it aggregates across many trees.
+
+[0.8873513 , 0.8572469 , 0.8873513 , 0.80660435, 0.66553357]
+
+Logistic regression aggregates performance without using trees directly.
+
+[0.89366351, 0.87169216, 0.88528769, 0.77042613, 0.65982761]
+
+**** Predictive Features
+
+All the model that can provide feature importance (not MLPC) give pretty much
+the same results.
+
+Decision Tree
+
+['age', 'job', 'duration', 'euribor3m', 'nr.employed']
+
+Gradient Boosted
+
+  name 	rank
+  age 	1
+  nr.employed 	1
+  euribor3m 	1
+  duration 	1
+  pdays 	1
+  cons.conf.idx 	2
+
+Random Forest
+
+  name 	rank
+  emp.var.rate 	1
+  nr.employed 	1
+  euribor3m 	1
+  pdays 	1
+  duration 	1
+  cons.conf.idx 	2
+  cons.price.idx 	3
+
+Logistic Regression
+
+ 	name 	rank
+	emp.var.rate 	1
+	nr.employed 	1
+	duration 	1
+	poutcome0 	1
+	poutcome 	1
+	euribor3m 	2
+	month 	3
+
+Comparing these, it appears that the socio-economic indicators are important.
+
+The tree methods are best with distinguishing features, whereas logistic
+regression has included poutcome0 and poutcome. Logistic regression also
+picks out month: this has some correlation with the economic factors and possibly
+the campaign sequence.
+
+age is important, but the decision tree named job has a top feature.
+
+**** Correlations
+
+The correlations are developed in fca1.ipynb
+
+***** Coded
+
+The data-set has been encoded but not scaled.
+
+Because there is a lot of data I've only calculated the correlations on a
+sample.
+
+I've removed the very highly correlated indicator variables I introduced for
+the NA. (These are usually 90% correlated with their underlying.)
+
+pdays is highly correlated with poutcome. This is an operational dependency.
+pdays will not be 999 (or about 40 in my recoding) if poutcome is success or failure.
+This suggests that pdays0 could proxy for pdays well.
+
+***** Scaled
+
+Switch over to use the scaled data to compare distributions of features.
+
+The correlations improve when scaled - always encouraging.
+
+There are some useful density plot comparisons.
+
+There is a cluster of features that are correlated to euribor3m. Of these,
+the cons.price.idx and nr.employed are most highly correlated and if one
+had to choose one, the cons.price.idx has the most variance and is less
+likely to be multi-modal.
+
+I suspect that the term deposit decision is valued as some rate of interest against
+some expected expenditure - or euribor3m vs. consumer price index.
+
+**** Implementation Notes
+
+Gradient-boosted is very slow in scikit-learn. In GNU-R it is faster than Random Forest.
+
+The SVC (Support Vector method Classifier) is prohibitively slow for large datasets.
+
+*** Refinements 1
+
+Correlated variables.
 
 And produces some CSV files that are loaded into the Excel workbooks
 
