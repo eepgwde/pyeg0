@@ -385,6 +385,9 @@ class _Impl:
 
         return pdf
 
+    def flatten(self, lol):
+        return chain(*lol)
+
     ## From https://docs.python.org/3/library/itertools.html
 
     def take(self, n, iterable):
