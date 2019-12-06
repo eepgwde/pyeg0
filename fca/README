@@ -186,15 +186,45 @@ Gradient-boosted is very slow in scikit-learn. In GNU-R it is faster than Random
 
 The SVC (Support Vector method Classifier) is prohibitively slow for large datasets.
 
-*** Refinements 1
+*** Refinements 1 - Reduce to 5 variables
 
-Correlated variables.
+Correlated variables. 
 
-And produces some CSV files that are loaded into the Excel workbooks
+poutcome0 is the most useful of the prior campaigns.
 
- fca-uk.xlsx fca-b.xlsx
+cons.conf.idx should be the best of the socio-economic attributes.
 
-The presentation is Capita Data Challenge.pptx and there is a PDF.
+age, marital, job and education should be important, but only age and job made
+top lists.
+
+So incrementally, I will remove some of the extraneous ones and test with
+logistic regression. See selection case 3.
+
+**** Choice of 5
+
+Final choice of 5 for logistic regression is
+
+      'age', 'job', 'marital', 'education', 'default'
+
+Giving scores cross-validation scores.
+
+       [0.8873513 , 0.8873513 , 0.8873513 , 0.88733762, 0.88733762]
+
+When the cross-validation results are very similar that is usually an indicator
+of problems.
+
+Here the confusion matrix has no true positives (or false positives).
+
+(tn, fp, fn, tp) = (7323, 0, 915, 0)
+
+Upsampling will not help here. It will give more true positives (and false positives)
+on the training data-set, but nothing on the test.
+
+**** Model Comparision
+
+A train and test split with confusion matrix
+
+
 
 * Postamble
 
