@@ -11,10 +11,16 @@ PYTHONIOENCODING=utf-8
 DOCSDIR ?= docs/
 PKG := $(notdir $(PWD))
 
+NBS ?= $(wildcard *.ipynb)
+NBS1 := $(NBS:.ipynb=.py)
+
 export SDIR
 
-all::
+all:: $(NBS1)
 	true
+
+%.py: %.ipynb
+	jupyter nbconvert --to python $< --stdout > $@
 
 ifneq ($(UUT),)
 
