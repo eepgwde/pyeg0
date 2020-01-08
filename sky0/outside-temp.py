@@ -82,15 +82,20 @@ ef5.rename(columns={'ddtm0': "Time Average", 'dy0': 'day-of-month'}, inplace=Tru
 
 str1 = "q1a: average time of hottest daily temperature of the month (ISO duration format):\n{}"
 v0 = ef5['Time Average'].mean()
-print(str1.format(v0.isoformat()))
-print()
+
+with open('q1.txt', 'w') as fl:
+  fl.write(str1.format(v0.isoformat()))
+  fl.write("\n")
 
 ef5['hour'] = ef5['Time Average'].map(lambda x: x.total_seconds() / 60 / 60)
 
 str1 = "q1b: times of the day that are the most commonly occurring hottest times:"
-print(str1)
-print(ef1['ddtm0'].mode())
-print()
+
+with open('q1.txt', 'a') as fl:
+  fl.write(str1)
+
+tdf0 = ef1['ddtm0'].mode().to_frame()
+tdf0.to_csv("q1.txt", mode="a", index=False, sep=' ')
 
 ef1['ddtm0'].value_counts().head()
 
@@ -113,7 +118,10 @@ t10 = ef7['date'].to_frame().drop_duplicates()[:10]
 
 # ## c. Which are the Top Ten hottest times on distinct days, preferably sorted by date order.
 
-print("q1c: top ten hottest times on distinct days, preferably sorted by date order:")
-print(ff1.merge(t10, on='date').sort_values('date'))
-print()
+with open('q1.txt', 'a') as fl:
+  fl.write("q1c: top ten hottest times on distinct days, preferably sorted by date order:")
+
+tdf0 = ff1.merge(t10, on='date').sort_values('date')
+
+tdf0.to_csv('q1.txt', mode='a', index=False, sep=' ')
 
