@@ -12,15 +12,22 @@ DOCSDIR ?= docs/
 PKG := $(notdir $(PWD))
 
 NBS ?= $(wildcard *.ipynb)
-NBS1 := $(NBS:.ipynb=.py)
+NBS1 := $(NBS:.ipynb=.py~)
+NBS2 := $(NBS:.ipynb=.pdf)
 
 export SDIR
 
-all:: $(NBS1)
+all:: $(NBS1) $(NBS2)
 	true
 
-%.py: %.ipynb
+install-local:
+	zip walter-eaves README $(NBS) $(NBS2) hi-temp.py july.py outside-temp.py $(wildcard q*.txt)
+
+%.py~: %.ipynb
 	jupyter nbconvert --to python $< --stdout > $@
+
+%.pdf: %.ipynb
+	jupyter nbconvert --to pdf $< 
 
 ifneq ($(UUT),)
 
@@ -73,5 +80,6 @@ clean::
 	-$(SHELL) -c "find . -type f -name '*.log' -delete "
 	-$(SHELL) -c "find . -type f -name '*~' -delete "
 	-$(SHELL) -c "find . -type d -name '*egg*' -exec rm -rf {} \; "
-	rm -f $(wildcard dist/*)
+	rm -f $(wildcard dist/*) $(NBS1) $(NBS2) $(wildcard 200606.*) $(wildcard q?.txt)
+	rm -f walter-eaves.zip
 	rm -f ChangeLog AUTHORS
