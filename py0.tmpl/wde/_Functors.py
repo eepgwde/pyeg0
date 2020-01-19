@@ -1,3 +1,7 @@
+"""
+This module provides a utility Singleton for embedding functions with some state.
+"""
+
 ## @file _Functors.py
 # @brief Extensions to Python class and object dispatch.
 # @author weaves
@@ -9,6 +13,12 @@
 # @note
 #
 # The Singleton includes a implementation that does some date arithmetic.
+#
+# pylint: disable=R0904
+# pylint: disable=C0103
+# pylint: disable=R0201
+
+import configparser
 
 import logging
 import os
@@ -17,14 +27,19 @@ import sys
 from datetime import datetime, date, timedelta
 from tempfile import NamedTemporaryFile
 
+from itertools import islice, chain, starmap, tee, zip_longest, cycle
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import VarianceThreshold
+
 import numpy as np
 import pandas as pd
 
-from itertools import islice, chain, starmap, tee, zip_longest, cycle
+from pandas.api.types import CategoricalDtype
 
-import configparser 
+import socks
 
-class _Impl(object):
+class _Impl:
     """Many utility methods and features hidden behind a singleton.
 
     Features: Global configuration. A global debug logger.
@@ -61,11 +76,139 @@ class _Impl(object):
 
         self.config(**kwargs)
 
-    def lbl2n(self, s0):
-        return s0
-
     def str2cat(self, df):
-        df[df.select_dtypes(['object']).columns] = df.select_dtypes(['object']).apply(lambda x: x.astype('category'))
+        """
+        For a Pandas dataframe, this converts string objects to category ones.
+        """
+        df[df.select_dtypes(['object']).columns] = \
+            df.select_dtypes(['object']).apply(lambda x: x.astype('category'))
+        return df
+
+    def cat2code(self, df0):
+        """
+        For a Pandas dataframe, this converts categorical objects to int8.
+        """
+        df = df0.copy(deep=True)
+        df[df.select_dtypes(['category']).columns] = \
+            df.select_dtypes(['category']).apply(lambda x: x.cat.codes)
+        return df
+
+    def code2scale(self, df0, scaler0=StandardScaler(), cols=None):
+        """
+        For a Pandas dataframe, this applies a scaler usually the StandardScaler.
+        """
+        df = df0.copy(deep=True)
+        if cols is None:
+            cols = df.columns
+        df[cols] = scaler0.fit_transform(df[cols])
+        return df
+
+    def df2describe(self, df):
+        """
+        For a Pandas dataframe, this generates a Pandas describe()
+        """
+
+        def f1(n0):
+            """
+            Run describe, change to a Dataframe and do some renaming
+            """
+            s0 = df[n0].describe().to_frame()
+            s0['name'] = n0
+            s0.reset_index(inplace=True)
+            s0.rename(columns={n0 : 'v', 'index': 'q'}, inplace=True)
+            s0 = s0[['name', 'q', 'v']]
+            return s0
+
+        return pd.concat([f1(n) for n in df.columns]).reset_index(drop=True)
+
+    def describe2null(self, ds):
+        """
+        Find the maximal record count for non-null and return the table.
+
+        (mx0, cts) = i0.describe2null(ds)
+
+        if any(cts.index != mx0):
+           100 * (mx0 - cts.index)/cts.index
+
+        """
+        cts = ds[ (ds['q'].str.startswith('count'))]
+        cts1 = cts['v'].value_counts()
+        s0 = set(cts1.values)
+        mx0 = max(s0)
+        df0 = cts1.to_frame()
+        idx = df0[df0['v'] == mx0].index.values
+        return (idx.tolist()[0], cts1)
+
+
+    def conditonals0(self, df, outcome=None, priors=None):
+        """
+        Look for conditional logic - that if a prior is always true when the outcome is true
+
+        A prior may also be always false when the outcome is false.
+
+        A prior may also be always true when the outcome is false.
+
+        A prior may also be always false when the outcome is true.
+        """
+        states = None
+        return states
+
+    def nzv(self, df, thresh=0.0):
+        """
+        Near-zero variance, this applies the VarianceThreshold
+
+        thresh = .8 * (1 - .8) is a common calculation (binomial variance is p q).
+        """
+
+        cols = list(df.columns)
+        # instantiate VarianceThreshold object
+        vt = VarianceThreshold(threshold=thresh)
+        # fit vt to data
+        vt.fit(df.values)
+        # get the indices of the features that are being kept
+        feature_idxs = vt.get_support(indices=True)
+        # remove low-variance columns from index
+        feature_names = [cols[idx]
+                         for idx, _
+                         in enumerate(cols)
+                         if idx
+                         in feature_idxs]
+
+        # get the columns
+        nzv_ = list(np.setdiff1d(cols, feature_names))
+        return nzv_
+
+    def categorize0(self, df, tag=None, ctype0=None, class0=None):
+        """
+        This recategorizes a column and adds a boolean column for a specific
+        class.
+        """
+
+        if tag is None:
+            return df
+
+        if len(set(list(df.columns)).intersection([tag])) == 0:
+            return df
+
+        if ctype0 is None:
+            attrs0 = set(df[tag])
+            ctype0 = CategoricalDtype(categories=cols, ordered=True)
+
+        df[tag] = df[tag].astype(ctype0);
+
+        if class0 is not None:
+            tag0 = tag+"0"
+            df[tag0] = df[tag].values == class0
+
+        return df
+
+    def map0(self, df, col0=None, d0={'yes': 1, 'no': 0}):
+        """
+        How to remap a column's attributes
+
+        Pass a dictionary of the expected values and their mappings.
+        """
+        df[col0] = df[col0].map(d0)
         return df
 
     def dtypes(self, df0, type0=np.dtype('O')):
@@ -82,10 +225,13 @@ class _Impl(object):
         return t0[type0]
 
     def categories0(self, df1):
-        return dict([ (x, tuple(df1[x].cat.categories)) for x in df1.select_dtypes(['category']).columns ])
+        d0 = [(x, tuple(df1[x].cat.categories)) \
+              for x in df1.select_dtypes(['category']).columns]
+        return dict(d0)
 
     def categories1(self, df):
-        df[df.select_dtypes(['category']).columns] = df.select_dtypes(['category']).apply(lambda x: x.cat.codes)
+        df[df.select_dtypes(['category']).columns] = \
+            df.select_dtypes(['category']).apply(lambda x: x.cat.codes)
         return df
 
     def config(self, **kwargs):
@@ -107,7 +253,55 @@ class _Impl(object):
                 self._opener = request.build_opener()
                 self._opener.addheaders = self._hdrs
 
+    def simplify0(self, df, dt0=None, age0='All ages', measure0='Value'):
+        """
+        Processes files from Nomisweb
+
+        See this file as a sample.
+        https://www.nomisweb.co.uk/api/v01/dataset/NM_31_1.jsonstat.json
+        """
+        if dt0 is None:
+            dt0 = max(df.date)
+
+        df1 = df[(df.date == dt0) & df.age.str.match(age0) & df.measures.str.match(measure0)]
+        df1 = df1[['geography', 'sex', 'value']].copy(deep=True)
+        df2 = df1[df1.geography.str.match('England and Wales')].copy() # because this is view
+
+        v = df1[df1.geography.str.match('England and Wales')]['value'].values \
+            - df1[df1.geography.str.match('Wales')]['value'].values
+        df2['value'] = v
+        df2['geography'] = 'England'
+
+        df3 = df1[~(df1.geography.str.match('England and Wales'))]\
+            .append(df2).copy(deep=True).reset_index()
+        df3.drop(columns=['index'], axis=1, inplace=True)
+        df4 = df3.groupby(['sex']).sum().reset_index()
+        df4['geography'] = 'UK'
+        df5 = df3.append(df4[df3.columns]).reset_index()
+        df5.drop(columns='index', axis=1, inplace=True)
+        df6 = df5.pivot(index='geography', columns='sex', values='value')
+        df6.columns = df6.columns.categories
+        df6['date'] = dt0
+        df6['age'] = age0
+        df6 = df6.reset_index()
+        df7 = df6[['date', 'geography', 'age', 'Male', 'Female', 'Total']]
+        return df7
+
+
     ## Configured methods
+
+    _seq0 = 0
+
+    def seq0(self, **kwargs):
+        """
+        Simple sequence number generator
+        """
+        while True:
+            t0 = self._seq0
+            self._seq0 += 1
+            if 'fmt' in kwargs:
+                t0 = kwargs['fmt'](t0)
+            yield t0
 
     def fetch(self, **kwargs):
         """
@@ -181,12 +375,37 @@ class _Impl(object):
         if self.isvalid0(url):
             purl = urlparse(url).query
 
-        qs = dict([ x.split('=') for x in purl.split('&') ])
+        qs0 = dict([x.split('=') for x in purl.split('&')])
         if 'fconv' in kwargs:
             fconv = kwargs['fconv']
-            qs = dict([ (x[0], fconv(x[1])) for x in qs.items() ])
+            qs0 = dict([(x[0], fconv(x[1])) for x in qs.items()])
 
-        return qs
+        return qs0
+
+
+    def make_pdf(self, dist, params, size=10000, ppfs=(0.01, 0.99)):
+        """Generate distributions's Probability Distribution Function """
+
+        # Separate parts of parameters
+        arg = params[:-2]
+        loc = params[-2]
+        scale = params[-1]
+
+        # Get sane start and end points of distribution
+        start = dist.ppf(ppfs[0], *arg, loc=loc, scale=scale) \
+            if arg else dist.ppf(ppfs[0], loc=loc, scale=scale)
+        end = dist.ppf(ppfs[1], *arg, loc=loc, scale=scale) \
+            if arg else dist.ppf(ppfs[1], loc=loc, scale=scale)
+
+        # Build PDF and turn into pandas Series
+        x = np.linspace(start, end, size)
+        y = dist.pdf(x, *arg, loc=loc, scale=scale)
+        pdf = pd.Series(y, x)
+
+        return pdf
+
+    def flatten(self, lol):
+        return chain(*lol)
 
     ## From https://docs.python.org/3/library/itertools.html
 
@@ -403,12 +622,12 @@ class _Impl(object):
                 result.append(pool[-1-n])
         return tuple(result)
 
-class Singleton(object):
+class Singleton:
     """
     Singleton for L{Impl}, this is known as TimeOps or Utility
     """
     _impl = None
-    
+
     @classmethod
     def instance(cls, **kwargs):
         if cls._impl is None:
