@@ -1,0 +1,47 @@
+weaves
+
+Sky Data Analysis Programming Assignment
+v3.5 10/06/2019 (created 11/10/2012)
+
+The .py scripts all run from the (Unix shell) command-line. They rely on the
+CSV file 200606.csv being in the same directory. The output files are q1.txt,
+q2.txt and q3.txt.
+
+The files have to run in this order. The first script writes a Pickle that the
+next two scripts use.
+
+outside-temp.py
+hi-temp.py
+july.py
+
+
+The Zip file walter-eaves.zip with these files
+
+These files are question 1.
+
+outside-temp.ipynb
+outside-temp.pdf
+outside-temp.py
+q1.txt
+
+These files are question 2.
+
+hi-temp.ipynb
+hi-temp.pdf
+hi-temp.py
+q2.txt
+
+These files are question 3.
+
+july.ipynb
+july.pdf
+july.py
+q3.txt
+
+And some rough working.
+
+residuals0.ipynb
+residuals0.pdf
+
+Also the zip contains this file README 
+

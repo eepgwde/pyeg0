@@ -31,8 +31,10 @@ all-local:
 %.ris3: %.ris2
 	gawk -f ris3.awk $< > $@
 
-target-local: $(X_SRCS2)
+install-local: $(X_SRCS2)
 	cat $+ > $(X_DST)
+
+install:: install-local
 
 clean-local::
 	$(SHELL) -c "rm -f *.ris*"

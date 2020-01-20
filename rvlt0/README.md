@@ -4,6 +4,24 @@ Revolut - Challenge
 
 Walter Eaves (weaves)
 
+* Notes
+
+Quite an involved data method
+For each user I construct the days between transactions between every pair. I then build an exponentially weighted moving average on each day.
+I then perform an as-of join against the notifications. 
+One hopes that after the notification the user will make more transactions and the days between transactions will reduce.
+I therefore construct a percentage difference of the first and last averages after the notification.
+
+A simple first test is to tabulate the population counts against the signum of the percentage change of the average.
+
+I then build a control group. The same users but the month before. And tabulate in the same way.
+
+I can carry a chi-square test (or similar).
+
+That confirms that there has been some change in the number of users making more transactions.
+
+It doesn't confirm the magnitude of the percentage or the magnitude of the values transacted.
+
 * Overview
 
 This system comprises a q/kdb+ database working with Python Pandas, SciKit and
