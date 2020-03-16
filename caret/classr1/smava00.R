@@ -108,7 +108,6 @@ smava0$ft0 <- c(smava0$ft0, "bank")
 
 save(train1, smava0, file="smava0.dat")
 
-load("smava0.dat", envir=.GlobalEnv)
 
 ## Correlations dataset.
 ## The same record may fail or succeed depending on the bank.
@@ -116,8 +115,15 @@ load("smava0.dat", envir=.GlobalEnv)
 ## So we may have records that are identical but fall once and succeed at another bank.
 ## This just for correlations.
 
+## Let's add a boolean for when x2 is null and assign the mean of x2 as the value.
+
+load("smava0.dat", envir=.GlobalEnv)
+train1$x2na <- 0
+train1[ is.na(train1$x2), "x2na" ] <- 1
+train1[ is.na(train1$x2), "x2" ] <- as.vector(summary(train1$x2)['Mean'])
+
 ## Pair-plot
-train1p <- train1[ !is.na(train1$x2), smava0$ft0 ]
+train1p <- train1[, c(smava0$ft0, "x2na") ]
 
 nm0.fspec <- paste("smava0", "pp", "-%03d.jpeg", sep ="")
 
@@ -163,9 +169,16 @@ train1n <- data.frame(train1p)
 outcomes <- as.factor(train1n$outcomes)
 outcomes <- factor(outcomes, levels = c("0", "1"), labels = c("No", "Yes"))
 
+## Center and scale
+
 xcols <- union(smava0$hcor, "outcomes")
 cols <- setdiff(colnames(train1n), xcols)
 train1n <- train1n[,cols]
+
+## Store this prepro
+smava0$pp <- preProcess(train1n, method = c("center", "scale"))
+
+df0 <- predict(smava0$pp, train1n)
 
 ## simple controls
 
@@ -182,7 +195,7 @@ gbmGrid <- expand.grid(interaction.depth = c(1, 2, 3),
                        shrinkage = 0.1,
                        n.minobsinnode = 20)
 
-fit0 <- train(train1n, outcomes, method = "gbm", 
+fit0 <- train(df0, outcomes, method = "gbm", 
               trControl = fitControl,
               tuneGrid = gbmGrid,
               metric = "Kappa",
@@ -190,7 +203,7 @@ fit0 <- train(train1n, outcomes, method = "gbm",
 
 smava0$gbm <- fit0
 
-trainPred <- predict(fit0, train1n)
+trainPred <- predict(fit0, df0)
 # postResample(testPred, testClass)
 
 conf0 <- confusionMatrix(trainPred, outcomes, positive = "Yes")
@@ -198,8 +211,7 @@ conf0
 
 ## Only 65% accurate on the whole set!
 
-
-nvars <- floor(length(colnames(train1n)) * 2/3)
+nvars <- floor(length(colnames(df0)) * 2/3)
 
 jpeg(filename=paste("smava0", "mf", "-%03d.jpeg", sep=""), 
      width=1024, height=768)
@@ -210,7 +222,7 @@ plot(modelImp, top = min(dim(modelImp$importance)[1], nvars) )
 ## Get a density and a ROC
 ## You need twoClassSummary for this
 
-x.p <- predict(fit0, train1n, type = "prob")[2]
+x.p <- predict(fit0, df0, type = "prob")[2]
 
 test.df <- data.frame(true0=x.p[[ "Yes" ]], Obs=outcomes)
 test.roc <- roc(Obs ~ true0, test.df)
