@@ -67,9 +67,9 @@ train1$outcomes <- outcomes
 smava0$outcomes <- outcomes
 
 idx <- as.vector(sapply(train1, class, USE.NAMES=FALSE) == "factor")
-cs <- colnames(train1)[idx]
+smava0$cs <- colnames(train1)[idx]
 
-for(c in cs) {
+for(c in smava0$cs) {
   train1[[c]] <- as.numeric(train1[[c]])
 }
 
@@ -118,9 +118,11 @@ save(train1, smava0, file="smava0.dat")
 ## Let's add a boolean for when x2 is null and assign the mean of x2 as the value.
 
 load("smava0.dat", envir=.GlobalEnv)
+
 train1$x2na <- 0
 train1[ is.na(train1$x2), "x2na" ] <- 1
-train1[ is.na(train1$x2), "x2" ] <- as.vector(summary(train1$x2)['Mean'])
+smava0$x2impute <- as.vector(summary(train1$x2)['Mean'])
+train1[ is.na(train1$x2), "x2" ] <- smava0$x2impute
 
 ## Pair-plot
 train1p <- train1[, c(smava0$ft0, "x2na") ]
@@ -173,7 +175,8 @@ outcomes <- factor(outcomes, levels = c("0", "1"), labels = c("No", "Yes"))
 
 xcols <- union(smava0$hcor, "outcomes")
 cols <- setdiff(colnames(train1n), xcols)
-train1n <- train1n[,cols]
+smava0$ft1 <- cols
+train1n <- train1n[,smava0$ft1]
 
 ## Store this prepro
 smava0$pp <- preProcess(train1n, method = c("center", "scale"))
@@ -233,4 +236,32 @@ plot.roc(test.roc)
 
 dev.off()
 
+## Make a prediction using test.
+
+## Apply the same data pre-processing and predict.
+
+## Don't do the order.
+
+test0 <- data.frame(test) # just an backup to use in the interpreter.
+test1 <- data.frame(test)
+
+for(c in smava0$cs) {
+  test1[[c]] <- as.numeric(test1[[c]])
+}
+
+test1$x2na <- 0
+test1[ is.na(test1$x2), "x2na" ] <- 1
+test1[ is.na(test1$x2), "x2" ] <- smava0$x2impute
+
+test1n <- test1[, smava0$ft1]
+
+## pre-process
+df0 <- predict(smava0$pp, test1n)
+
+testPred <- predict(smava0$gbm, df0)
+
+predictions <- data.frame(test)
+predictions$predictionAccepted <- testPred
+
+save(predictions, file="predictions.rdata")
 
