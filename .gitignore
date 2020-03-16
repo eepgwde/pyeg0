@@ -11,7 +11,6 @@
 *.RData
 *.Rdata
 .R*
-*.od*
 *.lst
 *.zip
 
