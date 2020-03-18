@@ -14,7 +14,7 @@ ifeq ($(MAKECMDGOALS),dist-local)
 
 dist-local:: $(TARGET)-$(X_STAMP).zip
 
-$(TARGET)-$(X_STAMP).zip: predictions.rdata smava00.ipynb
+$(TARGET)-$(X_STAMP).zip: predictions.rdata smava00.ipynb smava00.pdf smava00.R
 	zip $@  $(wildcard smava*-*.jpeg) $+
 
 endif

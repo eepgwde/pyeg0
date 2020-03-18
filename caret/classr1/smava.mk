@@ -4,24 +4,31 @@
 
 ## On my site cache/out up the tree
 
-X_R = Rscript
+X_R = R CMD BATCH 
 
 X_MODEL ?= gbm
 
 ## rpart trees are the all goal
 
-all-local: predictions.rdata
+RTGTS00 ?= $(wildcard smava*.ipynb)
+RTGTS01 := $(RTGTS00:.ipynb=.Rout)
+
+all-local: predictions.rdata $(RTGTS01)
 
 
-## Not a model
-
-## This puts NZV into the br0 list.
-## Run br4.R manually and adjust br4a.R to remove the NZV
 predictions.rdat: smava00.R bak/in/train.rdata bak/in/test.rdata
 	$(X_R) smava00.R
 
 clean::
 	rm -f $(wildcard *-*.jpeg) $(wildcard *-*.tiff $(wildcard *-*.log) $(wildcard *-check.flag) $(wildcard *-*.dat)
+
+## Notebook to script with run
+
+smava%.R: smava%.ipynb
+	jupyter nbconvert --stdout --to python $< > $@
+
+smava%.Rout: smava%.R
+	$(X_R) $<
 
 
 ## Snapshotting
