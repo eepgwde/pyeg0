@@ -1,26 +1,42 @@
+
+# ## SMAVA
+# 
+# Test exercise - Question 1
+
+# In[1]:
+
+
 ## weaves
 ## smava
 
 getwd()
 
 ## load in packages
-library(caret)
+library(Hmisc)
+
 library(ranger)
+library(MASS)
 library(tidyverse)
 library(e1071)
-library(MASS)
+
 library(rpart)
 library(rpart.plot)
 library(ipred)
 library(mlbench)
 library(pROC)
 library(gbm)
+library(dplyr)
+library(caret)
 
 library(doMC)
 
-registerDoMC(cores = 4)
+registerDoMC(cores = detectCores(all.tests = FALSE, logical = TRUE))
 
-options(useFancyQuotes = FALSE)
+options(useFancyQuotes = TRUE)
+
+
+# In[2]:
+
 
 ## Data sets
 
@@ -53,6 +69,10 @@ fnas("interestRate")
 ## interestRate is only given for accepted
 train[(train$accepted == "NO") & !is.na(train$interestRate), c("accepted", "interestRate")]
 
+
+# In[3]:
+
+
 ## No obvious rule
 ## sapply(train[is.na(train$x2),], summary)
 ## sapply(train[!is.na(train$x2),], summary)
@@ -73,10 +93,12 @@ for(c in smava0$cs) {
   train1[[c]] <- as.numeric(train1[[c]])
 }
 
-train2 <- train1 %>%
-  select(customerNumber, x2) %>%
-  group_by(customerNumber) %>%
-  summarise(n = n(), na0 = sum(is.na(x2)))
+train2 <- train1 %>% dplyr::select(customerNumber, x2) %>% 
+group_by(customerNumber) %>% summarise(n = n(), na0 = sum(is.na(x2))) 
+
+
+# In[4]:
+
 
 ## And is all NA at all banks for a set of customers.
 
@@ -95,6 +117,10 @@ train2[ (train2$n != train2$na0) && (train2$na0 > 0),]
 smava0$"null-customer" <- train2[train2$na0 > 0, "customerNumber"][["customerNumber"]]
 length(smava0$"null-customer")
 
+
+# In[5]:
+
+
 ## store some colnames sets.
 
 col0 <- colnames(train1)
@@ -107,6 +133,9 @@ smava0$ft0 <- c(smava0$ft0, "bank")
 ##
 
 save(train1, smava0, file="smava0.dat")
+
+
+# In[6]:
 
 
 ## Correlations dataset.
@@ -124,14 +153,26 @@ train1[ is.na(train1$x2), "x2na" ] <- 1
 smava0$x2impute <- as.vector(summary(train1$x2)['Mean'])
 train1[ is.na(train1$x2), "x2" ] <- smava0$x2impute
 
+
+# In[7]:
+
+
 ## Pair-plot
 train1p <- train1[, c(smava0$ft0, "x2na") ]
+
+
+# In[8]:
+
 
 nm0.fspec <- paste("smava0", "pp", "-%03d.jpeg", sep ="")
 
 jpeg(width=1024, height=768, filename= nm0.fspec)
 plot(train1p)
 dev.off()
+
+
+# In[ ]:
+
 
 ## correlations
 
@@ -157,6 +198,10 @@ all(!nzv0$nzv)
 all(!nzv0$zeroVar)
 
 ## So good distributions.
+
+
+# In[15]:
+
 
 ## Dataset 1
 
@@ -185,11 +230,11 @@ df0 <- predict(smava0$pp, train1n)
 
 ## simple controls
 
-fitControl <- trainControl(## 10-fold CV
+fitControl <- trainControl(
     method = "repeatedcv",
     number = 5,
     ## repeated a few times
-    repeats = 5,
+    repeats = 3,
     summaryFunction = twoClassSummary,
   classProbs = TRUE)
 
@@ -198,10 +243,14 @@ gbmGrid <- expand.grid(interaction.depth = c(1, 2, 3),
                        shrinkage = 0.1,
                        n.minobsinnode = 20)
 
+
+# In[16]:
+
+
 fit0 <- train(df0, outcomes, method = "gbm", 
               trControl = fitControl,
               tuneGrid = gbmGrid,
-              metric = "Kappa",
+              metric = "ROC",
               verbose = FALSE)
 
 smava0$gbm <- fit0
@@ -236,6 +285,18 @@ plot.roc(test.roc)
 
 dev.off()
 
+
+# In[32]:
+
+
+## Write out our training data.
+
+save(df0, outcomes, smava0, file = "smava00-fit.dat")
+
+
+# In[29]:
+
+
 ## Make a prediction using test.
 
 ## Apply the same data pre-processing and predict.
@@ -245,9 +306,37 @@ dev.off()
 test0 <- data.frame(test) # just an backup to use in the interpreter.
 test1 <- data.frame(test)
 
-for(c in smava0$cs) {
+for(c in intersect(smava0$cs, colnames(test))) {
   test1[[c]] <- as.numeric(test1[[c]])
 }
+
+
+# In[ ]:
+
+
+## Impute with Hmisc
+
+#load data
+data("iris")
+
+#seed missing values ( 10% )
+iris.mis <- prodNA(iris, noNA = 0.1)
+summary(iris.mis)
+
+# impute with mean value
+iris.mis$imputed_age <- with(iris.mis, impute(Sepal.Length, mean))
+
+# impute with random value
+iris.mis$imputed_age2 <- with(iris.mis, impute(Sepal.Length, 'random'))
+
+#similarly you can use min, max, median to impute missing value
+
+#using argImpute
+impute_arg <- aregImpute(~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width +Species, data = iris.mis, n.impute = 5) 
+
+
+# In[30]:
+
 
 test1$x2na <- 0
 test1[ is.na(test1$x2), "x2na" ] <- 1
@@ -264,4 +353,36 @@ predictions <- data.frame(test)
 predictions$predictionAccepted <- testPred
 
 save(predictions, file="predictions.rdata")
+
+
+# In[31]:
+
+
+head(predictions)
+
+
+# ## More transformations
+# 
+# spatialSign
+
+# In[7]:
+
+
+spatialSign(rnorm(5))
+
+spatialSign(matrix(rnorm(12), ncol = 3))
+
+# should fail since the fifth column is a factor
+try(spatialSign(iris), silent = TRUE)
+
+trellis.par.set(caretTheme())
+
+featurePlot(iris[,-5], iris[,5], "pairs")
+featurePlot(spatialSign(scale(iris[,-5])), iris[,5], "pairs")
+
+
+# In[ ]:
+
+
+
 
