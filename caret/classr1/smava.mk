@@ -14,13 +14,9 @@ RTGTS00 ?= $(wildcard smava*.ipynb)
 RTGTS01 := $(RTGTS00:.ipynb=.R)
 RTGTS02 := $(RTGTS00:.ipynb=.Rout)
 
-all: $(RTGTS02)
+all: $(RTGTS02) predictions.rdata
 
-all-local: predictions.rdata $(RTGTS01)
-
-
-predictions.rdat: smava00.R bak/in/train.rdata bak/in/test.rdata
-	$(X_R) smava00.R
+all-local: $(RTGTS01)
 
 clean::
 	$(RM) $(wildcard *-*.jpeg) 
@@ -33,9 +29,11 @@ clean::
 smava%.R: smava%.ipynb
 	jupyter nbconvert --stdout --to python $< | sed '1,2d' > $@
 
-smava%.Rout: smava%.R
+smava%.rdata smava%.Rout:: smava%.R
 	$(X_R) $<
 
+predictions.rdata: smava01.dat
+	cp $< $@
 
 ## Snapshotting
 
