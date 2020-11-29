@@ -2,6 +2,8 @@
 
 weaves
 
+The one example does work.
+
 * Using Gensim and Word2Vec
 
 https://en.wikipedia.org/wiki/Tf-idf

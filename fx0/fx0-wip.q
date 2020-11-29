@@ -1,10 +1,10 @@
 /// @author weaves
 ///
-/// Validation and prototyping code for jr2.q
+/// Validation and xprototyping code for jr2.q
 
 // More things you never knew you could do with q/kdb+
 
-\l /opt/src/share/db/
+\l /home/archive/fx/db
 
 t:([] name:(); iq:())
 `t insert (`Dent;98)
@@ -12,6 +12,7 @@ t:([] name:(); iq:())
 // Example functions
 
 // A factorial of all integers up to 8, or use prd
+
 
 { (*) over 1 + til x } each til 8
 
@@ -26,7 +27,7 @@ t:([] name:(); iq:())
 // This uses "repeat": x f/y apply f to y x times.
 10 {x,sum -2#x}/ 1 1
 
-# From zero as a function
+// From zero as a function
 fibonacci:{x,sum -2#x}/[;0 1]
 
 fibonacci 10
@@ -46,15 +47,15 @@ type x0
 
 type `long$3 xexp 10 
 
- // String formatting of numbers
- // cut by 3 and take account of negatives
+// String formatting of numbers
+// cut by 3 and take account of negatives
  
 x1:-100000.01
 
- s1:signum x1
- x1:abs x1
+s1:signum x1
+x1:abs x1
 
- x0:{ $[3 = count x; x,","; x] } each 3 cut reverse string x1
+x0:{ $[3 = count x; x,","; x] } each 3 cut reverse string x1
 x3: reverse raze x0
 x3: $[x3[0] = ","; 1_x3; x3]
  x3

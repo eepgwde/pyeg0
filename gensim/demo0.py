@@ -49,9 +49,7 @@ i0 = CorpOps.instance(fname='mycorpus.txt')
 
 t0 = i0.build()
 
-j0 = next(t0)
-
-
+j0 = next(iter(t0))
 
 # There are then utilities to convert these bag of words to matrix formats
 # and back.
