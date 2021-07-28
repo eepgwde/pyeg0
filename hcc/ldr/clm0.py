@@ -20,7 +20,7 @@ def main():
     if len(sys.argv) >= 4:
         nsheet=int(sys.argv[3])
         
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet, header=5)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet, header=5)
 
     isodt1 = lambda x : isodtg.isodt0(x, dayfirst=True)
     tbl = isodtg.apply(tbl, 'Loss Date', f=isodt1)    

@@ -20,7 +20,7 @@ def main():
     if len(sys.argv) >= 4:
         nsheet=int(sys.argv[3])
 
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet)
 
     tbl = isodtg.apply(tbl, 'survey_feat_end', f=isodtg.isodt0)    
     isodtg.to_csv(tbl, sys.argv[2])

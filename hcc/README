@@ -23,7 +23,8 @@ It then uses GNU-R for the analysis; there are three forms of analysis:
 
 ** top.mk
 
-The top-level directory is this one. It has a helper script hcc_.sh.
+The top-level directory is this one. It has a helper script hcc.sh and uses
+a script file hcc
 
 The source files are stored in cache/bak. The top.mk file calls the other
 make files.
@@ -33,12 +34,12 @@ make files.
 
 do all the work
 
-*** trns and ldr and defs.mk
+*** trns/ and ldr/ and defs.mk
 
-The directory trns and ldr are the same. It contains the defs.mk file that
-specifies the files to process.
+The directory trns and ldr are the same. It is just a naming convenience.
+It contains the defs.mk file that specifies the files to process.
 
-*** trns and trns.mk to cache/in
+*** trns/ and trns.mk to cache/in
 
 This performs the translation. It uses the source script hcc_.sh in the
 top-level directory and Python scripts to populate cache/in with CSV files.

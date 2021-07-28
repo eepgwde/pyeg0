@@ -10,6 +10,10 @@
 
 tbls: tables `.
 
+/
+
+// This needs a file that has been lost.
+
 fwy2c: update n1:sums n by outcome1 from 0!select n:count i by m0:`month$lossdate,outcome1 from clm1 where (not null fwy),(lossdate within 2013.01.01 2017.11.30),(not outcome1 in `Referred`Misc)
 
 
@@ -44,6 +48,7 @@ estatus0fwy: `n xdesc select n:count i by estatus0, enqstatusname from fwyenq1
 
 .csv.t2csv[`estatus0fwy]
 
+\
 
 // Check data sets
 
@@ -128,7 +133,8 @@ cwy1: cwy0 lj `featureid xkey `featureid xcol delete siteid from cwy2
 \
 
 /  Local Variables: 
-/  mode:q 
+/  minor-mode:kdbp
+/  minor-mode:q 
 /  q-prog-args: "-p 5000 -c 200 120 -C 2000 2000 -load ../cache/csvdb help.q -verbose -halt -quiet"
 /  fill-column: 75
 /  comment-column:50

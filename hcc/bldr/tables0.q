@@ -7,7 +7,7 @@
 
 \l hcc.q
 
-`.dcover set get `:./wsdcover ; 
+`.dcover set get `:./wsdcover ;
 
 .dcover.dates0
 
@@ -44,8 +44,8 @@ update xdate0:date0 from `e0;
 
 c2e: aj[`cwy0`date0;c0;e0]
 update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2e ;
-update xdate0: `date$0N by i from `c2e where cdate0 <= xdate0
-update type1:` from `c2e where null xdate0 						 
+update xdate0: `date$0N by i from `c2e where cdate0 <= xdate0 ;
+update type1:` from `c2e where null xdate0 ;
 
 c2e: `cwy0`date0 xasc c2e
 
@@ -56,9 +56,9 @@ update xdate0:date0 from `d0;
 
 c2d: aj[`cwy0`date0;c0;d0]
 update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2d ;
-update xdate0: `date$0N by i from `c2d where cdate0 <= xdate0
-update type1:` from `c2d where null xdate0
-c2d: `cwy0`date0 xasc c2d
+update xdate0: `date$0N by i from `c2d where cdate0 <= xdate0 ;
+update type1:` from `c2d where null xdate0 ;
+c2d: `cwy0`date0 xasc c2d 
 
 w0: `cwy0`date0 xdesc ungroup select type1:`wrk, date0 by cwy0 from wrk1 where (not null cwy0), not worktype in `other`verge
 
@@ -66,8 +66,8 @@ update xdate0:date0 from `w0;
 
 c2w: aj[`cwy0`date0;c0;w0]
 update type1: fills type1, xdate0: fills xdate0 by cwy0 from `c2w ;
-update xdate0: `date$0N by i from `c2w where cdate0 <= xdate0
-update type1:` from `c2w where null xdate0 						 
+update xdate0: `date$0N by i from `c2w where cdate0 <= xdate0 ;
+update type1:` from `c2w where null xdate0 ;
 
 c2w: `cwy0`date0 xasc c2w
 
@@ -195,14 +195,10 @@ width0: `n xdesc `yy`rh0 xasc .sch.sums0[c0;a;b;samples1]
 
 .csv.t2csv[`width0]
 
-
-
-/
-
 // correlation to mtraffic
 // not as easy as I thought, mtraffic not as exclusive
 
-a0: `width`mtraffic xkey `width xdesc `i`width`mtraffic`n xcols 0!10#select by i: i+1 from `n xdesc select n:count i, width wavg count i by mtraffic width from cwy0
+a0: `width`mtraffic xkey `width xdesc `i`width`mtraffic`n xcols 0!10#select by i: i+1 from `n xdesc select n:count i, width wavg count i by width,mtraffic from cwy0
 
 b0: `width`mtraffic xkey `width xdesc `j`width`mtraffic`n xcols 0!10#select by j: i+1 from `n xdesc select n:count i by (3.5 xbar width), mtraffic from cwy0
 
@@ -215,8 +211,7 @@ b0: select by j: i+1 from `n xdesc select n:count i, avg mtraffic by 3.5 xbar wi
 
 b0: `width`mtraffic xkey `width`mtraffic xdesc `j`width`mtraffic`n xcols 0!b0
 
-\
-
+/
 
 // Performance at fixing defects
 // Note: no actions for 2013 or 2014 TODO.
@@ -229,6 +224,8 @@ x0,: 0! select type0:`afC1, count0:count i, mean0:avg dfctactionfC1 by yr0:`year
 x0,: 0! select type0:`afC2, count0:count i, mean0:avg dfctactionfC2 by yr0:`year$date0 from samples1 where (0 < dfctactionfC2)
 
 x0: `yr0`type0 xasc x0
+
+\
 
 // Another report: defect inspections and actions (with the NCA count)
 
@@ -356,8 +353,9 @@ dfctsample1: select sum statusbC1, sum dfctbC1, sum dfctrfrbC1, sum dfctinspctbC
 \
 
 /  Local Variables: 
-/  mode:q 
-/  q-prog-args: "-p 5000 -c 200 120 -C 2000 2000 -load ../cache/csvdb help.q -verbose -halt -quiet"
+/  mode:kdbp
+/  minor-mode:q 
+/  q-prog-args: "-p 5000 -c 200 120 -C 2000 2000 -load ../cache/csvdb hcc.q help.q -verbose -halt -quiet"
 /  fill-column: 75
 /  comment-column:50
 /  comment-start: "/  "

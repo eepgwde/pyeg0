@@ -58,7 +58,8 @@ select count dfct0.action1, count dfct0.inspct0, rfr0:sum dfct0.rfr0, sum dfct0.
 				       
 
 /  Local Variables: 
-/  mode:q 
+/  mode:kdbp
+/  minor-mode:q 
 /  q-prog-args: "-p 5000 -c 200 120 -C 2000 2000 -load ../cache/csvdb help.q -verbose -halt -quiet"
 /  fill-column: 75
 /  comment-column:50

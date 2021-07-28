@@ -21,7 +21,7 @@ def main():
     if len(sys.argv) >= 4:
         nsheet=int(sys.argv[3])
 
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet)
 
     tbl.drop(['enquiry_desc', 'enquiry_address'], axis=1, inplace=True) 
     tbl = isodtg.apply(tbl, 'enquiry_time', f=isodtg.isodt0)    

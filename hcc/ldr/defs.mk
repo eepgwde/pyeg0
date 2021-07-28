@@ -17,7 +17,8 @@ T_DIR ?= /cache/incoming/hcc
 TOP ?= $(shell if test -L $(PWD); then echo ../../../../.. ; else echo ..; fi)
 
 ## A helper script uses my m_ arrangement.
-H_ = $(TOP)/hcc_
+# H_ = $(TOP)/hcc_
+H_ = $(TOP)/hcc
 
 X_BASE ?= $(TOP)/cache
 X_DEST ?= $(X_BASE)/csvdb
@@ -37,7 +38,9 @@ X_EXTS1 ?= cwy fwy rcia rcib dfct enq clm
 X_EXTS2 ?= cars pop income imd tcars fwylsoa cwylsoa 
 
 ### CSV needs prep
-X_EXTS3 ?= poi workscwy0 workscwy2 dfctcwy weather permits luton traffic0 salting fwyenq0
+X_EXTS3 ?= poi workscwy0 workscwy2 dfctcwy weather permits luton traffic0 salting 
+
+# Lost: fwyenq0
 
 X_TARGETS ?= $(addprefix $(X_DEST)/,$(X_EXTS1) $(X_EXTS2) $(X_EXTS3))
 

@@ -206,7 +206,7 @@ x0: 0!select priority:count i by dfct0.type0, dfct0.type0name from dfct2
 
 .sys.qreloader enlist "dfct1b.q"
 
-dfct2: `dfct0 xasc dfct2
+dfct2: `dfct0 xasc 0!dfct2
 
 // TODO
 // An issue with aggregating with foreign keys means that dfctrisk has to be changed
@@ -216,8 +216,6 @@ a01: `dfct0 xasc select first action1, first inspct0, first cat0, first resp0, f
 
 dfct2: `dfct0 xasc dfct2 lj a01
 
-/
-
 // Summary metrics
 // This seems to break the system. Maybe the .dfct.risk is too big?
 
@@ -226,10 +224,6 @@ dfct2: `dfct0 xasc dfct2 lj a01
 a01:select count i by yr0:`year$dt0, action1, status0 from dfct1 
 
 count .dfct.risk
-
-\
-
-\
 
 // * summary
 
@@ -255,7 +249,8 @@ save `:./dfct2
 \
 
 /  Local Variables: 
-/  mode:q 
+/  mode:kdbp
+/  minor-mode:q
 /  q-prog-args: "-p 5000 -c 200 120 -C 2000 2000 -load ../cache/csvdb help.q -verbose -halt -quiet"
 /  fill-column: 75
 /  comment-column:50

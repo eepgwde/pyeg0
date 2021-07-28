@@ -20,7 +20,7 @@ def main():
     if len(sys.argv) >= 4:
         nsheet=sys.argv[3]
         
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet)
     isodtg.to_csv(tbl, sys.argv[2])
 
 if __name__ == '__main__':

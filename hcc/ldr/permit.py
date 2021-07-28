@@ -21,7 +21,7 @@ def main():
     if len(sys.argv) >= 4:
         nsheet=int(sys.argv[3])
 
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet)
 
     tbl.drop(['Contractor', 'Latitude', 'Longitude', 'Works Description', 'Permit Condition', 'notice_comments', 'validation_warnings'], axis=1, inplace=True) 
 

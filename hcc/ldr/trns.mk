@@ -94,8 +94,9 @@ $(X_BASE)/in/FWY-inventory.csv: $(X_BASE)/bak/FWY-inventory.xlsx
 $(X_BASE)/in/CWY-enquiries.csv: enq.py $(X_BASE)/bak/cwy-enquiries.xlsx
 	$+ $@
 
-$(X_BASE)/in/fwyenq0.csv : enq.py $(X_BASE)/bak/fwyenq0.xlsx
-	$+ $@
+# Lost file
+# $(X_BASE)/in/fwyenq0.csv : enq.py $(X_BASE)/bak/fwyenq0.xlsx
+#	$+ $@
 
 # sheet 1 is sheet 0
 $(X_BASE)/in/RCI-A.csv: $(X_BASE)/bak/RCI.xlsx

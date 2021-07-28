@@ -19,7 +19,7 @@ def main():
         nsheet=sys.argv[3]
 
     # print("working: " + sys.argv[1])
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet)
     tbl.drop(['defect_description', 'defect_notes', 'defect_location', 'job_status_notes'], axis=1, inplace=True) 
     tbl = isodtg.apply(tbl, 'defect_date', f=isodtg.isodt0)
     isodtg.to_csv(tbl, sys.argv[2])

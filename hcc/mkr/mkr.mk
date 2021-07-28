@@ -28,9 +28,9 @@ view2:
 	echo $(X_CSVS)
 	echo $(X_CSVS1)
 
-X_SUPPORT = $(X_DEST)/hcc.q $(X_DEST)/imputes0 $(X_CSVS1)
+X_SUPPORT = $(X_DEST)/hcc.q $(X_CSVS1)
 
-all-local: $(X_DEST)/hcc.q $(X_DEST)/imputes0 $(X_CSVS1)
+all-local: $(X_DEST)/hcc.q $(X_CSVS1)
 
 $(X_DEST)/hcc.q: hcc.q
 	if ! test -L $@; then cd $(X_DEST); ln -s $(xPWD)/hcc.q .; fi

@@ -20,7 +20,7 @@ def main():
     if len(sys.argv) >= 4:
         nsheet=int(sys.argv[3])
 
-    tbl = pd.read_excel(sys.argv[1], sheetname=nsheet)
+    tbl = pd.read_excel(sys.argv[1], sheet_name=nsheet)
 
     tbl = isodtg.apply(tbl, 'Inspection_Date', f=isodtg.isodt0)    
     tbl = isodtg.apply(tbl, 'EditDate', f=isodtg.isodt0)
