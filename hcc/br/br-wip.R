@@ -2,6 +2,37 @@
 ## Protyping code.
 ## May no longer work. Most recent at the top
 
+# Determine number of clusters
+wss <- (nrow(mydata) - 1) * sum(apply(mydata, 2, var))
+for (i in 2:15) {
+  wss[i] <- sum(kmeans(mydata,
+    centers = i
+  )$withinss)
+}
+plot(1:15, wss,
+  type = "b", xlab = "Number of Clusters",
+  ylab = "Within groups sum of squares"
+)# Determine number of clusters
+
+
+# K-Means Cluster Analysis
+fit <- kmeans(mydata, 5) # 5 cluster solution
+# get cluster means
+aggregate(mydata, by = list(fit$cluster), FUN = mean)
+# append cluster assignment
+mydata <- data.frame(mydata, fit$cluster) # K-Means Cluster Analysis
+fit <- kmeans(mydata, 5) # 5 cluster solution
+# get cluster means
+aggregate(mydata, by = list(fit$cluster), FUN = mean)
+# append cluster assignment
+mydata <- data.frame(mydata, fit$cluster)
+
+library(cluster)
+clusplot(mydata, fit$cluster,
+  color = TRUE, shade = TRUE,
+  labels = 2, lines = 0
+  )
+
 
 ## Can I put imputed values back in
 ## Set knnImpute to use median
