@@ -5,7 +5,9 @@
 # This can be used to install the files as links to /cache/bak and then 
 # the links can be reconstructed using top.mk:links1
 
-all: links1.lst srcs.lst targets1.lst targets2.lst
+X_FILES = links.lst links1.lst srcs.lst targets.lst targets1.lst targets2.lst
+
+all: $(X_FILES)
 
 SDIR=/home/build/1/archive
 
@@ -26,3 +28,7 @@ targets1.lst: targets.lst
 
 targets2.lst: targets1.lst
 	cat targets1.lst | while read i; do ls $(SDIR)/"$$i"; done
+
+
+clean::
+	$(RM) $(X_FILES)

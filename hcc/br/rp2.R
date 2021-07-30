@@ -41,6 +41,8 @@ df.unfactor <- function(df0, names0 = list()) {
   return(df0)
 }
 
+# https://www.statmethods.net/advstats/cluster.html
+
 cluster.make0 <- function(mydata, plot0=FALSE, title="Untitled", c0=5, m0=15) {
   df0 <- df.unfactor(mydata)
   df0 <- scale(df0)
