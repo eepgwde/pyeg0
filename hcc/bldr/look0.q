@@ -3,6 +3,7 @@
 
 // For viewing final files.
 
+`.samples set get `:./wssamples
 
 \
 
