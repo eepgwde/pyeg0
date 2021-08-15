@@ -4,6 +4,7 @@
 ## flds.lst
 ## A sed script is generated to replace just those fields.
 
+
 include ../trns/defs.mk 
 
 X_SRCS0 = $(shell cat fls1.lst | xargs)

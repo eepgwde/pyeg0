@@ -350,3 +350,32 @@ d_sedf () {
     echo '/^JUSTSYMHDRS:/s/`'${i}'/`'${j}'/1'
   done
 }
+
+d_qserve () {
+  test $# -ge 1 || return 1
+  local e_cmd=$1
+  shift
+
+  e_args="$@"
+
+  : ${d_service:=$(basename $PWD)}
+  : ${d_port:=4444}
+
+  : ${d_file:=$PWD/passwd}
+
+  case $e_cmd in
+    list)
+      screen -S "$d_service" -ls
+      ;;
+    start1)
+      test -f $d_file || return 2
+      $nodo screen -S "$d_service" -d -m Qr -U $d_file -p $d_port -load cache/csvdb
+      ;;
+    start)
+      $nodo screen -S "$d_service" -d -m Qr -p $d_port -load cache/csvdb
+      ;;
+    stop)
+      screen -S "$d_service" -X quit
+      ;;
+  esac
+}
