@@ -1,0 +1,12 @@
+-c dev-requirements.txt
+boto3==1.20.39
+kedro[pandas.ParquetDataSet,pandas.ExcelDataSet,pandas.CSVDataSet,spark.SparkDataSet]==0.17.6
+matplotlib>=3.1.1, <4.0
+mlflow==1.23.1
+openpyxl==3.0.9
+pandas==1.3.5
+pyspark==3.1.2
+scikit-learn==1.0.1
+seaborn==0.9.0
+statsmodels==0.11.1
+wheel>=0.35, <0.37
