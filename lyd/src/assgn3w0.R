@@ -3,6 +3,7 @@
 library(readxl)
 library(emmeans)
 library(dplyr)
+library(ggpubr)
 
 ## Set working directory (see video on CANVAS)
 # setwd("C:/Users/lydkd/OneDrive/Documents/subject/foo")
@@ -32,7 +33,7 @@ mydata <- mydata %>% mutate(ugly = as.logical(ugly), steep = as.logical(steep), 
                             age = as.integer(age), veggie_freq = as.integer(veggie_freq),
                             likelihood = as.integer(likelihood))
 
-## Looking at the averages, no obvious differences: there is an man of 80 years, woman is 74.
+## Looking at the counts, no obvious differences: there is an man of 80 years, woman is 74.
 
 ## Number of men and women
 table(mydata$sex)
@@ -43,56 +44,127 @@ table(mydata$ugly)
 table(mydata$sex, mydata$ugly)
 
 ## Use factors
-mydata$gender <- factor(mydata$sex, levels = c(TRUE, FALSE), labels = c("W", "M"))
-mydata$ugly2 <- factor(mydata$ugply, levels = c(TRUE, FALSE), labels = c("ugly", "pretty"))
+mydata$gender <- factor(mydata$sex, levels = c(FALSE, TRUE), labels = c("M", "W"))
+mydata$ugly2 <- factor(mydata$ugly, levels = c(FALSE, TRUE), labels = c("pretty", "ugly"))
+
+## note: ugly2 has numeric values 1 and 2 for pretty and ugly
+
+## Check reasonable with aggregate
+
+aggregate(. ~ ugly2 + gender, data = mydata, mean)
+aggregate(. ~ ugly2 + gender, data = mydata, sd)
+
 
 t0 <- table(mydata$gender, mydata$ugly2)
 t0
 
-test1 <- chisq.test(t0)
+test1 <- list()
 
-test1$statistic
-test1$p.value
+test1$Xsq <- chisq.test(t0)
 
-mosaicplot(t0, color = TRUE, xlab = "gender", ylab = "ugly")
+test1$Xsq
 
-attr(test)
+test1$Xsq$expected
 
-vs = list()
-summary(mydata$age)
-summary(filter(mydata, sex)$age)
-summary(filter(mydata, !sex)$age)
-summary(filter(mydata, ugly)$age)
-summary(filter(mydata, !ugly)$age)
+jpeg(file="t0.jpeg")
+mosaicplot(t0, color = TRUE)
+dev.off()
 
-vs = list()
-vs = append(vs, list(mydata$age))
-vs = append(vs, list(filter(mydata, sex)$age))
-vs = append(vs, list(filter(mydata, !sex)$age))
-vs = append(vs, list(filter(mydata, ugly)$age))
-vs = append(vs, list(filter(mydata, !ugly)$age))
+test1$f <- fisher.test(t0, alternative = "greater")
+test1$f
 
-par(mfrow = c(1, length(vs)))
-invisible(lapply(1:length(vs), function(i) boxplot(vs[i])))
+## = Q1.1 slight bias by men to ugly vegetables.
 
-table(mydata$sex, mydata$ugly)
+## age and gender distribution 
+group_by(mydata, gender) %>%
+  summarise(
+    count = n(),
+    mean = mean(age, na.rm = TRUE),
+    sd = sd(age, na.rm = TRUE)
+  )
+
+ggboxplot(mydata,
+  x = "gender", y = "age",
+  color = "gender", palette = c("#00AFBB", "#E7B800"),
+  ylab = "age", xlab = "Groups"
+  )
+
+## test for normality
+with(mydata, shapiro.test(age[gender == "M"]))
+with(mydata, shapiro.test(age[gender == "W"]))
+
+## test for heteroskedasticity - different variances p-value < 0.05 means they are different
+var.test(age ~ gender, data = mydata)
+
+## variances are similar, so use t-test, again p-value < 0.05 means they are different
+t.test(age ~ gender, data = mydata, var.equal = TRUE, alternative = "two.sided")
+t.test(age ~ gender, data = mydata, var.equal = TRUE, alternative = "greater")
+t.test(age ~ gender, data = mydata, var.equal = TRUE, alternative = "less")
+
+## age distribution ugly and not ugly
+group_by(filter(mydata, ugly), gender) %>%
+  summarise(
+    count = n(),
+    mean = mean(age, na.rm = TRUE),
+    sd = sd(age, na.rm = TRUE)
+  )
+
+ggboxplot(filter(mydata, ugly),
+  x = "gender", y = "age",
+  color = "gender", palette = c("#00AFBB", "#E7B800"),
+  ylab = "age", xlab = "Groups"
+)
+
+group_by(filter(mydata, !ugly), gender) %>%
+  summarise(
+    count = n(),
+    mean = mean(age, na.rm = TRUE),
+    sd = sd(age, na.rm = TRUE)
+  )
+
+ggboxplot(filter(mydata, !ugly),
+  x = "gender", y = "age",
+  color = "gender", palette = c("#00AFBB", "#E7B800"),
+  ylab = "age", xlab = "Groups"
+  )
+
+## older men choose pretty?
+
+test1.aov <- aov(age ~ ugly2 + gender, data = mydata)
+summary(test1.aov)
+
+TukeyHSD(test1.aov)
+
+## Try logistic regression to guess at whether they choose ugly
+test1.logit <- glm(ugly ~ age + gender, family = binomial(link = "logit"), mydata)
+summary(test1.logit)
+
+predict(test1.logit, newdata = list(age = 40, gender = "W"), type = "response")
+predict(test1.logit, newdata = list(age = 40, gender = "M"), type = "response")
+
+test1.logit <- glm(ugly2 ~ age + gender, family = binomial(link = "logit"), mydata)
+summary(test1.logit)
+
+predict(test1.logit, newdata = list(age = 40, gender = "W"), type = "response")
+predict(test1.logit, newdata = list(age = 40, gender = "M"), type = "response")
 
 
+## check we can bias this by adding 10 to the age of people who choose ugly2
 
-step_1 <- select(mydata, ugly, sex, age)
-ugly <- filter (step_1, ugly == "1")
-not_ugly<- filter (step_1, ugly == "0")
-age_ugly <- mean(ugly$age)
-age_not_ugly <- mean(not_ugly$age)
+mydata1 <- mydata
+mydata1[mydata1$ugly2 == "ugly", "age"] <- mydata1[mydata1$ugly2 == "ugly", "age"] + 10
 
-##there is a slight age difference between the ugly and no labeling conditions.
-gender_ugly <- mean(ugly$sex)
-gender_not_ugly <- mean(not_ugly$sex)
+test1.logit <- glm(ugly2 ~ age + gender, family = binomial(link = "logit"), mydata1)
+summary(test1.logit)
+
+predict(test1.logit, newdata = list(age = 60, gender = "W"), type = "response")
+predict(test1.logit, newdata = list(age = 60, gender = "M"), type = "response")
 
 
-##there are slightly more females in the "not ugly" label.
 ## Q2. Test H1 and report the results consistent with the result section in the corresponding lecture
-##H1: “Ugly” labeling (vs. no specific label) increases the likelihood that consumers purchase unattractive produce
+
+## H1: “Ugly” labeling (vs. no specific label) increases the likelihood that consumers purchase
+## unattractive produce
 ##ugly= binary categorical, likelyhood to purchase is binary quantitative, meaning that anova test is nesecary
 mydata$ugly <-factor(mydata$ugly, labels = c("non_ugly", "ugly"))
 aggregate(likelihood ~ ugly, mydata, mean)
