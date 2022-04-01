@@ -46,6 +46,7 @@ table(mydata$sex, mydata$ugly)
 ## Use factors
 mydata$gender <- factor(mydata$sex, levels = c(FALSE, TRUE), labels = c("M", "W"))
 mydata$ugly2 <- factor(mydata$ugly, levels = c(FALSE, TRUE), labels = c("pretty", "ugly"))
+mydata$steep2 <- factor(mydata$steep, levels = c(FALSE, TRUE), labels = c("modest", "steep"))
 
 ## note: ugly2 has numeric values 1 and 2 for pretty and ugly
 
@@ -161,16 +162,35 @@ predict(test1.logit, newdata = list(age = 60, gender = "W"), type = "response")
 predict(test1.logit, newdata = list(age = 60, gender = "M"), type = "response")
 
 
-## Q2. Test H1 and report the results consistent with the result section in the corresponding lecture
-
 ## H1: “Ugly” labeling (vs. no specific label) increases the likelihood that consumers purchase
 ## unattractive produce
-##ugly= binary categorical, likelyhood to purchase is binary quantitative, meaning that anova test is nesecary
-mydata$ugly <-factor(mydata$ugly, labels = c("non_ugly", "ugly"))
-aggregate(likelihood ~ ugly, mydata, mean)
-anova_H1 <- aov(likelihood ~ ugly, data=mydata)
-summary(anova_H1)
+## H2: The positive effect of “ugly” labeling on purchase is moderated by the depth of price discount,
+## such that “ugly” labeling is most effective when associated with a moderate (vs. steep) discount
+## H3: The positive effect of “ugly” labeling on purchase is moderated by vegetable consumption
+## frequency, such that “ugly” labeling is most effective when vegetable consumption frequency is high
+## (vs. low)
+
+## Q2. Test H1 and report the results consistent with the result section in the corresponding lecture
+
+## "the likelihood" here, refers to the column in the table. The customers opinion of the vegetable boxes
+## So it is a conditional relationship: given they purchased "ugly" vegetables, what score did they assign
+## to the boxes.
+
+test2.aov <- aov(likelihood ~ ugly2, data = mydata)
+summary(test2.aov)
+
+## alternative hypothesis, because Pr(>F) << 0.05
+## This seems rational
+
 ## Q3. Test H2 and report the results consistent with the result section in the corresponding lecture
+
+## when a moderate discount is applied, shoppers buy ugly, but not with a steep discount
+
+t3 <- table(mydata$ugly2, mydata$steep2)
+
+test3.aov <- aov(ugly2 ~ steep2, data = mydata)
+summary(test3.aov)
+
 
 
 ## Q4. Test H3 and report the results consistent with the result section in the corresponding lecture
